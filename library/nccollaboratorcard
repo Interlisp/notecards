@@ -1,0 +1,212 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
+(FILECREATED " 5-Dec-87 20:08:09" {QV}<NOTECARDS>1.3L>LIBRARY>NCCOLLABORATORCARD.;1 9794   
+
+      changes to%:  (VARS NCCOLLABORATORCARDCOMS)
+                    (FNS NCCollab.MakeParamsPropList NCCollab.AddCollaboratorCard)
+
+      previous date%: " 9-Dec-86 00:25:36" {QV}<NOTECARDS>1.3K>LIBRARY>NCCOLLABORATORCARD.;13)
+
+
+(* "
+Copyright (c) 1986, 1987 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCCOLLABORATORCARDCOMS)
+
+(RPAQQ NCCOLLABORATORCARDCOMS ((DECLARE%: DONTCOPY (PROP MAKEFILE-ENVIRONMENT NCCOLLABORATORCARD))
+                               
+
+(* ;;; "This defines the Collaborator card type which inherits from Inspector.")
+
+                               (FILES (FROM NOTECARDS)
+                                      NCINSPECTORCARD NCCOLLABORATION)
+                               (FNS NCCollab.MakeParamsPropList NCCollab.InitialsSelectionFn 
+                                    NCCollab.FontSelectionFn NCCollab.ExtraTEditPropsSelectionFn 
+                                    NCCollab.FontFetchFn NCCollab.ParamInstallFn 
+                                    NCCollab.FontParamInstallFn NCCollab.CurrentCollaboratorCardP 
+                                    NCCollab.InstallCollaboratorCardInfo)
+                               (FNS NCCollab.CollaboratorCardMakeFn NCCollab.AddCollaboratorCard)
+                               (DECLARE%: DONTEVAL@LOAD (P (NCCollab.AddCollaboratorCard)
+                                                           (PUTPROP 'Collaborator '
+                                                                  Don'tForceFilingFlg T)))))
+(DECLARE%: DONTCOPY 
+
+(PUTPROPS NCCOLLABORATORCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+)
+
+
+
+(* ;;; "This defines the Collaborator card type which inherits from Inspector.")
+
+(FILESLOAD (FROM NOTECARDS)
+       NCINSPECTORCARD NCCOLLABORATION)
+(DEFINEQ
+
+(NCCollab.MakeParamsPropList
+  (LAMBDA (Card StartingParamsPropList)                      (* ; "Edited  5-Dec-87 20:02 by rht:")
+          
+          (* * Use Card to build a set of INSPECTORPARAMETER records with parameter names 
+          to become the card's substance.)
+
+    (DECLARE (GLOBALVARS NC.DefaultFont))
+    (LET ((NoteFile (fetch (Card NoteFile) of Card)))
+         `(Initials ,(OR (LISTGET StartingParamsPropList 'Initials)
+                         (create INSPECTORPARAMETER
+                                PARAMVALUE _ '?
+                                PARAMFETCHFN _ NIL
+                                PARAMSELECTIONFN _ (FUNCTION NCCollab.InitialsSelectionFn)
+                                PARAMINSTALLFN _ (FUNCTION NCCollab.ParamInstallFn))) Font
+                 ,(OR (LISTGET StartingParamsPropList 'Font)
+                      (create INSPECTORPARAMETER
+                             PARAMVALUE _ (NCCollab.FontFetchFn NIL (OR (NCP.NoteFileProp
+                                                                         NoteFile
+                                                                         'Font)
+                                                                        NC.DefaultFont))
+                             PARAMFETCHFN _ (FUNCTION NCCollab.FontFetchFn)
+                             PARAMSELECTIONFN _ (FUNCTION NCCollab.FontSelectionFn)
+                             PARAMINSTALLFN _ (FUNCTION NCCollab.FontParamInstallFn))) 
+                 ExtraTEditProps ,(OR (LISTGET StartingParamsPropList 'ExtraTEditProps)
+                                      (create INSPECTORPARAMETER
+                                             PARAMVALUE _ (NCP.NoteFileProp NoteFile 'ExtraTEditProps
+                                                                 )
+                                             PARAMFETCHFN _ NIL
+                                             PARAMSELECTIONFN _ (FUNCTION 
+                                                                 NCCollab.ExtraTEditPropsSelectionFn)
+                                             PARAMINSTALLFN _ (FUNCTION NCCollab.ParamInstallFn)))))))
+
+(NCCollab.InitialsSelectionFn
+  (LAMBDA (Parameter Value Card)                             (* rht%: "23-Nov-86 17:18")
+          
+          (* * Get a new Initials from the user.)
+
+    (LET ((NewValue (NCP.AskUser "New initials: " NIL Value T (NC.FetchWindow Card)
+                           NIL NIL T)))
+         (AND (NCCollab.CurrentCollaboratorCardP Card)
+              (NCCollab.ParamInstallFn Parameter NewValue Card))
+         NewValue)))
+
+(NCCollab.FontSelectionFn
+  (LAMBDA (Parameter Value Card)                             (* rht%: "24-Nov-86 01:01")
+          
+          (* * Just go get a font from the user.)
+
+    (LET ((NewValue (NC.GetFontFromUser Value)))
+         (if NewValue
+             then (AND (NCCollab.CurrentCollaboratorCardP Card)
+                       (NCCollab.FontParamInstallFn Parameter NewValue Card))
+                  (NCCollab.FontFetchFn Parameter NewValue)
+           else 'NOTCHANGED))))
+
+(NCCollab.ExtraTEditPropsSelectionFn
+  (LAMBDA (Parameter Value Card)                             (* rht%: "24-Nov-86 00:39")
+          
+          (* * Get the user's tedit props by letting her type in a TTYIN window.)
+
+    (DECLARE (GLOBALVARS NC.AskTEditPropsWindowWidth NC.AskTEditPropsWindowHeight))
+    (LET ((TTYINWindow (CREATEW (CREATEREGION LASTMOUSEX LASTMOUSEY NC.AskTEditPropsWindowWidth 
+                                       NC.AskTEditPropsWindowHeight)
+                              "TEdit Props?"))
+          NewValue)
+         (NC.MoveWindowOntoScreen TTYINWindow)
+         (PRIN1 (CONCAT "Type sequence of pairs of attributes and values" (CHARACTER 13)
+                       "followed by carriage return."
+                       (CHARACTER 13)
+                       "(Preface expressions with ctrl-Y to have them eval'ed.)"
+                       (CHARACTER 13))
+                TTYINWindow)
+         (SETQ NewValue (RESETFORM (TTYDISPLAYSTREAM TTYINWindow)
+                               (CAR (NLSETQ (TTYIN ">> " NIL NIL '(LISPXREAD) NIL NIL Value T)))))
+         (CLOSEW TTYINWindow)
+         (if (NC.UserSpecifiedTEditPropsCheckFn NewValue)
+             then (AND (NCCollab.CurrentCollaboratorCardP Card)
+                       (NCCollab.ParamInstallFn Parameter NewValue Card))
+                  NewValue
+           else (NC.PrintMsg NIL T "List must contain an even number of items.")
+                (FLASHW PROMPTWINDOW)
+                Value))))
+
+(NCCollab.FontFetchFn
+  (LAMBDA (Parameter Value)                                  (* rht%: "21-Nov-86 00:03")
+          
+          (* * Return the shorthand display of font.)
+
+    (LIST (FONTPROP Value 'FAMILY)
+          (FONTPROP Value 'SIZE)
+          (NC.FontFaceShorthand (FONTPROP Value 'FACE)))))
+
+(NCCollab.ParamInstallFn
+  (LAMBDA (Parameter Value Card)                             (* rht%: "21-Nov-86 17:31")
+          
+          (* * Stash the value on Parameter name of notefile.)
+
+    (NC.NoteFileProp (NCP.CardNoteFile Card)
+           Parameter Value)))
+
+(NCCollab.FontParamInstallFn
+  (LAMBDA (Parameter Value Card)                             (* rht%: "24-Nov-86 00:56")
+          
+          (* * Stash the value on Parameter name of notefile.)
+
+    (NC.NoteFileProp (NCP.CardNoteFile Card)
+           Parameter
+           (OR (FONTP Value)
+               (APPLY (FUNCTION FONTCREATE)
+                      Value)))))
+
+(NCCollab.CurrentCollaboratorCardP
+  (LAMBDA (Card)                                             (* rht%: "21-Nov-86 01:44")
+          
+          (* * Returns non-nil if Card is the unique current collaborator card hung off 
+          the notefile.)
+
+    (NC.SameCardP Card (NCP.NoteFileProp (fetch (Card NoteFile) of Card)
+                              'CurrentCollaboratorCard))))
+
+(NCCollab.InstallCollaboratorCardInfo
+  (LAMBDA (Card)                                             (* rht%: "21-Nov-86 17:28")
+          
+          (* * Take the parameter values from Card's substance and install them on the 
+          notefile.)
+
+    (for ParameterPropPair on (NCP.CardSubstance Card) by (CDDR ParameterPropPair)
+       do (APPLY* (fetch (INSPECTORPARAMETER PARAMINSTALLFN) of (CADR ParameterPropPair))
+                 (CAR ParameterPropPair)
+                 (fetch (INSPECTORPARAMETER PARAMVALUE) of (CADR ParameterPropPair))
+                 Card))))
+)
+(DEFINEQ
+
+(NCCollab.CollaboratorCardMakeFn
+  (LAMBDA (Card Title NoDisplayFlg ParamsPropList)           (* rht%: " 8-Dec-86 22:20")
+          
+          (* * Create a CollabInfo card.)
+
+    (LET ((Result (NC.ApplySupersFn MakeFn Card Title NoDisplayFlg (NCCollab.MakeParamsPropList
+                                                                    Card ParamsPropList)))
+          (NoteFile (fetch (Card NoteFile) of Card))
+          CollabInfoBox)
+         (if (NCP.ValidCardP (SETQ CollabInfoBox (NCCollab.GetCollabInfoBox NoteFile)))
+             then (NCP.FileCards Card CollabInfoBox))
+         Result)))
+
+(NCCollab.AddCollaboratorCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+          
+          (* * Create the CollabInfo card type.)
+
+    (NCP.CreateCardType 'Collaborator 'Inspector `((MakeFn ,(FUNCTION NCCollab.CollaboratorCardMakeFn
+                                                             ))) '((DisplayedInMenuFlg T)))))
+)
+(DECLARE%: DONTEVAL@LOAD 
+(NCCollab.AddCollaboratorCard)
+(PUTPROP 'Collaborator 'Don'tForceFilingFlg T)
+)
+(PUTPROPS NCCOLLABORATORCARD COPYRIGHT ("Xerox Corporation" 1986 1987))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (1954 8563 (NCCollab.MakeParamsPropList 1964 . 4132) (NCCollab.InitialsSelectionFn 4134
+ . 4591) (NCCollab.FontSelectionFn 4593 . 5102) (NCCollab.ExtraTEditPropsSelectionFn 5104 . 6608) (
+NCCollab.FontFetchFn 6610 . 6917) (NCCollab.ParamInstallFn 6919 . 7186) (NCCollab.FontParamInstallFn 
+7188 . 7556) (NCCollab.CurrentCollaboratorCardP 7558 . 7951) (NCCollab.InstallCollaboratorCardInfo 
+7953 . 8561)) (8564 9593 (NCCollab.CollaboratorCardMakeFn 8574 . 9199) (NCCollab.AddCollaboratorCard 
+9201 . 9591)))))
+STOP

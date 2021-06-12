@@ -1,0 +1,20 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 3-Nov-2020 16:14:11" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>MEDLEYSYSTEMPATCHES.;2 3389         previous date%: "25-Nov-93 16:25:28" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>MEDLEYSYSTEMPATCHES.;1)(* ; "Copyright (c) 1988, 1989, 1990, 1993, 2020 by Venue & Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT MEDLEYSYSTEMPATCHESCOMS)(RPAQQ MEDLEYSYSTEMPATCHESCOMS       (        (* ;; "Following stuff is needed to make IMAGEOBJ's write out correctly, for graphs, sketches, etc. [rg 12/10/87]")        (FNS WRITE.IMAGEOBJ)                                                             (* ;                    "Insure that correct imageobj HPRINTMACRO is at front of the HPRINTMACROS list.")        [DECLARE%: DONTEVAL@LOAD (ADDVARS (HPRINTMACROS (IMAGEOBJ . WRITE.IMAGEOBJ]                (* ;;      "rht 12/14/87: Fix so that REATTACHPROMPTWINDOW stops trashing promptwindow's PASSTOMAINCOMS.")        (FNS REATTACHPROMPTWINDOW)                (* ;; "Temporary fix to the random popping up of shrunken text cards problem.")        [VARS (TTY.PROCESS.DEFAULT '(BACKGROUND EXEC EXEC#2 EXEC#3 EXEC#4 EXEC#4 EXEC#5 MOUSE]        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)              MEDLEYSYSTEMPATCHES)))(* ;; "Following stuff is needed to make IMAGEOBJ's write out correctly, for graphs, sketches, etc. [rg 12/10/87]")(DEFINEQ(WRITE.IMAGEOBJ
+  [LAMBDA (IMAGEOBJ STREAM)                                 (* ; "Edited 10-Dec-87 11:58 by Gobbel")
+
+    (* ;; "HPRINT function for writing out IMAGE OBJECTS")
+
+    (* ;; "write out the name of the function to read things back in with.")
+
+    (PRINT (LIST (fetch (IMAGEFNS GETFN) of (fetch (IMAGEOBJ IMAGEOBJFNS) of IMAGEOBJ
+                                                           )))
+           STREAM HPRINTRDTBL)
+    (APPLY* (fetch (IMAGEFNS PUTFN) of (fetch (IMAGEOBJ IMAGEOBJFNS) of IMAGEOBJ))
+           IMAGEOBJ STREAM)
+    T]))(* ; "Insure that correct imageobj HPRINTMACRO is at front of the HPRINTMACROS list.")(DECLARE%: DONTEVAL@LOAD (ADDTOVAR HPRINTMACROS (IMAGEOBJ . WRITE.IMAGEOBJ)))(* ;; "rht 12/14/87: Fix so that REATTACHPROMPTWINDOW stops trashing promptwindow's PASSTOMAINCOMS.")(DEFINEQ(REATTACHPROMPTWINDOW
+  [LAMBDA (MAINWINDOW PWINDOW)                               (* ; "Edited 14-Dec-87 01:08 by rht:")
+
+    (* ;; "rht 12/14/87: Fixed so that restores old PASSTOMAINCOMS after calling ATTACHWINDOW.")
+
+    (LET [(OLDPASSTOMAINCOMS (WINDOWPROP PWINDOW 'PASSTOMAINCOMS]
+         (ATTACHWINDOW PWINDOW MAINWINDOW 'TOP 'JUSTIFY)
+         (WINDOWPROP PWINDOW 'PASSTOMAINCOMS OLDPASSTOMAINCOMS]))(* ;; "Temporary fix to the random popping up of shrunken text cards problem.")(RPAQQ TTY.PROCESS.DEFAULT (BACKGROUND EXEC EXEC#2 EXEC#3 EXEC#4 EXEC#4 EXEC#5 MOUSE))(PUTPROPS MEDLEYSYSTEMPATCHES FILETYPE :TCOMPL)(PUTPROPS MEDLEYSYSTEMPATCHES MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP"                                                                   :BASE 10))(PUTPROPS MEDLEYSYSTEMPATCHES COPYRIGHT ("Venue & Xerox Corporation" 1988 1989 1990 1993 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (1539 2141 (WRITE.IMAGEOBJ 1549 . 2139)) (2433 2857 (REATTACHPROMPTWINDOW 2443 . 2855)))))STOP

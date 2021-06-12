@@ -1,0 +1,963 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP")
+(FILECREATED "31-Jan-89 16:05:53" {QV}<IDE>1.41>NCPLOTCARD.;33 46490  
+
+      changes to%:  (ADVICE PLOT.WHENSELECTEDFN)
+                    (FNS PC.SetUpMiddleButtonMenu PCP.ResetPlotMenuItems)
+                    (VARS NCPLOTCARDCOMS PC.PlotCardIcon)
+
+      previous date%: "31-Jan-89 15:17:21" {QV}<IDE>1.41>NCPLOTCARD.;31)
+
+
+(* "
+Copyright (c) 1988, 1989 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCPLOTCARDCOMS)
+
+(RPAQQ NCPLOTCARDCOMS
+       [
+        (* ;; 
+        "dsj. 11/10/88.  Creates new card type, the Plot Card, based on J.Pedersen's Plot package.")
+
+        (FILES PLOT PLOTANDNC-PATCH)
+        
+        (* ;; "Data entry fns")
+
+        (FNS PC.AddCurve PC.AddLine PC.AddPowerCurve PC.ConvertPointsToTextStream PC.EditPlotLine 
+             PC.EditPlotObject PC.EditPlotPoints PC.EditPlotPowerCurve PC.GetPointObjects 
+             PC.GetPointsFromTeditWindow PC.PlotObjectLine? PC.PlotObjectPowerCurve? 
+             PC.PlotPowerCurve PC.PointsTeditMenuCommands PC.PointsTeditQuitAndSaveFn 
+             PC.PointsTeditQuitFn PC.PointsTeditReadTable PC.PointsTeditRightButtonQuitFn 
+             PC.PointsTeditUpdateFn PC.PointsTeditWindowProps PC.PowerFn)
+        
+        (* ;; "NC card type fns")
+
+        (FNS PC.AddPlotCardType PC.CopyCardFn PC.CreatePlot PC.DirtyPCardFn PC.EditCardFn 
+             PC.GetCardFn PC.MakeCardFn PC.PutCardFn PC.QuitCardFn)
+        
+        (* ;; "")
+
+        (FNS MARKPLOTDIRTY PLOTDIRTYP MARKPLOTDIRTYFROMMENU)
+        
+        (* ;; "Interface fns")
+
+        (FNS PC.MiddleButtonMenuSelectedFn PC.SetUpMiddleButtonMenu PC.AddPlotMenuItems 
+             PC.MiddlePlotMenuItems PC.GetMiddleButtonTitleBarMenuItems)
+        (ADVISE PLOT.WHENSELECTEDFN)
+        (BITMAPS PC.PlotCardIcon)
+        (GLOBALVARS PC.PointsTeditMenuCommands PC.PointsTeditReadTable)
+        (INITVARS (PC.PointTextDelimiter "/"))
+        (VARS (PC.VersionNumber 1)
+              (PC.PowerCurveVersion 1))
+        
+        (* ;; "PCP fns and vars")
+
+        (FNS PCP.ResetPlotMenuItems)
+        (INITVARS (PCP.BottomLabel ">> X label <<")
+               (PCP.LeftLabel "Y label")
+               (PCP.TopLabel ">> Plot name <<")
+               (PCP.RightLabel))
+        (INITVARS (PCP.BottomTics T)
+               (PCP.LeftTics T)
+               (PCP.TopTics)
+               (PCP.RightTics))
+        (GLOBALVARS PC.MiddleButtonTitleBarMenuItems)
+        [VARS [PCP.EditPlotObjectFns '((PC.PlotObjectPowerCurve? PC.EditPlotPowerCurve)
+                                       (PC.PlotObjectLine? PC.EditPlotLine]
+              (PCP.MiddleButtonTitleBarMenuItems '(("Edit Points" PC.EditPlotPoints 
+                                                    "Allows you to add or delete points to this plot"
+                                                          )
+                                                   ("Add Line" PC.AddLine 
+                                                     "Allows you to add a straight line to this plot"
+                                                          )
+                                                   ("Add Curve" PC.AddCurve 
+                                                       "Allows you to add a power curve to this plot"
+                                                          (SUBITEMS ("Add Power Curve" 
+                                                                           PC.AddPowerCurve 
+                                                       "Allows you to add a power curve to this plot"
+                                                                           ]
+        
+        (* ;; "This should be an NCP fn")
+
+        (FNS NCP.ReshapeWindow)
+        
+        (* ;; "PLOT fns patch")
+
+        (FNS DRAWGRAPHOBJECT.NEW)
+        
+        (* ;; "Computational fns")
+
+        (FNS POWERFN)
+        (INITVARS (PC.COEFF)
+               (PC.POWER)
+               (PC.ASYMPTOTE))
+        [P (MOVD 'DRAWGRAPHOBJECT.NEW 'DRAWGRAPHOBJECT T)
+           (PC.AddPlotCardType)
+           (AND (MEMBER 'NCCARDMGMT FILELST)
+                (CM.AddCardMgmtToCardType 'Plot]
+        (DECLARE%: DONTCOPY (PROPS (NCPLOTCARD MAKEFILE-ENVIRONMENT)
+                                   (NCPLOTCARD FILETYPE])
+
+
+
+(* ;; "dsj. 11/10/88.  Creates new card type, the Plot Card, based on J.Pedersen's Plot package.")
+
+
+(FILESLOAD PLOT PLOTANDNC-PATCH)
+
+
+
+(* ;; "Data entry fns")
+
+(DEFINEQ
+
+(PC.AddCurve
+  [LAMBDA (Plot)                                             (* ; "Edited 15-Nov-88 20:23 by DSJ")
+
+    (* ;; "dsj 11/15/88.  Add a curve to the plot.")
+                                                             (* ; 
+                                                             "Currently only power curves availiable")
+    (PC.AddPowerCurve Plot])
+
+(PC.AddLine
+  [LAMBDA (Plot Slope Intercept ResetFlg)                    (* ; "Edited 15-Nov-88 20:26 by DSJ")
+
+    (* ;; "dsj. 11/14/88.  Allow user to add a line to the plot.")
+
+    (if (AND (NULL ResetFlg)
+             Intercept)
+        then (PLOTLINE Plot Slope Intercept)
+      else (GETMOUSESTATE)
+           (PROG ((PlotWindow (GETPLOTWINDOW Plot))
+                  Pos)
+                 (SETQ Pos (CONS (fetch RIGHT of (WINDOWREGION PlotWindow))
+                                 LASTMOUSEY))
+                 (RETURN (if (SETQ Slope (RNUMBER (if Slope
+                                                      then (CONCAT "Current slope & intercept is:  "
+                                                                  Slope " , " Intercept 
+                                                                  "
+Give the new slope of the line:")
+                                                    else "Give the slope of the line:")
+                                                Pos NIL NIL T T NIL T))
+                             then (if (SETQ Intercept
+                                       (RNUMBER (if Intercept
+                                                    then (CONCAT "Current slope & intercept is:  " 
+                                                                Slope " , " Intercept 
+                                                               "
+Give the new intercept of the line:")
+                                                  else (CONCAT "Slope is:  " Slope 
+                                                              "
+Give the intercept of the line:"))
+                                              Pos NIL NIL T T NIL T))
+                                      then (PLOTLINE Plot Slope Intercept])
+
+(PC.AddPowerCurve
+  [LAMBDA (Plot Asymptote Coeff Power ResetFlg)              (* ; "Edited 16-Nov-88 00:06 by DSJ")
+
+    (* ;; "dsj 11/15/88.  Add a power curve to the plot.  Ask user for parameters.")
+
+    (if (AND (NULL ResetFlg)
+             Asymptote)
+        then (PC.PlotPowerCurve Plot Asymptote Coeff Power)
+      else (GETMOUSESTATE)
+           (PROG (Pos (PlotWindow (GETPLOTWINDOW Plot)))
+                 (SETQ Pos (CONS (fetch RIGHT of (WINDOWREGION PlotWindow))
+                                 LASTMOUSEY))
+                 (RETURN (if (SETQ Asymptote
+                              (RNUMBER (if Asymptote
+                                           then (CONCAT "Asymptote is:  " Asymptote "
+Coeff is:  " Coeff "
+Power is:  " Power "
+Give the new asymptote of the power curve:")
+                                         else "Give the asymptote of the power curve:")
+                                     Pos NIL NIL T T NIL T))
+                             then (if (SETQ Coeff
+                                       (RNUMBER (if Coeff
+                                                    then (CONCAT "Asymptote is:  " Asymptote 
+                                                                "
+Coeff is:  " Coeff "
+Power is:  " Power "
+Give the new coeff of the power curve:")
+                                                  else (CONCAT "Asymptote is:  " Asymptote 
+                                                              "
+Give the coeff of the power curve:
+
+"))
+                                              Pos NIL NIL T T NIL T))
+                                      then (if (SETQ Power
+                                                (RNUMBER (if Power
+                                                             then (CONCAT "Asymptote is:  " Asymptote
+                                                                         "
+Coeff is:  " Coeff "
+Power is:  " Power "
+Give the new power of the power curve:")
+                                                           else (CONCAT "Asymptote is:  " Asymptote 
+                                                                       "
+Coeff is:  " Coeff "
+Give the power of the power curve:
+
+"))
+                                                       Pos NIL NIL T T NIL T))
+                                               then (PC.PlotPowerCurve Plot Asymptote Coeff Power])
+
+(PC.ConvertPointsToTextStream
+  [LAMBDA (PointPlotObjects)                                 (* ; "Edited 14-Nov-88 19:48 by DSJ")
+
+    (* ;; "dsj/11/14/88.  Convert point positions in plot objects to text in a stream.")
+
+    (GLOBALVARS PC.PointTextDelimiter)
+    (PROG ((Points ""))
+          (for obj in PointPlotObjects bind point do [SETQ point (fetch (POINTDATA POINTPOSITION)
+                                                                    of (PLOTOBJECTPROP obj
+                                                                              'OBJECTDATA]
+                                                     (SETQ Points (CONCAT Points (CAR point)
+                                                                         " "
+                                                                         (CDR point)
+                                                                         " " PC.PointTextDelimiter 
+                                                                         " ")))
+          (RETURN (OPENTEXTSTREAM Points])
+
+(PC.EditPlotLine
+  [LAMBDA (LineObject Plot)                                  (* ; "Edited 15-Nov-88 01:24 by DSJ")
+
+    (* ;; "dsj. 11/15/88.  Edit parameters of the line.")
+
+    (PROG [(LineData (PLOTOBJECTPROP LineObject 'OBJECTDATA] (* ; "First get new line")
+          (if (PC.AddLine Plot (fetch (LINEDATA SLOPE) of LineData)
+                     (fetch (LINEDATA CONSTANT) of LineData)
+                     T)
+              then                                           (* ; " And delete the old one.")
+                   (DELETEPLOTOBJECT LineObject Plot NIL T])
+
+(PC.EditPlotObject
+  [LAMBDA (PlotObject Plot)                                  (* ; "Edited 27-Jan-89 17:23 by DSJ")
+
+    (* ;; "dsj/ 11/14/88.  Edit the selected plot object")
+
+    (* ;; "dsj 1/27/89 Now reads fns off of PCP.EditPlotObjectFns globalvar.")
+
+    (if (for FnPair in PCP.EditPlotObjectFns thereis         (* ; 
+                                                             "if its an object of that type, edit it")
+                                                   (if (APPLY* (CAR FnPair)
+                                                              PlotObject Plot)
+                                                       then (APPLY* (CADR FnPair)
+                                                                   PlotObject Plot)
+                                                            T))
+      else (PLOTPROMPT "Can't edit that plot object here." Plot])
+
+(PC.EditPlotPoints
+  [LAMBDA (Plot)                                             (* ; "Edited 15-Nov-88 00:23 by DSJ")
+
+    (* ;; "dsj. 11/14/88.  Give user a TEdit interface for adding/deleting points to the plot.")
+
+    (PROG (PointsWindow PointsStream (PointsWindowHeight 75)
+                 (PlotWindow (GETPLOTWINDOW Plot))
+                 (PointObjs (PC.GetPointObjects Plot)))      (* ; 
+                                    "Don't open a new window if one for this guy is already opened. ")
+          (if (AND (SETQ PointsWindow (WINDOWPROP PlotWindow 'POINTSWINDOW))
+                   (OPENWP PointsWindow))
+              then (FLASHW PointsWindow)
+                   (RETURN)
+            else                                             (* ; "Set up points window")
+                 (if PointsWindow
+                     then                                    (* ; "Move it to right place")
+                          (MOVEW PointsWindow (fetch LEFT of (WINDOWREGION PlotWindow))
+                                 (fetch TOP of (WINDOWREGION PlotWindow)))
+                   else (SETQ PointsWindow (CREATEW (CREATEREGION (fetch LEFT of (WINDOWREGION 
+                                                                                        PlotWindow))
+                                                           (fetch TOP of (WINDOWREGION PlotWindow))
+                                                           (fetch WIDTH of (WINDOWREGION PlotWindow))
+                                                           PointsWindowHeight)
+                                                  "Plot Points Editor" NIL T)) 
+                                                             (* ; "Put it on plotwindow's prop")
+                        (WINDOWPROP PlotWindow 'POINTSWINDOW PointsWindow)) 
+                                                             (* ; "Set up points textstream")
+                 (SETQ PointsStream (PC.ConvertPointsToTextStream PointObjs)) 
+                                                             (* ; "Create TEdit window")
+                 (WINDOWPROP PointsWindow 'TEDIT.MENU.COMMANDS (PC.PointsTeditMenuCommands))
+                 (TEDIT PointsStream PointsWindow NIL (PC.PointsTeditWindowProps)) 
+                                                             (* ; "Put needed info on prop lists")
+                 (WINDOWPROP PointsWindow 'PLOT Plot)
+                 (STREAMPROP PointsStream 'WINDOW PointsWindow) 
+                                                             (* ; "Make this an attached window")
+                 (ATTACHWINDOW PointsWindow PlotWindow 'TOP 'JUSTIFY 'LOCALCLOSE)
+                 (WINDOWADDPROP PointsWindow 'CLOSEFN (FUNCTION FREEATTACHEDWINDOW)
+                        T])
+
+(PC.EditPlotPowerCurve
+  [LAMBDA (GraphObject Plot)                                 (* ; "Edited 16-Nov-88 00:10 by DSJ")
+
+    (* ;; "dsj. 11/15/88.  Edit parameters of the power curve.")
+
+    (PROG [(PowerData (PLOTOBJECTPROP GraphObject 'OBJECTUSERDATA]
+          (RETURN (AND PowerData (PC.AddPowerCurve Plot (LISTGET PowerData 'Asymptote)
+                                        (LISTGET PowerData 'Coeff)
+                                        (LISTGET PowerData 'Power)
+                                        T)                   (* ; "then delete old one")
+                       (DELETEPLOTOBJECT GraphObject Plot NIL T])
+
+(PC.GetPointObjects
+  [LAMBDA (Plot)                                             (* ; "Edited 14-Nov-88 18:11 by DSJ")
+
+    (* ;; "dsj. 11/14/88.  Return plot's point objects, if any.")
+
+    (for obj in (PLOTPROP Plot 'PLOTOBJECTS) collect obj when (PLOTOBJECTSUBTYPE? POINT obj])
+
+(PC.GetPointsFromTeditWindow
+  [LAMBDA (WindowOrStream)                                   (* ; "Edited 15-Nov-88 20:11 by DSJ")
+
+    (* ;; "dsj. 11/14/88.  Read points from tedit window.  Delimiters are: <CR> plus the value of PC.PointTextDelimiter")
+
+    (PROG [Points Pair X Y CH (PRT (PC.PointsTeditReadTable))
+                 (Stream (OR (STREAMP WindowOrStream)
+                             (WINDOWPROP WindowOrStream 'TEXTSTREAM]
+          (SETFILEPTR Stream 0)
+          (SKIPSEPRS Stream PC.PointsTeditReadTable)
+          (until (EOFP Stream)
+             do [SETQ Pair (OPENTEXTSTREAM (MKSTRING (READ Stream PRT]
+                (SKIPSEPRS Pair)
+                (until (EOFP Pair) do (SETQ CH (READ Pair))
+                                      (if (AND X Y)
+                                          then               (* ; " too many; error ")
+                                               (GO ERROR)
+                                        elseif (NUMBERP CH)
+                                          then (if X
+                                                   then      (* ; "Add to set of points")
+                                                        (SETQ Points (CONS (CONS X (SETQ Y CH))
+                                                                           Points))
+                                                 else (SETQ X CH))
+                                        else                 (* ; "not a number")
+                                             (GO ERROR))
+                                      (SKIPSEPRS Pair))      (* ; "finally, check for valid points")
+                (if (AND X (NULL Y))
+                    then                                     (* ; "only had one")
+                         (GO ERROR)
+                  else                                       (* ; "else Reset")
+                       (SETQ X (SETQ Y)))
+                (SKIPSEPRS Stream PC.PointsTeditReadTable))
+
+     (* ;; "success")
+
+          (RETURN (REVERSE Points))
+      ERROR
+          (RETURN 'ERROR])
+
+(PC.PlotObjectLine?
+  [LAMBDA (PlotObject)                                       (* ; "Edited 27-Jan-89 17:13 by DSJ")
+
+    (* ;; "dsj. 1/15/89.")
+
+    (PLOTOBJECTSUBTYPE? LINE PlotObject])
+
+(PC.PlotObjectPowerCurve?
+  [LAMBDA (PlotObject)                                       (* ; "Edited 15-Nov-88 23:46 by DSJ")
+
+    (* ;; "dsj. 11/15/88.")
+
+    (AND (PLOTOBJECTSUBTYPE? GRAPH PlotObject)
+         (PROG [(ObjectUserData (PLOTOBJECTPROP PlotObject 'OBJECTUSERDATA]
+               (RETURN (AND (LISTP ObjectUserData)
+                            (LISTGET ObjectUserData 'PowerCurveVersion])
+
+(PC.PlotPowerCurve
+  [LAMBDA (Plot Asymptote Coeff Power)                       (* ; "Edited 16-Nov-88 00:01 by DSJ")
+
+    (* ;; "dsj 11/15/88. Draw a new power curve on the plot")
+
+    (GLOBALVARS PC.COEFF PC.POWER PC.ASYMPTOTE PC.PowerCurveVersion)
+    (PROG (GraphObj)                                         (* ; "Set powerfn globalvars")
+          (AND Asymptote (SETQ PC.ASYMPTOTE Asymptote))
+          (AND Coeff (SETQ PC.COEFF Coeff))
+          (AND Power (SETQ PC.POWER Power))
+          (SETQ GraphObj (PLOTGRAPH Plot (FUNCTION PC.PowerFn)))
+                                                             (* ; "hang power params on plot object")
+          (PLOTOBJECTPROP GraphObj 'OBJECTUSERDATA (LIST 'PowerCurveVersion PC.PowerCurveVersion
+                                                         'Asymptote Asymptote 'Coeff Coeff
+                                                         'Power Power))
+          (RETURN GraphObj])
+
+(PC.PointsTeditMenuCommands
+  [LAMBDA NIL                                                (* ; "Edited 14-Nov-88 20:43 by DSJ")
+
+    (* ;; "DSJ 11/14/88.  Menu items for points tedit window.")
+
+    (if (AND (BOUNDP 'PC.PointsTeditMenuCommands)
+             PC.PointsTeditMenuCommands)
+      else (SETQ PC.PointsTeditMenuCommands
+            (PROG [(DefaultItems (COPY (fetch (MENU ITEMS) of TEDIT.DEFAULT.MENU)))
+                   (DeleteItems '(Quit Proofread Dictionary] (* ; "Find %"quit%" item ")
+                  (for deleteitem in DeleteItems bind itemtodelete
+                     do [SETQ itemtodelete (for item in DefaultItems
+                                              thereis (OR (EQ deleteitem item)
+                                                          (EQ deleteitem (CAR item] 
+                                                             (* ; "Remove it")
+                        (DREMOVE itemtodelete DefaultItems)) (* ; "And add ours")
+                  (RETURN (APPEND DefaultItems '(("Update Plot" (FUNCTION PC.PointsTeditUpdateFn)
+                                                        "Save changes and update plot")
+                                                 ("Quit and Save"
+                                                  (FUNCTION PC.PointsTeditQuitAndSaveFn)
+                                                  
+                                   "Close the points editor window, saving changes and updating plot"
+                                                  (SUBITEMS ("Quit and Save" (FUNCTION 
+                                                                          PC.PointsTeditQuitAndSaveFn
+                                                                              )
+                                                                   
+                                   "Close the points editor window, saving changes and updating plot"
+                                                                   )
+                                                         ("Quit w/out Saving" (FUNCTION 
+                                                                               PC.PointsTeditQuitFn)
+                                                                
+                            "Close the points editor window, without saving changes or updating plot"
+                                                                ])
+
+(PC.PointsTeditQuitAndSaveFn
+  [LAMBDA (Stream)                                           (* ; "Edited 15-Nov-88 00:18 by DSJ")
+
+    (* ;; "dsj. 11/14/88.  Save the plot's points and then quit .")
+
+    (AND (PC.PointsTeditUpdateFn Stream)
+         (PC.PointsTeditQuitFn Stream])
+
+(PC.PointsTeditQuitFn
+  [LAMBDA (Stream)                                           (* ; "Edited 14-Nov-88 23:45 by DSJ")
+
+    (* ;; "dsj. 11/14/88.  Quit.")
+
+    (PROG [Plot Points PointObjs (PointsWindow (STREAMPROP Stream 'WINDOW]
+          (TEDIT.STREAMCHANGEDP Stream T)
+          (TEDIT.QUIT Stream])
+
+(PC.PointsTeditReadTable
+  [LAMBDA NIL                                                (* ; "Edited 14-Nov-88 22:34 by DSJ")
+
+    (* ;; "dsj/ 11/14/88.  Set up readtable for reading points tedit stream. ")
+
+    (GLOBALVARS PC.PointTextDelimiter)
+    (if (AND (BOUNDP 'PC.PointsTeditReadTable)
+             PC.PointsTeditReadTable)
+      else (SETQ PC.PointsTeditReadTable (COPYREADTABLE))    (* ; 
+                                                             "Dont want <CR> as a READ delimiter ")
+           (SETSEPR (LIST 13 (APPLY* 'CHARCODE PC.PointTextDelimiter))
+                  NIL PC.PointsTeditReadTable])
+
+(PC.PointsTeditRightButtonQuitFn
+  [LAMBDA (Window Stream)                                    (* ; "Edited 15-Nov-88 00:15 by DSJ")
+
+    (* ;; "dsj. 11/14/88.  Called via right button %"closew%"; save points.")
+
+    (OR (PC.PointsTeditUpdateFn Stream)
+        'DON'T])
+
+(PC.PointsTeditUpdateFn
+  [LAMBDA (Stream)                                           (* ; "Edited 15-Nov-88 00:22 by DSJ")
+
+    (* ;; "dsj. 11/14/88.  Save the plot's points.")
+
+    (PROG [Plot Points PointObjs (UpdatedFlg T)
+                (PointsWindow (STREAMPROP Stream 'WINDOW]
+          (if (TEDIT.STREAMCHANGEDP Stream)
+              then (SETQ Plot (WINDOWPROP PointsWindow 'PLOT)) 
+                                                             (* ; 
+                                                             "Read new points from the tedit window")
+                   (SETQ Points (PC.GetPointsFromTeditWindow PointsWindow))
+                   (if (EQ 'ERROR Points)
+                       then (SETQ UpdatedFlg)
+                            (PROMPTPRINT "Formatting error in points; cannot save. ")
+                     else                                    (* ; " delete all old points from plot")
+                          (for OBJ in (PC.GetPointObjects Plot)
+                             do (DELETEPLOTOBJECT OBJ Plot T T)) 
+                                                             (* ; 
+                                                             "And make new point objects in plot")
+                          (PLOTPOINTS Plot Points)           (* ; "finally, mark stream as unchanged")
+                          (TEDIT.STREAMCHANGEDP Stream T))
+            else (PROMPTPRINT "Nothing changed"))
+          (RETURN UpdatedFlg])
+
+(PC.PointsTeditWindowProps
+  [LAMBDA NIL                                                (* ; "Edited 15-Nov-88 00:10 by DSJ")
+
+    (* ;; "dsj/11/14/88.  Props to the points tedit window.")
+
+    `(QUITFN PC.PointsTeditRightButtonQuitFn])
+
+(PC.PowerFn
+  [LAMBDA (X GraphObj)                                       (* ; "Edited 15-Nov-88 23:23 by DSJ")
+
+    (* ;; "dsj. 11/15/88.  Call the power fn with proper params  ")
+
+    (PROG [(PowerData (PLOTOBJECTPROP GraphObj 'OBJECTUSERDATA]
+          (RETURN (if PowerData
+                      then                                   (* ; 
+                                                             "Old obj; we're redrawing or something")
+                           (POWERFN X (LISTGET PowerData 'Asymptote)
+                                  (LISTGET PowerData 'Coeff)
+                                  (LISTGET PowerData 'Power))
+                    else                                     (* ; 
+                                                             "New obj; set params with global vars")
+                         (POWERFN X])
+)
+
+
+
+(* ;; "NC card type fns")
+
+(DEFINEQ
+
+(PC.AddPlotCardType
+  [LAMBDA NIL                                                (* ; "Edited 19-Jan-89 19:18 by DSJ")
+
+    (* ;; "dsj. 11/11/88.  Adds PLOT card type to the session.")
+
+    (* ;; "dsj. 1/19/89.  Now calls PCP.ResetPlotMenuItems")
+                                                             (* ; 
+                                                             "LeftButtonMenuItems are inherited.  ")
+    [NCP.CreateCardType 'Plot 'NoteCard '((MakeFn PC.MakeCardFn)
+                                          (QuitFn PC.QuitCardFn)
+                                          (PutFn PC.PutCardFn)
+                                          (GetFn PC.GetCardFn)
+                                          (EditFn PC.EditCardFn)
+                                          (CopyFn PC.CopyCardFn)
+                                          (DirtyPFn PC.DirtyPCardFn))
+           `((DisplayedInMenuFlg T)
+             (LinkIconAttachedBitMap ,PC.PlotCardIcon)
+             (DefaultWidth 400)
+             (DefaultHeight 250]                             (* ; "Set menu items ")
+    (PCP.ResetPlotMenuItems])
+
+(PC.CopyCardFn
+  [LAMBDA (Card FromStream ToStream Length)                  (* ; "Edited 13-Nov-88 22:59 by DSJ")
+
+    (* ;; "dsj. 11/13/88.  Copy plot card substance.")
+
+    (LET* ((FromStartPtr (GETFILEPTR FromStream))
+           (FromEndPtr (PLUS Length FromStartPtr)))
+          (COPYBYTES FromStream ToStream FromStartPtr FromEndPtr))
+    T])
+
+(PC.CreatePlot
+  [LAMBDA (Region Title)                                     (* ; "Edited 30-Jan-89 16:26 by DSJ")
+
+    (* ;; 
+ "dsj. 11/11/88.  Create a blank plot with defaults, to be displayed in the newly created plot card.")
+
+    (PROG (Plot)
+
+     (* ;; "Create the plot. ")
+
+          (SETQ Plot (CREATEPLOT NIL Region Title))
+
+     (* ;; "Set up plot defaults")
+                                                             (* ; "Set up plot labels")
+          (PLOTLABEL Plot 'BOTTOM PCP.BottomLabel T)
+          (PLOTLABEL Plot 'LEFT PCP.LeftLabel T)
+          (PLOTLABEL Plot 'TOP PCP.TopLabel T)
+          (PLOTLABEL Plot 'RIGHT PCP.RightLabel T)           (* ; "Set up plot tics")
+          (PLOTTICS Plot 'BOTTOM PCP.BottomTics T)
+          (PLOTTICS Plot 'LEFT PCP.LeftTics T)
+          (PLOTTICS Plot 'RIGHT PCP.RightTics T)
+          (PLOTTICS Plot 'TOP PCP.TopTics T)                 (* ; "Add menu items")
+          (PC.AddPlotMenuItems Plot)
+          (OPENPLOTWINDOW Plot)
+          (RETURN Plot])
+
+(PC.DirtyPCardFn
+  [LAMBDA (Card)                                             (* ; "Edited 13-Nov-88 23:06 by DSJ")
+
+    (* ;; "dsj. 11/13/88. Plot card dirty?")
+
+    (PLOTDIRTYP (NCP.CardSubstance Card])
+
+(PC.EditCardFn
+  [LAMBDA (Card Plot RegionOrPosition)                       (* ; "Edited  9-Jan-89 19:38 by DSJ")
+
+    (* ;; "dsj. 11/13/88.  Bring up a Plot window. ")
+
+    (* ;; "dsj 1/9/89.  Now marks plot as not dirty. (Marking as dirty now done by plot menu)")
+
+    (* ;; " ")
+
+    (LET (Region PlotWindow Title)                           (* ; 
+                                                      "reshape if card already up and region given. ")
+         (if (NCP.ReshapeWindow Card RegionOrPosition)
+           else (if (SETQ Region (NCP.DetermineDisplayRegion Card RegionOrPosition))
+                    then 
+                         (* ;; "Set up plot's window field to do the right thing when the plot is opened (there should be a better interface to this.)")
+
+                         (SETQ Title (NCP.CardTitle Card))
+                         (replace (PLOT PLOTWINDOW) of Plot with (LIST Region Title 1))
+                         (SETQ PlotWindow (OPENPLOTWINDOW Plot)) 
+
+                         (* ;; "")
+
+                         (NCP.SetUpTitleBar PlotWindow (NCP.CardType Card))
+                         (PC.SetUpMiddleButtonMenu PlotWindow)
+                         (MARKPLOTDIRTY Plot T)
+                         PlotWindow])
+
+(PC.GetCardFn
+  [LAMBDA (Card Length NoteFileStream)                       (* ; "Edited 14-Nov-88 15:20 by DSJ")
+
+    (* ;; "dsj. 11/13/88.  Get the plot from the notefile.  ")
+
+    (LET (Plot (PlotVersionNumber (READ NoteFileStream)))    (* ; "Read the version #")
+         (SELECTQ PlotVersionNumber
+             (1                                              (* ; "Read the plot")
+                (SETQ Plot (HREAD NoteFileStream)))
+             (SHOULDNT "Bad version number for Plot"))
+         Plot])
+
+(PC.MakeCardFn
+  [LAMBDA (Card Title NoDisplayFlg ParamList Region)         (* ; "Edited 15-Nov-88 01:02 by DSJ")
+
+    (* ;; "dsj. 11/11/88.  Create a Plot card.")
+
+    (if NoDisplayFlg
+        then (NCP.CardSubstance Card (PC.CreatePlot))
+             Card
+      else (LET (Window (Plot (PC.CreatePlot (NCP.DetermineDisplayRegion Card Region)
+                                     Title)))
+                (SETQ Window (PLOTPROP Plot 'PLOTWINDOW))
+                (NCP.SetUpTitleBar Window (NCP.CardType Card))
+                (PC.SetUpMiddleButtonMenu Window)            (* ; "")
+                (NCP.CardSubstance Card Plot)
+                Window])
+
+(PC.PutCardFn
+  [LAMBDA (Card NoteFileStream)                              (* ; "Edited 14-Nov-88 15:29 by DSJ")
+
+    (* ;; "dsj. 11/13/88.  Put this plot out to the notefile.  ")
+
+    (LET ((Plot (NCP.CardSubstance Card))
+          MenuUp)                                            (* ; "Get rid of the right menu if it's up; it causes problems when bringing the card back up. Must do it before the quit fn.")
+         (if (SETQ MenuUp (PLOT.FIXRIGHTMENU Plot))
+             then (PLOT.FIXRIGHTMENU Plot NIL))              (* ; "print the version #")
+         (PRINT PC.VersionNumber NoteFileStream)             (* ; "And put the plot")
+         (HPRINT Plot NoteFileStream)
+         (AND MenuUp                                         (* ; "Return the menu")
+              (PLOT.FIXRIGHTMENU Plot T))
+         0])
+
+(PC.QuitCardFn
+  [LAMBDA (CardIdentifier)                                   (* ; "Edited 13-Nov-88 23:31 by DSJ")
+
+    (* ;; "dsj. 11/13/88.  Quit out of the plot card. ")
+
+    (LET ((Card (NC.CoerceToCard CardIdentifier))
+          Plot])
+)
+
+
+
+(* ;; "")
+
+(DEFINEQ
+
+(MARKPLOTDIRTY
+  [LAMBDA (Plot ResetFlg)                                    (* ; "Edited 13-Nov-88 23:10 by DSJ")
+
+    (* ;; "dsj. 11/13/88.  Mark the plot as dirty")
+
+    (PLOTPROP Plot 'DIRTYFLG (NOT ResetFlg])
+
+(PLOTDIRTYP
+  [LAMBDA (Plot)                                             (* ; "Edited 13-Nov-88 23:05 by DSJ")
+
+    (* ;; "dsj. 11/13/88.  Is the plot dirty?")
+
+    (PLOTPROP Plot 'DIRTYFLG])
+
+(MARKPLOTDIRTYFROMMENU
+  [LAMBDA (ITEM MENU)                                        (* ; "Edited  9-Jan-89 19:32 by DSJ")
+
+    (* ;; "dsj 1/9/89.  This fn advises PLOT.WHENSELECTEDFN and marks the plot dirty when certain menu items are selected.")
+
+    (PROG ((NotDirtyFns '(Layout Redraw Fixed% Menu))
+           Plot)                                             (* ; "This menu is either the cardwindow's middle button title var menu, or the attached window menu.  Plot is a menuprop in the former case but not the latter.")
+          (if [AND (NOT (MEMBER (CAR ITEM)
+                               NotDirtyFns))
+                   (SETQ Plot (OR (GETMENUPROP MENU 'PLOT)
+                                  (WINDOWPROP (MAINWINDOW (WFROMMENU MENU))
+                                         'PLOT]
+              then                                           (* ; "mark it dirty")
+                   (MARKPLOTDIRTY Plot])
+)
+
+
+
+(* ;; "Interface fns")
+
+(DEFINEQ
+
+(PC.MiddleButtonMenuSelectedFn
+  [LAMBDA (ITEM MENU KEY)                                    (* ; "Edited 13-Nov-88 23:14 by DSJ")
+
+    (* ;; "dsj. 11/13/88.  Pass the Plot package's right button menu items' functionality onto the Plot Notecard's middle button title bar menu.  Call the PLOT fn with the args it would expect.")
+
+    (APPLY* (FUNCTION PLOT.WHENSELECTEDFN)
+           ITEM MENU)
+    NIL])
+
+(PC.SetUpMiddleButtonMenu
+  [LAMBDA (CardWindow)                                       (* ; "Edited 31-Jan-89 16:01 by DSJ")
+
+    (* ;; "dsj. 11/13/88.  Set up special info on the middle button menu So that we can pass the Plot package's right button menu items' functionality onto the Plot Notecard.  ")
+
+    (PROG [(Plot (WHICHPLOT CardWindow))
+           (MiddleButtonMenu (WINDOWPROP CardWindow 'TitleBarMiddleButtonMenu]
+                                                             (* ; 
+                 "We need to get back to the card's plot from the middle button menu, so hang a prop")
+          (PUTMENUPROP MiddleButtonMenu 'PLOT Plot)          (* ; "Put in our own selectedfn")
+          (replace (MENU WHENSELECTEDFN) of MiddleButtonMenu with (FUNCTION 
+                                                                   PC.MiddleButtonMenuSelectedFn))
+                                                             (* ; "finally, make the plot window's right button menu match the middle button, in case the PCP menu items have since been changed.  ")
+          (PLOTMENUITEMS Plot 'RIGHT (fetch (MENU ITEMS) of MiddleButtonMenu))
+          (RETURN MiddleButtonMenu])
+
+(PC.AddPlotMenuItems
+  [LAMBDA (Plot)                                             (* ; "Edited 20-Jan-89 18:33 by DSJ")
+
+    (* ;; "dsj/11/14/88.  Add menu items to new plot.")
+                                                             (* ; "The right")
+    (PLOTMENUITEMS Plot 'RIGHT (PC.GetMiddleButtonTitleBarMenuItems))
+                                                             (* ; "And the middle")
+    (PLOTADDMENUITEMS Plot 'MIDDLE (PC.MiddlePlotMenuItems])
+
+(PC.MiddlePlotMenuItems
+  [LAMBDA NIL                                                (* ; "Edited 15-Nov-88 01:32 by DSJ")
+
+    (* ;; "dsj/ 11/14/88.  Add Items to middle button plot menus. ")
+
+    '(("Edit" PC.EditPlotObject "Allows you to change the parameters of selected plot object"])
+
+(PC.GetMiddleButtonTitleBarMenuItems
+  [LAMBDA (ResetFlg)                                         (* ; "Edited 20-Jan-89 18:33 by DSJ")
+
+    (* ;; "dsj/ 1/19/89.  Add Items to right button plot menus, for Plot card' middle button title bar menu.  Want %"fixed menu%" item at the end. (This fn used to be PC.RightPlotMenuItems).  ")
+
+    (if (OR ResetFlg (NOT (BOUNDP 'PC.MiddleButtonTitleBarMenuItems))
+            (NULL PC.MiddleButtonTitleBarMenuItems))
+        then [SETQ PC.MiddleButtonTitleBarMenuItems (PROG ((DefaultItems (COPY 
+                                                                           PLOT.DEFAULTRIGHTMENUITEMS
+                                                                               ))
+                                                           FixedItem)
+                                                             (* ; "Find it")
+                                                          [SETQ FixedItem
+                                                           (for item in DefaultItems
+                                                              thereis (EQ 'Fixed% Menu (CAR item]
+                                                             (* ; "Remove it")
+                                                          (DREMOVE FixedItem DefaultItems)
+                                                             (* ; "And add ours")
+                                                          (RETURN (APPEND DefaultItems 
+                                                                    PCP.MiddleButtonTitleBarMenuItems
+                                                                         (LIST FixedItem]
+      else PC.MiddleButtonTitleBarMenuItems])
+)
+
+[XCL:REINSTALL-ADVICE 'PLOT.WHENSELECTEDFN :BEFORE '((:LAST (MARKPLOTDIRTYFROMMENU ITEM MENU]
+
+(READVISE PLOT.WHENSELECTEDFN)
+
+(RPAQQ PC.PlotCardIcon #*(17 17)@@@@H@@@KOONH@@@B@@BH@@@B@HBH@@@JAHBH@@@BADJH@@@BCDJH@@@JBDJH@@@BBEJH@@@BFEBH@@@JLGBH@@@BHBBH@@@B@@BH@@@J@@BH@@@COONH@@@@@@@H@@@DIBDH@@@
+)
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+
+(GLOBALVARS PC.PointsTeditMenuCommands PC.PointsTeditReadTable)
+)
+
+(RPAQ? PC.PointTextDelimiter "/")
+
+(RPAQQ PC.VersionNumber 1)
+
+(RPAQQ PC.PowerCurveVersion 1)
+
+
+
+(* ;; "PCP fns and vars")
+
+(DEFINEQ
+
+(PCP.ResetPlotMenuItems
+  [LAMBDA NIL                                                (* ; "Edited 31-Jan-89 15:26 by DSJ")
+
+    (* ;; "dsj/ 1/19/89.  Add Items to right plot menus, and reset the Plot card's type-specific menu.  Menu items found on the globalvar PCP.MiddleButtonTitleBarMenuItems  ")
+
+    [NCP.ChangeCardTypeFields 'Plot NIL `((MiddleButtonMenuItems ,(
+                                                                  PC.GetMiddleButtonTitleBarMenuItems
+                                                                   T]
+    "Plot menu items reset."])
+)
+
+(RPAQ? PCP.BottomLabel ">> X label <<")
+
+(RPAQ? PCP.LeftLabel "Y label")
+
+(RPAQ? PCP.TopLabel ">> Plot name <<")
+
+(RPAQ? PCP.RightLabel )
+
+(RPAQ? PCP.BottomTics T)
+
+(RPAQ? PCP.LeftTics T)
+
+(RPAQ? PCP.TopTics )
+
+(RPAQ? PCP.RightTics )
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+
+(GLOBALVARS PC.MiddleButtonTitleBarMenuItems)
+)
+
+(RPAQQ PCP.EditPlotObjectFns ((PC.PlotObjectPowerCurve? PC.EditPlotPowerCurve)
+                              (PC.PlotObjectLine? PC.EditPlotLine)))
+
+(RPAQQ PCP.MiddleButtonTitleBarMenuItems [("Edit Points" PC.EditPlotPoints 
+                                                 "Allows you to add or delete points to this plot")
+                                          ("Add Line" PC.AddLine 
+                                                 "Allows you to add a straight line to this plot")
+                                          ("Add Curve" PC.AddCurve 
+                                                 "Allows you to add a power curve to this plot"
+                                                 (SUBITEMS ("Add Power Curve" PC.AddPowerCurve 
+                                                       "Allows you to add a power curve to this plot"
+                                                                  ])
+
+
+
+(* ;; "This should be an NCP fn")
+
+(DEFINEQ
+
+(NCP.ReshapeWindow
+  [LAMBDA (Card RegionOrPosition)                            (* ; "Edited 13-Nov-88 22:31 by DSJ")
+
+    (* ;; "dsj. 11.13/88.  Reshape open card window to RegionOrPosition")
+
+    (PROG ((CardWindow (NCP.CardWindow Card))
+           WindowRegion)
+          (RETURN
+           (if CardWindow
+               then (TOTOPW CardWindow)
+                    [if RegionOrPosition
+                        then (if (REGIONP RegionOrPosition)
+                                 then (if [NOT (EQUAL RegionOrPosition (WINDOWPROP CardWindow
+                                                                              'REGION]
+                                          then (SHAPEW CardWindow (NCP.DetermineDisplayRegion Card 
+                                                                         RegionOrPosition)))
+                               elseif (POSITIONP RegionOrPosition)
+                                 then (SETQ WindowRegion (WINDOWPROP CardWindow 'REGION))
+                                      (if [NOT (AND (EQUAL (fetch (POSITION XCOORD) of 
+                                                                                     RegionOrPosition
+                                                                  )
+                                                           (fetch (REGION LEFT) of WindowRegion))
+                                                    (EQUAL (fetch (POSITION YCOORD) of 
+                                                                                     RegionOrPosition
+                                                                  )
+                                                           (fetch (REGION BOTTOM) of WindowRegion]
+                                          then (SHAPEW CardWindow (NCP.DetermineDisplayRegion Card 
+                                                                         RegionOrPosition]
+                    (FLASHW CardWindow)
+                    CardWindow])
+)
+
+
+
+(* ;; "PLOT fns patch")
+
+(DEFINEQ
+
+(DRAWGRAPHOBJECT.NEW
+  [LAMBDA (GRAPHOBJECT VIEWPORT PLOT)                        (* ; "Edited 16-Nov-88 01:36 by DSJ")
+
+    (* ;; "dsj. 11/15/88.  Now passes GRAPHOBJECT to GRAPHFN. ")
+
+    (LET* ((STREAM (fetch (VIEWPORT PARENTSTREAM) of VIEWPORT))
+           (STREAMSUBREGION (fetch (VIEWPORT STREAMSUBREGION) of VIEWPORT))
+           (OBJECTDATA (fetch (PLOTOBJECT OBJECTDATA) of GRAPHOBJECT))
+           (XUPPER (fetch (PLOT XUPPER) of PLOT))
+           (XLOWER (fetch (PLOT XLOWER) of PLOT))
+           (YUPPER (fetch (PLOT YUPPER) of PLOT))
+           (YLOWER (fetch (PLOT YLOWER) of PLOT))
+           (GRAPHFN (fetch (GRAPHDATA GRAPHFN) of OBJECTDATA))
+           (NSAMPLES (fetch (GRAPHDATA NSAMPLES) of OBJECTDATA))
+           (STYLE (fetch (GRAPHDATA STYLE) of OBJECTDATA))
+           (LINEWIDTH (TIMES (DSPSCALE NIL STREAM)
+                             (fetch (PLOT.STYLE LINEWIDTH) of STYLE)))
+           (DASHING (fetch (PLOT.STYLE DASHING) of STYLE))
+           (COLOR (fetch (PLOT.STYLE COLOR) of STYLE))
+           STREAMPOSITIONS)
+          [SETQ STREAMPOSITIONS (NCONC1 (bind (INC _ (FQUOTIENT (FDIFFERENCE XUPPER XLOWER)
+                                                            (SUB1 NSAMPLES))) for I from 1
+                                           to (SUB1 NSAMPLES) as X from XLOWER by INC
+                                           collect (CREATEPOSITION (WORLDTOSTREAMX X VIEWPORT)
+                                                          (WORLDTOSTREAMY (APPLY* GRAPHFN X 
+                                                                                 GRAPHOBJECT)
+                                                                 VIEWPORT)))
+                                       (CREATEPOSITION (WORLDTOSTREAMX XUPPER VIEWPORT)
+                                              (WORLDTOSTREAMY (APPLY* GRAPHFN XUPPER GRAPHOBJECT)
+                                                     VIEWPORT]
+          (first (MOVETO (fetch XCOORD of (CAR STREAMPOSITIONS))
+                        (fetch YCOORD of (CAR STREAMPOSITIONS))
+                        STREAM) for PT in (CDR STREAMPOSITIONS)
+             do (CLIPPED.DRAWTO STREAMSUBREGION (fetch XCOORD of PT)
+                       (fetch YCOORD of PT)
+                       LINEWIDTH
+                       'REPLACE STREAM COLOR DASHING))
+          (if (EQ STREAM (WINDOWPROP (fetch (PLOT PLOTWINDOW) of PLOT)
+                                'DSP))
+              then (replace (GRAPHDATA STREAMPOSITIONS) of OBJECTDATA with STREAMPOSITIONS])
+)
+
+
+
+(* ;; "Computational fns")
+
+(DEFINEQ
+
+(POWERFN
+  [LAMBDA (X Asymptote Coeff Power)                          (* ; "Edited 15-Nov-88 22:54 by DSJ")
+
+    (* ;; "dsj. 11/15/88.  Return y = PC.ASYMPTOTE + PC.COEFF * X**PC.POWER  ")
+
+    (AND (NUMBERP X)
+         (OR Asymptote (SETQ Asymptote PC.ASYMPTOTE))
+         (OR Coeff (SETQ Coeff PC.COEFF))
+         (OR Power (SETQ Power PC.POWER))
+         (FPLUS Asymptote (FTIMES Coeff (EXPT X Power])
+)
+
+(RPAQ? PC.COEFF )
+
+(RPAQ? PC.POWER )
+
+(RPAQ? PC.ASYMPTOTE )
+
+(MOVD 'DRAWGRAPHOBJECT.NEW 'DRAWGRAPHOBJECT T)
+
+(PC.AddPlotCardType)
+
+(AND (MEMBER 'NCCARDMGMT FILELST)
+     (CM.AddCardMgmtToCardType 'Plot))
+(DECLARE%: DONTCOPY 
+)
+(PUTPROPS NCPLOTCARD COPYRIGHT ("Xerox Corporation" 1988 1989))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (4491 26140 (PC.AddCurve 4501 . 4893) (PC.AddLine 4895 . 6719) (PC.AddPowerCurve 6721 . 
+9184) (PC.ConvertPointsToTextStream 9186 . 10266) (PC.EditPlotLine 10268 . 10891) (PC.EditPlotObject 
+10893 . 11828) (PC.EditPlotPoints 11830 . 14708) (PC.EditPlotPowerCurve 14710 . 15365) (
+PC.GetPointObjects 15367 . 15679) (PC.GetPointsFromTeditWindow 15681 . 17828) (PC.PlotObjectLine? 
+17830 . 18035) (PC.PlotObjectPowerCurve? 18037 . 18454) (PC.PlotPowerCurve 18456 . 19422) (
+PC.PointsTeditMenuCommands 19424 . 21884) (PC.PointsTeditQuitAndSaveFn 21886 . 22188) (
+PC.PointsTeditQuitFn 22190 . 22511) (PC.PointsTeditReadTable 22513 . 23160) (
+PC.PointsTeditRightButtonQuitFn 23162 . 23450) (PC.PointsTeditUpdateFn 23452 . 24987) (
+PC.PointsTeditWindowProps 24989 . 25241) (PC.PowerFn 25243 . 26138)) (26175 32658 (PC.AddPlotCardType 
+26185 . 27329) (PC.CopyCardFn 27331 . 27694) (PC.CreatePlot 27696 . 28756) (PC.DirtyPCardFn 28758 . 
+28982) (PC.EditCardFn 28984 . 30311) (PC.GetCardFn 30313 . 30844) (PC.MakeCardFn 30846 . 31541) (
+PC.PutCardFn 31543 . 32399) (PC.QuitCardFn 32401 . 32656)) (32677 34085 (MARKPLOTDIRTY 32687 . 32915) 
+(PLOTDIRTYP 32917 . 33124) (MARKPLOTDIRTYFROMMENU 33126 . 34083)) (34117 38347 (
+PC.MiddleButtonMenuSelectedFn 34127 . 34545) (PC.SetUpMiddleButtonMenu 34547 . 35779) (
+PC.AddPlotMenuItems 35781 . 36283) (PC.MiddlePlotMenuItems 36285 . 36590) (
+PC.GetMiddleButtonTitleBarMenuItems 36592 . 38345)) (38899 39506 (PCP.ResetPlotMenuItems 38909 . 39504
+)) (40831 42896 (NCP.ReshapeWindow 40841 . 42894)) (42929 45691 (DRAWGRAPHOBJECT.NEW 42939 . 45689)) (
+45727 46159 (POWERFN 45737 . 46157)))))
+STOP

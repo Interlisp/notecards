@@ -1,0 +1,651 @@
+(FILECREATED " 2-Sep-88 10:53:28" {DSK}<LISPFILES>READNUM.;1 23469  
+
+      previous date: " 6-Apr-87 09:27:44" {DSK}<LISPFILES>READNUM.;1)
+
+
+(PRETTYCOMPRINT READNUMCOMS)
+
+(RPAQQ READNUMCOMS ((FNS READNUM READNUM.CLOSEFN READNUM.CREATE.DISPLAY READNUM.CREATE.MENU 
+			   READNUM.CREATE.REGION READNUM.DISPLAY.TOTAL READNUM.FLASHAREA READNUM.LOOP 
+			   READNUM.OUTLINE.REGION READNUM.PROCESS READNUM.REGION.ONSCREEN 
+			   READNUM.SET.WINDOWPROPS READNUM.UPDATE READNUM.WHENHELDFN READTIME 
+			   READTIME.CREATE.MENU READTIME.MAKE.OUTPUT READTIME.PARSE.TIME 
+			   READTIME.PROCESS READTIME.UPDATE READTIME.WHENHELDFN READTIMEW)
+	(INITVARS (READNUM.DEFAULT.MAXDIGITS 9))
+	(GLOBALVARS READNUM.DEFAULT.MAXDIGITS)))
+(DEFINEQ
+
+(READNUM
+  [LAMBDA (MESSAGE POSITION FONT MINIMUM MAXIMUM FLOATING POSITIVE NOABORT MAXDIGITS)
+                                                             (* Gaska "26-Mar-87 15:39")
+
+          (* * Create a keypad for entry of numbers)
+
+
+    (PROG* ([FONT (FONTCREATE (OR FONT (QUOTE (GACHA 12 BRR]
+	    (FLOATING (OR FLOATING (FLOATP MINIMUM)
+			    (FLOATP MAXIMUM)))
+	    [POSITIVE (OR POSITIVE (AND MINIMUM (GEQ MINIMUM 0]
+	    (MAXDIGITS (LET [(MAXDIG (MAX (if (FIXP MINIMUM)
+						then (NCHARS MINIMUM)
+					      else READNUM.DEFAULT.MAXDIGITS)
+					    (if (FIXP MAXIMUM)
+						then (NCHARS MAXIMUM)
+					      else READNUM.DEFAULT.MAXDIGITS]
+			    (if (AND (NOT (AND MINIMUM MAXIMUM))
+					 MAXDIGITS
+					 (IGREATERP MAXDIGITS MAXDIG))
+				then MAXDIGITS
+			      else MAXDIG)))
+	    (MENU (READNUM.CREATE.MENU FONT FLOATING POSITIVE NOABORT))
+	    (DISPLAYWINDOW (READNUM.CREATE.DISPLAY MESSAGE POSITION FONT MINIMUM MAXIMUM POSITIVE 
+						     FLOATING MAXDIGITS MENU)))
+           (ADDMENU MENU DISPLAYWINDOW (CREATEPOSITION (IQUOTIENT (IDIFFERENCE
+									  (WINDOWPROP DISPLAYWINDOW
+											(QUOTE
+											  WIDTH))
+									  (fetch IMAGEWIDTH
+									     of MENU))
+									2)
+							   0))
+           (WINDOWPROP DISPLAYWINDOW (QUOTE REPAINTFN)
+			 NIL)
+           (if NOABORT
+	       then (WINDOWADDPROP DISPLAYWINDOW (QUOTE CLOSEFN)
+				       (QUOTE DON'T)))
+           (RETURN (READNUM.LOOP DISPLAYWINDOW])
+
+(READNUM.CLOSEFN
+  [LAMBDA (WINDOW)                                           (* Gaska " 4-Mar-87 14:22")
+
+          (* * Close function for READNUM)
+
+
+    (WINDOWPROP WINDOW (QUOTE TOTAL)
+		  NIL)
+    (WINDOWPROP WINDOW (QUOTE FINISHED)
+		  T])
+
+(READNUM.CREATE.DISPLAY
+  [LAMBDA (MESSAGE POSITION FONT MINIMUM MAXIMUM POSITIVE FLOATING MAXDIGITS MENU)
+                                                             (* Gaska " 2-Sep-88 10:47")
+
+          (* * Create the display window for READNUM)
+
+
+    (PROG* ([MESSAGE (if MESSAGE
+			 then (OR (LISTP MESSAGE)
+				      (LIST MESSAGE]
+	    (CHARHEIGHT (FONTHEIGHT FONT))
+	    (DISPLAYCHARS (IPLUS MAXDIGITS (if POSITIVE
+						 then 0
+					       else 1)
+				   (if FLOATING
+				       then 1
+				     else 0)))
+	    (DISPLAYWIDTH (ITIMES (ADD1 DISPLAYCHARS)
+				    (STRINGWIDTH "0" FONT)))
+	    (MAXMESSAGEWIDTH (STRINGWIDTH (for MSG in MESSAGE largest (STRINGWIDTH MSG FONT)
+						   )
+					    FONT))
+	    (WIDTH (MAX (fetch IMAGEWIDTH of MENU)
+			  (IPLUS MAXMESSAGEWIDTH 10)
+			  (if MINIMUM
+			      then (IPLUS (STRINGWIDTH (CONCAT "Min is " (MKSTRING MINIMUM))
+							     FONT)
+					      10)
+			    else 0)
+			  (if MAXIMUM
+			      then (IPLUS (STRINGWIDTH (CONCAT "Max is " (MKSTRING MAXIMUM))
+							     FONT)
+					      10)
+			    else 0)
+			  (IPLUS DISPLAYWIDTH 10)))
+	    [HEIGHT (IPLUS (fetch IMAGEHEIGHT of MENU)
+			     (TIMES (IPLUS CHARHEIGHT 2)
+				      (PLUS (LENGTH MESSAGE)
+					      (for X in (LIST MINIMUM MAXIMUM) count X)
+					      1.5]
+	    (POSITION (READNUM.REGION.ONSCREEN POSITION WIDTH HEIGHT))
+	    (TITLEREGION (READNUM.CREATE.REGION WIDTH HEIGHT CHARHEIGHT (LENGTH MESSAGE)))
+	    [MINIMUMREGION (if MINIMUM
+			       then (READNUM.CREATE.REGION WIDTH HEIGHT CHARHEIGHT
+							       (ADD1 (LENGTH MESSAGE]
+	    [MAXIMUMREGION (if MAXIMUM
+			       then (READNUM.CREATE.REGION WIDTH HEIGHT CHARHEIGHT
+							       (IPLUS 1 (LENGTH MESSAGE)
+									(if MINIMUM
+									    then 1
+									  else 0]
+	    (DISPLAYREGION (CREATEREGION (IQUOTIENT (IDIFFERENCE WIDTH DISPLAYWIDTH)
+							2)
+					   (IPLUS (fetch IMAGEHEIGHT of MENU)
+						    5)
+					   DISPLAYWIDTH
+					   (IPLUS CHARHEIGHT 2)))
+	    (WINDOW (CREATEW (CREATEREGION (CAR POSITION)
+					       (CDR POSITION)
+					       (WIDTHIFWINDOW WIDTH)
+					       (HEIGHTIFWINDOW HEIGHT))
+			       NIL 4)))
+           (DSPFONT FONT WINDOW)
+           [if MESSAGE
+	       then (for MSG in (REVERSE MESSAGE)
+			 do (CENTERPRINTINREGION MSG TITLEREGION (WINDOWPROP WINDOW
+										   (QUOTE DSP)))
+			      (replace BOTTOM of TITLEREGION with (IPLUS (fetch BOTTOM
+										    of TITLEREGION)
+										 CHARHEIGHT 2]
+           [if MINIMUM
+	       then (CENTERPRINTINREGION (CONCAT "Min is " (MKSTRING MINIMUM))
+					     MINIMUMREGION
+					     (WINDOWPROP WINDOW (QUOTE DSP]
+           [if MAXIMUM
+	       then (CENTERPRINTINREGION (CONCAT "Max is " (MKSTRING MAXIMUM))
+					     MAXIMUMREGION
+					     (WINDOWPROP WINDOW (QUOTE DSP]
+           (READNUM.OUTLINE.REGION DISPLAYREGION WINDOW 2)
+           (READNUM.SET.WINDOWPROPS WINDOW MINIMUM MAXIMUM DISPLAYCHARS DISPLAYREGION MINIMUMREGION 
+				      MAXIMUMREGION)
+           (READNUM.DISPLAY.TOTAL WINDOW)
+           (RETURN WINDOW])
+
+(READNUM.CREATE.MENU
+  [LAMBDA (FONT FLOATING POSITIVE NOABORT)                   (* Gaska " 5-Mar-87 08:10")
+
+          (* * Create the READNUM keyboard)
+
+
+    (create MENU
+	      ITEMS _(APPEND (if NOABORT
+				   then (QUOTE (% ))
+				 else (QUOTE (Abt)))
+			       (QUOTE (Clr BS OK 1 2 3 4 5 6 7 8))
+			       (if FLOATING
+				   then (QUOTE (%.))
+				 else (QUOTE (% )))
+			       (if POSITIVE
+				   then (QUOTE (% ))
+				 else (QUOTE (-)))
+			       (QUOTE (9 0)))
+	      MENUFONT _ FONT
+	      MENUCOLUMNS _ 4
+	      CENTERFLG _ T
+	      MENUOUTLINESIZE _ 2
+	      WHENSELECTEDFN _(FUNCTION READNUM.PROCESS)
+	      WHENHELDFN _(FUNCTION READNUM.WHENHELDFN])
+
+(READNUM.CREATE.REGION
+  [LAMBDA (WINDOWIDTH WINDOWHEIGHT CHARHEIGHT LINESFROMTOP)
+                                                             (* Gaska " 2-Sep-88 10:15")
+
+          (* * Create a region for a label)
+
+
+    (CREATEREGION 0 (IDIFFERENCE WINDOWHEIGHT (ITIMES (IPLUS CHARHEIGHT 2)
+							    LINESFROMTOP))
+		    WINDOWIDTH CHARHEIGHT])
+
+(READNUM.DISPLAY.TOTAL
+  [LAMBDA (WINDOW)                                           (* Gaska " 4-Mar-87 13:51")
+
+          (* * Display the current value in the READNUM display region)
+
+
+    (DSPFILL (WINDOWPROP WINDOW (QUOTE DISPLAYREGION))
+	       WHITESHADE
+	       (QUOTE REPLACE)
+	       (WINDOWPROP WINDOW (QUOTE DSP)))
+    (CENTERPRINTINREGION (WINDOWPROP WINDOW (QUOTE TOTAL))
+			   (WINDOWPROP WINDOW (QUOTE DISPLAYREGION))
+			   (WINDOWPROP WINDOW (QUOTE DSP])
+
+(READNUM.FLASHAREA
+  [LAMBDA (REGION WINDOW)                                    (* Gaska " 4-Mar-87 13:49")
+
+          (* * Flash an area within a window)
+
+
+    (BITBLT NIL NIL NIL WINDOW (fetch LEFT of REGION)
+	      (fetch BOTTOM of REGION)
+	      (fetch WIDTH of REGION)
+	      (fetch HEIGHT of REGION)
+	      (QUOTE TEXTURE)
+	      (QUOTE INVERT)
+	      BLACKSHADE)
+    (DISMISS 100)
+    (BITBLT NIL NIL NIL WINDOW (fetch LEFT of REGION)
+	      (fetch BOTTOM of REGION)
+	      (fetch WIDTH of REGION)
+	      (fetch HEIGHT of REGION)
+	      (QUOTE TEXTURE)
+	      (QUOTE INVERT)
+	      BLACKSHADE])
+
+(READNUM.LOOP
+  [LAMBDA (WINDOW)                                           (* Gaska " 7-Mar-87 13:46")
+
+          (* * Loop until READNUM is finished)
+
+
+    (SPAWN.MOUSE)
+    (RESETLST (RESETSAVE NIL (LIST (QUOTE CLOSEW)
+					 WINDOW))
+		(until (WINDOWPROP WINDOW (QUOTE FINISHED))
+		   do (TOTOPW WINDOW)
+			(DISMISS 100)
+		   finally (WINDOWDELPROP WINDOW (QUOTE CLOSEFN)
+					      (QUOTE READNUM.CLOSEFN))
+			     (WINDOWDELPROP WINDOW (QUOTE CLOSEFN)
+					      (QUOTE DON'T))
+			     (RETURN (if (WINDOWPROP WINDOW (QUOTE TOTAL))
+					   then (if (WINDOWPROP WINDOW (QUOTE TIMEENTRY))
+						      then (READTIME.MAKE.OUTPUT WINDOW)
+						    else (MKATOM (WINDOWPROP WINDOW
+										   (QUOTE TOTAL])
+
+(READNUM.OUTLINE.REGION
+  [LAMBDA (REGION WINDOW SIZE)                               (* Gaska " 2-Sep-88 10:02")
+
+          (* * Put a border of size SIZE around the REGION in WINDOW)
+
+
+    (LET ((SIZE (OR (FIXP SIZE)
+		      2)))
+         (BITBLT NIL NIL NIL WINDOW (IDIFFERENCE (fetch LEFT of REGION)
+						     SIZE)
+		   (IDIFFERENCE (fetch BOTTOM of REGION)
+				  SIZE)
+		   (IPLUS (fetch WIDTH of REGION)
+			    SIZE SIZE)
+		   (IPLUS (fetch HEIGHT of REGION)
+			    SIZE SIZE)
+		   (QUOTE TEXTURE)
+		   (QUOTE REPLACE)
+		   BLACKSHADE)
+         (BITBLT NIL NIL NIL WINDOW (fetch LEFT of REGION)
+		   (fetch BOTTOM of REGION)
+		   (fetch WIDTH of REGION)
+		   (fetch HEIGHT of REGION)
+		   (QUOTE TEXTURE)
+		   (QUOTE REPLACE)
+		   (DSPTEXTURE NIL WINDOW])
+
+(READNUM.PROCESS
+  [LAMBDA (ITEM MENU BUTTON)                                 (* Gaska " 9-Mar-87 16:15")
+
+          (* * Process READNUM keyboard entries)
+
+
+    (PROG* [(WINDOW (WFROMMENU MENU))
+	    (TOTAL (WINDOWPROP WINDOW (QUOTE TOTAL]
+           (SELECTQ ITEM
+		      (Abt (WINDOWPROP WINDOW (QUOTE TOTAL)
+					 NIL)
+			   (WINDOWPROP WINDOW (QUOTE FINISHED)
+					 T))
+		      (Clr (READNUM.UPDATE WINDOW "0"))
+		      (OK (if [AND (WINDOWPROP WINDOW (QUOTE MINIMUM))
+				       (LESSP (MKATOM TOTAL)
+						(WINDOWPROP WINDOW (QUOTE MINIMUM]
+			      then (READNUM.FLASHAREA (WINDOWPROP WINDOW (QUOTE MINIMUMREGION)
+									)
+							  WINDOW)
+			    else (WINDOWPROP WINDOW (QUOTE FINISHED)
+						 T)))
+		      [BS (READNUM.UPDATE WINDOW (LET ((NEWSTRING
+							   (OR (SUBSTRING TOTAL 1
+									      (SUB1 (NCHARS
+											TOTAL)))
+								 "0")))
+						        (if (STREQUAL NEWSTRING "-")
+							    then "0"
+							  else NEWSTRING]
+		      [%. (if (NULL (STRPOS "." TOTAL))
+				then (READNUM.UPDATE WINDOW (CONCAT TOTAL "."]
+		      (%  NIL)
+		      [- (READNUM.UPDATE WINDOW (if (STREQUAL (SUBSTRING TOTAL 1 1)
+								    "-")
+						      then (SUBSTRING TOTAL 2 (NCHARS TOTAL))
+						    else (CONCAT "-" TOTAL]
+		      (READNUM.UPDATE WINDOW (CONCAT (if (STREQUAL TOTAL "0")
+							     then ""
+							   else TOTAL)
+							 ITEM])
+
+(READNUM.REGION.ONSCREEN
+  [LAMBDA (POSITION WIDTH HEIGHT)                          (* Gaska " 6-Mar-87 09:35")
+
+          (* * Determine if a region is entirely on the screen, if not, adust the position)
+
+
+    (LET [(POSITION (OR (POSITIONP POSITION)
+			    (LET NIL
+			         (GETMOUSESTATE)
+			         (CREATEPOSITION LASTMOUSEX LASTMOUSEY]
+         (CREATEPOSITION [if (ILEQ (IPLUS (CAR POSITION)
+						  WIDTH)
+					 SCREENWIDTH)
+			       then (CAR POSITION)
+			     else (IMAX 0 (IDIFFERENCE SCREENWIDTH (IPLUS WIDTH 10]
+			   (if (ILEQ (IPLUS (CDR POSITION)
+						  HEIGHT)
+					 SCREENHEIGHT)
+			       then (CDR POSITION)
+			     else (IMAX 0 (IDIFFERENCE SCREENHEIGHT (IPLUS HEIGHT 10])
+
+(READNUM.SET.WINDOWPROPS
+  [LAMBDA (WINDOW MINIMUM MAXIMUM DISPLAYCHARS DISPLAYREGION MINIMUMREGION MAXIMUMREGION)
+                                                             (* Gaska " 6-Mar-87 09:39")
+
+          (* * Set window properties for READNUM)
+
+
+    (WINDOWPROP WINDOW (QUOTE MINIMUM)
+		  MINIMUM)
+    (WINDOWPROP WINDOW (QUOTE MAXIMUM)
+		  MAXIMUM)
+    (WINDOWPROP WINDOW (QUOTE DISPLAYCHARS)
+		  DISPLAYCHARS)
+    (WINDOWPROP WINDOW (QUOTE DISPLAYREGION)
+		  DISPLAYREGION)
+    (WINDOWPROP WINDOW (QUOTE MINIMUMREGION)
+		  MINIMUMREGION)
+    (WINDOWPROP WINDOW (QUOTE MAXIMUMREGION)
+		  MAXIMUMREGION)
+    (WINDOWPROP WINDOW (QUOTE TOTAL)
+		  "0")
+    (WINDOWPROP WINDOW (QUOTE RESHAPEFN)
+		  (QUOTE DON'T))
+    (WINDOWPROP WINDOW (QUOTE SHRINKFN)
+		  (QUOTE DON'T))
+    (WINDOWADDPROP WINDOW (QUOTE CLOSEFN)
+		     (QUOTE READNUM.CLOSEFN])
+
+(READNUM.UPDATE
+  [LAMBDA (WINDOW NEWVALUE)                                  (* Gaska " 9-Mar-87 16:19")
+
+          (* * Update the READNUM window)
+
+
+    (COND
+      ([AND (WINDOWPROP WINDOW (QUOTE MINIMUM))
+	      (MINUSP (MKATOM NEWVALUE))
+	      (LESSP (MKATOM NEWVALUE)
+		       (WINDOWPROP WINDOW (QUOTE MINIMUM]
+	(READNUM.FLASHAREA (WINDOWPROP WINDOW (QUOTE MINIMUMREGION))
+			     WINDOW))
+      ([AND (WINDOWPROP WINDOW (QUOTE MAXIMUM))
+	      (GREATERP (MKATOM NEWVALUE)
+			  (WINDOWPROP WINDOW (QUOTE MAXIMUM]
+	(READNUM.FLASHAREA (WINDOWPROP WINDOW (QUOTE MAXIMUMREGION))
+			     WINDOW))
+      ((IGREATERP (NCHARS NEWVALUE)
+		    (WINDOWPROP WINDOW (QUOTE DISPLAYCHARS)))
+	(READNUM.FLASHAREA (WINDOWPROP WINDOW (QUOTE DISPLAYREGION))
+			     WINDOW))
+      (T (WINDOWPROP WINDOW (QUOTE TOTAL)
+		       NEWVALUE)
+	 (READNUM.DISPLAY.TOTAL WINDOW])
+
+(READNUM.WHENHELDFN
+  [LAMBDA (ITEM MENU BUTTON)                                 (* Gaska " 5-Mar-87 07:35")
+
+          (* * Print explanations when menu items are held down)
+
+
+    (LET ((MESSAGE (SELECTQ ITEM
+			      (Abt "Abort number input and return NIL")
+			      (Clr "Clear the total to zero")
+			      (OK "Terminate number input and return the total")
+			      (BS "Delete last digit")
+			      (%. "Insert a decimal point")
+			      (- "Change sign of total")
+			      (%  NIL)
+			      "Insert this digit to the right of the total")))
+         (if MESSAGE
+	     then (PROMPTPRINT MESSAGE])
+
+(READTIME
+  [LAMBDA (MESSAGE POSITION FONT ONEDAY NOABORT NOSECONDS)   (* Gaska " 3-Apr-87 11:03")
+
+          (* * Create a keypad for entry of time)
+
+
+    (PROG* ([FONT (FONTCREATE (OR FONT (QUOTE (GACHA 12 BRR]
+	    (MENU (READTIME.CREATE.MENU FONT NOABORT))
+	    (DISPLAYWINDOW (READNUM.CREATE.DISPLAY MESSAGE POSITION FONT NIL NIL T NIL
+						     (if NOSECONDS
+							 then 5
+						       else 8)
+						     MENU)))
+           (ADDMENU MENU DISPLAYWINDOW (CREATEPOSITION (IQUOTIENT (IDIFFERENCE
+									  (WINDOWPROP DISPLAYWINDOW
+											(QUOTE
+											  WIDTH))
+									  (fetch IMAGEWIDTH
+									     of MENU))
+									2)
+							   0))
+           (WINDOWPROP DISPLAYWINDOW (QUOTE REPAINTFN)
+			 NIL)
+           (if NOABORT
+	       then (WINDOWADDPROP DISPLAYWINDOW (QUOTE CLOSEFN)
+				       (QUOTE DON'T)))
+           (WINDOWPROP DISPLAYWINDOW (QUOTE ONEDAY)
+			 ONEDAY)
+           (WINDOWPROP DISPLAYWINDOW (QUOTE NOSECONDS)
+			 NOSECONDS)
+           (WINDOWPROP DISPLAYWINDOW (QUOTE TIMEENTRY)
+			 T)
+           (RETURN (READNUM.LOOP DISPLAYWINDOW])
+
+(READTIME.CREATE.MENU
+  [LAMBDA (FONT NOABORT NOOK)                                (* Gaska " 3-Apr-87 10:54")
+
+          (* * Create the READTIME keyboard)
+
+
+    (create MENU
+	      ITEMS _[APPEND (if NOABORT
+				   then (QUOTE (% ))
+				 else (QUOTE (Abt)))
+			       (QUOTE (Clr BS 1 2 3 4 5 6 7 8 9 : 0))
+			       (if NOOK
+				   then (QUOTE (% ))
+				 else (QUOTE (OK]
+	      MENUFONT _ FONT
+	      MENUCOLUMNS _ 3
+	      CENTERFLG _ T
+	      MENUOUTLINESIZE _ 2
+	      WHENSELECTEDFN _(FUNCTION READTIME.PROCESS)
+	      WHENHELDFN _(FUNCTION READTIME.WHENHELDFN])
+
+(READTIME.MAKE.OUTPUT
+  [LAMBDA (WINDOW)                                           (* Gaska " 7-Mar-87 13:52")
+
+          (* * Create the final output for READTIME)
+
+
+    (PROG* [[PARSED.TIME (READTIME.PARSE.TIME (WINDOWPROP WINDOW (QUOTE TOTAL]
+	    (HOURS (CAR PARSED.TIME))
+	    (MINUTES (OR (CADR PARSED.TIME)
+			   0))
+	    (SECONDS (OR (CADDR PARSED.TIME)
+			   0))
+	    (STRING (CONCAT (OR (SUBSTRING HOURS 1 2)
+				    (CONCAT "0" HOURS))
+			      ":"
+			      (OR (SUBSTRING MINUTES 1 2)
+				    (CONCAT "0" MINUTES))
+			      ":"
+			      (OR (SUBSTRING SECONDS 1 2)
+				    (CONCAT "0" SECONDS]
+           (RETURN (if (WINDOWPROP WINDOW (QUOTE NOSECONDS))
+			 then (SUBSTRING STRING 1 5)
+		       else STRING])
+
+(READTIME.PARSE.TIME
+  [LAMBDA (VALUE)                                            (* Gaska " 7-Mar-87 12:26")
+
+          (* * Parse a time value into hours, minutes, and seconds)
+
+
+    (PROG* [(TIME (UNPACK VALUE))
+	    (LISTOFTIMES (repeatuntil (NULL TIME)
+			    collect (LET ((NUM (repeatuntil (NULL (FIXP X)) as X
+						    in TIME collect X)))
+				           [SETQ TIME (NTH TIME (ADD1 (LENGTH NUM]
+				       NUM]
+           (RETURN (for X in LISTOFTIMES collect (PACK (for Y in X collect Y
+								    when (FIXP Y])
+
+(READTIME.PROCESS
+  [LAMBDA (ITEM MENU BUTTON)                                 (* Gaska " 6-Mar-87 14:59")
+
+          (* * Process READTIME keyboard entries)
+
+
+    (PROG* [(WINDOW (WFROMMENU MENU))
+	    (TOTAL (WINDOWPROP WINDOW (QUOTE TOTAL]
+           (SELECTQ ITEM
+		      (Abt (WINDOWPROP WINDOW (QUOTE TOTAL)
+					 NIL)
+			   (WINDOWPROP WINDOW (QUOTE FINISHED)
+					 T))
+		      (Clr (READTIME.UPDATE WINDOW "0"))
+		      (OK (WINDOWPROP WINDOW (QUOTE FINISHED)
+					T))
+		      (BS (READTIME.UPDATE WINDOW (OR [if (STREQUAL
+								  (SUBSTRING TOTAL
+									       (SUB1 (NCHARS
+											 TOTAL))
+									       (NCHARS TOTAL))
+								  "00")
+							      then (SUBSTRING
+								       TOTAL 1 (IDIFFERENCE
+									 (NCHARS TOTAL)
+									 3))
+							    else (SUBSTRING TOTAL 1
+										(SUB1 (NCHARS
+											  TOTAL]
+							  "0")))
+		      (: (READTIME.UPDATE WINDOW (CONCAT TOTAL ":00")))
+		      (READTIME.UPDATE WINDOW (CONCAT (if (STREQUAL TOTAL "0")
+							      then ""
+							    else TOTAL)
+							  ITEM])
+
+(READTIME.UPDATE
+  [LAMBDA (WINDOW NEWVALUE NOCHECK)                          (* Gaska " 3-Apr-87 11:02")
+
+          (* * Update the READNUM window)
+
+
+    (PROG* ((PARSED.TIME (READTIME.PARSE.TIME NEWVALUE))
+	    (LASTENTRY (EQUAL (GLC (CONCAT NEWVALUE))
+				(QUOTE :)))
+	    (HOURS (CAR PARSED.TIME))
+	    (MINUTES (CADR PARSED.TIME))
+	    (SECONDS (CADDR PARSED.TIME)))
+           (if [OR (IGREATERP (LENGTH PARSED.TIME)
+				    3)
+		       (AND (WINDOWPROP WINDOW (QUOTE NOSECONDS))
+			      (IGREATERP (LENGTH PARSED.TIME)
+					   2))
+		       (IGREATERP HOURS (if (WINDOWPROP WINDOW (QUOTE ONEDAY))
+					      then 23
+					    else 99))
+		       (AND MINUTES (IGREATERP MINUTES 60))
+		       (AND SECONDS (IGREATERP SECONDS 60))
+		       (AND MINUTES LASTENTRY (WINDOWPROP WINDOW (QUOTE NOSECONDS]
+	       then (READNUM.FLASHAREA (WINDOWPROP WINDOW (QUOTE DISPLAYREGION))
+					   WINDOW)
+	     else (WINDOWPROP WINDOW (QUOTE TOTAL)
+				  (CONCAT (OR (SUBSTRING HOURS 1 2)
+						  (if (AND (ZEROP HOURS)
+							       (NULL MINUTES))
+						      then "0"
+						    else (CONCAT "0" HOURS)))
+					    (if (OR LASTENTRY MINUTES)
+						then ":"
+					      else "")
+					    (if MINUTES
+						then (OR (SUBSTRING MINUTES 1 2)
+							     (CONCAT "0" MINUTES))
+					      else "")
+					    (if (AND MINUTES (OR LASTENTRY SECONDS))
+						then ":"
+					      else "")
+					    (if SECONDS
+						then (OR (SUBSTRING SECONDS 1 2)
+							     (CONCAT "0" SECONDS))
+					      else "")))
+		    (READNUM.DISPLAY.TOTAL WINDOW])
+
+(READTIME.WHENHELDFN
+  [LAMBDA (ITEM MENU BUTTON)                                 (* Gaska " 6-Mar-87 14:45")
+
+          (* * Print explanations when menu items are held down)
+
+
+    (LET ((MESSAGE (SELECTQ ITEM
+			      (Abt "Abort time input and return NIL")
+			      (Clr "Clear the time to zero")
+			      (OK "Terminate input and return the time")
+			      (BS "Delete last entry")
+			      (: "Start minutes or seconds entry")
+			      (%  NIL)
+			      "Insert this digit to the right of the total")))
+         (if MESSAGE
+	     then (PROMPTPRINT MESSAGE])
+
+(READTIMEW
+  [LAMBDA (MESSAGE POSITION FONT ONEDAY NOSECONDS)           (* Gaska " 6-Apr-87 09:01")
+
+          (* * Create a keypad for entry of time)
+
+
+    (PROG* ([FONT (FONTCREATE (OR FONT (QUOTE (GACHA 12 BRR]
+	    (MENU (READTIME.CREATE.MENU FONT T T))
+	    (DISPLAYWINDOW (READNUM.CREATE.DISPLAY MESSAGE POSITION FONT NIL NIL T NIL
+						     (if NOSECONDS
+							 then 5
+						       else 8)
+						     MENU)))
+           (ADDMENU MENU DISPLAYWINDOW (CREATEPOSITION (IQUOTIENT (IDIFFERENCE
+									  (WINDOWPROP DISPLAYWINDOW
+											(QUOTE
+											  WIDTH))
+									  (fetch IMAGEWIDTH
+									     of MENU))
+									2)
+							   0))
+           (WINDOWPROP DISPLAYWINDOW (QUOTE REPAINTFN)
+			 NIL)
+           (WINDOWADDPROP DISPLAYWINDOW (QUOTE CLOSEFN)
+			    (QUOTE DON'T))
+           (WINDOWPROP DISPLAYWINDOW (QUOTE NOSECONDS)
+			 NOSECONDS)
+           (WINDOWPROP DISPLAYWINDOW (QUOTE ONEDAY)
+			 ONEDAY)
+           (WINDOWPROP DISPLAYWINDOW (QUOTE TIMEENTRY)
+			 T)
+           (RETURN DISPLAYWINDOW])
+)
+
+(RPAQ? READNUM.DEFAULT.MAXDIGITS 9)
+(DECLARE: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS READNUM.DEFAULT.MAXDIGITS)
+)
+(DECLARE: DONTCOPY
+  (FILEMAP (NIL (724 23330 (READNUM 734 . 2375) (READNUM.CLOSEFN 2377 . 2650) (READNUM.CREATE.DISPLAY 
+2652 . 6121) (READNUM.CREATE.MENU 6123 . 6888) (READNUM.CREATE.REGION 6890 . 7267) (
+READNUM.DISPLAY.TOTAL 7269 . 7803) (READNUM.FLASHAREA 7805 . 8510) (READNUM.LOOP 8512 . 9359) (
+READNUM.OUTLINE.REGION 9361 . 10251) (READNUM.PROCESS 10253 . 11836) (READNUM.REGION.ONSCREEN 11838 . 
+12658) (READNUM.SET.WINDOWPROPS 12660 . 13617) (READNUM.UPDATE 13619 . 14619) (READNUM.WHENHELDFN 
+14621 . 15254) (READTIME 15256 . 16467) (READTIME.CREATE.MENU 16469 . 17111) (READTIME.MAKE.OUTPUT 
+17113 . 17946) (READTIME.PARSE.TIME 17948 . 18583) (READTIME.PROCESS 18585 . 19774) (READTIME.UPDATE 
+19776 . 21582) (READTIME.WHENHELDFN 21584 . 22174) (READTIMEW 22176 . 23328)))))
+STOP

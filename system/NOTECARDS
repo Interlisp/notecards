@@ -1,0 +1,442 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
+(FILECREATED "10-Jun-2021 14:39:04" {DSK}<home>pi>il>notecards>system>NOTECARDS.;14 27703  
+
+      changes to%:  (VARS NOTECARDSCOMS)
+                    (FNS NC.PostGreet)
+
+      previous date%: "10-Jun-2021 14:19:29" {DSK}<home>pi>il>notecards>system>NOTECARDS.;13)
+
+
+(* ; "
+Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
+")
+
+(PRETTYCOMPRINT NOTECARDSCOMS)
+
+(RPAQQ NOTECARDSCOMS
+       ((GLOBALVARS *NC.ReleaseIdentifier* NOTECARDSDIRECTORIES \NC.SourceAccessFlg *NC.LoadedFiles*
+               UseMapWithPoliticalBoundaries AFTERLOGOUTFORMS)
+        (INITVARS (*NC.LoadedFiles* NIL)
+               (*NC-LOAD-RELEASE* NIL))
+        (VARS (*NC.ReleaseIdentifier* "2.0"))
+        
+
+(* ;;; "Set up the NoteCards directories globalvars")
+
+        (FNS NC.SetUpNOTECARDSDIRECTORIES)
+        (DECLARE%: DONTEVAL@LOAD DOCOPY (P (NC.SetUpNOTECARDSDIRECTORIES)))
+        [P (IF (NOT (CL:FIND-PACKAGE "ROOMS"))
+               THEN
+               (DEFPACKAGE "ROOMS" (:EXPORT "INTERACTIVE-CLOSE-WINDOW" "ALL-WINDOWS" "*CURRENT-ROOM*"
+                                          "*ROOMS-SYSTEM-DATE*" "HIDE-WINDOW" "UN-HIDE-WINDOW" 
+                                          "WINDOW-HIDDEN?"]
+        
+
+(* ;;; " Load a few LIBRARYFILES")
+
+        (DECLARE%: DONTEVAL@LOAD DOCOPY (FILES (SYSLOAD)
+                                               FILEBROWSER TEDIT HRULE GRAPHER))
+        
+
+(* ;;; "card types and library packages")
+
+        (GLOBALVARS NOTECARDTYPESTUBS NOTECARDTYPES *NC.LibraryFiles* *NC.LispUsersFiles*)
+        (ADDVARS (NOTECARDTYPESTUBS Sketch Graph Browser Search Document LinkIndex))
+        (ADDVARS (NOTECARDTYPES Hash List Text FileBox))
+        (ADDVARS (*NC.LibraryFiles* NCHACKS NEWSHADEITEM))
+        (ADDVARS (*NC.LispUsersFiles* SCALEBITMAP STYLESHEET))
+        
+
+(* ;;; "Load the Library Files")
+
+        (DECLARE%: DONTEVAL@LOAD DOCOPY (FILES (SYSLOAD FROM VALUEOF NOTECARDSDIRECTORIES)
+                                               NCHACKS NEWSHADEITEM TEDIT-PROCESS-KILLER)
+               (FILES (SYSLOAD FROM VALUEOF LISPUSERSDIRECTORIES)
+                      STYLESHEET))
+        
+
+(* ;;; "code module lists")
+
+        (GLOBALVARS NC.CoreFiles NC.Files)
+        
+
+(* ;;; "global params")
+
+        (GLOBALVARS NC.DeletedLinkImageObject NC.DeletedLinkImageFns NC.InvisibleLinkImageObject 
+               NC.InvisibleLinkImageFns NC.LinkIconImageFns NC.NoDeleteImageFns NC.SystemDate 
+               TEDIT.INPUT.FORMATS WindowMenuCommands NCINITIALGLOBALPARAMS)
+        (INITVARS NCINITIALGLOBALPARAMS)
+        
+
+(* ;;; "Load the NoteCards files")
+
+        (FNS NC.FindFile NC.LoadFileFromDirectories NC.LookupAutoloadFnFile NC.StoreAutoloadFnFile 
+             SIMPLE-FILENAME SIMPLE-LOADEDFILELST)
+        [DECLARE%: DONTEVAL@LOAD DOCOPY (FILES (SYSLOAD FROM VALUEOF NOTECARDSDIRECTORIES)
+                                               NCCONFIG)
+                                                             (* ; "(P (ADVISE 'WHEREIS 'BEFORE NIL '(if (GETPROP 'NOTECARDS 'FILEDATES) then (NC.FixFileDates 'NOTECARDS) (UNADVISE 'WHEREIS))))")
+               (P (for File in NC.CoreFiles do (NC.LoadFileFromDirectories File]
+        
+
+(* ;;; "Initialization functions")
+
+        (FNS NC.PostGreet NC.LoadPatches)
+        (ADDVARS (POSTGREETFORMS (NC.PostGreet)))
+        (DECLARE%: DONTEVAL@LOAD DOCOPY (P (NC.PostGreet)
+                                           (NC.LoadPatches)))
+        
+
+(* ;;; "Set up Lafite Bug Report Forms")
+
+        (FNS NC.MakeLafiteForm)
+        (ADDVARS (LAFITESPECIALFORMS ("NoteCards Report" (FUNCTION NC.MakeLafiteForm)
+                                            "Report bug or request new feature for NoteCards.")))
+        (VARS (LAFITEFORMSMENU NIL))
+                                                             (* ; "force menu to be recomputed")
+        
+
+(* ;;; "INITIALIZE NoteCards")
+
+        (FNS NC.Setup)
+        (DECLARE%: DONTEVAL@LOAD DOCOPY (P (NC.Setup)))
+        (ADDVARS (BackgroundMenuCommands (NoteCards (NC.BringUpNoteCardsIcon)
+                                                "Bring up the NoteCards control icon.")))
+        (VARS (BackgroundMenu NIL))
+                                                             (* ; "force menu to be recomputed")
+        (FNS NC.SetSystemDate)
+        (DECLARE%: DONTEVAL@LOAD DOCOPY (P (NC.SetSystemDate)))
+        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)
+              NOTECARDS)))
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS *NC.ReleaseIdentifier* NOTECARDSDIRECTORIES \NC.SourceAccessFlg *NC.LoadedFiles* 
+       UseMapWithPoliticalBoundaries AFTERLOGOUTFORMS)
+)
+
+(RPAQ? *NC.LoadedFiles* NIL)
+
+(RPAQ? *NC-LOAD-RELEASE* NIL)
+
+(RPAQ *NC.ReleaseIdentifier* "2.0")
+
+
+
+(* ;;; "Set up the NoteCards directories globalvars")
+
+(DEFINEQ
+
+(NC.SetUpNOTECARDSDIRECTORIES
+  [LAMBDA (BaseDirectory ReleaseIdentifier)
+    (DECLARE (GLOBALVARS NOTECARDSDIRECTORIES \NC.SourceAccessFlg *NC.ReleaseIdentifier*))
+                                                             (* ; "Edited 19-May-2021 17:04 by pi")
+
+    (* ;; "Starting from the directory this file is being loaded from, set up NOTECARDSDIRECTORIES with the right list of directories for loading NoteCards files from.  NB that this function must be run from a loading file to work properly, as it uses (INPUT) to decide what directory to use.")
+
+    (SETQ NOTECARDSDIRECTORIES
+     (LET [NoteCardsBaseDirectory StrPtr NoteCardsLoadDirectory (NoteCardsSubDirectories
+                                                                 '(system library lispusers patches]
+
+          (* ;; "Get the directory for the file now being loaded")
+
+          [COND
+             ((SETQ NoteCardsBaseDirectory BaseDirectory))
+             (T [SETQ NoteCardsLoadDirectory (PACKFILENAME.STRING 'HOST (FILENAMEFIELD (FULLNAME
+                                                                                        (INPUT))
+                                                                               'HOST)
+                                                    'DIRECTORY
+                                                    (FILENAMEFIELD (FULLNAME (INPUT))
+                                                           'DIRECTORY]
+
+                (* ;; "Find the directory path up to the first subdirectory called NoteCards")
+
+                (COND
+                   ((SETQ StrPtr (STRPOS "NOTECARDS" (U-CASE NoteCardsLoadDirectory)
+                                        NIL NIL NIL T NIL T))
+                    (SETQ NoteCardsBaseDirectory (SUBATOM NoteCardsLoadDirectory 1 StrPtr]
+
+          (* ;; "Create the directory search list based on the NoteCardsBaseDirectory")
+
+          (COND
+             [NoteCardsBaseDirectory (APPEND (LIST NoteCardsLoadDirectory)
+
+                                            (* ;; ".../NOTECARDS/LIBRARY ... and so forth")
+
+                                            [MAPCAR NoteCardsSubDirectories
+                                                   #'(LAMBDA (SUBDIR)
+                                                       (PACKFILENAME.STRING
+                                                        'HOST
+                                                        (FILENAMEFIELD NoteCardsBaseDirectory
+                                                               'HOST)
+                                                        'DIRECTORY
+                                                        (CONCAT (FILENAMEFIELD NoteCardsBaseDirectory
+                                                                       'DIRECTORY)
+                                                               ">" SUBDIR]
+
+                                            (* ;; 
+                                          "...>NOTECARDS>%"RELEASE%">LIBRARY> .... and so forth")
+
+                                            (MAPCAR NoteCardsSubDirectories
+                                                   #'(LAMBDA (SUBDIR)
+                                                       (PACKFILENAME.STRING
+                                                        'HOST
+                                                        (FILENAMEFIELD NoteCardsBaseDirectory
+                                                               'HOST)
+                                                        'DIRECTORY
+                                                        (CONCAT (FILENAMEFIELD NoteCardsBaseDirectory
+                                                                       'DIRECTORY)
+                                                               ">" *NC.ReleaseIdentifier* ">" SUBDIR]
+             (T (LIST NoteCardsLoadDirectory])
+)
+(DECLARE%: DONTEVAL@LOAD DOCOPY 
+
+(NC.SetUpNOTECARDSDIRECTORIES)
+)
+
+(IF (NOT (CL:FIND-PACKAGE "ROOMS"))
+    THEN (DEFPACKAGE "ROOMS" (:EXPORT "INTERACTIVE-CLOSE-WINDOW" "ALL-WINDOWS" "*CURRENT-ROOM*" 
+                                        "*ROOMS-SYSTEM-DATE*" "HIDE-WINDOW" "UN-HIDE-WINDOW" 
+                                        "WINDOW-HIDDEN?")))
+
+
+
+(* ;;; " Load a few LIBRARYFILES")
+
+(DECLARE%: DONTEVAL@LOAD DOCOPY 
+
+(FILESLOAD (SYSLOAD)
+       FILEBROWSER TEDIT HRULE GRAPHER)
+)
+
+
+
+(* ;;; "card types and library packages")
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NOTECARDTYPESTUBS NOTECARDTYPES *NC.LibraryFiles* *NC.LispUsersFiles*)
+)
+
+(ADDTOVAR NOTECARDTYPESTUBS Sketch Graph Browser Search Document LinkIndex)
+
+(ADDTOVAR NOTECARDTYPES Hash List Text FileBox)
+
+(ADDTOVAR *NC.LibraryFiles* NCHACKS NEWSHADEITEM)
+
+(ADDTOVAR *NC.LispUsersFiles* SCALEBITMAP STYLESHEET)
+
+
+
+(* ;;; "Load the Library Files")
+
+(DECLARE%: DONTEVAL@LOAD DOCOPY 
+
+(FILESLOAD (SYSLOAD FROM VALUEOF NOTECARDSDIRECTORIES)
+       NCHACKS NEWSHADEITEM TEDIT-PROCESS-KILLER)
+
+
+(FILESLOAD (SYSLOAD FROM VALUEOF LISPUSERSDIRECTORIES)
+       STYLESHEET)
+)
+
+
+
+(* ;;; "code module lists")
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.CoreFiles NC.Files)
+)
+
+
+
+(* ;;; "global params")
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.DeletedLinkImageObject NC.DeletedLinkImageFns NC.InvisibleLinkImageObject 
+       NC.InvisibleLinkImageFns NC.LinkIconImageFns NC.NoDeleteImageFns NC.SystemDate 
+       TEDIT.INPUT.FORMATS WindowMenuCommands NCINITIALGLOBALPARAMS)
+)
+
+(RPAQ? NCINITIALGLOBALPARAMS NIL)
+
+
+
+(* ;;; "Load the NoteCards files")
+
+(DEFINEQ
+
+(NC.FindFile
+  [LAMBDA (FileName TypeName CheckConnectedDirFlg SourceFlg Directories)
+                                                             (* ; "Edited 19-May-2021 17:00 by pi")
+    (DECLARE (GLOBALVARS NOTECARDSDIRECTORIES))
+    (LET [(FilesLoadDirs (if Directories
+                             then (EVAL Directories)
+                           elseif CheckConnectedDirFlg
+                             then (CONS (DIRECTORYNAME T T)
+                                            NOTECARDSDIRECTORIES)
+                           else NOTECARDSDIRECTORIES))
+          (FileProps (AND *NC-LOAD-RELEASE* (GETPROP FileName (if SourceFlg
+                                                                  then 'SourceFile
+                                                                else 'CompiledFile]
+         [OR FileName (SETQ FileName (PACK* 'NC (U-CASE TypeName)
+                                            'CARD]
+         (OR (AND (NOT NC.InstallFlg)
+                  FileProps
+                  (FINDFILE FileProps))
+             (if (AND (NULL (FILENAMEFIELD FileName 'EXTENSION))
+                          (FINDFILE (PACKFILENAME 'BODY FileName 'EXTENSION
+                                           (if SourceFlg
+                                               then ""
+                                             else COMPILE.EXT))
+                                 T FilesLoadDirs))
+               else (FINDFILE FileName T FilesLoadDirs])
+
+(NC.LoadFileFromDirectories  [LAMBDA (FileName Directories QuietFlg TypeName AlwaysFlg) (* ;                                                            "Edited  2-Oct-90 15:53 by gadener")    (* ;; "Try to load FileName from Directories.  The latter can be a list in which case the elements should be directory paths.  It can be an atom in which case it should be a DIRECTORIES var.  Or it can be NIL in which case it defaults to the litatom NOTECARDSDIRECTORIES.")    (* ;; "rg 9/4/87 now pushes file name onto NC.LoadedFiles for use by NC.PostGreet")    (* ;; "rg 1/15/88 now checks rootified version of LOADEDFILELST, won't load any file that it finds there.  Net effect is that this fn will NEVER load a file that has been loaded in ANY version previously.  No longer calls NC.FixFileDates.")    (* ;; "rg 1/22/88: doesn't SYSLOAD if NC.SourceAccessFlg set, returns full file name instead of NC.LoadedFiles.  Trimmed change log.")    (* ;; "rg 5/2/88: Uses FILEDATES prop instead of checking SIMPLELOADEDFILELST, added AlwaysFlg")    (* ;; "rg 6/22/88 put search through LOADEDFILELST back in - FILEDATES property check wasn't sufficient for, e.g., stubs.")    (* ;; "pmi 9/8/88: Changed printout  %"Attempting to autoload ...%" so that it prints either the FileName or the TypeName, in case FileName is NIL.  Also changed to add the name part of FullName instead of FileName to the NC.LoadedFiles list.  ")    (DECLARE (GLOBALVARS *NC.LoadedFiles* \NC.SourceAccessFlg))    (RESETLST        [RESETSAVE NIL (if (OPENWP (WFROMDS (TTYDISPLAYSTREAM)                                              T))                           then (SETQ QuietFlg T)                                 '(NILL)                         else `(CLOSEW ,(WFROMDS (TTYDISPLAYSTREAM]        [RESETSAVE NIL (if QuietFlg                           then '(NILL)                         else `(WINDOWPROP ,(WFROMDS (TTYDISPLAYSTREAM))                                          'PAGEFULLFN                                          ,(WINDOWPROP (WFROMDS (TTYDISPLAYSTREAM))                                                  'PAGEFULLFN                                                  'NILL]        [LET ((Window (WFROMDS (TTYDISPLAYSTREAM)))              (SimpleName (SIMPLE-FILENAME FileName))              FullName)             (COND                ([AND [OR AlwaysFlg (NOT (GETPROP SimpleName 'FILEDATES))                          (for LoadedFile in LOADEDFILELST never (EQ SimpleName                                                                                 (SIMPLE-FILENAME                                                                                  LoadedFile]                      (SETQ FullName (NC.FindFile FileName TypeName TypeName NIL                                            (OR (GETPROP FileName 'Directories)                                                Directories]                 (if (NOT QuietFlg)                     then (CLEARW Window)                           (FLASHWINDOW Window)                           (if TypeName                               then (PRINTOUT Window "Card type " TypeName " not loaded." T))                           (PRINTOUT Window "Attempting to autoload " (OR FileName TypeName)                                  T))                 (PROG1 [if AlwaysFlg                            then (LOAD FullName (if (NOT \NC.SourceAccessFlg)                                                        then 'SYSLOAD))                          else (APPLY* #'FILESLOAD (if \NC.SourceAccessFlg                                                           then `(,FullName)                                                         else `((SYSLOAD)                                                                    ,FullName]                     (pushnew *NC.LoadedFiles* (FILENAMEFIELD FullName 'NAME)))])])
+
+(NC.LookupAutoloadFnFile  [LAMBDA (AutoloadFn)                                       (* ;                                                            "Edited 14-Jan-88 11:53 by Randy.Gobbel")    (* ;; "rg 1/14/88 no longer gets fully-qualified name, lets NC.LoadFileFromDirectories load from connected dir if NC.InstallFlg set")    (* ;; "Fetch the filename for loading given function")    (GETPROP AutoloadFn 'File])
+
+(NC.StoreAutoloadFnFile  [LAMBDA (AutoloadFn FileName Directories)                  (* edited%: "26-Aug-87 17:22")         (* * Store an entry in the autoload table for given AutoloadFn.       It consists of FileName and Directories variable or list or NIL.)    (PUTPROP AutoloadFn 'File FileName)    (PUTPROP FileName 'Directories Directories)    (pushnew NC.AutoloadableFns AutoloadFn])
+
+(SIMPLE-FILENAME  [LAMBDA (file)                                             (* ;                                                            "Edited 20-Jan-88 11:22 by Randy.Gobbel")    (LET [(ext (FILENAMEFIELD file 'EXTENSION]         (PACKFILENAME 'NAME (FILENAMEFIELD file 'NAME)                'EXTENSION                (if (NOT (FMEMB ext *COMPILED-EXTENSIONS*))                    then ext])
+
+(SIMPLE-LOADEDFILELST  [LAMBDA NIL                                                (* ;                                                            "Edited 20-Jan-88 11:23 by Randy.Gobbel")    (for file in LOADEDFILELST collect (SIMPLE-FILENAME file])
+)
+(DECLARE%: DONTEVAL@LOAD DOCOPY 
+
+(FILESLOAD (SYSLOAD FROM VALUEOF NOTECARDSDIRECTORIES)
+       NCCONFIG)
+
+
+(for File in NC.CoreFiles do (NC.LoadFileFromDirectories File))
+)
+
+
+
+(* ;;; "Initialization functions")
+
+(DEFINEQ
+
+(NC.PostGreet
+  [LAMBDA NIL                                            (* ; "Edited 10-Jun-2021 14:37 by pi")
+
+    (* ;; "called when loading NOTECARDS and after each greet (for NOTECARDS sysout users) Note this means you cannot put anything in here that should not be called twice!")
+
+    (DECLARE (GLOBALVARS \NC.SourceAccessFlg NC.CardTypes *NC.LoadedFiles* NOTECARDTYPES 
+                        NOTECARDTYPESTUBS *NC.LibraryFiles* *NC.LispUsersFiles* NCINITIALGLOBALPARAMS
+                        ))
+    [LET (FullFileName TypeName Type File)
+         (for TypeName in NOTECARDTYPES unless (AND (SETQ Type (GETHASH TypeName 
+                                                                                  NC.CardTypes))
+                                                                (NOT (fetch (NoteCardType StubFlg
+                                                                                       ) of
+                                                                                         Type)))
+            do (NC.CardTypeLoader TypeName NIL T))
+
+         (* ;; "in case new patches have been made since the sysout was made or the last greet")
+
+         (for TypeName in NOTECARDTYPESTUBS unless (OR (NC.CardTypeRecord TypeName)
+                                                                   (MEMB TypeName NOTECARDTYPES)
+                                                                   (GETHASH TypeName NC.CardTypes))
+            do (NC.CardTypeStubLoader TypeName))
+
+         (* ;; "Load the library packages requested by the user's NOTECARDSLIBRARYFILES parameters")
+
+         (for File in *NC.LibraryFiles* unless (GETPROP File 'FILEDATES)
+            do (COND
+                      ((SETQ FullFileName (NC.FindFile File))
+                       (NC.LoadFileFromDirectories FullFileName))
+                      (T (PRINT (CONCAT "NoteCards: Can't find library file: " File "."]
+    (for File in *NC.LispUsersFiles* do (NC.LoadFileFromDirectories File 
+                                                           'LISPUSERSDIRECTORIES))
+    (if (GETD 'START-TEDIT-KILLER)
+        then (START-TEDIT-KILLER))
+    (if (AND \NC.SourceAccessFlg (GETD 'XCL::ADD-WHERE-IS-DATABASE))
+        then (XCL::ADD-WHERE-IS-DATABASE (NC.FindFile 'NOTECARDS.HASH NIL NIL T)))
+    (NCP.NoteCardsParameters NCINITIALGLOBALPARAMS])
+
+(NC.LoadPatches
+  [LAMBDA NIL                                            (* ; "Edited 19-May-2021 17:12 by pi")
+    (DECLARE (GLOBALVARS NOTECARDSDIRECTORIES *NC.ReleaseIdentifier*))
+
+    (* ;; "Load the POSTRELEASEPATCHES File, which will get thelatest patches.")
+
+    (LET [(CHECK-DIRECTORIES '(APPEND (LIST "{DSK}/usr/local/lde/Notecards/patches"
+                                            (CONCAT "{DSK}/usr/local/lde/Notecards/" 
+                                                   *NC.ReleaseIdentifier* "/patches/"))
+                                     NOTECARDSDIRECTORIES]
+         (if (NC.FindFile 'POSTRELEASEPATCHES NIL NIL NIL CHECK-DIRECTORIES)
+             then (NC.LoadFileFromDirectories 'POSTRELEASEPATCHES CHECK-DIRECTORIES NIL NIL T
+                             ])
+)
+
+(ADDTOVAR POSTGREETFORMS (NC.PostGreet))
+(DECLARE%: DONTEVAL@LOAD DOCOPY 
+
+(NC.PostGreet)
+
+(NC.LoadPatches)
+)
+
+
+
+(* ;;; "Set up Lafite Bug Report Forms")
+
+(DEFINEQ
+
+(NC.MakeLafiteForm  [LAMBDA NIL                                                (* ;                                                            "Edited  2-Oct-90 13:46 by gadener")    (* ;; "Send Message to Envos Notecards Dir ")    (RESETFORM (LAFITEMODE 'NS)           (LET ((THE-FORM-STREAM (MAKEXXXSUPPORTFORM (CONCAT "NoteCards " *NC.ReleaseIdentifier*)                                         "NPT:MV:Envos" NC.SystemDate)))                (TEXTPROP THE-FORM-STREAM 'LAFITEMODE 'NS)                THE-FORM-STREAM])
+)
+
+(ADDTOVAR LAFITESPECIALFORMS ("NoteCards Report" (FUNCTION NC.MakeLafiteForm)
+                                        "Report bug or request new feature for NoteCards."))
+
+(RPAQQ LAFITEFORMSMENU NIL)
+
+
+
+(* ; "force menu to be recomputed")
+
+
+
+
+(* ;;; "INITIALIZE NoteCards")
+
+(DEFINEQ
+
+(NC.Setup  [LAMBDA NIL                                                (* Randy.Gobbel " 5-Nov-86 15:45")         (* * rht 11/17/84%: Added definition of NC.InvisibleLinkImageObj.)         (* * rht 4/11/86%: Deleted short window menu stuff.       Also dumped INTERCALC stuff and prompt window stuff.)    (DECLARE (GLOBALVARS UseMapWithPoliticalBoundaries AFTERLOGOUTFORMS))    (NC.InitializeUID)    (SETQ AFTERLOGOUTFORMS (CONS '(NC.InitializeUID)                                 AFTERLOGOUTFORMS))    (SETQ UseMapWithPoliticalBoundaries T)    (SETQ TEDIT.INPUT.FORMATS NIL)    (NC.MakeMainMenu)    (SETQ NC.LinkIconImageFns (IMAGEFNSCREATE (FUNCTION NC.LinkIconDisplayFn)                                     (FUNCTION NC.LinkIconImageBoxFn)                                     (FUNCTION NC.LinkIconPutFn)                                     (FUNCTION NC.LinkIconGetFn)                                     (FUNCTION NC.LinkIconCopyFn)                                     (FUNCTION NC.LinkIconButtonEventInFn)                                     (FUNCTION NILL)                                     (FUNCTION NC.LinkIconWhenMovedFn)                                     (FUNCTION NC.LinkIconWhenInsertedFn)                                     (FUNCTION NC.LinkIconWhenDeletedFn)                                     (FUNCTION NC.LinkIconWhenCopiedFn)                                     (FUNCTION NILL)                                     (FUNCTION NILL)))    [SETQ NC.NoDeleteImageFns (PROG ((ImageObj (NC.MakeLinkIcon NIL)))                                    (replace (IMAGEOBJ IMAGEOBJFNS) of ImageObj                                       with (create IMAGEFNS using (fetch                                                                                (IMAGEOBJ IMAGEOBJFNS                                                                                       ) of                                                                                         ImageObj)))                                    (IMAGEOBJPROP ImageObj 'WHENDELETEDFN (FUNCTION NILL))                                    (RETURN (fetch (IMAGEOBJ IMAGEOBJFNS) of ImageObj]    (SETQ NC.DeletedLinkImageFns (IMAGEFNSCREATE (FUNCTION NC.DeletedLinkDisplayFn)                                        (FUNCTION NC.DeletedLinkImageBoxFn)                                        (FUNCTION NC.DeletedLinkPutFn)                                        (FUNCTION NC.DeletedLinkGetFn)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)))    (SETQ NC.DeletedLinkImageObject (IMAGEOBJCREATE "DeletedLink" NC.DeletedLinkImageFns))    (SETQ NC.InvisibleLinkImageFns (IMAGEFNSCREATE (FUNCTION NILL)                                          (FUNCTION NC.InvisibleLinkImageBoxFn)                                          (FUNCTION NC.InvisibleLinkPutFn)                                          (FUNCTION NC.InvisibleLinkGetFn)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)))    (SETQ NC.InvisibleLinkImageObject (IMAGEOBJCREATE "InvisibleLink" NC.InvisibleLinkImageFns])
+)
+(DECLARE%: DONTEVAL@LOAD DOCOPY 
+
+(NC.Setup)
+)
+
+(ADDTOVAR BackgroundMenuCommands (NoteCards (NC.BringUpNoteCardsIcon)
+                                            "Bring up the NoteCards control icon."))
+
+(RPAQQ BackgroundMenu NIL)
+
+
+
+(* ; "force menu to be recomputed")
+
+(DEFINEQ
+
+(NC.SetSystemDate  [LAMBDA NIL                                                (* edited%: "26-Aug-87 18:30")         (* * Set the NC.SystemDate from the stored file dates)    (DECLARE (GLOBALVARS NC.SystemDate NC.Files))    (LET (ThisFileDate)         (SETQ NC.SystemDate "23-Aug-70 13:28:52")         (for File in (LDIFFERENCE NC.Files '(NCCONFIG POSTRELEASEPATCHES))            do [SETQ ThisFileDate (OR (CAAR (GETPROP File 'FILEDATES))                                          (GETPROP File 'FileDate]                  (if (AND ThisFileDate (GREATERP (IDATE ThisFileDate)                                                   (IDATE NC.SystemDate)))                      then (SETQ NC.SystemDate ThisFileDate)                            (PUTPROP 'NC.SystemDate 'NewestFile File])
+)
+(DECLARE%: DONTEVAL@LOAD DOCOPY 
+
+(NC.SetSystemDate)
+)
+
+(PUTPROPS NOTECARDS FILETYPE :FAKE-COMPILE-FILE)
+
+(PUTPROPS NOTECARDS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+(PUTPROPS NOTECARDS COPYRIGHT ("Xerox Corporation" 1986 1987 1988 1989 1990 1991 1993 1994 2020 2021))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (4905 8794 (NC.SetUpNOTECARDSDIRECTORIES 4915 . 8792)) (10486 17608 (NC.FindFile 10496
+ . 12018) (NC.LoadFileFromDirectories 12020 . 16033) (NC.LookupAutoloadFnFile 16035 . 16479) (
+NC.StoreAutoloadFnFile 16481 . 16897) (SIMPLE-FILENAME 16899 . 17324) (SIMPLE-LOADEDFILELST 17326 . 
+17606)) (17842 21144 (NC.PostGreet 17852 . 20319) (NC.LoadPatches 20321 . 21142)) (21317 21875 (
+NC.MakeLafiteForm 21327 . 21873)) (22168 26233 (NC.Setup 22178 . 26231)) (26521 27361 (
+NC.SetSystemDate 26531 . 27359)))))
+STOP

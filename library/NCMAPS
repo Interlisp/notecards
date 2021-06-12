@@ -1,0 +1,34 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 5-Nov-2020 20:01:20" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCMAPS.;4 3987         previous date%: "10-Jan-94 21:21:06" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCMAPS.;3)(* ; "Copyright (c) 1986, 1987, 1988, 1989, 1993, 1994, 2020 by Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCMAPSCOMS)(RPAQQ NCMAPSCOMS       ([DECLARE%: DONTEVAL@LOAD (P (NC.LoadFileFromDirectories 'NCSKETCHCARD]        (* ;;; "NOTECARDSMAPDIRECTORIES stuff")        (GLOBALVARS NOTECARDSMAPDIRECTORIES UseMapWithPoliticalBoundaries MAPFILESDIRECTORIES)        (FNS NC.SetUpNOTECARDSMAPDIRECTORIES)        (INITVARS (NOTECARDSMAPDIRECTORIES (NC.SetUpNOTECARDSMAPDIRECTORIES))               (MAPFILESDIRECTORIES NOTECARDSMAPDIRECTORIES))        (* ;;; "Smash any dummy MAP def'n on SKETCH.ELEMENT.TYPE.NAMES before loading NEWMAP")        [DECLARE%: DONTEVAL@LOAD (P (DREMOVE 'MAP SKETCH.ELEMENT.TYPE.NAMES)                                    (NC.LoadFileFromDirectories 'NEWMAP 'NOTECARDSMAPDIRECTORIES)                                    (NCP.ChangeCardTypeFields 'Sketch NIL                                           `((MiddleButtonMenuItems ,(SKETCH.COMMANDMENU.ITEMS T T]        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)              NCMAPS)))(DECLARE%: DONTEVAL@LOAD (NC.LoadFileFromDirectories 'NCSKETCHCARD))(* ;;; "NOTECARDSMAPDIRECTORIES stuff")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NOTECARDSMAPDIRECTORIES UseMapWithPoliticalBoundaries MAPFILESDIRECTORIES))(DEFINEQ(NC.SetUpNOTECARDSMAPDIRECTORIES
+  [LAMBDA (BaseDirectory)                                (* ; "Edited  4-Dec-87 13:51 by rht:")
+
+         (* * Set up the NoteCards directories maps globalvars)
+
+    (LET (ThisDirectory StrPtr NoteCardsBaseDirectory)
+
+         (* * Get the directory for the file now being loaded)
+
+         [COND
+            ((SETQ NoteCardsBaseDirectory BaseDirectory))
+            (T (SETQ ThisDirectory (PACK* '{ (FILENAMEFIELD (FULLNAME (INPUT))
+                                                    'HOST)
+                                          '}
+                                          '<
+                                          (FILENAMEFIELD (FULLNAME (INPUT))
+                                                 'DIRECTORY)
+                                          '>))
+
+         (* * Find the directory path up to the first subdirectory called NoteCards)
+
+               (COND
+                  ((SETQ StrPtr (STRPOS "NOTECARDS>" (U-CASE ThisDirectory)
+                                       NIL NIL NIL T))
+                   (SETQ NoteCardsBaseDirectory (SUBATOM ThisDirectory 1 (SUB1 StrPtr]
+
+         (* * Create the directory search list based on the NoteCardsBaseDirectory)
+
+         (COND
+            (NoteCardsBaseDirectory (LIST (PACK* NoteCardsBaseDirectory *NC.ReleaseIdentifier* 
+                                                 ">MAPS>")
+                                          (PACK* NoteCardsBaseDirectory "MAPS>")
+                                          NoteCardsBaseDirectory))
+            (T (LIST ThisDirectory]))(RPAQ? NOTECARDSMAPDIRECTORIES (NC.SetUpNOTECARDSMAPDIRECTORIES))(RPAQ? MAPFILESDIRECTORIES NOTECARDSMAPDIRECTORIES)(* ;;; "Smash any dummy MAP def'n on SKETCH.ELEMENT.TYPE.NAMES before loading NEWMAP")(DECLARE%: DONTEVAL@LOAD (DREMOVE 'MAP SKETCH.ELEMENT.TYPE.NAMES)(NC.LoadFileFromDirectories 'NEWMAP 'NOTECARDSMAPDIRECTORIES)[NCP.ChangeCardTypeFields 'Sketch NIL `((MiddleButtonMenuItems ,(SKETCH.COMMANDMENU.ITEMS T T])(PUTPROPS NCMAPS FILETYPE :FAKE-COMPILE-FILE)(PUTPROPS NCMAPS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))(PUTPROPS NCMAPS COPYRIGHT ("Xerox Corporation" 1986 1987 1988 1989 1993 1994 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (1670 3276 (NC.SetUpNOTECARDSMAPDIRECTORIES 1680 . 3274)))))STOP

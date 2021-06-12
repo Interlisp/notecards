@@ -1,0 +1,167 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 5-Nov-2020 20:02:28" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCSEARCHCARD.;5 11625        previous date%: " 9-Jan-94 20:15:11" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCSEARCHCARD.;4)(* ; "Copyright (c) 1986, 1987, 1988, 1989, 1990, 1993, 1994, 2020 by Venue & Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCSEARCHCARDCOMS)(RPAQQ NCSEARCHCARDCOMS       ((* ;;; "Stuff for the Notecards search card.")        (DECLARE%: DONTEVAL@LOAD (FILES NCTEXTCARD))        (FNS NCAddStub.SearchCard)        (FNS NC.MakeSearchCard NC.AddSearchCard NC.TitleSearch)        (BITMAPS NC.SearchCardIcon)        (DECLARE%: DONTEVAL@LOAD (P (NC.AddSearchCard)))        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)              NCSEARCHCARD)))(* ;;; "Stuff for the Notecards search card.")(DECLARE%: DONTEVAL@LOAD (FILESLOAD NCTEXTCARD))(DEFINEQ(NCAddStub.SearchCard
+  [LAMBDA NIL                                         (* ; "Edited  6-Dec-88 12:25 by krivacic")
+
+(* ;;; "kirk 18Jun86 Add the Search card stub")
+
+(* ;;; "rht 11/7/86: Now passes down a \\FILLME// field.")
+
+    (NC.AddCardTypeStub 'Search 'Text 'NCSEARCHCARD NIL `((DisplayedInMenuFlg T)
+                                                          (LinkIconAttachedBitMap ,NC.SearchCardIcon]))(DEFINEQ(NC.MakeSearchCard
+  [LAMBDA (Card Title NoDisplayFlg ParamList InterestedWindow RegionOrPosition)
+                                                             (* ; "Edited  5-Aug-88 13:53 by Trigg")
+
+    (* ;; "Search for cards with specified characteristics and create a list card containing pointers to these cards.  For now search is limited to cards whose title contains a specified string.")
+
+    (* ;; "rht 11/8/84: Fixed some confusion between ListCardID and ID variables.")
+
+    (* ;; "fgh 11/17/85 Updated to handle multiple notefiles and crad objects.")
+
+    (* ;; "rht 4/11/86: changed to call NC.ApplySuper.")
+
+    (* ;; "rht 10/21/86: Now deletes card if no search string specified.")
+
+    (* ;; "rg 3/16/87 NC.DeleteNoteCards -> NC.DeleteNoteCard")
+
+    (* ;; "rht 8/5/88: Added RegionOrPosition arg and passed to super's makefn.  Also added ParamList and InterestedWindow args.")
+
+    (LET ((NoteFile (fetch (Card NoteFile) of Card))
+          SearchString HitCards WindowOrCard Window)
+         (SPAWN.MOUSE)
+         (SETQ WindowOrCard (NC.ApplySupersFn MakeFn Card (OR Title "SearchCard")
+                                   NoDisplayFlg ParamList InterestedWindow RegionOrPosition))
+         (NC.ActivateCard Card)
+         (SETQ Window (AND (WINDOWP WindowOrCard)
+                           WindowOrCard))
+         (SETQ SearchString (NC.AskUser "Please enter the search string: " NIL NIL T (OR Window 
+                                                                                     InterestedWindow
+                                                                                         )))
+         (if (OR (EQUAL SearchString "")
+                 (NOT SearchString))
+             then (NC.DeleteNoteCard Card NIL T)
+                  NIL
+           else [NC.SetTitle Card (SETQ Title (OR Title (CONCAT "Cards with %"" SearchString 
+                                                               "%" in title"]
+                (AND Window (WINDOWPROP Window 'TITLE Title))
+                (RESETLST
+                    (RESETSAVE (CURSOR WAITINGCURSOR))
+                    (NC.PrintMsg (OR Window InterestedWindow)
+                           T "Searching for cards ...")
+                    (SETQ HitCards (NC.TitleSearch NoteFile SearchString))
+                    (TEDIT.INSERT (NC.FetchSubstance Card)
+                           (CONCAT " List compiled on: " (DATE)
+                                  (CHARACTER 13)
+                                  (CHARACTER 13))
+                           1)
+                    (for HitCard in HitCards unless (EQ HitCard Card)
+                       do (NC.InsertLinkBeforeMarker Card HitCard NC.ListContentsLinkLabel NIL NIL))
+                    (NC.PrintMsg (OR Window InterestedWindow)
+                           NIL "Done!" (CHARACTER 13)))
+                (BLOCK 250)
+                (NC.ClearMsg (OR Window InterestedWindow)
+                       T)
+                WindowOrCard])(NC.AddSearchCard
+  [LAMBDA NIL                                         (* ; "Edited  2-Dec-88 17:29 by krivacic")
+
+         (* * fgh |11/14/85| Updated to ri of substance type param to add card type.)
+
+    (NC.AddCardType 'Search 'Text `[(MakeFn ,(FUNCTION NC.MakeSearchCard]
+           `((LinkDisplayMode Title)
+             (LinkIconAttachedBitMap ,NC.SearchCardIcon)
+             (DisplayedInMenuFlg ,T])(NC.TitleSearch
+  [LAMBDA (NoteFile SearchString)                        (* ; "Edited 11-Jan-89 14:12 by rtk")
+
+(* ;;; "Searchs all cards on NoteFile for ones with SearchString in their title.")
+
+(* ;;; "rht 3/25/87: Now only looks at non-deleted cards.")
+
+(* ;;; "bk 12-28-88: Search only valid card types.")
+
+(* ;;; "Add * and ? winldcards.")
+
+    (LET* ((NULL-STRING "")
+           (SEARCH-CHARS (UNPACK SearchString))
+           (NEXT-SEARCH-ITEM NULL-STRING)
+           (NC.ListOfCardTypes (NC.ListOfCardTypes T))
+           SEARCH-LIST)
+
+          (* ;; "Break the search string into wildcard components of %"text%" %"?%" or %"*%"")
+
+          [for NEXTCHAR in SEARCH-CHARS do (COND
+                                                          ((EQ NEXTCHAR '*)
+                                                           (SETQ SEARCH-LIST (CONS '*
+                                                                                   (CONS 
+                                                                                     NEXT-SEARCH-ITEM
+                                                                                         SEARCH-LIST)
+                                                                                   ))
+                                                           (SETQ NEXT-SEARCH-ITEM NULL-STRING))
+                                                          ((EQ NEXTCHAR '?)
+                                                           (SETQ SEARCH-LIST (CONS '?
+                                                                                   (CONS 
+                                                                                     NEXT-SEARCH-ITEM
+                                                                                         SEARCH-LIST)
+                                                                                   ))
+                                                           (SETQ NEXT-SEARCH-ITEM NULL-STRING))
+                                                          (T (SETQ NEXT-SEARCH-ITEM (CONCAT 
+                                                                                     NEXT-SEARCH-ITEM
+                                                                                           NEXTCHAR]
+
+          (* ;; "Add the Last item to the search list")
+
+          (if (NEQ NULL-STRING NEXT-SEARCH-ITEM)
+              then (SETQ SEARCH-LIST (CONS NEXT-SEARCH-ITEM SEARCH-LIST)))
+
+          (* ;; "If there was only one component of text, then add a %"*%" to each end.")
+
+          [if [AND (EQ (LENGTH SEARCH-LIST)
+                           1)
+                       (NOT (FMEMB (CAR SEARCH-LIST)
+                                   '                         (* ?)]
+              then (SETQ SEARCH-LIST (LIST '* (CAR SEARCH-LIST)
+                                               '*]
+          (SETQ SEARCH-LIST (REVERSE SEARCH-LIST))
+
+          (* ;; "Map throuth the cards")
+
+          (NC.MapCards
+           NoteFile
+           [FUNCTION (LAMBDA (Card)
+                       Card]
+           (FUNCTION (LAMBDA (Card)
+                       (LET ((HAD-A-MISMATCH NIL)
+                             (SEARCH-POS 1)
+                             (BASE-POS 0)
+                             (SEARCH-TITLE (AND (NC.ValidCardP Card)
+                                                (NC.RetrieveTitle Card)))
+                             (LAST-PATTERN '?)
+                             (SEARCH-INCREMENT 0))
+                            (AND SEARCH-TITLE (FMEMB (fetch (Card Type) of Card)
+                                                     NC.ListOfCardTypes)
+                                 (PROGN (for SEARCH-PATTERN in SEARCH-LIST
+                                           while (NOT HAD-A-MISMATCH)
+                                           do [COND
+                                                     ((OR (STRING-EQUAL SEARCH-PATTERN "")
+                                                          (EQ SEARCH-PATTERN '*))
+                                                      NIL)
+                                                     ((EQ SEARCH-PATTERN '?)
+                                                      [SETQ HAD-A-MISMATCH
+                                                       (OR HAD-A-MISMATCH (GREATERP (+ 
+                                                                                     SEARCH-INCREMENT
+                                                                                       SEARCH-POS)
+                                                                                 (NCHARS SEARCH-TITLE
+                                                                                        ]
+                                                      (SETQ SEARCH-POS (+ SEARCH-POS 1)))
+                                                     (T (SETQ BASE-POS (STRPOS SEARCH-PATTERN 
+                                                                              SEARCH-TITLE SEARCH-POS
+                                                                              ))
+                                                        (SETQ HAD-A-MISMATCH
+                                                         (OR (AND (EQ LAST-PATTERN '?)
+                                                                  (NEQ BASE-POS SEARCH-POS))
+                                                             (AND (NEQ LAST-PATTERN '?)
+                                                                  (NULL BASE-POS))
+                                                             HAD-A-MISMATCH))
+                                                        (SETQ SEARCH-POS (+ (NCHARS SEARCH-PATTERN)
+                                                                            (OR BASE-POS 0]
+                                                 (SETQ LAST-PATTERN SEARCH-PATTERN))
+                                        (AND (NOT HAD-A-MISMATCH)
+                                             (OR (GREATERP SEARCH-POS (NCHARS SEARCH-TITLE))
+                                                 (EQ LAST-PATTERN '*]))(RPAQQ NC.SearchCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@C@@H@@H@LL@H@@HC@C@H@@HFCHHH@@IHFLDH@@J@LFBH@@J@FLDH@@I@CHHH@@HL@@HH@@HC@C@H@@H@LL@H@@H@C@@H@@H@@@@H@@OOOOOH@@)(DECLARE%: DONTEVAL@LOAD (NC.AddSearchCard))(PUTPROPS NCSEARCHCARD FILETYPE :FAKE-COMPILE-FILE)(PUTPROPS NCSEARCHCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))(PUTPROPS NCSEARCHCARD COPYRIGHT ("Venue & Xerox Corporation" 1986 1987 1988 1989 1990 1993 1994 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (1017 1461 (NCAddStub.SearchCard 1027 . 1459)) (1462 11096 (NC.MakeSearchCard 1472 . 4510) (NC.AddSearchCard 4512 . 4936) (NC.TitleSearch 4938 . 11094)))))STOP

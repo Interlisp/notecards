@@ -1,0 +1,204 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
+(FILECREATED " 5-Dec-87 20:14:05" {QV}<NOTECARDS>1.3L>LIBRARY>NCKEY.;1 9506   
+
+      changes to%:  (VARS NCKEYCOMS)
+                    (FNS NCKEY-BUILD-HELP)
+
+      previous date%: "11-Jul-87 14:44:53" {QV}<NOTECARDS>1.3K>LIBRARY>NCKEY.;1)
+
+
+(* "
+Copyright (c) 1987 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCKEYCOMS)
+
+(RPAQQ NCKEYCOMS ((DECLARE%: DONTCOPY (PROP MAKEFILE-ENVIRONMENT NCKEY))
+                  (FILES (SYSLOAD FROM LISPUSERS)
+                         TEDITKEY)
+                  
+
+(* ;;; "User Parameters")
+
+                  (INITVARS (*NCKEY-DEFAULT-TITLE* "Untitled")
+                         (*NCKEY-DEFAULT-DISPLAYMODE*)
+                         (*NCKEY-DEFAULT-CARDTYPE* 'Text)
+                         (*NCKEY-DEFAULT-LINKTYPE* 'Unspecified))
+                  (INITVARS (*NCKEY-BINDINGS* '(((J j)
+                                                 NCKEY-CREATE-LINK-WITH-TITLE 
+                                                 "Inserts a Link Using Selection as Title")
+                                                ((K k)
+                                                 NCKEY-CREATE-LINK-WITH-TEXT 
+                                                 "Inserts a Link Using Selection as Text")
+                                                ((R r)
+                                                 (NCHACKS.RemoveDeletedIconsFromTextCards CARD)
+                                                 "Removes Deleted Link Icons")
+                                                ((T t)
+                                                 NCKEY-ENTITLE "Sets Title Using Selection")
+                                                ((L l)
+                                                 NCKEY-MAP-LINKS 
+                                                 "Coerces Links using Global Parameters")
+                                                NIL
+                                                ((?)
+                                                 NCKEY-HELP "Brings Up Help Menu"))))
+                  
+
+(* ;;; "Global Variables")
+
+                  (VARS (*NCKEY-HELP-MENU*))
+                  (FNS NCKEY-DISPATCHER NCKEY-BUILD-HELP)
+                  (FNS NCKEY-HELP NCKEY-ENTITLE NCKEY-MAP-LINKS NCKEY-CREATE-LINK-WITH-TEXT 
+                       NCKEY-CREATE-LINK-WITH-TITLE)
+                  (DECLARE%: DONTEVAL@LOAD (P (NCKEY-BUILD-HELP))
+                         (P (SETQ TEDITKEY.KEYBINDINGS (UNION (APPEND TEDITKEY.KEYBINDINGS
+                                                                     '(NIL))
+                                                              '((NCKEY-DISPATCHER (%##W %##w)
+                                                                       "NCKey Evaluator"))))
+                            (\TK.BUILD.MENU)
+                            (TEDITKEY.INSTALL)))))
+(DECLARE%: DONTCOPY 
+
+(PUTPROPS NCKEY MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+)
+(FILESLOAD (SYSLOAD FROM LISPUSERS)
+       TEDITKEY)
+
+
+
+(* ;;; "User Parameters")
+
+
+(RPAQ? *NCKEY-DEFAULT-TITLE* "Untitled")
+
+(RPAQ? *NCKEY-DEFAULT-DISPLAYMODE* )
+
+(RPAQ? *NCKEY-DEFAULT-CARDTYPE* 'Text)
+
+(RPAQ? *NCKEY-DEFAULT-LINKTYPE* 'Unspecified)
+
+(RPAQ? *NCKEY-BINDINGS* '(((J j)
+                           NCKEY-CREATE-LINK-WITH-TITLE "Inserts a Link Using Selection as Title")
+                          ((K k)
+                           NCKEY-CREATE-LINK-WITH-TEXT "Inserts a Link Using Selection as Text")
+                          ((R r)
+                           (NCHACKS.RemoveDeletedIconsFromTextCards CARD)
+                           "Removes Deleted Link Icons")
+                          ((T t)
+                           NCKEY-ENTITLE "Sets Title Using Selection")
+                          ((L l)
+                           NCKEY-MAP-LINKS "Coerces Links using Global Parameters")
+                          NIL
+                          ((?)
+                           NCKEY-HELP "Brings Up Help Menu")))
+
+
+
+(* ;;; "Global Variables")
+
+
+(RPAQQ *NCKEY-HELP-MENU* NIL)
+(DEFINEQ
+
+(NCKEY-DISPATCHER
+  (LAMBDA (TEXTSTREAM TEXTOBJ SEL)                           (* Rao "26-Jun-87 17:23")
+    (RESETLST (RESETSAVE (CONTROL T))
+           (RESETSAVE (ECHOMODE NIL))
+           (RESETSAVE (CARET 'OFF))
+           (LET* ((KEY (READC T))
+                  (CARD (NCP.CardFromTextStream TEXTSTREAM)))
+                 (if CARD
+                     then (bind ACTIONFN for ENTRY in *NCKEY-BINDINGS*
+                             do (if (ATOM (CAR ENTRY))
+                                    then (if (EQ (CAR ENTRY)
+                                                 KEY)
+                                             then (SETQ ACTIONFN (CADR ENTRY)))
+                                  elseif (for CHARSPEC in (CAR ENTRY) thereis (EQ CHARSPEC KEY))
+                                    then (SETQ ACTIONFN (CADR ENTRY)))
+                             finally (if ACTIONFN
+                                         then (if (ATOM ACTIONFN)
+                                                  then (APPLY* ACTIONFN CARD (NCP.CardNoteFile CARD)
+                                                              TEXTSTREAM SEL)
+                                                else (EVAL ACTIONFN))
+                                       else (NCP.PrintMsg NIL NIL 
+                                                   "The Key is not bound to a NCKEY Function")))
+                   else (NCP.PrintMsg NIL NIL "The current TEDIT is not a NoteCard"))))))
+
+(NCKEY-BUILD-HELP
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+                                                             (* builds a menu to display the key 
+                                                             bindings)
+    (PROG (ITEMS)
+          (for TRIPLE in *NCKEY-BINDINGS*
+             do (if TRIPLE
+                    then (push ITEMS (LIST (CADDR TRIPLE)
+                                           `',(CADR TRIPLE) 
+                                "Function which is performed by the key(s) to the right of the mouse"
+                                           ))
+                         (push ITEMS (LIST (if (ATOM (CAR TRIPLE))
+                                               then (CHARDESC (CAR TRIPLE))
+                                             else (for DESC in (CAR TRIPLE) collect (CHARDESC DESC)))
+                                           NIL))
+                  else 
+          
+          (* insert a space since NIL marks logical divisions in the list)
+
+                       (push ITEMS '("" NIL ""))
+                       (push ITEMS '("" NIL ""))))
+          (SETQ *NCKEY-HELP-MENU* (create MENU
+                                         ITEMS _ (DREVERSE ITEMS)
+                                         MENUCOLUMNS _ 2
+                                         CENTERFLG _ T
+                                         MENUFONT _ (FONTCREATE 'HELVETICA 10))))))
+)
+(DEFINEQ
+
+(NCKEY-HELP
+  (LAMBDA (WHATEVER)                                         (* Rao "26-Jun-87 16:45")
+                                                             (* brings up a menu of the available 
+                                                             key bindings)
+    (MENU *NCKEY-HELP-MENU*)))
+
+(NCKEY-ENTITLE
+  (LAMBDA (CARD NOTEFILE TEXTSTREAM SEL)                     (* Rao "25-Jun-87 11:47")
+    (LET* ((TITLE (TEDIT.SEL.AS.STRING TEXTSTREAM SEL)))
+          (NCP.CardTitle CARD TITLE))))
+
+(NCKEY-MAP-LINKS
+  (LAMBDA (CARD NOTEFILE TEXTSTREAM SEL)                     (* Rao "26-Jun-87 17:02")
+    (for LINK in (NCP.GetLinks CARD NIL NIL NOTEFILE) do (NCP.LinkType LINK *NCKEY-DEFAULT-LINKTYPE*)
+                                                         (NCP.LinkDisplayMode LINK 
+                                                                *NCKEY-DEFAULT-DISPLAYMODE*))))
+
+(NCKEY-CREATE-LINK-WITH-TEXT
+  (LAMBDA (CARD NOTEFILE TEXTSTREAM SEL)                     (* Rao "25-Jun-87 14:58")
+    (LET* ((DESTCARD (NCP.CreateCard *NCKEY-DEFAULT-CARDTYPE* NOTEFILE *NCKEY-DEFAULT-TITLE* T))
+           (DESTSTREAM (NCP.CardSubstance DESTCARD)))
+          (TEDIT.COPY SEL (TEDIT.SETSEL DESTSTREAM 0 0 'LEFT))
+          (TEDIT.SETSEL TEXTSTREAM SEL)
+          (TEDIT.DELETE TEXTSTREAM SEL)
+          (NCP.CardSubstance DESTCARD DESTSTREAM)
+          (NCP.CreateLink CARD DESTCARD *NCKEY-DEFAULT-LINKTYPE* *NCKEY-DEFAULT-DISPLAYMODE*))))
+
+(NCKEY-CREATE-LINK-WITH-TITLE
+  (LAMBDA (CARD NOTEFILE TEXTSTREAM SEL)                     (* Rao "24-Jun-87 18:49")
+    (LET* ((TITLE (OR (TEDIT.SEL.AS.STRING TEXTSTREAM SEL)
+                      *NCKEY-DEFAULT-TITLE*)))
+          (TEDIT.DELETE TEXTSTREAM SEL)
+          (NCP.CreateLink CARD (NCP.CreateCard *NCKEY-DEFAULT-CARDTYPE* NOTEFILE TITLE T)
+                 *NCKEY-DEFAULT-LINKTYPE* *NCKEY-DEFAULT-DISPLAYMODE*))))
+)
+(DECLARE%: DONTEVAL@LOAD 
+(NCKEY-BUILD-HELP)
+
+(SETQ TEDITKEY.KEYBINDINGS (UNION (APPEND TEDITKEY.KEYBINDINGS '(NIL))
+                                  '((NCKEY-DISPATCHER (%##W %##w)
+                                           "NCKey Evaluator"))))
+(\TK.BUILD.MENU)
+(TEDITKEY.INSTALL)
+)
+(PUTPROPS NCKEY COPYRIGHT ("Xerox Corporation" 1987))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (4140 7222 (NCKEY-DISPATCHER 4150 . 5692) (NCKEY-BUILD-HELP 5694 . 7220)) (7223 9143 (
+NCKEY-HELP 7233 . 7540) (NCKEY-ENTITLE 7542 . 7744) (NCKEY-MAP-LINKS 7746 . 8147) (
+NCKEY-CREATE-LINK-WITH-TEXT 8149 . 8709) (NCKEY-CREATE-LINK-WITH-TITLE 8711 . 9141)))))
+STOP

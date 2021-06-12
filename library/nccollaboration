@@ -1,0 +1,290 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP")
+(FILECREATED "12-May-88 17:00:32" {DSK}<LISPFILES>NOTECARDS>COLLAB>NCCOLLABORATION.;3 16151  
+
+      changes to%:  (FNS NCCollab.CollaboratizeNoteFile)
+
+      previous date%: "13-Apr-88 15:49:56" {DSK}<LISPFILES>NOTECARDS>COLLAB>NCCOLLABORATION.;2)
+
+
+(* "
+Copyright (c) 1986, 1987, 1988 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCCOLLABORATIONCOMS)
+
+(RPAQQ NCCOLLABORATIONCOMS [(DECLARE%: DONTCOPY (PROPS (NCCOLLABORATION MAKEFILE-ENVIRONMENT)
+                                                       (NCCOLLABORATION FILETYPE)))
+                            
+
+(* ;;; "Package of handy functions and cardtypes for collaborators.")
+
+                            (FILES (FROM NOTECARDS)
+                                   NCCOLLABORATORCARD NCHISTORYCARD)
+                            (GLOBALVARS NCCollab.CollabInfoExtraMenuItems 
+                                   NCCollab.NoteFileIconMiddleMenuItems 
+                                   NCCollab.CollaboratorsMenuGreyShade)
+                            [INITVARS (NCCollab.CollaboratorsMenuGreyShade 4096)
+                                   (NCCollab.NoteFileIconMiddleMenuItems '((Collaborator% Info 
+                                                                      NCCollab.AccessCollaboratorInfo 
+            "Modify info for a known collaborator name, create a new one, or remove an existing one."
+                                                                                  ]
+                            (FNS NCCollab.OpenNoteFileFn NCCollab.CollaboratizeNoteFile 
+                                 NCCollab.GetCollabInfoBox NCCollab.ChangeCurrentCollaborator 
+                                 NCCollab.RemoveCollaboratorCard NCCollab.AccessCollaboratorInfo 
+                                 NCCollab.MakeCollaboratorsMenu NCCollab.ListOfCollaboratorCards)
+                            (FNS NCCollab.HangOnCardUntilDone)
+                            (P (NCP.AddSessionIconMenuItem 'NoteFile '(| Collaboratize | 
+                                                                       NCCollab.CollaboratizeNoteFile 
+                                                                         "Collaboratizes a notefile."
+                                                                             ))
+                               (NCP.AddNoteFileIconMenuItem '(Collaboratize 
+                                                                    NCCollab.CollaboratizeNoteFile 
+                                                                    "Collaboratizes a notefile.")
+                                      'Open])
+(DECLARE%: DONTCOPY 
+
+(PUTPROPS NCCOLLABORATION MAKEFILE-ENVIRONMENT (:PACKAGE "INTERLISP" :READTABLE "INTERLISP"))
+
+(PUTPROPS NCCOLLABORATION FILETYPE :TCOMPL)
+)
+
+
+
+(* ;;; "Package of handy functions and cardtypes for collaborators.")
+
+(FILESLOAD (FROM NOTECARDS)
+       NCCOLLABORATORCARD NCHISTORYCARD)
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NCCollab.CollabInfoExtraMenuItems NCCollab.NoteFileIconMiddleMenuItems 
+       NCCollab.CollaboratorsMenuGreyShade)
+)
+
+(RPAQ? NCCollab.CollaboratorsMenuGreyShade 4096)
+
+(RPAQ? NCCollab.NoteFileIconMiddleMenuItems '((Collaborator% Info NCCollab.AccessCollaboratorInfo 
+            "Modify info for a known collaborator name, create a new one, or remove an existing one."
+                                                     )))
+(DEFINEQ
+
+(NCCollab.OpenNoteFileFn
+  [LAMBDA (NoteFile)                                         (* ; "Edited 12-Jan-88 13:54 by pmi:")
+
+(* ;;; "This gets called at notefile-open time.")
+
+(* ;;; "pmi 10/21/87: Now prompts for new collaborator name before creating the collaborator card, rather than creating a collaborator card with '??' as the title.")
+
+    (DECLARE (GLOBALVARS NCCollab.NoteFileIconMiddleMenuItems))
+    (LET ((UserName (USERNAME))
+          Menu CollaboratorCard MenuItemRegion)
+         (NCP.AddNoteFileIconMiddleButtonItems NoteFile NCCollab.NoteFileIconMiddleMenuItems)
+         [SETQ Menu (NCCollab.MakeCollaboratorsMenu NoteFile '(("-- New Name(s) --" 'NEWNAMES 
+                                                        "Create a new collaborator information card."
+                                                                      ]
+         (NCP.PrintMsg NIL T "Please select Collaborator name(s)")
+          
+          (* Make Menu be positioned next to UserName if present, otherwise at "NewNames" 
+          entry.)
+
+         (SETQ MenuItemRegion (MENUITEMREGION (for Item in (fetch (MENU ITEMS) of Menu)
+                                                 when (STREQUAL (U-CASE (CAR Item))
+                                                             (U-CASE UserName))
+                                                 do (RETURN Item) finally (RETURN Item))
+                                     Menu))
+         (replace (MENU MENUOFFSET) of Menu with (CONS (fetch (REGION LEFT) of MenuItemRegion)
+                                                       (fetch (REGION BOTTOM) of MenuItemRegion)))
+         (if (EQ (SETQ CollaboratorCard (MENU Menu))
+                 'NEWNAMES)
+             then 
+          
+          (* Create a new card with unknown title if UserName is on menu, else use 
+          UserName.)
+
+                  [SETQ CollaboratorCard (NCP.CoerceToCard
+                                          (NCP.CreateCard
+                                           'Collaborator NoteFile
+                                           (if (for Item in (fetch (MENU ITEMS) of Menu)
+                                                  thereis (STREQUAL (CAR Item)
+                                                                 UserName))
+                                               then (NCP.AskUser 
+                                                           "Enter new name(s) for collaborator(s): " 
+                                                           NIL NIL T (NC.CoerceToInterestedWindow
+                                                                      NoteFile))
+                                             else UserName]
+                  (NCCollab.HangOnCardUntilDone CollaboratorCard "DONE" "Fill in parameters" 
+   "Selecting DONE indicates completion of updating this card.  Will allow OpenNoteFile to continue."
+                         ))
+         (if (NCP.ValidCardP CollaboratorCard)
+             then (NCCollab.ChangeCurrentCollaborator NoteFile CollaboratorCard])
+
+(NCCollab.CollaboratizeNoteFile
+  [LAMBDA (NoteFile)                                         (* ; "Edited 12-May-88 16:43 by pmi")
+          
+          (* ;; "Initialize given notefile for collaborative use.  Make a collaboration card if none exists and register in the notefile.  Hang a call to NCCollab.OpenNoteFileFn in the OpenEventsCard for the notefile.")
+          
+          (* ;; "rht 4/19/87: Now calls NC.LoadFileFromDirectories rather than FILESLOAD.")
+          
+          (* ;; "rht 1/3/88: Fixed bug in call to NC.LoadFileFromDirectories; was calling with unquoted litatom arg.")
+          
+          (* ;; "pmi 5/12/88: Now prints a message if notefile is not open, nistead of breaking.")
+
+    (if (NCP.OpenNoteFileP NoteFile)
+        then (LET ((OpenEventsCard (NCP.GetOpenEventsCard NoteFile))
+                   [OpenEventSExp '(PROGN (NC.LoadFileFromDirectories 'NCCOLLABORATION)
+                                          (NCCollab.OpenNoteFileFn NoteFile]
+                   OpenEventsCardWasCachedFlg)
+          
+          (* ;; "Run the collaboration OpenNoteFileFn now.")
+
+                  (NCCollab.OpenNoteFileFn NoteFile)
+          
+          (* ;; "Make sure that file has been historitized.")
+
+                  (NCHist.HistoricizeNoteFile NoteFile)
+          
+          (* ;; "Add call to NCCollab.OpenNoteFileFn to the open events card substance.  Since historicizing has already happened, this makes sure that collaboration opennotefilefn precedes history one.")
+
+                  (if (NOT (SETQ OpenEventsCardWasCachedFlg (NCP.ActiveCardP OpenEventsCard)))
+                      then (NCP.CacheCards OpenEventsCard))
+                  [if (NOT (MEMBER OpenEventSExp (NCP.CardSubstance OpenEventsCard)))
+                      then (NCP.CardSubstance OpenEventsCard (CONS OpenEventSExp (NCP.CardSubstance
+                                                                                  OpenEventsCard]
+                  (if (NOT OpenEventsCardWasCachedFlg)
+                      then (NCP.CloseCards OpenEventsCard)))
+      else (LET ((InterestedWindow (NCP.CoerceToInterestedWindow NoteFile)))
+                (NCP.PrintMsg InterestedWindow T (CONCAT "Can't collaboratize closed notefile: "
+                                                        (NCP.FileNameFromNoteFile NoteFile)))
+                (DISMISS NC.MsgDelay)
+                (NCP.ClearMsg InterestedWindow T])
+
+(NCCollab.GetCollabInfoBox
+  (LAMBDA (NoteFile)                                         (* rht%: " 8-Dec-86 22:27")
+          
+          (* * Create a collaboration info card if there isn't one already.)
+
+    (LET ((Box (NCP.LookupCardByName 'CollabInfo NoteFile)))
+         (if (NOT (NCP.ValidCardP Box))
+             then (SETQ Box (NCP.CreateFileBox NoteFile "Collaboration Info" T))
+                  (NCP.MarkAsNotNeedingFiling Box)
+                  (NCP.RegisterCardByName 'CollabInfo Box))
+         Box)))
+
+(NCCollab.ChangeCurrentCollaborator
+  (LAMBDA (NoteFile CollaboratorCard)                        (* rht%: "23-Nov-86 17:48")
+          
+          (* * Change current collaborator. If CollaboratorCard is NIL, then ask user to 
+          specify.)
+
+    (OR CollaboratorCard (SETQ CollaboratorCard (MENU (NCCollab.MakeCollaboratorsMenu NoteFile))))
+    (if (NCP.ValidCardP CollaboratorCard)
+        then (NCP.NoteFileProp NoteFile 'CurrentCollaboratorCard CollaboratorCard)
+             (NCInsp.InstallParams CollaboratorCard))))
+
+(NCCollab.RemoveCollaboratorCard
+  (LAMBDA (NoteFile)                                         (* rht%: "23-Nov-86 16:47")
+          
+          (* * Remove one of the collaborator cards.)
+
+    (LET ((CollaboratorCard (MENU (NCCollab.MakeCollaboratorsMenu NoteFile))))
+         (if (NCP.ValidCardP CollaboratorCard)
+             then (NCP.DeleteCards CollaboratorCard)))))
+
+(NCCollab.AccessCollaboratorInfo
+  (LAMBDA (NoteFile Item)                                    (* rht%: "23-Nov-86 17:45")
+          
+          (* * Called from NoteFile icon's middle button menu.
+          Bring up a menu of known collaborator names plus options to add a new name or 
+          remove one.)
+
+    (LET ((Result (MENU (NCCollab.MakeCollaboratorsMenu NoteFile '(("-- New Name(s) --" 'NEWNAMES 
+                                                        "Create a new collaborator information card."
+                                                                          )
+                                                                   ("-- Remove Name --" 'REMOVENAME 
+                                                  "Remove one of the collaborator information cards."
+                                                                          )
+                                                                   (
+                                                                  "-- Change current collaborator --"
+                                                                    'CHANGECURRENT 
+                                                        "Change choice of current collaborator name."
+                                                                    ))))))
+         (COND
+            ((NCP.ValidCardP Result)
+             (NCP.OpenCard Result))
+            ((EQ Result 'NEWNAMES)
+             (NCP.CreateCard 'Collaborator NoteFile "??"))
+            ((EQ Result 'REMOVENAME)
+             (NCCollab.RemoveCollaboratorCard NoteFile))
+            ((EQ Result 'CHANGECURRENT)
+             (NCCollab.ChangeCurrentCollaborator NoteFile))))))
+
+(NCCollab.MakeCollaboratorsMenu
+  (LAMBDA (NoteFile ExtraMenuItems)                          (* rht%: " 8-Dec-86 22:36")
+          
+          (* * Returns a menu with items corresponding to the collaborators of this 
+          notefile. The current collaborator, if any, is shaded.)
+
+    (DECLARE (GLOBALVARS NCCollab.CollaboratorsMenuGreyShade))
+    (LET ((ListOfCollaboratorCards (NCCollab.ListOfCollaboratorCards NoteFile))
+          ListOfCollaboratorNames Menu CurrentCollaboratorCard)
+         (SETQ ListOfCollaboratorNames (for Card in ListOfCollaboratorCards collect (NCP.CardTitle
+                                                                                     Card)))
+         (SETQ CurrentCollaboratorCard (NCP.NoteFileProp NoteFile 'CurrentCollaboratorCard))
+         (SETQ Menu (create MENU
+                           ITEMS _ `(%,@ (for Name in ListOfCollaboratorNames as Card in 
+                                                                              ListOfCollaboratorCards
+                                            collect (LIST Name Card 
+                                                          "Selects this collaborator name or names.")
+                                              )
+                                         %,@ ExtraMenuItems)
+                           TITLE _ "Collaborator Name(s)"))  (* Shade item corresponding to current 
+                                                             collaborator.)
+         (if (NCP.ValidCardP CurrentCollaboratorCard)
+             then (for Item in (fetch (MENU ITEMS) of Menu) when (AND (NCP.ValidCardP (CADR Item))
+                                                                      (NCP.SameCardP 
+                                                                             CurrentCollaboratorCard
+                                                                             (CADR Item)))
+                     do (SHADEITEM Item Menu NCCollab.CollaboratorsMenuGreyShade)))
+         Menu)))
+
+(NCCollab.ListOfCollaboratorCards
+  (LAMBDA (NoteFile)                                         (* rht%: " 8-Dec-86 22:36")
+          
+          (* * Returns a list of the collaborator cards in given NoteFile.)
+
+    (LET ((CollabInfoBox (NCCollab.GetCollabInfoBox NoteFile)))
+         (if (NCP.ValidCardP CollabInfoBox)
+             then (NCP.FileBoxChildren CollabInfoBox)))))
+)
+(DEFINEQ
+
+(NCCollab.HangOnCardUntilDone
+  (LAMBDA (Card MenuButtonName MenuTitle HelpMessage)        (* rht%: "23-Nov-86 14:25")
+          
+          (* * Bring up Card, attach menu with title MenuTitle and with a single button 
+          having name MenuButtonName and help message HelpMessage.)
+
+    (LET ((Window (NCP.OpenCard Card))
+          (Menu (create MENU
+                       ITEMS _ `((%, MenuButtonName NIL %, HelpMessage))
+                       TITLE _ MenuTitle
+                       MENUFONT _ (FONTCREATE 'HELVETICA 12 'BRR)
+                       MENUTITLEFONT _ (FONTCREATE 'HELVETICA 10 'BRR)))
+          WindowRegion)
+         (SETQ WindowRegion (WINDOWREGION Window))
+         (MENU Menu (CONS (fetch (REGION LEFT) of WindowRegion)
+                          (PLUS (fetch (REGION BOTTOM) of WindowRegion)
+                                (fetch (REGION HEIGHT) of WindowRegion)))
+               T))))
+)
+(NCP.AddSessionIconMenuItem 'NoteFile '(| Collaboratize | NCCollab.CollaboratizeNoteFile 
+                                              "Collaboratizes a notefile."))
+(NCP.AddNoteFileIconMenuItem '(Collaboratize NCCollab.CollaboratizeNoteFile 
+                                     "Collaboratizes a notefile.") 'Open)
+(PUTPROPS NCCOLLABORATION COPYRIGHT ("Xerox Corporation" 1986 1987 1988))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (3476 14777 (NCCollab.OpenNoteFileFn 3486 . 6663) (NCCollab.CollaboratizeNoteFile 6665
+ . 9157) (NCCollab.GetCollabInfoBox 9159 . 9684) (NCCollab.ChangeCurrentCollaborator 9686 . 10228) (
+NCCollab.RemoveCollaboratorCard 10230 . 10616) (NCCollab.AccessCollaboratorInfo 10618 . 12310) (
+NCCollab.MakeCollaboratorsMenu 12312 . 14381) (NCCollab.ListOfCollaboratorCards 14383 . 14775)) (14778
+ 15736 (NCCollab.HangOnCardUntilDone 14788 . 15734)))))
+STOP

@@ -1,0 +1,309 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "XCL" 
+BASE 10)
+(filecreated "15-Feb-88 12:00:00" 
+{qv}<notecards>1.3l>library>textcardkeys.\;4 11500  
+
+      |changes| |to:|  (fns |NC.CreateLinkedTextNote| 
+                            |NC.CreateLinkedTextInclusion| 
+                            |NC.CloseTextCard| 
+                            |NC.CreateLinkedNewTextCard| 
+                            |NCP.NewTextCardRegion| 
+                            |NC.NewTextCardRegion|)
+                       (vars textcardkeyscoms)
+
+      |previous| |date:| " 8-May-87 18:03:41" 
+{qv}<notecards>1.3l>library>textcardkeys.\;1)
+
+
+; Copyright (c) 1987, 1988 by Xerox Corporation.  All rights reserved.
+
+(prettycomprint textcardkeyscoms)
+
+(rpaqq textcardkeyscoms (
+      
+      (* |;;| "adds a new feature to NCTEXTCARD allowing user defineable special keys to create a new text card and a link to it with one of two user defineable link types and initial titles. It also allows assigning a special key to close a card. The initial settings are META asterisk key (META-SHIFT-8) creates a See link. META open paren (META SHIFT 9) creates an include link. META close paren (META SHIFT 0) closes a card.  NCP.NewTextCardRegion is available to be modified to taste.")
+
+                             
+      
+      (* |;;| 
+    "Text Note creation, link, and title accelerator")
+
+                             (globalvars 
+                              |NC.CreateLinkedTextNoteChar| 
+                          |NC.CreateLinkedTextNoteLinkType| 
+                             |NC.CreateLinkedTextNoteTitle|
+                                    )
+                             (initvars (
+                              |NC.CreateLinkedTextNoteChar|
+                                        298)
+                                    (
+                          |NC.CreateLinkedTextNoteLinkType|
+                                     '|See|)
+                                    (
+                             |NC.CreateLinkedTextNoteTitle|
+                                     "*"))
+                             (fns |NC.CreateLinkedTextNote|
+                                  )
+                             
+      
+      (* |;;| 
+    "Included text creation, link, and title accelerator")
+
+                             (globalvars 
+                         |NC.CreateLinkedTextInclusionChar| 
+                     |NC.CreateLinkedTextInclusionLinkType| 
+                        |NC.CreateLinkedTextInclusionTitle|
+                                    )
+                             (initvars (
+                         |NC.CreateLinkedTextInclusionChar|
+                                        296)
+                                    (
+                     |NC.CreateLinkedTextInclusionLinkType|
+                                     '|Include|)
+                                    (
+                        |NC.CreateLinkedTextInclusionTitle|
+                                     ""))
+                             (fns 
+                             |NC.CreateLinkedTextInclusion|
+                                  )
+                             
+      
+      (* |;;| "close card  accelerator")
+
+                             (globalvars 
+                                    |NC.CloseTextCardChar|)
+                             (initvars (
+                                     |NC.CloseTextCardChar|
+                                        297))
+                             (fns |NC.CloseTextCard|)
+                             
+      
+      (* |;;| "used by Text Note and text inclusion")
+
+                             (fns 
+                               |NC.CreateLinkedNewTextCard| 
+                                  |NCP.NewTextCardRegion| 
+                                  |NC.NewTextCardRegion|)
+                             
+      
+      (* |;;| "setup TEDIT keys")
+
+                             (p (tedit.setfunction
+                                 
+                              |NC.CreateLinkedTextNoteChar|
+                                 '|NC.CreateLinkedTextNote|
+                                 )
+                                (tedit.setfunction
+                                 
+                         |NC.CreateLinkedTextInclusionChar|
+                                 '
+                             |NC.CreateLinkedTextInclusion|
+                                 )
+                                (tedit.setfunction
+                                 |NC.CloseTextCardChar|
+                                 '|NC.CloseTextCard|))))
+
+
+
+(* |;;| 
+"adds a new feature to NCTEXTCARD allowing user defineable special keys to create a new text card and a link to it with one of two user defineable link types and initial titles. It also allows assigning a special key to close a card. The initial settings are META asterisk key (META-SHIFT-8) creates a See link. META open paren (META SHIFT 9) creates an include link. META close paren (META SHIFT 0) closes a card.  NCP.NewTextCardRegion is available to be modified to taste."
+)
+
+
+
+
+(* |;;| "Text Note creation, link, and title accelerator")
+
+(declare\: doeval@compile dontcopy
+
+(globalvars |NC.CreateLinkedTextNoteChar| 
+       |NC.CreateLinkedTextNoteLinkType| 
+       |NC.CreateLinkedTextNoteTitle|)
+)
+
+(rpaq? |NC.CreateLinkedTextNoteChar| 298)
+
+(rpaq? |NC.CreateLinkedTextNoteLinkType| '|See|)
+
+(rpaq? |NC.CreateLinkedTextNoteTitle| "*")
+(defineq
+
+(|NC.CreateLinkedTextNote|
+  (lambda (|text.stream| |textobj|)
+                             (* |kirk:| "20-Feb-87 22:13")
+    (add.process (list (function 
+                        |NC.CreateLinkedNewTextCard|)
+                       |text.stream| |textobj| (kwote
+                                                
+                          |NC.CreateLinkedTextNoteLinkType|
+                                                )))))
+)
+
+
+
+(* |;;| 
+"Included text creation, link, and title accelerator")
+
+(declare\: doeval@compile dontcopy
+
+(globalvars |NC.CreateLinkedTextInclusionChar| 
+       |NC.CreateLinkedTextInclusionLinkType| 
+       |NC.CreateLinkedTextInclusionTitle|)
+)
+
+(rpaq? |NC.CreateLinkedTextInclusionChar| 296)
+
+(rpaq? |NC.CreateLinkedTextInclusionLinkType| 
+       '|Include|)
+
+(rpaq? |NC.CreateLinkedTextInclusionTitle| "")
+(defineq
+
+(|NC.CreateLinkedTextInclusion|
+  (lambda (|text.stream| |textobj|)
+                             (* |kirk:| "20-Feb-87 22:12")
+    (add.process (list (function 
+                        |NC.CreateLinkedNewTextCard|)
+                       |text.stream| |textobj| (kwote
+                                                
+                     |NC.CreateLinkedTextInclusionLinkType|
+                                                )))))
+)
+
+
+
+(* |;;| "close card  accelerator")
+
+(declare\: doeval@compile dontcopy
+
+(globalvars |NC.CloseTextCardChar|)
+)
+
+(rpaq? |NC.CloseTextCardChar| 297)
+(defineq
+
+(|NC.CloseTextCard|
+  (lambda (|nothing| |textobj|)
+                             (* |kirk:| "17-Feb-87 22:32")
+      
+      (* |;;| "for use in TEDIT.SETFUNCTION call")
+
+    (|NCP.CloseCards| (|NC.CardFromWindow|
+                       (car (|fetch| (textobj \\window)
+                               |of| textobj)))
+           t)))
+)
+
+
+
+(* |;;| "used by Text Note and text inclusion")
+
+(defineq
+
+(|NC.CreateLinkedNewTextCard|
+  (lambda (text.stream textobj linktype)
+                             (* \; 
+                        "Edited 12-Feb-88 11:48 by kirk:")
+
+    (let* ((linking.card (|NC.CardFromWindow|
+                          (car (|fetch| (textobj \\window)
+                                  |of| textobj))))
+           (notefile (|NCP.CardNoteFile| linking.card))
+           new.card title)
+          (setq title (cond
+                         ((eq linktype 
+                     |NC.CreateLinkedTextInclusionLinkType|
+                              )
+                          
+                        |NC.CreateLinkedTextInclusionTitle|
+                          )
+                         ((eq linktype 
+                          |NC.CreateLinkedTextNoteLinkType|
+                              )
+                          |NC.CreateLinkedTextNoteTitle|)
+                         (t nil)))
+          (setq new.card (|NCP.CreateCard| '|Text| notefile 
+                                title t))
+          (|NC.InsertLinkInText| text.stream linktype 
+                 new.card linking.card)
+          (|NCP.CreateLinkType| linktype notefile)
+          (|NCP.OpenCard| new.card (
+                                  |NCP.NewTextCardRegion|
+                                    linking.card linktype))
+          (|NC.AssignTitle| new.card)
+      
+      (* |;;| "kludge to give tty back to linking card.   Why not instead have your NC.CloseTextCard function check a LINKED.CARD or whatever property and after closing just pass tty back to that card's window (if any)?")
+
+          (|bind| (process _ (windowprop (|NCP.CardWindow|
+                                          new.card)
+                                    'process))
+             |first| (tty.process process)
+             |until| (or (null process)
+                         (process.finishedp process))
+             |do| (block))
+          (tty.process (windowprop (|NCP.CardWindow| 
+                                          linking.card)
+                              'process)))))
+
+(|NCP.NewTextCardRegion|
+  (lambda (linking.card linktype)
+                             (* |kirk:| "17-Feb-87 21:56")
+    (|NC.NewTextCardRegion| linking.card linktype)))
+
+(|NC.NewTextCardRegion|
+  (lambda (linking.card linktype)
+                             (* |kirk:| "20-Feb-87 22:41")
+    (let
+     ((region (windowregion (|NCP.CardWindow| linking.card)
+                     )))
+     (and
+      region
+      (makewithinregion
+       (createregion (iplus (|fetch| (region left)
+                               |of| region)
+                            (|fetch| (region width)
+                               |of| region))
+              (cond
+                 ((eq linktype 
+                     |NC.CreateLinkedTextInclusionLinkType|
+                      )
+                  (idifference (|fetch| (region bottom)
+                                  |of| region)
+                         (|fetch| (region height)
+                            |of| region)))
+                 ((eq linktype 
+                      |NC.CreateLinkedTextNoteLinkType|)
+                  (idifference (iplus (|fetch| (region
+                                                bottom)
+                                         |of| region)
+                                      (|fetch| (region
+                                                height)
+                                         |of| region))
+                         (iplus (|NC.FetchDefaultHeight|
+                                 linking.card)
+                                40)))
+                 (t nil))
+              (|NC.FetchDefaultWidth| linking.card)
+              (|NC.FetchDefaultHeight| linking.card)))))))
+)
+
+
+
+(* |;;| "setup TEDIT keys")
+
+(tedit.setfunction |NC.CreateLinkedTextNoteChar|
+       '|NC.CreateLinkedTextNote|)
+(tedit.setfunction |NC.CreateLinkedTextInclusionChar|
+       '|NC.CreateLinkedTextInclusion|)
+(tedit.setfunction |NC.CloseTextCardChar| '
+       |NC.CloseTextCard|)
+(putprops textcardkeys copyright ("Xerox Corporation" 1987 
+1988))
+(declare\: dontcopy
+  (filemap (nil (5446 5896 (|NC.CreateLinkedTextNote| 5456 . 
+5894)) (6321 6776 (|NC.CreateLinkedTextInclusion| 6331 . 
+6774)) (6934 7293 (|NC.CloseTextCard| 6944 . 7291)) (7350 
+11125 (|NC.CreateLinkedNewTextCard| 7360 . 9441) (
+|NCP.NewTextCardRegion| 9443 . 9629) (|NC.NewTextCardRegion|
+ 9631 . 11123)))))
+stop

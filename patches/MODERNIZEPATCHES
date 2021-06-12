@@ -1,0 +1,109 @@
+(DEFINE-FILE-INFO READTABLE "INTERLISP" PACKAGE "INTERLISP")
+(FILECREATED "12-Jun-2021 13:29:59" {DSK}<home>pi>il>notecards>patches>MODERNIZEPATCHES.;4 6787   
+
+      changes to%:  (FNS MODERN.NEARSIDE MODERNWINDOW.BUTTONEVENTFN)
+
+      previous date%: "12-Jun-2021 12:26:51" {DSK}<home>pi>il>notecards>patches>MODERNIZEPATCHES.;3
+)
+
+
+(PRETTYCOMPRINT MODERNIZEPATCHESCOMS)
+
+(RPAQQ MODERNIZEPATCHESCOMS ((FNS MODERN.NEARSIDE MODERNWINDOW.BUTTONEVENTFN)))
+(DEFINEQ
+
+(MODERN.NEARSIDE
+  [LAMBDA (MAINREGION EDGEPERCENT)                       (* ; "Edited 12-Jun-2021 13:27 by pi")
+
+    (* ;; 
+  "TRUE if the MOUSEX is %"near%" the side (i.e., within EDGE.PERCENT of the width) of MAINREGION")
+
+    (LET ((WIDTH (FETCH WIDTH of MAINREGION))
+          (LEFT (FETCH LEFT OF MAINREGION)))
+         (OR (ILESSP LASTMOUSEX (IPLUS LEFT (TIMES WIDTH EDGEPERCENT)))
+             (IGREATERP LASTMOUSEX (IPLUS LEFT (TIMES WIDTH (DIFFERENCE 1 EDGEPERCENT])
+
+(MODERNWINDOW.BUTTONEVENTFN
+  [LAMBDA (WINDOW ORIGFUNCTION ANYWHERE)                 (* ; "Edited 12-Jun-2021 13:29 by pi")
+
+    (* ;; "")
+
+    (* ;; " fgh 2021-06-09  Added support for MODERN-STYLE2 in which left button click in Ttile Bar does shape/move only if click is outside the center N%% of the title bar left-to-right.  Inside the center N%% the original buttonevent fn is called.  MODERN-STYLE2 is indicared by a WINDOWPROP.")
+
+    (* ;; "")
+
+    (IF (AND (MOUSESTATE (ONLY LEFT))
+                 (EQ LASTKEYBOARD 0))
+        THEN (TOTOPW WINDOW)
+              (LET [CORNER TOPMARGIN (MAINREGION (WINDOWPROP WINDOW 'REGION))
+                          (ATTACHEDREGION (ATTACHEDWINDOWREGION (CENTRALWINDOW WINDOW]
+
+                   (* ;; "If the window has a TOPMARGIN property, that tells us that it does not have a canonical title but may still have a title-like attached window just above the main window.  The TOPMARGIN should be 0 in that case.")
+
+                   (* ;; "This is particularly the case of FILEBROWSER windows, where the the modified ATTACHEDWINDOWTOTOPFN drives the click here. ")
+
+                   (SETQ TOPMARGIN (IF (WINDOWPROP WINDOW 'TOPMARGIN)
+                                     ELSEIF (WINDOWPROP WINDOW 'TITLE)
+                                       THEN (FONTPROP WindowTitleDisplayStream 'HEIGHT)
+                                     ELSE MODERN-WINDOW-MARGIN))
+                   (SETQ CORNER (INCORNER.REGION MAINREGION TOPMARGIN))
+                   (IF CORNER
+                       THEN 
+
+                             (* ;; 
+       "The upper corners may be in the title bar, near the side, so test corners before titlebar.")
+
+                             (* ;; "We are in the corner of the main window, so we are reshaping.  But the ghost region should include all of the attached windows, and the starting cursor should be positioned at the corner closest to the selected corner of the main window.")
+
+                             (* ;; "WINDOWREGION includes the attached windows")
+
+                             (LET ((LEFT (FETCH LEFT OF ATTACHEDREGION))
+                                   (RIGHT (FETCH RIGHT OF ATTACHEDREGION))
+                                   (TOP (FETCH TOP OF ATTACHEDREGION))
+                                   (BOTTOM (FETCH BOTTOM OF ATTACHEDREGION))
+                                   STARTINGREGION)
+
+                                 (* ;; "\CURSORPOSITION moves the mouse to the tracking corner of the ghost region, in screen coordinates, so that the mouse starts out at the tracking corner of the ghost region, even if there are attached windows (as in the filebrowser) that overhang the corner and the initiating click was at the corner of the mainwindow.")
+
+                                  (CL:UNLESS (EQ 'DON'T (WINDOWPROP WINDOW 'RESHAPEFN))
+                                      [SETQ STARTINGREGION
+                                       (GETREGION NIL NIL NIL NIL NIL
+                                              (SELECTQ CORNER
+                                                  (RIGHTBOTTOM (\CURSORPOSITION RIGHT BOTTOM)
+                                                               (GETMOUSESTATE)
+                                                               (LIST LEFT TOP RIGHT BOTTOM))
+                                                  (LEFTBOTTOM (\CURSORPOSITION LEFT BOTTOM)
+                                                              (GETMOUSESTATE)
+                                                              (LIST RIGHT TOP LEFT BOTTOM))
+                                                  (RIGHTTOP (\CURSORPOSITION RIGHT TOP)
+                                                            (GETMOUSESTATE)
+                                                            (LIST LEFT BOTTOM RIGHT TOP))
+                                                  (LEFTTOP (\CURSORPOSITION LEFT TOP)
+                                                           (GETMOUSESTATE)
+                                                           (LIST RIGHT BOTTOM LEFT TOP))
+                                                  (SHOULDNT])
+                                  (SHAPEW (CL:IF (MEMB 'SHAPEW (WINDOWPROP WINDOW 'PASSTOMAINCOMS))
+                                              (WINDOWPROP WINDOW 'MAINWINDOW)
+                                              WINDOW)
+                                         STARTINGREGION))
+                             T
+                     ELSEIF [OR ANYWHERE (AND (NEARTOP MAINREGION TOPMARGIN)
+                                                  (LET [(EDGEPERCENT (WINDOWPROP WINDOW 
+                                                                            'MODERN-STYLE2]
+                                                       (OR (NOT EDGEPERCENT)
+                                                           (MODERN.NEARSIDE MAINREGION 
+                                                                  EDGEPERCENT]
+                       THEN (NEARESTCORNER ATTACHEDREGION)
+                             (MOVEW (CL:IF (MEMB 'MOVEW (WINDOWPROP WINDOW 'PASSTOMAINCOMS))
+                                        (WINDOWPROP WINDOW 'MAINWINDOW)
+                                        WINDOW))
+                             T
+                     ELSEIF [OR ORIGFUNCTION (SETQ ORIGFUNCTION (WINDOWPROP WINDOW 
+                                                                           'PREMODERN-BUTTONEVENTFN]
+                       THEN (APPLY* ORIGFUNCTION WINDOW)))
+      ELSEIF [OR ORIGFUNCTION (SETQ ORIGFUNCTION (WINDOWPROP WINDOW 'PREMODERN-BUTTONEVENTFN]
+        THEN (APPLY* ORIGFUNCTION WINDOW])
+)
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (466 6764 (MODERN.NEARSIDE 476 . 988) (MODERNWINDOW.BUTTONEVENTFN 990 . 6762)))))
+STOP

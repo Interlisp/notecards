@@ -1,0 +1,180 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
+(FILECREATED " 5-Dec-87 20:06:16" {QV}<NOTECARDS>1.3L>LIBRARY>NCINSPECTORCARD.;1 7975   
+
+      changes to%:  (VARS NCINSPECTORCARDCOMS)
+                    (FNS NCInsp.AddInspectorCard)
+
+      previous date%: " 9-Dec-86 00:27:26" {QV}<NOTECARDS>1.3K>LIBRARY>NCINSPECTORCARD.;9)
+
+
+(* "
+Copyright (c) 1986, 1987 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCINSPECTORCARDCOMS)
+
+(RPAQQ NCINSPECTORCARDCOMS ((DECLARE%: DONTCOPY (PROP MAKEFILE-ENVIRONMENT NCINSPECTORCARD))
+                            
+
+(* ;;; "This card type acts like the session parameters editor allowing you to edit a proplist inside a card. The card's substance contains the proplist mapping properties to values along with other useful info like functions to fetch and store used by the inspector.")
+
+                            (FNS NCInsp.FetchFn NCInsp.SelectionFn NCInsp.TogglerFetchFn)
+                            (FNS NCInsp.InspectorMakeFn NCInsp.InspectorEditFn 
+                                 NCInsp.ParamNamesFromPropList NCInsp.InstallParams)
+                            (FNS NCInsp.AddInspectorCard)
+                            (RECORDS INSPECTORPARAMETER)
+                            (DECLARE%: DONTEVAL@LOAD (P (NCInsp.AddInspectorCard)))))
+(DECLARE%: DONTCOPY 
+
+(PUTPROPS NCINSPECTORCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+)
+
+
+
+(* ;;; 
+"This card type acts like the session parameters editor allowing you to edit a proplist inside a card. The card's substance contains the proplist mapping properties to values along with other useful info like functions to fetch and store used by the inspector."
+)
+
+(DEFINEQ
+
+(NCInsp.FetchFn
+  (LAMBDA (InspectorCard Parameter)                          (* rht%: "21-Nov-86 00:23")
+          
+          (* * Fetches the value of Parameter from InspectorCard's substance.)
+
+    (LET ((ParameterInfo (LISTGET (NCP.CardSubstance InspectorCard)
+                                Parameter))
+          Value FetchFn)
+         (SETQ Value (fetch (INSPECTORPARAMETER PARAMVALUE) of ParameterInfo))
+         (SETQ FetchFn (fetch (INSPECTORPARAMETER PARAMFETCHFN) of ParameterInfo))
+         (if FetchFn
+             then (APPLY* FetchFn Parameter Value InspectorCard)
+           else Value))))
+
+(NCInsp.SelectionFn
+  (LAMBDA (Parameter ValueFlg Window)                        (* rht%: "21-Nov-86 01:09")
+          
+          (* * Actions to be taken when the user selects an item in the Inspector.
+          Get for a new value.)
+
+    (LET ((Card (NCP.CardFromWindow Window))
+          ParameterInfo Answer SelectionFn Value)
+         (SETQ ParameterInfo (LISTGET (NCP.CardSubstance Card)
+                                    Parameter))
+         (SETQ Value (fetch (INSPECTORPARAMETER PARAMVALUE) of ParameterInfo))
+         (SETQ SelectionFn (fetch (INSPECTORPARAMETER PARAMSELECTIONFN) of ParameterInfo))
+         (if (AND SelectionFn (NEQ 'NOTCHANGED (SETQ Answer (APPLY* SelectionFn Parameter Value Card)
+                                                )))
+             then (replace (INSPECTORPARAMETER PARAMVALUE) of ParameterInfo with Answer)
+                  (NCP.MarkCardDirty Card)
+                  (INSPECTW.REDISPLAY Window Parameter))
+         (INSPECTW.SELECTITEM Window))))
+
+(NCInsp.TogglerFetchFn
+  (LAMBDA (Parameter Value)                                  (* rht%: "20-Nov-86 23:19")
+          
+          (* * Return Yes if non-nil, No if nil.)
+
+    (if Value
+        then 'Yes
+      else 'No)))
+)
+(DEFINEQ
+
+(NCInsp.InspectorMakeFn
+  (LAMBDA (Card Title NoDisplayFlg InspectorParamsPropList)  (* rht%: " 8-Dec-86 18:01")
+          
+          (* * This is the Make fn for Inspector cards.
+          Currently the parameters, values, fns, etc.
+          must be provided in InspectorParamsPropList.
+          One day we'll have an interface with which to get them from the user.
+          Create an interlisp inspector in a notecard.)
+
+    (NCP.CardSubstance Card InspectorParamsPropList)
+    (if NoDisplayFlg
+        then Card
+      else (LET ((ParamNames (NCInsp.ParamNamesFromPropList InspectorParamsPropList))
+                 Window Type)
+                (SETQ Window (INSPECTW.CREATE Card ParamNames (FUNCTION NCInsp.FetchFn)
+                                    NIL NIL NIL NIL (OR Title "Untitled")
+                                    (FUNCTION NCInsp.SelectionFn)
+                                    NIL NIL))
+                (SETQ Type (NC.RetrieveType Card))
+                (NCP.SetUpTitleBar Window Type)
+                (WINDOWADDPROP Window 'SHRINKFN (FUNCTION NC.TextCardShrinkFn))
+                Window))))
+
+(NCInsp.InspectorEditFn
+  (LAMBDA (Card Substance RegionOrPosition)                  (* rht%: "23-Nov-86 13:00")
+          
+          (* * This is the EditFn for the Inspector card type.
+          Just brings up an inspector in a card window on the props stored in the card's 
+          substance.)
+
+    (LET ((Window (NC.FetchWindow Card))
+          Region Title Type)
+         (if (WINDOWP Window)
+             then (TOTOPW Window)
+                  (if RegionOrPosition
+                      then (SHAPEW Window (NC.DetermineDisplayRegion Card RegionOrPosition)))
+                  (RPTQ 2 (FLASHW Window))
+                  Window
+           else (SETQ Window (INSPECTW.CREATE Card (NCInsp.ParamNamesFromPropList Substance)
+                                    (FUNCTION NCInsp.FetchFn)
+                                    NIL NIL NIL NIL (NC.RetrieveTitle Card)
+                                    (FUNCTION NCInsp.SelectionFn)
+                                    (if (REGIONP RegionOrPosition)
+                                        then (NC.DetermineDisplayRegion Card RegionOrPosition)
+                                      else RegionOrPosition)
+                                    NIL))
+                (SETQ Type (NC.RetrieveType Card))
+                (NC.InstallTitleBarLeftMenu Window Type)
+                (NC.InstallTitleBarMiddleMenu Window Type)
+                (NC.InstallTitleBarButtonEventFn Window (FUNCTION NC.TitleBarButtonEventFn))
+                (WINDOWADDPROP Window 'SHRINKFN (FUNCTION NC.TextCardShrinkFn)))
+         Window)))
+
+(NCInsp.ParamNamesFromPropList
+  (LAMBDA (ParamsPropList)                                   (* rht%: "20-Nov-86 22:37")
+          
+          (* * Get the list of Param names from a params proplist.)
+
+    (for PropPair on ParamsPropList by (CDDR PropPair) collect (CAR PropPair))))
+
+(NCInsp.InstallParams
+  (LAMBDA (Card)                                             (* rht%: "21-Nov-86 17:28")
+          
+          (* * Take the parameter values from Card's substance and install them on the 
+          notefile.)
+
+    (for ParameterPropPair on (NCP.CardSubstance Card) by (CDDR ParameterPropPair)
+       do (APPLY* (fetch (INSPECTORPARAMETER PARAMINSTALLFN) of (CADR ParameterPropPair))
+                 (CAR ParameterPropPair)
+                 (fetch (INSPECTORPARAMETER PARAMVALUE) of (CADR ParameterPropPair))
+                 Card))))
+)
+(DEFINEQ
+
+(NCInsp.AddInspectorCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+          
+          (* * Create the Inspector card type.)
+
+    (NCP.CreateCardType 'Inspector 'List `((MakeFn ,(FUNCTION NCInsp.InspectorMakeFn))
+                                           (EditFn ,(FUNCTION NCInsp.InspectorEditFn)))
+           '((DisplayedInMenuFlg NIL)))))
+)
+(DECLARE%: EVAL@COMPILE
+
+(RECORD INSPECTORPARAMETER (PARAMVALUE PARAMFETCHFN PARAMSELECTIONFN PARAMINSTALLFN))
+)
+(DECLARE%: DONTEVAL@LOAD 
+(NCInsp.AddInspectorCard)
+)
+(PUTPROPS NCINSPECTORCARD COPYRIGHT ("Xerox Corporation" 1986 1987))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (1726 3654 (NCInsp.FetchFn 1736 . 2374) (NCInsp.SelectionFn 2376 . 3411) (
+NCInsp.TogglerFetchFn 3413 . 3652)) (3655 7294 (NCInsp.InspectorMakeFn 3665 . 4798) (
+NCInsp.InspectorEditFn 4800 . 6396) (NCInsp.ParamNamesFromPropList 6398 . 6698) (NCInsp.InstallParams 
+6700 . 7292)) (7295 7712 (NCInsp.AddInspectorCard 7305 . 7710)))))
+STOP

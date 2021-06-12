@@ -1,0 +1,306 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 5-Nov-2020 19:31:00" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCFILECARD.;4 18667        previous date%: " 9-Jan-94 21:18:59" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCFILECARD.;2)(* ; "Copyright (c) 1985, 1986, 1987, 1988, 1989, 1993, 1994, 2020 by Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCFILECARDCOMS)(RPAQQ NCFILECARDCOMS       [(DECLARE%: DONTCOPY (PROPS (NCFILECARD MAKEFILE-ENVIRONMENT)                                   (NCFILECARD FILETYPE)))        (FNS NCAddStub.FileCard)        (* ;;; "Globalvars from elsewhere")        (GLOBALVARS NC.DefaultFont TEDIT.DEFAULT.MENU NC.FileCardIcon)        (* ;;; "Substance functions")        (FNS NC.MakeFileCard NC.EditFileSubstance NC.FileSubstanceDirtyP NC.GetFileSubstance              NC.MarkFileSubstanceDirty NC.PutFileSubstance NC.QuitFileSubstance NC.FileCardPutFile)        (* ;;; "Utilities")        (FNS NC.FileCardFileVersionNumber NC.FileCardTitle NC.FetchTextStream NC.GetFileFromUser              NC.MakeFileCardCore NC.SetTextStream NC.FileCardShrinkFn)        (BITMAPS NC.FileCardIcon)        (FNS NC.AddFileCardType)        (DECLARE%: DONTEVAL@LOAD (* * Add file card type to CardTypes list)               (P (NC.AddFileCardType))               (* * Hang an ExportSubstanceFn off the File litatom.)               (P (PUTPROP 'File 'ExportSubstanceFn (FUNCTION OPENTEXTSTREAM])(DECLARE%: DONTCOPY (PUTPROPS NCFILECARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))(PUTPROPS NCFILECARD FILETYPE :FAKE-COMPILE-FILE))(DEFINEQ(NCAddStub.FileCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+          
+          (* * kirk 18Jun86 Add the text card stub)
+          
+          (* * rht 11/8/86%: Now specifies bitmap.)
+
+    (DECLARE (GLOBALVARS NC.FileCardIcon))
+    (NC.AddCardTypeStub 'File 'NoteCard 'NCFILECARD NIL `((DisplayedInMenuFlg T)
+                                                          (LinkIconAttachedBitMap ,NC.FileCardIcon)))
+    )))(* ;;; "Globalvars from elsewhere")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.DefaultFont TEDIT.DEFAULT.MENU NC.FileCardIcon))(* ;;; "Substance functions")(DEFINEQ(NC.MakeFileCard
+  [LAMBDA (Card Title NoDisplayFlg ParamList InterestedWindow RegionOrPosition)
+                                                             (* ; "Edited  5-Aug-88 15:47 by Trigg")
+
+(* ;;; "Make a new card of type File -- ERSETQ around Core procedure here!")
+
+    (* ;; "rht 8/5/88: Added RegionOrPosition arg and passed to NC.MakeFileCardCore.  Also added ParamList and InterestedWindow args.")
+
+    (LET (ReturnValue)
+         (COND
+            ((AND (ERSETQ (SETQ ReturnValue (NC.MakeFileCardCore Card Title NoDisplayFlg ParamList 
+                                                   InterestedWindow RegionOrPosition)))
+                  ReturnValue))
+            (T (AND (OPENWP (NC.FetchWindow Card))
+                    (CLOSEW (NC.FetchWindow Card)))
+               NIL])(NC.EditFileSubstance
+  (LAMBDA (Card FileDesignator RegionOrPosition)             (* rht%: "29-Apr-87 16:32")
+          
+          (* * Bring up a TEdit window for Card ID whose substance is specified by file 
+          designator in Region specified by RegionOrPosition or by the user.)
+          
+          (* * fgh |12/17/85| Updated for 1.3 and multiple open NFs)
+          
+          (* * fgh |6/1/86| Updated with new title bar menu scheme)
+          
+          (* * rht 11/16/86%: Now moves window to RegionOrPosition if already up.)
+          
+          (* * rht 4/29/87%: Changed to match NC.BringUpTEditCard.)
+
+    (PROG (Region TEditWindow TEditProcess Title NewFileName Type TextStream)
+          (if (SETQ TEditWindow (NC.FetchWindow Card))
+              then (TOTOPW TEditWindow)
+                   (if RegionOrPosition
+                       then (SHAPEW TEditWindow (NC.DetermineDisplayRegion Card RegionOrPosition)))
+                   (RPTQ 2 (FLASHW TEditWindow))
+                   (if (SETQ TEditProcess (WINDOWPROP TEditWindow 'PROCESS))
+                       then (TTY.PROCESS TEditProcess)
+                     else                                    (* Process may have been turned off.
+                                                             Try to restart.)
+                          (SETQ TEditProcess (RESTART-PROCESS-OF-TEDIT-WINDOW TEditWindow)))
+                   (RETURN TEditWindow))
+          (SETQ Region (NC.DetermineDisplayRegion Card RegionOrPosition))
+          (SETQ Title (NC.RetrieveTitle Card))
+          (SETQ Type (NC.RetrieveType Card))
+          (SETQ TEditWindow (CREATEW Region Title NIL T))
+          
+          (* Make a prompt window "invisibly" so it gets hooked in.)
+
+          (NC.AttachPromptWindowOffScreen TEditWindow)
+          (WINDOWADDPROP TEditWindow 'SHRINKFN (FUNCTION NC.FileCardShrinkFn))
+          (NC.InstallTitleBarLeftMenu TEditWindow Type)
+          (NC.InstallTextTitleBarMiddleMenu TEditWindow Type)
+          (COND
+             ((NULL (INFILEP FileDesignator))
+              (NC.PrintMsg TEditWindow T FileDesignator " is no longer a file." (CHARACTER 13))
+              (COND
+                 ((NC.YesP (NC.AskUser "Do you want to create the file?" " -- " "Yes" NIL TEditWindow 
+                                  NIL NIL T))
+                  (CLOSEF (PROG1 (SETQ FileDesignator (OPENSTREAM FileDesignator 'OUTPUT 'NEW))
+                                 (BOUT FileDesignator 32))))
+                 ((NC.YesP (NC.AskUser "Do you want to respecify the file name?" " -- " "Yes" NIL 
+                                  TEditWindow NIL NIL T))
+                  (SETQ FileDesignator (NC.GetFileFromUser TEditWindow T))
+                  (NC.SetSubstance Card FileDesignator)
+                  (NC.MarkCardDirty Card)
+                  (NC.SetTitle Card (NC.FileCardTitle Card))
+                  (NC.SetTitleDirtyFlg Card T)
+                  (WINDOWPROP TEditWindow 'TITLE (NC.SetTitle Card (NC.FileCardTitle Card)))
+                  (NC.PutProp Card 'FileName FileDesignator))
+                 (T (CLOSEW TEditWindow)
+                    (RETURN NIL)))))
+          (TEDIT FileDesignator TEditWindow NIL (NC.MakeTEditPropsList TEditWindow T
+                                                       (fetch (Card NoteFile) of Card)))
+          (NC.SetTextStream Card (SETQ TextStream (WINDOWPROP TEditWindow 'TEXTSTREAM)))
+          (STREAMPROP TextStream 'NoteCardObject Card)
+          (NC.PutProp Card 'FileVersion (NC.FileCardFileVersionNumber Card))
+          (RETURN TEditWindow))))(NC.FileSubstanceDirtyP
+  (LAMBDA (Card)                                             (* fgh%: "17-Dec-85 18:23")
+          
+          (* * Return T is TextSubstance has been changed.)
+          
+          (* * fgh |12/17/85| Updated for 1.3)
+
+    (LET (TextStream)
+         (AND (SETQ TextStream (NC.FetchTextStream Card))
+              (TEDIT.STREAMCHANGEDP TextStream)))))(NC.GetFileSubstance
+  (LAMBDA (Card Length Stream VersionNumber)                 (* fgh%: " 3-Jun-86 15:45")
+          
+          (* * Read the File designator from DatabaseStream)
+          
+          (* * fgh |12/17/85| Updated for 1.3)
+          
+          (* * fgh |6/3/86| Added Stream and VersionNumber args and made READ from 
+          Stream.)
+
+    (READ Stream)))(NC.MarkFileSubstanceDirty
+  (LAMBDA (Card ResetFlg)                                    (* fgh%: "17-Dec-85 18:24")
+          
+          (* * Mark or unmark TextStream of File being changed.)
+          
+          (* * fgh |12/17/85| Updated for 1.3)
+
+    (LET (TextObj (Window (NC.FetchWindow Card)))
+         (AND Window (SETQ TextObj (WINDOWPROP Window 'TEXTOBJ))
+              (replace (TEXTOBJ \DIRTY) of TextObj with (COND
+                                                           (ResetFlg NIL)
+                                                           (T T)))))))(NC.PutFileSubstance
+  (LAMBDA (Card Stream)                                      (* fgh%: " 3-Jun-86 15:45")
+          
+          (* * Put a file designator onto DatabaseStream)
+          
+          (* * fgh |12/17/85| Updated for 1.3)
+          
+          (* * Save the file for this file card)
+          
+          (* * fgh |2/6/86| Now returns a version number.)
+
+    (NC.FileCardPutFile Card Stream)
+          
+          (* * Save the file card stuff in the NoteFile)
+
+    (PRINT (NC.FetchSubstance Card)
+           Stream)
+    0))(NC.QuitFileSubstance
+  (LAMBDA (WindowOrTextStreamOrCard)                         (* rht%: "16-Oct-86 16:59")
+          
+          (* * fgh |12/17/85| Updated for 1.3)
+          
+          (* * rht 10/16/86%: Removed call to NC.DeactivateCard.)
+
+    (LET (Window PromptWindow TextStream TextStreamChanged (Card (NC.CoerceToCard 
+                                                                        WindowOrTextStreamOrCard)))
+         (SETQ TextStream (NC.FetchTextStream Card))
+         (SETQ Window (NC.FetchWindow Card))
+         (COND
+            (Window (WINDOWDELPROP Window 'CLOSEFN (FUNCTION NC.QuitCard))
+                   (TEDIT.QUIT TextStream)
+                   (AND (SETQ PromptWindow (fetch (TEXTOBJ PROMPTWINDOW) of (TEXTOBJ TextStream)))
+                        (CLOSEW PromptWindow))))
+         (NC.SetTextStream Card NIL))))(NC.FileCardPutFile
+  [LAMBDA (WindowOrCard DatabaseStream QuittingFlg)          (* ; "Edited 15-Sep-88 14:47 by Trigg")
+
+(* ;;; "Do the work to save a file card.  That is you must put the file if its changed as well as write thee notecard info to the NoteFile")
+
+    (* ;; "fgh 12/17/85 Updated for 1.3")
+
+    (* ;; "rht 9/15/88: Ripped out stuff that changes title to match file we just %"put%" to.")
+
+    (LET ((Card (NC.CoerceToCard WindowOrCard))
+          TextStream)
+         (SETQ TextStream (NC.FetchTextStream Card))
+         (if (AND TextStream (TEDIT.STREAMCHANGEDP TextStream))
+             then (TEDIT.PUT TextStream (NC.FetchSubstance Card))
+                  (NC.PutProp Card 'FileVersion (NC.FileCardFileVersionNumber Card]))(* ;;; "Utilities")(DEFINEQ(NC.FileCardFileVersionNumber
+  (LAMBDA (Card)                                             (* fgh%: "17-Dec-85 18:17")
+          
+          (* * Return the current version number of the file reffered to by the file card 
+          ID)
+          
+          (* * fgh |12/17/85| Updated for 1.3)
+
+    (FILENAMEFIELD (FULLNAME (fetch (TEXTOBJ TXTFILE) of (TEXTOBJ (NC.FetchTextStream Card))))
+           'VERSION)))(NC.FileCardTitle
+  (LAMBDA (Card)                                             (* rht%: "25-Mar-87 15:40")
+          
+          (* * Determine the title for file card ID)
+          
+          (* * fgh |12/17/85| Updated for 1.3 and multiple open NoteFiles.)
+
+    (LET ((FileName (NC.FetchSubstance Card)))
+         (CONCAT (FILENAMEFIELD FileName 'NAME)
+                "."
+                (OR (FILENAMEFIELD FileName 'EXTENSION)
+                    "")))))(NC.FetchTextStream
+  (LAMBDA (Card)                                             (* fgh%: "17-Dec-85 19:32")
+          
+          (* * fgh |12/17/85| Updated for 1.3)
+
+    (NC.FetchUserDataProp Card 'NoteCardTextStream)))(NC.GetFileFromUser
+  (LAMBDA (Window DontClearPromptFlg FirstTry)               (* rht%: "29-Apr-87 15:00")
+          
+          (* * Create a file designator)
+          
+          (* * rht 3/25/87%: Changed to call NC.AskYesOrNo.)
+          
+          (* * rht 4/29/87%: Removed call to NC.YesP.)
+
+    (LET (FileName FullFileName)
+         (SETQ FileName (NC.AskUser "Enter file name" ":  " FirstTry (NULL DontClearPromptFlg)
+                               Window T NIL T))
+         (PROG1 (COND
+                   ((SETQ FullFileName (INFILEP FileName))
+                    (PACKFILENAME 'VERSION NIL 'BODY FullFileName))
+                   ((NULL (SETQ FullFileName (FULLNAME FileName 'NEW)))
+                    (NC.PrintMsg Window T FileName " is not a legal file name." (CHARACTER 13)
+                           "Please try again."
+                           (CHARACTER 13))
+                    (NC.GetFileFromUser Window T))
+                   ((NC.AskYesOrNo (CONCAT "Do you want me to create " FullFileName)
+                           " ? " "Yes" T Window NIL NIL T)
+                    (PACKFILENAME 'VERSION NIL 'BODY (CLOSEF (PROG1 (SETQ FileName
+                                                                     (OPENSTREAM FileName
+                                                                            'OUTPUT
+                                                                            'NEW))
+                                                                    (BOUT FileName 32)))))
+                   ((NC.YesP (NC.AskYesOrNo "Do you want to specify another file name?" " -- " "No" T 
+                                    Window NIL NIL T))
+                    (NC.GetFileFromUser Window DontClearPromptFlg FirstTry))
+                   (T NIL))
+                (NC.ClearMsg Window T)))))(NC.MakeFileCardCore
+  [LAMBDA (Card Title NoDisplayFlg ParamList InterestedWindow RegionOrPosition)
+                                                             (* ; "Edited  5-Aug-88 15:48 by Trigg")
+
+(* ;;; "Make a new card of type File -- Core procedure")
+
+    (* ;; "fgh 12/17/85 Updated for 1.3 multiple open NF changes")
+
+    (* ;; "fgh 6/1/86 Updated with new title bar menu scheme")
+
+    (* ;; "rht 3/25/87: Cleaned up lots of outdated cruftiness.")
+
+    (* ;; "rht 4/29/87: Changed to match NC.MakeTEditCard.")
+
+    (* ;; "rht 8/5/88: Added RegionOrPosition arg and passed to NC.MakeNewCardWindow.  Also added ParamList and InterestedWindow args.")
+
+    (LET (FileName TextStream)
+         (if (NOT NoDisplayFlg)
+             then (LET ((Window (NC.MakeNewCardWindow Card (OR Title "Creating File card ...")
+                                       NIL T RegionOrPosition))
+                        (Type (NC.RetrieveType Card)))       (* ; 
+                                             "Make a prompt window 'invisibly' so it gets hooked in.")
+                       (NC.AttachPromptWindowOffScreen Window)
+                       (NC.InstallTitleBarLeftMenu Window Type)
+                       (NC.InstallTextTitleBarMiddleMenu Window Type)
+                       (WINDOWADDPROP Window 'SHRINKFN (FUNCTION NC.FileCardShrinkFn))
+                       (TEDIT NIL Window NIL (NC.MakeTEditPropsList Window T (fetch (Card NoteFile)
+                                                                                of Card)))
+                       (until [SETQ TextStream (NC.SetTextStream Card (WINDOWPROP Window 'TEXTSTREAM]
+                          do (BLOCK))
+                       (STREAMPROP TextStream 'NoteCardObject Card)
+                       (if (SETQ FileName (NC.GetFileFromUser Window))
+                           then (TEDIT.INCLUDE (TEXTOBJ TextStream)
+                                       FileName)
+                                (NC.SetSubstance Card FileName)
+                                (WINDOWPROP Window 'TITLE (NC.SetTitle Card (NC.FileCardTitle Card)))
+                                (NC.PutProp Card 'FileName FileName)
+                                (NC.PutProp Card 'FileVersion (NC.FileCardFileVersionNumber Card))
+                                (GIVE.TTY.PROCESS Window)
+                                Window
+                         else (NC.DeleteNoteCard Card NIL T)
+                              NIL))
+           else (SETQ FileName (NC.GetFileFromUser))
+                (NC.SetSubstance Card FileName)
+                (NC.SetTitle Card (NC.FileCardTitle Card))
+                Card])(NC.SetTextStream
+  (LAMBDA (Card TextStream)                                  (* fgh%: "17-Dec-85 19:30")
+          
+          (* * fgh |12/17/85| Updated for 1.3)
+
+    (NC.SetUserDataProp Card 'NoteCardTextStream TextStream)
+    TextStream))(NC.FileCardShrinkFn
+  [LAMBDA (W)                                                (* ; "Edited  5-Feb-88 23:27 by Trigg")
+
+(* ;;; "This is in order to get the right title on the TEdit icon.  This is a kludgy finesse around TEdit's shrunken icon title facility.")
+          
+          (* ;; 
+       "rht 2/5/88: Now just calls TextCard's shrink fn, slightly modifying the shrunken icon title.")
+
+    (NC.TextCardShrinkFn W (CONCAT "File Card" (CHARACTER 13)
+                                  "NC: "]))(RPAQQ NC.FileCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@@@@H@@KMBANH@@JABA@H@@JABA@H@@JABA@H@@KIBALH@@JABA@H@@JABA@H@@JABA@H@@JACMNH@@H@@@@H@@H@@@@H@@OOOOOH@@)(DEFINEQ(NC.AddFileCardType
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+          
+          (* * Add a file card type to the card types list)
+
+    (NC.AddCardType
+     'File
+     'NoteCard
+     `((MakeFn ,(FUNCTION NC.MakeFileCard))
+       (EditFn ,(FUNCTION NC.EditFileSubstance))
+       (QuitFn ,(FUNCTION NC.QuitFileSubstance))
+       (GetFn ,(FUNCTION NC.GetFileSubstance))
+       (PutFn ,(FUNCTION NC.PutFileSubstance))
+       (MarkDirtyFn ,(FUNCTION NC.MarkFileSubstanceDirty))
+       (DirtyPFn ,(FUNCTION NC.FileSubstanceDirtyP)))
+     `((DefaultWidth 350)
+       (DefaultHeight 500)
+       (LinkAnchorModesSupported ,'Global)
+       (DisplayedInMenuFlg T)
+       (MiddleButtonMenuItems ,(for Item in (fetch (MENU ITEMS) of TEDIT.DEFAULT.MENU)
+                                  collect (if (EQ Item 'Quit)
+                                              then '(Quit (FUNCTION NC.QuitCard)
+                                                          
+                                              "Close this note card after saving it in the NoteFile."
+                                                          )
+                                            else Item)))
+       (LinkIconAttachedBitMap ,NC.FileCardIcon))))))(DECLARE%: DONTEVAL@LOAD (NC.AddFileCardType)(PUTPROP 'File 'ExportSubstanceFn (FUNCTION OPENTEXTSTREAM)))(PUTPROPS NCFILECARD COPYRIGHT ("Xerox Corporation" 1985 1986 1987 1988 1989 1993 1994 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (1750 2249 (NCAddStub.FileCard 1760 . 2247)) (2433 10425 (NC.MakeFileCard 2443 . 3262) (NC.EditFileSubstance 3264 . 6890) (NC.FileSubstanceDirtyP 6892 . 7274) (NC.GetFileSubstance 7276 . 7654) (NC.MarkFileSubstanceDirty 7656 . 8244) (NC.PutFileSubstance 8246 . 8790) (NC.QuitFileSubstance 8792 . 9660) (NC.FileCardPutFile 9662 . 10423)) (10454 16927 (NC.FileCardFileVersionNumber 10464 . 10891) (NC.FileCardTitle 10893 . 11354) (NC.FetchTextStream 11356 . 11581) (NC.GetFileFromUser 11583 . 13408) (NC.MakeFileCardCore 13410 . 16151) (NC.SetTextStream 16153 . 16400) (NC.FileCardShrinkFn 16402 . 16925)) (17112 18433 (NC.AddFileCardType 17122 . 18431)))))STOP

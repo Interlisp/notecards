@@ -1,0 +1,338 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
+(FILECREATED " 5-Dec-87 20:04:44" {QV}<NOTECARDS>1.3L>LIBRARY>NCCASECLUSTER.;1 16443  
+
+      changes to%:  (VARS NCCASECLUSTERCOMS)
+                    (FNS CASECLUSTER.AddCaseClusterCard CASECLUSTER.AddFactsCard 
+                         CASECLUSTER.AddDecisionRuleCard CASECLUSTER.AddRuleSupportCard 
+                         CASECLUSTER.AddLegalStatusRuleCard CASECLUSTER.AddRuleInstanceCard 
+                         CASECLUSTER.AddRationaleCard CASECLUSTER.AddArgumentCard)
+
+      previous date%: " 4-May-87 14:35:38" {QV}<NOTECARDS>1.3K>LIBRARY>NCCASECLUSTER.;4)
+
+
+(* "
+Copyright (c) 1987 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCCASECLUSTERCOMS)
+
+(RPAQQ NCCASECLUSTERCOMS ((DECLARE%: DONTCOPY (PROP MAKEFILE-ENVIRONMENT NCCASECLUSTER))
+                          (FILES (FROM NOTECARDS)
+                                 NCCLUSTERCARD)
+                          
+
+(* ;;; "Stuff for the CaseCluster notecard type and its child types.")
+
+                          (GLOBALVARS CASECLUSTER.ClusterChildInfos CASECLUSTER.FileBoxNames 
+                                 CASECLUSTER.ArgumentCardHeight CASECLUSTER.ArgumentCardWidth)
+                          (INITVARS (CASECLUSTER.ClusterChildInfos '((Text issues Issues)
+                                                                     (Facts facts NIL)
+                                                                     (Text decision Decision)
+                                                                     (Rationale rationale NIL)))
+                                 (CASECLUSTER.FileBoxNames '(CasesBox IssuesBox FactsBox DecisionsBox 
+                                                                   RationalesBox))
+                                 (CASECLUSTER.ArgumentCardHeight 200)
+                                 (CASECLUSTER.ArgumentCardWidth 761))
+                          (FNS CASECLUSTER.CaseClusterMakeFn CASECLUSTER.FactsMakeFn 
+                               CASECLUSTER.DecisionRuleMakeFn CASECLUSTER.RuleSupportMakeFn 
+                               CASECLUSTER.LegalStatusRuleMakeFn CASECLUSTER.RuleInstanceMakeFn 
+                               CASECLUSTER.RationaleMakeFn CASECLUSTER.ArgumentMakeFn)
+                          (FNS CASECLUSTER.AddCaseClusterCard CASECLUSTER.AddFactsCard 
+                               CASECLUSTER.AddDecisionRuleCard CASECLUSTER.AddRuleSupportCard 
+                               CASECLUSTER.AddLegalStatusRuleCard CASECLUSTER.AddRuleInstanceCard 
+                               CASECLUSTER.AddRationaleCard CASECLUSTER.AddArgumentCard)
+                          (DECLARE%: DONTEVAL@LOAD (P (CASECLUSTER.AddCaseClusterCard)
+                                                      (CASECLUSTER.AddFactsCard)
+                                                      (CASECLUSTER.AddDecisionRuleCard)
+                                                      (CASECLUSTER.AddRuleSupportCard)
+                                                      (CASECLUSTER.AddLegalStatusRuleCard)
+                                                      (CASECLUSTER.AddRuleInstanceCard)
+                                                      (CASECLUSTER.AddRationaleCard)
+                                                      (CASECLUSTER.AddArgumentCard)))))
+(DECLARE%: DONTCOPY 
+
+(PUTPROPS NCCASECLUSTER MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+)
+(FILESLOAD (FROM NOTECARDS)
+       NCCLUSTERCARD)
+
+
+
+(* ;;; "Stuff for the CaseCluster notecard type and its child types.")
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS CASECLUSTER.ClusterChildInfos CASECLUSTER.FileBoxNames CASECLUSTER.ArgumentCardHeight 
+       CASECLUSTER.ArgumentCardWidth)
+)
+
+(RPAQ? CASECLUSTER.ClusterChildInfos '((Text issues Issues)
+                                       (Facts facts NIL)
+                                       (Text decision Decision)
+                                       (Rationale rationale NIL)))
+
+(RPAQ? CASECLUSTER.FileBoxNames '(CasesBox IssuesBox FactsBox DecisionsBox RationalesBox))
+
+(RPAQ? CASECLUSTER.ArgumentCardHeight 200)
+
+(RPAQ? CASECLUSTER.ArgumentCardWidth 761)
+(DEFINEQ
+
+(CASECLUSTER.CaseClusterMakeFn
+  (LAMBDA (Card Title NoDisplayFlg)                          (* rht%: " 4-May-87 02:11")
+          
+          (* * Create a case cluster card. Done by passing proper info triples as well as 
+          list of fileboxes through to Cluster's MakeCardFn.)
+
+    (LET ((NoteFile (NCP.CardNoteFile Card)))
+         (OR Title (SETQ Title (NCP.AskUser (CONCAT "Title of " (NCP.CardType Card)
+                                                   " card? ")
+                                      "-- " NIL T NIL T)))
+         (NCP.ApplySuperTypeFn MakeFn Card Title NoDisplayFlg
+                (create CLUSTER.ClusterInfo
+                       ChildInfos _ CASECLUSTER.ClusterChildInfos
+                       FileBoxes _
+                       (for FileBoxName in CASECLUSTER.FileBoxNames
+                          collect (OR (NCP.LookupCardByName FileBoxName NoteFile)
+                                      (AND (NCP.AskYesOrNo (CONCAT 
+                                                             "Want to create new filebox with name '" 
+                                                                  FileBoxName "'? ")
+                                                  NIL "Yes" T)
+                                           (LET ((FileBox (NCP.CreateFileBox NoteFile FileBoxName T 
+                                                                 NIL NIL (NCP.ContentsFileBox 
+                                                                                NoteFile))))
+                                                (NCP.RegisterCardByName FileBoxName FileBox)
+                                                FileBox)))))))))
+
+(CASECLUSTER.FactsMakeFn
+  (LAMBDA (Card Title NoDisplayFlg)                          (* rht%: " 4-May-87 02:05")
+          
+          (* * Create a Facts card. Just like a Text card except throws in some initial 
+          text.)
+
+    (LET ((ReturnValue (NCP.ApplySuperTypeFn MakeFn Card Title NoDisplayFlg)))
+         (NCP.CardAddText Card (CONCAT "LEGAL FACTS" (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "REAL FACTS"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)))
+         ReturnValue)))
+
+(CASECLUSTER.DecisionRuleMakeFn
+  (LAMBDA (Card Title NoDisplayFlg)                          (* rht%: " 4-May-87 01:54")
+          
+          (* * Create a DecisionRule card. Just like a Text card except throws in some 
+          initial text.)
+
+    (LET ((ReturnValue (NCP.ApplySuperTypeFn MakeFn Card Title NoDisplayFlg)))
+         (NCP.CardAddText Card (CONCAT "LEGAL CONTEXT" (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "OPERATIVE FACTS"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "DECISION"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "SUPPORT"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)))
+         ReturnValue)))
+
+(CASECLUSTER.RuleSupportMakeFn
+  (LAMBDA (Card Title NoDisplayFlg)                          (* rht%: " 4-May-87 01:55")
+          
+          (* * Create a RuleSupport card. Just like a Text card except throws in some 
+          initial text.)
+
+    (LET ((ReturnValue (NCP.ApplySuperTypeFn MakeFn Card Title NoDisplayFlg)))
+         (NCP.CardAddText Card (CONCAT "PRINCIPLE" (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "REFERENCE"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "STATUTE"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "CASE PRECEDENT"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)))
+         ReturnValue)))
+
+(CASECLUSTER.LegalStatusRuleMakeFn
+  (LAMBDA (Card Title NoDisplayFlg)                          (* rht%: " 4-May-87 01:55")
+          
+          (* * Create a LegalStatusRule card. Just like a Text card except throws in some 
+          initial text.)
+
+    (LET ((ReturnValue (NCP.ApplySuperTypeFn MakeFn Card Title NoDisplayFlg)))
+         (NCP.CardAddText Card (CONCAT "LEGAL CONTEXT" (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "OPERATIVE FACTS"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "LEGAL STATUS"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "SUPPORT"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)))
+         ReturnValue)))
+
+(CASECLUSTER.RuleInstanceMakeFn
+  (LAMBDA (Card Title NoDisplayFlg)                          (* rht%: " 4-May-87 01:58")
+          
+          (* * Create a RuleInstance card. Just like a Text card except throws in some 
+          initial text. Also creates and links to a bindings card.)
+
+    (LET ((ReturnValue (NCP.ApplySuperTypeFn MakeFn Card Title NoDisplayFlg))
+          (NoteFile (NCP.CardNoteFile Card))
+          BindingsCard)
+         (NCP.CardAddText Card (CONCAT "LEGAL RULE" (CHARACTER 13)
+                                      (CHARACTER 13)
+                                      "BINDINGS"
+                                      (CHARACTER 13)))
+         (SETQ BindingsCard (NCP.CreateTextCard NoteFile (CONCAT Title ":Bindings")
+                                   T))
+         (OR (NCP.ValidLinkTypeP 'Binding NoteFile)
+             (NCP.CreateLinkType 'Binding NoteFile))
+         (NCP.LocalGlobalLink 'Binding Card BindingsCard)
+         (NCP.CardAddText Card (CONCAT (CHARACTER 13)
+                                      "STATUS RULES"
+                                      (CHARACTER 13)
+                                      (CHARACTER 13)))
+         ReturnValue)))
+
+(CASECLUSTER.RationaleMakeFn
+  (LAMBDA (Card Title NoDisplayFlg)                          (* rht%: " 4-May-87 02:01")
+          
+          (* * Create a Rationale card. Just like a text card except starts with an 
+          initial link to a fresh Argument card.)
+
+    (LET ((ReturnValue (NCP.ApplySuperTypeFn MakeFn Card Title NoDisplayFlg))
+          (NoteFile (NCP.CardNoteFile Card)))
+         (OR (NCP.ValidLinkTypeP 'Argument NoteFile)
+             (NCP.CreateLinkType 'Argument NoteFile))
+         (NCP.LocalGlobalLink 'Argument Card (NCP.CreateCard 'Argument NoteFile (CONCAT Title 
+                                                                                       ":Argument1")
+                                                    T)
+                NIL
+                'Title)
+         ReturnValue)))
+
+(CASECLUSTER.ArgumentMakeFn
+  (LAMBDA (Card Title NoDisplayFlg)                          (* rht%: " 4-May-87 14:32")
+          
+          (* * Create an Argument card. Just like a Browser card except builds some 
+          initial structure.)
+
+    (LET ((NoteFile (NCP.CardNoteFile Card))
+          RuleInstanceCard1 RuleInstanceCard2 HeadingPos)
+         (OR Title (SETQ Title (NCP.AskUser "Title of Argument card: " "--" NIL T NIL)))
+         (OR (NCP.ValidLinkTypeP 'Support NoteFile)
+             (NCP.CreateLinkType 'Support NoteFile))
+         (OR (NCP.ValidLinkTypeP 'Status NoteFile)
+             (NCP.CreateLinkType 'Status NoteFile))
+         (SETQ RuleInstanceCard1 (NCP.CreateCard 'RuleInstance NoteFile (CONCAT Title ":Rule1")
+                                        T))
+         (SETQ RuleInstanceCard2 (NCP.CreateCard 'RuleInstance NoteFile (CONCAT Title ":Rule2")
+                                        T))
+          
+          (* Find the "STATUS RULES" string in the first rule instance card and insert 
+          link to second rule instance card there.)
+
+         (SETQ HeadingPos (TEDIT.FIND (TEXTOBJ (NCP.CardSubstance RuleInstanceCard1))
+                                 "STATUS RULES" 1 NIL))
+         (NCP.ChangeLoc RuleInstanceCard1 (if HeadingPos
+                                              then (PLUS HeadingPos (NCHARS "LEGAL CONTEXT"))
+                                            else 1))
+         (NCP.CardAddText RuleInstanceCard1 (CHARACTER 13))
+         (NCP.LocalGlobalLink 'Status RuleInstanceCard1 RuleInstanceCard2 NIL 'Title)
+          
+          (* Create this card as a browser on the structure we just built.)
+
+         (NCP.CreateBrowserCard NoteFile Title (LIST 'ROOTCARDS RuleInstanceCard1 'LINKTYPES
+                                                     '(Support Status Binding)
+                                                     'FORMAT
+                                                     '(LATTICE VERTICAL))
+                NoDisplayFlg))))
+)
+(DEFINEQ
+
+(CASECLUSTER.AddCaseClusterCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+
+    (NCP.CreateCardType 'CaseCluster 'Cluster `((MakeFn ,(FUNCTION CASECLUSTER.CaseClusterMakeFn)))
+           `((LinkDisplayMode Title)
+             (DisplayedInMenuFlg ,T)))))
+
+(CASECLUSTER.AddFactsCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+
+    (NCP.CreateCardType 'Facts 'Text `((MakeFn ,(FUNCTION CASECLUSTER.FactsMakeFn)))
+           `((LinkDisplayMode Title)
+             (DisplayedInMenuFlg ,T)))))
+
+(CASECLUSTER.AddDecisionRuleCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+
+    (NCP.CreateCardType 'DecisionRule 'Text `((MakeFn ,(FUNCTION CASECLUSTER.DecisionRuleMakeFn)))
+           `((LinkDisplayMode Title)
+             (DisplayedInMenuFlg ,T)))))
+
+(CASECLUSTER.AddRuleSupportCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+
+    (NCP.CreateCardType 'RuleSupport 'Text `((MakeFn ,(FUNCTION CASECLUSTER.RuleSupportMakeFn)))
+           `((LinkDisplayMode Title)
+             (DisplayedInMenuFlg ,T)))))
+
+(CASECLUSTER.AddLegalStatusRuleCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+
+    (NCP.CreateCardType 'LegalStatusRule 'Text `((MakeFn ,(FUNCTION CASECLUSTER.LegalStatusRuleMakeFn
+                                                           ))) `((LinkDisplayMode Title)
+                                                                 (DisplayedInMenuFlg ,T)))))
+
+(CASECLUSTER.AddRuleInstanceCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+
+    (NCP.CreateCardType 'RuleInstance 'Text `((MakeFn ,(FUNCTION CASECLUSTER.RuleInstanceMakeFn)))
+           `((LinkDisplayMode Title)
+             (DisplayedInMenuFlg ,T)))))
+
+(CASECLUSTER.AddRationaleCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+
+    (NCP.CreateCardType 'Rationale 'Text `((MakeFn ,(FUNCTION CASECLUSTER.RationaleMakeFn)))
+           `((LinkDisplayMode Title)
+             (DisplayedInMenuFlg ,T)))))
+
+(CASECLUSTER.AddArgumentCard
+  (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
+
+    (NCP.CreateCardType 'Argument 'Browser `((MakeFn ,(FUNCTION CASECLUSTER.ArgumentMakeFn)))
+           `((LinkDisplayMode Title)
+             (DisplayedInMenuFlg ,T)))))
+)
+(DECLARE%: DONTEVAL@LOAD 
+(CASECLUSTER.AddCaseClusterCard)
+(CASECLUSTER.AddFactsCard)
+(CASECLUSTER.AddDecisionRuleCard)
+(CASECLUSTER.AddRuleSupportCard)
+(CASECLUSTER.AddLegalStatusRuleCard)
+(CASECLUSTER.AddRuleInstanceCard)
+(CASECLUSTER.AddRationaleCard)
+(CASECLUSTER.AddArgumentCard)
+)
+(PUTPROPS NCCASECLUSTER COPYRIGHT ("Xerox Corporation" 1987))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (4224 13464 (CASECLUSTER.CaseClusterMakeFn 4234 . 5912) (CASECLUSTER.FactsMakeFn 5914 . 
+6585) (CASECLUSTER.DecisionRuleMakeFn 6587 . 7535) (CASECLUSTER.RuleSupportMakeFn 7537 . 8479) (
+CASECLUSTER.LegalStatusRuleMakeFn 8481 . 9439) (CASECLUSTER.RuleInstanceMakeFn 9441 . 10629) (
+CASECLUSTER.RationaleMakeFn 10631 . 11449) (CASECLUSTER.ArgumentMakeFn 11451 . 13462)) (13465 16071 (
+CASECLUSTER.AddCaseClusterCard 13475 . 13789) (CASECLUSTER.AddFactsCard 13791 . 14084) (
+CASECLUSTER.AddDecisionRuleCard 14086 . 14400) (CASECLUSTER.AddRuleSupportCard 14402 . 14713) (
+CASECLUSTER.AddLegalStatusRuleCard 14715 . 15139) (CASECLUSTER.AddRuleInstanceCard 15141 . 15455) (
+CASECLUSTER.AddRationaleCard 15457 . 15762) (CASECLUSTER.AddArgumentCard 15764 . 16069)))))
+STOP

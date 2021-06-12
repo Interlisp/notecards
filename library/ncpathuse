@@ -1,0 +1,122 @@
+(DEFINE-FILE-INFO READTABLE "INTERLISP" PACKAGE "INTERLISP")
+(FILECREATED "28-Mar-89 11:21:33" |{NB:PARC:XEROX}<NOTECARDS>1.3M>LIBRARY>NCPATHUSE.;1| 5336   
+
+      previous date%: "18-Mar-86 10:11:15" {QV}<NOTECARDS>1.3L>LIBRARY>NCPATH>NCPATHUSE.;1)
+
+
+(* "
+Copyright (c) 1986, 1989 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCPATHUSECOMS)
+
+(RPAQQ NCPATHUSECOMS
+       [(FILES NCPATH NCPATHPARSE)
+        (FNS NCPath.GetCardPathListsFromPathCollection NCPath.GetTerminalsFromPathCollection 
+             NCPath.GetUniqueTerminalsFromPathCollection NCPath.ReverseAndSeparatePaths PathStepPrint
+             PrintFSM PrintFSMNode)
+        (* (P (DEFPRINT 'NCPathFSM 'PrintFSM)
+              (DEFPRINT 'NCPathFSMNode 'PrintFSMNode)
+              (DEFPRINT 'NCPathPathStep 'PathStepPrint])
+
+(FILESLOAD NCPATH NCPATHPARSE)
+(DEFINEQ
+
+(NCPath.GetCardPathListsFromPathCollection
+  [LAMBDA (PathCollection)                                   (* Newman "18-Mar-86 08:43")
+
+         (* * This function collects a list of cards traversed by each path in 
+         PathCollection. Thus, it returns a list of lists.
+         Each sublist is a list of all the cards traversed in a particular path.)
+
+    (for Path in PathCollection collect (CONS (CAR (LAST Path))
+                                                          (for Step
+                                                             in (CDR (REVERSE Path))
+                                                             collect (NCPath.PathStep.End Step])
+
+(NCPath.GetTerminalsFromPathCollection
+  [LAMBDA (PathCollection)                                   (* Newman "18-Mar-86 08:39")
+
+         (* * This function collects the terminal cards in a collection of paths.
+         It is intended to assist the user in getting the results desired from what 
+         NCPath.FSM.PathCollect returns.)
+
+    (for Path in PathCollection collect (NCPath.Path.End Path])
+
+(NCPath.GetUniqueTerminalsFromPathCollection
+  [LAMBDA (PathCollection)                                   (* Newman "18-Mar-86 08:41")
+
+         (* * This function is very similar to NCPath.GetTerminalsFromPathCollection, but 
+         it collects only unique terminal nodes, where the other function can collect 
+         multiple copies of the same terminal card.)
+
+    (bind TempCollection for Path in PathCollection unless (MEMBER (NCPath.Path.End
+                                                                                    Path)
+                                                                                  TempCollection)
+       do (push TempCollection (NCPath.Path.End Path)) finally (RETURN TempCollection])
+
+(NCPath.ReverseAndSeparatePaths
+  [LAMBDA (PathCollection)                                   (* Newman "18-Mar-86 08:47")
+
+         (* * The results of NCPath.FSM.PathCollect is typically a list of lists, each 
+         sublist being a path in the collection. These paths share cons cells for 
+         efficiency, and are stored with the steps in the paths in reverse order.
+         This function accepts the result of NCPath.FSM.PathCollect, and returns a list of 
+         paths with their steps in the correct order such that no cons cells are shared 
+         between paths.)
+
+    (for Path in PathCollection collect (REVERSE (COPY Path])
+
+(PathStepPrint
+  [LAMBDA (Instance Stream)                                  (* Newman "18-Mar-86 08:47")
+
+         (* * This function is intended to be a print definition for the NCPathPathStep 
+         datatype.)
+
+    (CONS (if (fetch (NCPathPathStep Direction) of Instance)
+              then (fetch (NCPathPathStep Link) of Instance)
+            else (CONCAT "_" (fetch (NCPathPathStep Link) of Instance)))
+          NIL])
+
+(PrintFSM
+  [LAMBDA (Instance Stream)                                  (* Newman "18-Mar-86 08:48")
+
+         (* * This function is intended for use as a print definition for the NCPathFSM 
+         datatype.)
+
+    (CONS (CONCAT "[FSM; CurrentState=" (fetch (NCPathFSM CurrentState) of Instance)
+                 " InitialState="
+                 (fetch (NCPathFSM InitialState) of Instance)
+                 "]"])
+
+(PrintFSMNode
+  [LAMBDA (Instance Stream)                                  (* Newman " 4-Mar-86 12:43")
+
+         (* * This function is to be the DEFPRINT function for FSMNodes)
+
+    (CONS (CONCAT "[FSMNode; Predicate=" (fetch (NCPathFSMNode Predicate) of Instance)
+                 " Card/Link="
+                 (if (fetch (NCPathFSMNode Card/Link) of Instance)
+                     then 'LINK
+                   else 'CARD)
+                 " Direction="
+                 (if (fetch (NCPathFSMNode Direction) of Instance)
+                     then 'FORWARD
+                   else 'BACK)
+                 " NextNodes="
+                 (fetch (NCPathFSMNode NextNodes) of Instance)
+                 "]"])
+)
+
+
+
+(* (P (DEFPRINT (QUOTE NCPathFSM) (QUOTE PrintFSM)) (DEFPRINT (QUOTE NCPathFSMNode) (QUOTE 
+PrintFSMNode)) (DEFPRINT (QUOTE NCPathPathStep) (QUOTE PathStepPrint))))
+
+(PUTPROPS NCPATHUSE COPYRIGHT ("Xerox Corporation" 1986 1989))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (851 5077 (NCPath.GetCardPathListsFromPathCollection 861 . 1558) (
+NCPath.GetTerminalsFromPathCollection 1560 . 1979) (NCPath.GetUniqueTerminalsFromPathCollection 1981
+ . 2740) (NCPath.ReverseAndSeparatePaths 2742 . 3402) (PathStepPrint 3404 . 3870) (PrintFSM 3872 . 
+4306) (PrintFSMNode 4308 . 5075)))))
+STOP

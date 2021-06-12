@@ -1,0 +1,36 @@
+(DEFINE-FILE-INFO READTABLE "INTERLISP" PACKAGE "INTERLISP")
+(FILECREATED "10-Jun-2021 12:47:21" {DSK}<home>pi>il>notecards>internal>NCCOMPILE.;4 1282   
+
+      changes to%:  (FNS NC.Compile)
+
+      previous date%: "10-Jun-2021 12:37:29" {DSK}<home>pi>il>notecards>internal>NCCOMPILE.;2)
+
+
+(PRETTYCOMPRINT NCCOMPILECOMS)
+
+(RPAQQ NCCOMPILECOMS ((FNS NC.Compile)))
+(DEFINEQ
+
+(NC.Compile
+  [LAMBDA NIL                                            (* ; "Edited 10-Jun-2021 12:46 by pi")
+    (ADVISE 'PAGEFULLFN '(RETURN))
+    (CNDIR '{DSK}/home/pi/il/notecards)                  (* ; "Edited 10-Jun-2021 11:34 by pi")
+    (LET [[SystemFiles (LDIFFERENCE (DIRECTORY "system/*.;" 'COLLECT)
+                              (DIRECTORY "system/NOTECARDS.;" 'COLLECT]
+          (PatchFiles (DIRECTORY "patches/*.;" 'COLLECT))
+          (LibraryFiles (DIRECTORY "library/*.;" 'COLLECT]
+         (LOAD 'TEDITDCL.LCOM)
+         (LOAD 'EXPORTS.ALL 'SYSLOAD)
+         (LOAD 'system/NCDECLS)
+         (LOAD 'system/NCCONFIG)
+         (LOAD 'system/NOTECARDS)
+         (TCOMPL 'NOTECARDS)
+         (LOAD 'system/NOTECARDS.LCOM)
+         (TCOMPL SystemFiles)
+         (TCOMPL PatchFiles)
+         (TCOMPL LibraryFiles))
+    (UNADVISE 'PAGEFULLFN])
+)
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (375 1259 (NC.Compile 385 . 1257)))))
+STOP

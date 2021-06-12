@@ -1,0 +1,149 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP")
+(FILECREATED " 3-Oct-88 11:03:35" {QV}<NOTECARDS>1.3L>LIBRARY>NCSHADEDCROSSFILELINKS.;2 7827   
+
+      changes to%:  (FNS NCShade.CrossFileLinkAttachedBitMapFn NCShade.FetchNoteFileAttachedBitmap)
+                    (VARS NCSHADEDCROSSFILELINKSCOMS)
+
+      previous date%: "30-Sep-88 15:36:34" {QV}<NOTECARDS>1.3L>LIBRARY>NCSHADEDCROSSFILELINKS.;1)
+
+
+(* "
+Copyright (c) 1988 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCSHADEDCROSSFILELINKSCOMS)
+
+(RPAQQ NCSHADEDCROSSFILELINKSCOMS
+       [
+
+(* ;;; "New file")
+
+        (DECLARE%: DONTCOPY (PROPS (NCSHADEDCROSSFILELINKS MAKEFILE-ENVIRONMENT)
+                                   (NCSHADEDCROSSFILELINKS FILETYPE)))
+        
+        (* ;; "A programmer can customize the icon which will appear on the right side of the link icon for cross-file links.  The main hook is the property 'AttachedBitMapFn which should be placed on the card type's atom ( which in this case is CrossFileLink). This function will be called in the display code by NC.FetchLinkIconAttachedBitMap when a cross-file link is encountered.")
+
+        
+        (* ;; "An example is provided here which has a notefile-dependent function for computing the bitmap to be displayed.  It stores each notefile with its list of different sized bitmaps in the hash array NC.AttachedBitMapsHashArray.  Then function NC.FetchNoteFileAttachedBitmap computes and retrieves these bitmaps.")
+
+        (GLOBALVARS NCShade.AttachedBitMapsHashArray NCShade.NoteFileAttachedBitMap 
+               NCShade.NoteFileAttachedBitMapMask)
+        (INITVARS (NCShade.AttachedBitMapsHashArray))
+        (BITMAPS NCShade.NoteFileAttachedBitMap NCShade.NoteFileAttachedBitMapMask)
+        (FNS NCShade.CrossFileLinkAttachedBitMapFn NCShade.FetchNoteFileAttachedBitmap)
+        
+        (* ;; "The following expression establishes NC.CrossFileLinkAttachedBitMapFn as the AttachedBitMapFn for the link type CrossFileLink.  NC.CrossFileLinkAttachedBitMapFn shades the cross-file link bitmap according to the notefile it points to.")
+
+        (P (PUTPROP 'CrossFileLink 'AttachedBitMapFn (FUNCTION NCShade.CrossFileLinkAttachedBitMapFn])
+
+
+
+(* ;;; "New file")
+
+(DECLARE%: DONTCOPY 
+
+(PUTPROPS NCSHADEDCROSSFILELINKS MAKEFILE-ENVIRONMENT (:PACKAGE "INTERLISP" :READTABLE "INTERLISP"))
+
+(PUTPROPS NCSHADEDCROSSFILELINKS FILETYPE :BCOMPL)
+)
+
+
+
+(* ;; 
+"A programmer can customize the icon which will appear on the right side of the link icon for cross-file links.  The main hook is the property 'AttachedBitMapFn which should be placed on the card type's atom ( which in this case is CrossFileLink). This function will be called in the display code by NC.FetchLinkIconAttachedBitMap when a cross-file link is encountered."
+)
+
+
+
+
+(* ;; 
+"An example is provided here which has a notefile-dependent function for computing the bitmap to be displayed.  It stores each notefile with its list of different sized bitmaps in the hash array NC.AttachedBitMapsHashArray.  Then function NC.FetchNoteFileAttachedBitmap computes and retrieves these bitmaps."
+)
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+
+(GLOBALVARS NCShade.AttachedBitMapsHashArray NCShade.NoteFileAttachedBitMap 
+       NCShade.NoteFileAttachedBitMapMask)
+)
+
+(RPAQ? NCShade.AttachedBitMapsHashArray )
+
+(RPAQQ NCShade.NoteFileAttachedBitMap #*(19 17)OOO@@@@@@@AH@@@@@@@L@@@@@@@F@@@@@@@C@@@@@@@AH@@@@@@@L@@@@@@@F@@@@@@@B@@@@@@@F@@@@@@@L@@@@@@AH@@@@@@C@@@@@@@F@@@@@@@L@@@@@@AH@@@@OOO@@@@@
+)
+
+(RPAQQ NCShade.NoteFileAttachedBitMapMask #*(19 17)@@@ON@@@@@@GN@@@@@@CN@@@@@@AN@@@@@@@N@@@@@@@F@@@@@@@B@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@B@@@@@@@F@@@@@@@N@@@@@@AN@@@@@@CN@@@@@@GN@@@@@@ON@@@
+)
+(DEFINEQ
+
+(NCShade.CrossFileLinkAttachedBitMapFn
+  [LAMBDA (Card ScaledHeightToMatch Scale)                   (* ; "Edited  3-Oct-88 10:58 by pmi")
+
+    (* ;; "Compute the proper bitmap for the cross-file link card Card.  The bitmaps are stored in a hash array using notefile objects for the keys.")
+
+    (DECLARE (GLOBALVARS NC.DefaultLinkIconAttachedBitMapHeights NCShade.AttachedBitMapsHashArray))
+    (LET (NoteFile BitMapSample BitMapList BitMap ScaledHeight)
+         [SETQ NoteFile (NC.NoteFileFromNoteFileUID (fetch (CrossFileLinkSubstance 
+                                                                  CrossFileLinkDestNoteFileUID)
+                                                       of (NCP.CardSubstance Card]
+
+         (* ;; "If we have not yet defined the hash array to hold the possible bitmaps, do so now.")
+
+         (if (NOT (HARRAYP NCShade.AttachedBitMapsHashArray))
+             then (SETQ NCShade.AttachedBitMapsHashArray (HASHARRAY 100)))
+
+         (* ;; "If the bitmaps for this notefile have not already been defined, get a sample bitmap and create an array of bitmaps of different sizes.")
+
+         (if [NOT (LISTP (SETQ BitMapList (GETHASH NoteFile NCShade.AttachedBitMapsHashArray]
+             then (SETQ BitMapSample (NCShade.FetchNoteFileAttachedBitmap NoteFile (
+                                                                          NC.CoerceToInterestedWindow
+                                                                                    Card)))
+                  (SETQ BitMapList (NC.MakeTypeIconBitMapSet BitMapSample 
+                                          NC.DefaultLinkIconAttachedBitMapHeights))
+                  (PUTHASH NoteFile BitMapList NCShade.AttachedBitMapsHashArray))
+
+         (* ;; "Pick the proper size bitmap from the list as determined by ScaledHeightToMatch.")
+
+         (OR ScaledHeightToMatch (SETQ ScaledHeightToMatch 0))
+         (OR Scale (SETQ Scale 1))
+         (for X on BitMapList by (CDDR X) do (SETQ ScaledHeight (TIMES Scale (CAR X)))
+                                             (if (OR (NULL BitMap)
+                                                     (LEQ ScaledHeight ScaledHeightToMatch))
+                                                 then (SETQ BitMap (CADR X))
+                                               elseif (GREATERP ScaledHeight ScaledHeightToMatch)
+                                                 then (RETURN)))
+         BitMap])
+
+(NCShade.FetchNoteFileAttachedBitmap
+  [LAMBDA (NoteFile InterestedWindow)                        (* ; "Edited 30-Sep-88 14:50 by pmi")
+
+    (* ;; "One way to define the bitmaps for these cross-file link attached bitmaps --- let the user make up a shade.")
+
+    (DECLARE (GLOBALVARS NCShade.NoteFileAttachedBitMap NCShade.NoteFileAttachedBitMapMask))
+    (LET (NoteFileName BitMap BitMapShade)
+         (SETQ NoteFileName (NCP.FileNameFromNoteFile NoteFile))
+         (NCP.PrintMsg InterestedWindow T "Create a shade for notefile " NoteFileName)
+         (SETQ BitMapShade (EDITSHADE))
+         (NCP.ClearMsg InterestedWindow T)
+         (SETQ BitMap (BITMAPCREATE (BITMAPWIDTH NCShade.NoteFileAttachedBitMap)
+                             (BITMAPHEIGHT NCShade.NoteFileAttachedBitMap)))
+         (BITBLT NCShade.NoteFileAttachedBitMap NIL NIL BitMap NIL NIL NIL NIL 'INPUT 'PAINT)
+         (BLTSHADE BitMapShade BitMap NIL NIL NIL NIL 'PAINT)
+         (BITBLT NCShade.NoteFileAttachedBitMapMask NIL NIL BitMap NIL NIL NIL NIL 'INPUT
+                'ERASE)
+         BitMap])
+)
+
+
+
+(* ;; 
+"The following expression establishes NC.CrossFileLinkAttachedBitMapFn as the AttachedBitMapFn for the link type CrossFileLink.  NC.CrossFileLinkAttachedBitMapFn shades the cross-file link bitmap according to the notefile it points to."
+)
+
+
+(PUTPROP 'CrossFileLink 'AttachedBitMapFn (FUNCTION NCShade.CrossFileLinkAttachedBitMapFn))
+(PUTPROPS NCSHADEDCROSSFILELINKS COPYRIGHT ("Xerox Corporation" 1988))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (3757 7386 (NCShade.CrossFileLinkAttachedBitMapFn 3767 . 6288) (
+NCShade.FetchNoteFileAttachedBitmap 6290 . 7384)))))
+STOP

@@ -1,0 +1,186 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
+(FILECREATED "10-Jun-2021 13:18:09" {DSK}<home>pi>il>notecards>system>NCCONFIG.;8 12200  
+
+      changes to%:  (VARS NCCONFIGCOMS)
+
+      previous date%: " 2-Nov-2020 16:43:12" {DSK}<home>pi>il>notecards>system>NCCONFIG.;7)
+
+
+(* ; "
+Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
+")
+
+(PRETTYCOMPRINT NCCONFIGCOMS)
+
+(RPAQQ NCCONFIGCOMS
+       [
+        (* ;; "NoteCards version control --- the stuff kept in this file is all concerned with getting the user a consistent version of NoteCards.  Anything that depends on getting a particular version of a particular file is indirected through here.  In addition, card type stub functions and pointers to other autoloadable functions are stored here.")
+
+        
+        (* ;; "WARNING! DO NOT SYSLOAD THIS FILE --- THE VALUES OF NC.Files, NC.AutoloadableFns, AND NC.AutoloadStubFns WILL BE SMASHED!")
+
+        (GLOBALVARS NC.CoreFiles NC.Files NC.NoUpdateFlg NC.InstallFlg NC.ForceLoadFlg 
+               NC.SketchCardIcon NC.IdeaSketchCardIcon NC.GraphCardIcon NC.BrowserCardIcon 
+               NC.SearchCardIcon NC.DocumentCardIcon NC.LinkIndexCardIcon)
+        (E (NC.UpdateConfig))
+        (INITVARS (NC.NoUpdateFlg NIL)
+               (NC.InstallFlg NIL)
+               (NC.ForceLoadFlg NIL)
+               (NC.AutoloadableFns NIL))
+        [INITVARS (NC.CoreFiles '(NCDECLS NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE 
+                                        NCLOCALDEVICE NCCARDS NCLINKS NCTYPESMECH NCPROGINT 
+                                        NCCROSSFILELINKS MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES 
+                                        MEDLEYROOMSPATCHES MODERNIZEPATCHES))
+               (NC.Files '(NOTECARDS NCDECLS NCCONFIG NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE
+                                 NCLOCALDEVICE NCCOMPACT NCREPAIR NCCARDS NCLINKS NCTYPESMECH 
+                                 NCPROGINT NCCROSSFILELINKS NCHASHCARD NCTEXTCARD NCSKETCHCARD 
+                                 NCGRAPHCARD NCFILEBOXCARD NCBROWSERCARD NCSEARCHCARD NCDOCUMENTCARD
+                                 NCTABLETOPCARD NCLINKINDEXCARD NCLISTCARD NCCONVERTVERSION2TO3 
+                                 NCGESTURES MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES
+                                 POSTRELEASEPATCHES GRAPHERPATCH NCMAPS NCHACKS NCFILECARD 
+                                 NEWSHADEITEM NOTECARDS.HASH]
+        (DECLARE%: DONTEVAL@LOAD (IFPROP ConfigProps * NC.Files)
+               (CONFIGPROPS * NC.Files)
+               (IFPROP File * NC.AutoloadableFns))
+        (FNS * NC.AutoloadStubFns)
+        (FILEPKGCOMS CONFIGPROPS)
+        (BITMAPS NC.SketchCardIcon NC.IdeaSketchCardIcon NC.GraphCardIcon NC.BrowserCardIcon 
+               NC.SearchCardIcon NC.DocumentCardIcon NC.LinkIndexCardIcon)
+        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)
+              NCCONFIG)
+        (DECLARE%: DONTEVAL@LOAD DOEVAL@COMPILE DONTCOPY COMPILERVARS (ADDVARS (NLAMA)
+                                                                             (NLAML)
+                                                                             (LAMA])
+
+
+
+(* ;; 
+"NoteCards version control --- the stuff kept in this file is all concerned with getting the user a consistent version of NoteCards.  Anything that depends on getting a particular version of a particular file is indirected through here.  In addition, card type stub functions and pointers to other autoloadable functions are stored here."
+)
+
+
+
+
+(* ;; 
+"WARNING! DO NOT SYSLOAD THIS FILE --- THE VALUES OF NC.Files, NC.AutoloadableFns, AND NC.AutoloadStubFns WILL BE SMASHED!"
+)
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.CoreFiles NC.Files NC.NoUpdateFlg NC.InstallFlg NC.ForceLoadFlg NC.SketchCardIcon 
+       NC.IdeaSketchCardIcon NC.GraphCardIcon NC.BrowserCardIcon NC.SearchCardIcon 
+       NC.DocumentCardIcon NC.LinkIndexCardIcon)
+)
+
+(RPAQ? NC.NoUpdateFlg NIL)
+
+(RPAQ? NC.InstallFlg NIL)
+
+(RPAQ? NC.ForceLoadFlg NIL)
+
+(RPAQ? NC.AutoloadableFns NIL)
+
+(RPAQ? NC.CoreFiles '(NCDECLS NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE NCLOCALDEVICE 
+                                NCCARDS NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS 
+                                MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES 
+                                MODERNIZEPATCHES))
+
+(RPAQ? NC.Files
+       '(NOTECARDS NCDECLS NCCONFIG NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE NCLOCALDEVICE 
+               NCCOMPACT NCREPAIR NCCARDS NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS NCHASHCARD 
+               NCTEXTCARD NCSKETCHCARD NCGRAPHCARD NCFILEBOXCARD NCBROWSERCARD NCSEARCHCARD 
+               NCDOCUMENTCARD NCTABLETOPCARD NCLINKINDEXCARD NCLISTCARD NCCONVERTVERSION2TO3 
+               NCGESTURES MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES 
+               POSTRELEASEPATCHES GRAPHERPATCH NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
+(DECLARE%: DONTEVAL@LOAD 
+
+(RPAQQ NC.Files
+       (NOTECARDS NCDECLS NCCONFIG NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE NCLOCALDEVICE 
+              NCCOMPACT NCREPAIR NCCARDS NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS NCHASHCARD 
+              NCTEXTCARD NCSKETCHCARD NCGRAPHCARD NCFILEBOXCARD NCBROWSERCARD NCSEARCHCARD 
+              NCDOCUMENTCARD NCTABLETOPCARD NCLINKINDEXCARD NCLISTCARD NCCONVERTVERSION2TO3 
+              NCGESTURES MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES POSTRELEASEPATCHES
+              GRAPHERPATCH NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
+
+
+(RPAQQ NC.Files
+       (NOTECARDS NCDECLS NCCONFIG NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE NCLOCALDEVICE 
+              NCCOMPACT NCREPAIR NCCARDS NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS NCHASHCARD 
+              NCTEXTCARD NCSKETCHCARD NCGRAPHCARD NCFILEBOXCARD NCBROWSERCARD NCSEARCHCARD 
+              NCDOCUMENTCARD NCTABLETOPCARD NCLINKINDEXCARD NCLISTCARD NCCONVERTVERSION2TO3 
+              NCGESTURES MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES POSTRELEASEPATCHES
+              GRAPHERPATCH NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
+
+
+(RPAQQ NC.AutoloadableFns (NC.CompactNoteFileToTarget NC.CompactNoteFileInPlace 
+                                     NC.ScavengerPhase1 NC.FindNextCardPart 
+                                     NC.ConvertNoteFileVersion2To3))
+
+(PUTPROPS NC.CompactNoteFileToTarget File NCCOMPACT)
+
+(PUTPROPS NC.CompactNoteFileInPlace File NCCOMPACT)
+
+(PUTPROPS NC.ScavengerPhase1 File NCREPAIR)
+
+(PUTPROPS NC.FindNextCardPart File NCREPAIR)
+
+(PUTPROPS NC.ConvertNoteFileVersion2To3 File NCCONVERTVERSION2TO3)
+)
+
+(RPAQQ NC.AutoloadStubFns (NCAddStub.SketchCard NCAddStub.GraphCard NCAddStub.BrowserCard 
+                                     NCAddStub.SearchCard NCAddStub.DocumentCard 
+                                     NCAddStub.LinkIndexCard))
+(DEFINEQ
+
+(NCAddStub.SketchCard  [LAMBDA NIL                                                (* ; "Edited  3-Dec-87 18:58 by rht:")         (* * kirk 18Jun86 Add the Sketch card stub)         (* * rht 11/7/86%: Fixed typo, changing a QUOTE to BQUOTE.)    (DECLARE (GLOBALVARS NC.SketchCardIcon))    (NC.AddCardTypeStub 'Sketch 'NoteCard 'NCSKETCHCARD NIL `((DisplayedInMenuFlg T)                                                              (LinkIconAttachedBitMap                                                                      ,NC.SketchCardIcon])
+
+(NCAddStub.GraphCard  [LAMBDA NIL                                                (* ; "Edited  3-Dec-87 18:58 by rht:")         (* * kirk 18Jun86 Add the Graph card stub)         (* * rht 11/7/86%: Fixed typo, changing a QUOTE to BQUOTE.)    (DECLARE (GLOBALVARS NC.GraphCardIcon))    (NC.AddCardTypeStub 'Graph 'NoteCard 'NCGRAPHCARD NIL `((DisplayedInMenuFlg T)                                                            (LinkIconAttachedBitMap                                                                    ,NC.GraphCardIcon])
+
+(NCAddStub.BrowserCard  [LAMBDA NIL                                                (* ;                                                            "Edited  6-Dec-88 12:22 by krivacic")(* ;;; "kirk 18Jun86 Add the Browser card stub")(* ;;; "rht 11/7/86: Now passes down a \\FILLME// field.")    (NC.AddCardTypeStub 'Browser 'Graph 'NCBROWSERCARD NIL `((DisplayedInMenuFlg T)                                                             (LinkIconAttachedBitMap                                                                     ,NC.BrowserCardIcon])
+
+(NCAddStub.SearchCard  [LAMBDA NIL                                                (* ;                                                            "Edited  6-Dec-88 12:25 by krivacic")(* ;;; "kirk 18Jun86 Add the Search card stub")(* ;;; "rht 11/7/86: Now passes down a \\FILLME// field.")    (NC.AddCardTypeStub 'Search 'Text 'NCSEARCHCARD NIL `((DisplayedInMenuFlg T)                                                          (LinkIconAttachedBitMap ,NC.SearchCardIcon])
+
+(NCAddStub.DocumentCard  [LAMBDA NIL                                                (* ;                                                            "Edited  6-Dec-88 12:21 by krivacic")(* ;;; "kirk 18Jun86 Add the FileBox card stub")    (NC.AddCardTypeStub 'Document 'Text 'NCDOCUMENTCARD NIL `((DisplayedInMenuFlg . T)                                                              (LinkIconAttachedBitMap                                                                      ,NC.DocumentCardIcon])
+
+(NCAddStub.LinkIndexCard  [LAMBDA NIL                                                (* ;                                                            "Edited  6-Dec-88 12:25 by krivacic")(* ;;; "kirk 18Jun86 Add the LinkIndex card stub")(* ;;; "rht 11/7/86: Now passes down a \\FILLME// field.")    (NC.AddCardTypeStub 'LinkIndex 'Text 'NCLINKINDEXCARD NIL `((DisplayedInMenuFlg T)                                                                (LinkIconAttachedBitMap                                                                        ,NC.LinkIndexCardIcon])
+)
+(PUTDEF (QUOTE CONFIGPROPS) (QUOTE FILEPKGCOMS) '[(COM MACRO (X (COMS * (MAKECONFIGPROPSCOMS . X])
+
+(RPAQQ NC.SketchCardIcon #*(21 18)OOOOOH@@H@@@@H@@HGO@@H@@HH@H@H@@H@@G@H@@HC@@HH@@HDH@DH@@HHD@BH@@I@B@@H@@I@B@@H@@HHDONH@@HDHHBH@@HC@HBH@@H@@HBH@@H@@HBH@@H@@ONH@@H@@@@H@@OOOOOH@@
+)
+
+(RPAQQ NC.IdeaSketchCardIcon #*(21 18)OOOOOH@@H@@@@H@@HO@G@H@@I@HHHH@@J@E@DH@@H@E@DH@@H@E@DH@@H@I@DH@@HC@HHH@@HD@E@H@@HD@B@H@@H@@@@H@@HN@OHH@@IA@HHH@@IA@HHH@@HN@OHH@@H@@@@H@@OOOOOH@@
+)
+
+(RPAQQ NC.GraphCardIcon #*(21 18)OOOOOH@@H@@@@H@@HAN@@H@@HGB@@H@@HIN@@H@@HH@@@H@@I@@@@H@@I@@@@H@@KLCN@H@@JDBB@H@@KLCN@H@@I@@H@H@@I@@H@H@@HINH@H@@HGC@@H@@HAN@@H@@H@@@@H@@OOOOOH@@
+)
+
+(RPAQQ NC.BrowserCardIcon #*(21 18)OOOOOH@@H@@@@H@@H@@@@H@@H@N@@H@@H@J@@H@@HAJ@@H@@HBO@@H@@HD@KHH@@KH@FHH@@JH@BHH@@JH@CHH@@KL@@@H@@HBN@@H@@HAJ@@H@@H@J@@H@@H@N@@H@@H@@@@H@@OOOOOH@@
+)
+
+(RPAQQ NC.SearchCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@C@@H@@H@LL@H@@HC@C@H@@HFCHHH@@IHFLDH@@J@LFBH@@J@FLDH@@I@CHHH@@HL@@HH@@HC@C@H@@H@LL@H@@H@C@@H@@H@@@@H@@OOOOOH@@
+)
+
+(RPAQQ NC.DocumentCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@B@@H@@H@B@@H@@KOJONH@@KOJONH@@J@OHBH@@J@JHBH@@KOJONH@@H@B@@H@@KOJONH@@KOJONH@@J@OHBH@@J@HHBH@@KOHONH@@H@@@@H@@OOOOOH@@
+)
+
+(RPAQQ NC.LinkIndexCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@@@@H@@KOO@@H@@JHACNH@@KOO@@H@@H@@@@H@@KOO@@H@@JHACNH@@KOO@@H@@H@@@@H@@KOO@@H@@JHACNH@@KOO@@H@@H@@@@H@@OOOOOH@@
+)
+
+(PUTPROPS NCCONFIG FILETYPE :FAKE-COMPILE-FILE)
+
+(PUTPROPS NCCONFIG MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+(DECLARE%: DONTEVAL@LOAD DOEVAL@COMPILE DONTCOPY COMPILERVARS 
+
+(ADDTOVAR NLAMA )
+
+(ADDTOVAR NLAML )
+
+(ADDTOVAR LAMA )
+)
+(PUTPROPS NCCONFIG COPYRIGHT ("Venue & Xerox Corporation" 1987 1988 1989 1990 1993 1994 2020 2021))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (7033 10379 (NCAddStub.SketchCard 7043 . 7616) (NCAddStub.GraphCard 7618 . 8181) (
+NCAddStub.BrowserCard 8183 . 8760) (NCAddStub.SearchCard 8762 . 9261) (NCAddStub.DocumentCard 9263 . 
+9783) (NCAddStub.LinkIndexCard 9785 . 10377)))))
+STOP

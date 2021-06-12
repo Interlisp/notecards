@@ -1,0 +1,290 @@
+(DEFINE-FILE-INFO READTABLE "INTERLISP" PACKAGE "INTERLISP")
+(FILECREATED "17-Mar-88 15:21:27" {QV}<NOTECARDS>1.3L>LIBRARY>NCCLUSTERCARD.;2 15158  
+
+      changes to%:  (FNS CLUSTER.LayoutInSquare CLUSTER.AddClusterCard)
+
+      previous date%: " 4-May-87 19:58:54" {QV}<NOTECARDS>1.3K>LIBRARY>NCCLUSTERCARD.;5)
+
+
+(* "
+Copyright (c) 1987, 1988 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCCLUSTERCARDCOMS)
+
+(RPAQQ NCCLUSTERCARDCOMS ((DECLARE%: DONTCOPY (PROP MAKEFILE-ENVIRONMENT 
+                                                    {QV}<notecards>1.3K>LIBRARY>NCCLUSTERCARD.;5))
+                          (FILES (FROM NOTECARDS)
+                                 NCSCREEN)
+                          (* Fns for the Cluster notecard type.)
+                          (GLOBALVARS CLUSTER.ExtraMenuItems)
+                          [VARS (CLUSTER.ExtraMenuItems
+                                 `((|Layout Cluster Children| (FUNCTION CLUSTER.LayoutInCascade)
+                                          
+                               "Regroup and layout the elements of this cluster (in cascade format)."
+                                          (SUBITEMS (|Layout In Cascade| (FUNCTION 
+                                                                              CLUSTER.LayoutInCascade
+                                                                                )
+                                                           
+                                 "Regroup and layout the elements of this cluster in cascade format."
+                                                           )
+                                                 (|Layout In Square| (FUNCTION CLUSTER.LayoutInSquare
+                                                                            )
+                                                        
+                                 "Regroup and layout the elements of this cluster in cascade format."
+                                                        )
+                                                 (|Layout In Surround| (FUNCTION 
+                                                                             CLUSTER.LayoutInSurround
+                                                                              )
+                                                        
+                                "Regroup and layout the elements of this cluster in surround format."
+                                                        ]
+                          (FNS CLUSTER.MakeFn CLUSTER.EditFn CLUSTER.QuitFn CLUSTER.PutFn 
+                               CLUSTER.GetFn CLUSTER.FetchChildren CLUSTER.SetChildren 
+                               CLUSTER.AddClusterCard)
+                          (FNS CLUSTER.LayoutInCascade CLUSTER.LayoutInSquare 
+                               CLUSTER.LayoutInSurround)
+                          (RECORDS CLUSTER.ClusterInfo CLUSTER.ChildInfo)
+                          (P (CLUSTER.AddClusterCard))))
+(DECLARE%: DONTCOPY 
+
+(PUTPROPS {QV}<notecards>1.3K>LIBRARY>NCCLUSTERCARD.;5 MAKEFILE-ENVIRONMENT 
+          (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+)
+(FILESLOAD (FROM NOTECARDS)
+       NCSCREEN)
+
+
+
+(* Fns for the Cluster notecard type.)
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS CLUSTER.ExtraMenuItems)
+)
+
+(RPAQ CLUSTER.ExtraMenuItems `[(|Layout Cluster Children| (FUNCTION CLUSTER.LayoutInCascade)
+                                      
+                               "Regroup and layout the elements of this cluster (in cascade format)."
+                                      (SUBITEMS (|Layout In Cascade| (FUNCTION 
+                                                                            CLUSTER.LayoutInCascade)
+                                                       
+                                 "Regroup and layout the elements of this cluster in cascade format."
+                                                       )
+                                             (|Layout In Square| (FUNCTION CLUSTER.LayoutInSquare)
+                                                    
+                                 "Regroup and layout the elements of this cluster in cascade format."
+                                                    )
+                                             (|Layout In Surround| (FUNCTION CLUSTER.LayoutInSurround
+                                                                          )
+                                                    
+                                "Regroup and layout the elements of this cluster in surround format."
+                                                    ])
+(DEFINEQ
+
+(CLUSTER.MakeFn
+  [LAMBDA (Card Title NoDisplayFlg ClusterInfo)              (* rht%: " 4-May-87 14:34")
+          
+          (* * ClusterInfo should be an instance of the CLUSTER.ClusterInfo record.
+          Create a cluster with head card Card and one child card for each element of 
+          ChildInfos. The elements of ChildInfos are instances of the CLUSTER.ChildInfo 
+          record. If the TitleString field of the record is NIL, then use the card's 
+          type.)
+
+    (LET ((NoteFile (NCP.CardNoteFile Card))
+          (ChildInfos (fetch (CLUSTER.ClusterInfo ChildInfos) of ClusterInfo))
+          FileBoxes ChildCards Window Region)
+         (SETQ FileBoxes (APPEND (fetch (CLUSTER.ClusterInfo FileBoxes) of ClusterInfo)
+                                (for i from 1 to (DIFFERENCE (LENGTH ChildInfos)
+                                                        (LENGTH (fetch (CLUSTER.ClusterInfo FileBoxes
+                                                                              ) of ClusterInfo)))
+                                   collect NIL)))
+         (OR Title (SETQ Title (NCP.AskUser (CONCAT "Title of " (NCP.CardType Card)
+                                                   " card? ")
+                                      "-- " NIL T NIL T)))
+         (SETQ Window (WINDOWP (APPLY* (NCP.CardTypeFn 'Text 'MakeFn)
+                                      Card Title NoDisplayFlg)))
+         (NCP.CardTitle Card Title)
+         (SETQ ChildCards (for ChildInfo in ChildInfos as Box in FileBoxes bind ChildCard LinkType
+                             collect (LET ((LinkType (fetch (CLUSTER.ChildInfo LinkType) of ChildInfo
+                                                            ))
+                                           (ChildCard (NCP.CreateCard
+                                                       (fetch (CLUSTER.ChildInfo CardType)
+                                                          of ChildInfo)
+                                                       NoteFile
+                                                       (CONCAT Title ": " (OR (fetch (
+                                                                                    CLUSTER.ChildInfo
+                                                                                      TitleString)
+                                                                                 of ChildInfo)
+                                                                              (fetch (
+                                                                                    CLUSTER.ChildInfo
+                                                                                      CardType)
+                                                                                 of ChildInfo)))
+                                                       T NIL Box)))
+          
+          (* If LinkType field was nil, then don't create a link for this child.)
+
+                                          (if LinkType
+                                              then (OR (NCP.ValidLinkTypeP LinkType NoteFile)
+                                                       (NCP.CreateLinkType LinkType NoteFile))
+                                                   (NCP.LocalGlobalLink LinkType Card ChildCard NIL)
+                                                   (NCP.CardAddText Card (CHARACTER 13)))
+                                          ChildCard)))
+         (CLUSTER.SetChildren Card ChildCards)
+         (if (NOT NoDisplayFlg)
+             then (CLUSTER.LayoutInSquare Card))
+         (OR Window Card])
+
+(CLUSTER.EditFn
+  [LAMBDA (Card Substance Region/Position)                   (* rht%: " 4-May-87 19:47")
+          
+          (* * Bring up a cluster card. This causes head card to be brought up and all 
+          child cards to come up cascaded below it.)
+
+    (LET (Window)
+         (SETQ Window (APPLY* (NCP.CardTypeFn 'Text 'EditFn)
+                             Card Substance Region/Position))
+          
+          (* Have to do this so that later calls to NC.CoerceToCard will work on the 
+          card's window.)
+
+         (WINDOWPROP Window 'NoteCardObject Card)
+         (CLUSTER.LayoutInCascade Card)
+         Window])
+
+(CLUSTER.QuitFn
+  [LAMBDA (CardIdentifier)                                   (* rht%: " 4-May-87 19:48")
+          
+          (* * Close up a cluster card by first closing all children, then closing the 
+          head cluster card.)
+
+    (LET ((Card (NCP.CoerceToCard CardIdentifier)))
+         (AND (NCP.ValidCardP Card)
+              (for Card in (CLUSTER.FetchChildren Card) when (NCP.ValidCardP Card)
+                 do (NCP.CloseCards Card)))
+         (APPLY* (NCP.CardTypeFn 'Text 'QuitFn)
+                CardIdentifier])
+
+(CLUSTER.PutFn
+  [LAMBDA (ClusterCard Stream)                               (* rht%: " 4-May-87 19:48")
+          
+          (* * Write the cluster substance down to the stream.
+          The format is number of children, followed by uids and text substance.)
+
+    (LET ((ClusterChildren (CLUSTER.FetchChildren ClusterCard)))
+         (NC.WritePtr Stream (LENGTH ClusterChildren)
+                3)
+         (for ChildCard in ClusterChildren do (NC.WriteUID Stream (fetch (Card UID) of ChildCard)))
+         (APPLY* (NCP.CardTypeFn 'Text 'PutFn)
+                ClusterCard Stream)
+         1])
+
+(CLUSTER.GetFn
+  [LAMBDA (ClusterCard Length Stream VersionNum)             (* rht%: " 4-May-87 19:49")
+          
+          (* * Read in the Cluster card substance.
+          Expect a number of children, followed by UIDs and then text substance.)
+
+    (LET ((NoteFile (NCP.CardNoteFile ClusterCard))
+          (StartPtr (GETFILEPTR Stream))
+          NumChildren)
+         (if (GEQ VersionNum 1)
+             then (SETQ NumChildren (NC.ReadPtr Stream 3))
+                  (CLUSTER.SetChildren ClusterCard
+                         (for i from 1 to NumChildren bind UID Card
+                            when [AND (type? UID (SETQ UID (NC.ReadUID Stream)))
+                                      (NC.CardP (SETQ Card (NC.CardFromUID UID NoteFile] collect
+                                                                                         Card)))
+         (APPLY* (NCP.CardTypeFn 'Text 'GetFn)
+                ClusterCard
+                (DIFFERENCE Length (DIFFERENCE (GETFILEPTR Stream)
+                                          StartPtr))
+                Stream])
+
+(CLUSTER.FetchChildren
+  [LAMBDA (ClusterCard)                                      (* rht%: " 3-May-87 23:59")
+          
+          (* * Return the child cards for this cluster card.)
+
+    (NCP.CardUserDataProp ClusterCard 'ClusterChildCards])
+
+(CLUSTER.SetChildren
+  [LAMBDA (ClusterCard ChildCards)                           (* rht%: " 4-May-87 00:00")
+          
+          (* * Replace ChildCards of ClusterCard with the given new ones.)
+
+    (NCP.CardUserDataProp ClusterCard 'ClusterChildCards ChildCards])
+
+(CLUSTER.AddClusterCard
+  [LAMBDA NIL                                                (* ; "Edited 17-Mar-88 15:12 by pmi")
+          
+          (* * Define the Cluster Card type.)
+
+    (DECLARE (GLOBALVARS CLUSTER.ExtraMenuItems))
+    (NCP.CreateCardType 'Cluster 'Text `[(MakeFn ,(FUNCTION CLUSTER.MakeFn))
+                                         (EditFn ,(FUNCTION CLUSTER.EditFn))
+                                         (QuitFn ,(FUNCTION CLUSTER.QuitFn))
+                                         (GetFn ,(FUNCTION CLUSTER.GetFn))
+                                         (PutFn ,(FUNCTION CLUSTER.PutFn]
+           `((LinkDisplayMode Title)
+             (DisplayedInMenuFlg ,NIL)
+             (LeftButtonMenuItems ,(APPEND (NC.GetCardTypeField LeftButtonMenuItems 'Text)
+                                          CLUSTER.ExtraMenuItems])
+)
+(DEFINEQ
+
+(CLUSTER.LayoutInCascade
+  [LAMBDA (CardOrWindowOrTextStream)                         (* rht%: " 4-May-87 00:55")
+          
+          (* * Regroups and lays out the cluster children in cascade format.)
+
+    (LET ((Card (NCP.CoerceToCard CardOrWindowOrTextStream))
+          Window Region)
+         (if (SETQ Window (NCP.CardWindow Card))
+             then (SCREEN.LayoutCardsInCascade (SCREEN.GetCascadePosition Window)
+                         (CLUSTER.FetchChildren Card])
+
+(CLUSTER.LayoutInSquare
+  [LAMBDA (CardOrWindowOrTextStream)                         (* ; "Edited 17-Mar-88 15:20 by pmi")
+          
+          (* ;; "Regroups and lays out the cluster children in square format.")
+          
+          (* ;; "pmi 3/16/88: Added GLOBALVARS declaration.")
+
+    (DECLARE (GLOBALVARS SCREEN.CascadeYSpace))
+    (LET ((Card (NCP.CoerceToCard CardOrWindowOrTextStream))
+          Window Region)
+         (if (SETQ Window (NCP.CardWindow Card))
+             then (SETQ Region (WINDOWPROP Window 'REGION))
+                  (SCREEN.LayoutCardsInSquare (CREATEPOSITION (fetch (REGION LEFT) of Region)
+                                                     (DIFFERENCE (fetch (REGION TOP) of Region)
+                                                            (PLUS (FONTPROP WindowTitleDisplayStream
+                                                                         'HEIGHT)
+                                                                  SCREEN.CascadeYSpace)))
+                         (CLUSTER.FetchChildren Card])
+
+(CLUSTER.LayoutInSurround
+  [LAMBDA (CardOrWindowOrTextStream)                         (* rht%: " 3-May-87 22:57")
+          
+          (* * Regroups and lays out the cluster children in surround format.)
+
+    (LET ((Card (NCP.CoerceToCard CardOrWindowOrTextStream))
+          Window Region)
+         (if (SETQ Window (NCP.CardWindow Card))
+             then (SCREEN.LayoutCardsInSurround Card (CLUSTER.FetchChildren Card])
+)
+(DECLARE%: EVAL@COMPILE
+
+(RECORD CLUSTER.ClusterInfo (ChildInfos FileBoxes))
+
+(RECORD CLUSTER.ChildInfo (CardType LinkType TitleString))
+)
+(CLUSTER.AddClusterCard)
+(PUTPROPS NCCLUSTERCARD COPYRIGHT ("Xerox Corporation" 1987 1988))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (4661 12825 (CLUSTER.MakeFn 4671 . 8404) (CLUSTER.EditFn 8406 . 9068) (CLUSTER.QuitFn 
+9070 . 9640) (CLUSTER.PutFn 9642 . 10280) (CLUSTER.GetFn 10282 . 11411) (CLUSTER.FetchChildren 11413
+ . 11673) (CLUSTER.SetChildren 11675 . 11957) (CLUSTER.AddClusterCard 11959 . 12823)) (12826 14896 (
+CLUSTER.LayoutInCascade 12836 . 13339) (CLUSTER.LayoutInSquare 13341 . 14441) (
+CLUSTER.LayoutInSurround 14443 . 14894)))))
+STOP

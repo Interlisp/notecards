@@ -1,0 +1,84 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)(FILECREATED " 5-Nov-2020 19:32:15" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCGESTURES.;4 7039         previous date%: " 9-Jan-94 20:23:30" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCGESTURES.;3)(* ; "Copyright (c) 1984, 1985, 1988, 1989, 1993, 1994, 2020 by Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCGESTURESCOMS)(RPAQQ NCGESTURESCOMS [(* * Stuff for closing and moving windows by gesturing.)                           (GLOBALVARS LASTMOUSEBUTTONS)                           (FNS NC.GrabWindow)                           (P (SETQ BACKGROUNDBUTTONEVENTFN (FUNCTION NC.GrabWindow])(* * Stuff for closing and moving windows by gesturing.)(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS LASTMOUSEBUTTONS))(DEFINEQ(NC.GrabWindow
+  [LAMBDA NIL                                                (* edited%: " 3-Jun-88 14:27")
+          
+          (* * Modified to respect a main window's MOVEFN or CLOSEFN if this happens to 
+          be an attached window. --KEF)
+
+    (PROG ((InOutList NIL)
+           Window WindowRegionLeft WindowRegionBottom WindowRegionWidth WindowRegionHeight INX INY 
+           OUTX OUTY)
+          (AND
+           (NEQ LASTMOUSEBUTTONS 7)
+           (until (MOUSESTATE UP)
+              do (RESETLST (RESETSAVE (CURSOR BOXCURSOR))
+                        (until (OR (MOUSESTATE UP)
+                                   (NEQ Window (WHICHW))) do (BLOCK))
+                        (SETQ InOutList (CONS (LIST Window LASTMOUSEX LASTMOUSEY)
+                                              InOutList))
+                        [SETQ WindowRegionLeft (fetch (REGION LEFT) of (WINDOWPROP Window
+                                                                              'REGION]
+                        [SETQ WindowRegionBottom (fetch (REGION BOTTOM) of (WINDOWPROP Window
+                                                                                  'REGION]
+                        [SETQ WindowRegionWidth (fetch (REGION WIDTH) of (WINDOWPROP Window
+                                                                                'REGION]
+                        [SETQ WindowRegionHeight (fetch (REGION HEIGHT) of (WINDOWPROP Window
+                                                                                  'REGION]
+                        (SETQ OUTX (CADAR InOutList))
+                        (SETQ OUTY (CADDAR InOutList))
+                        (SETQ INX (CADR (CADR InOutList)))
+                        (SETQ INY (CADDR (CADR InOutList)))
+                        (COND
+                           [[AND Window (NOT (LASTMOUSESTATE UP))
+                                 (AND [OR [AND (ILESSP INX (IPLUS WindowRegionLeft (FTIMES 0.25 
+                                                                                    WindowRegionWidth
+                                                                                          )))
+                                               (ILESSP OUTX (IPLUS WindowRegionLeft (FTIMES 0.25 
+                                                                                    WindowRegionWidth
+                                                                                           ]
+                                          (AND (IGREATERP INX (IPLUS WindowRegionLeft
+                                                                     (FTIMES 0.75 WindowRegionWidth))
+                                                      )
+                                               (IGREATERP OUTX (IPLUS WindowRegionLeft
+                                                                      (FTIMES 0.75 WindowRegionWidth]
+                                      (OR [AND (ILESSP INY (IPLUS WindowRegionBottom (FTIMES 0.25 
+                                                                                   WindowRegionHeight
+                                                                                            )))
+                                               (ILESSP OUTY (IPLUS WindowRegionBottom
+                                                                   (FTIMES 0.25 WindowRegionHeight]
+                                          (AND (IGREATERP INY (IPLUS WindowRegionBottom
+                                                                     (FTIMES 0.75 WindowRegionHeight)
+                                                                     ))
+                                               (IGREATERP OUTY (IPLUS WindowRegionBottom
+                                                                      (FTIMES 0.75 WindowRegionHeight
+                                                                             ]
+                            (COND
+                               [(FMEMB 'MOVEW (WINDOWPROP Window 'PASSTOMAINCOMS))
+                                (MOVEW (WINDOWPROP Window 'MAINWINDOW]
+                               (T (MOVEW Window]
+                           ([AND Window (NOT (LASTMOUSESTATE UP))
+                                 (for N from 3 to 3 by 2
+                                    always (AND (EQ Window (CAAR (NTH InOutList N)))
+                                                (NOT (INSIDEP (CREATEREGION (IPLUS WindowRegionLeft 
+                                                                                   20)
+                                                                     (IPLUS WindowRegionBottom 20)
+                                                                     (IDIFFERENCE WindowRegionWidth 
+                                                                            40)
+                                                                     (IDIFFERENCE WindowRegionHeight 
+                                                                            40))
+                                                            (CADAR (NTH InOutList (SUB1 N)))
+                                                            (CADDAR (NTH InOutList (SUB1 N]
+                            (COND
+                               [(FMEMB 'CLOSEW (WINDOWPROP Window 'PASSTOMAINCOMS))
+                                (CLOSEW (WINDOWPROP Window 'MAINWINDOW]
+                               (T (CLOSEW Window)))
+                            (BLOCK)))
+                        (SETQ Window (WHICHW))
+          
+          (* * Kludge to fix TEDIT image object button event fn bug.)
+
+                        (COND
+                           ((AND (WINDOWP Window)
+                                 TEDIT.SELPENDING
+                                 (EQ (WINDOWPROP Window 'TEXTOBJ)
+                                     TEDIT.SELPENDING))
+                            (SETQ Window NIL]))(SETQ BACKGROUNDBUTTONEVENTFN (FUNCTION NC.GrabWindow))(PUTPROPS NCGESTURES COPYRIGHT ("Xerox Corporation" 1984 1985 1988 1989 1993 1994 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (891 6870 (NC.GrabWindow 901 . 6868)))))STOP

@@ -1,0 +1,12 @@
+(FILECREATED "10-Jun-2021 13:01:59" ("compiled on " {DSK}<home>pi>il>notecards>library>NCMAILCARD.;1) 
+"29-Apr-2021 09:48:40" tcompl'd in "Medley  Full Sysout 30-Apr-2021 ..." dated "30-Apr-2021 14:49:58")
+(FILECREATED " 7-Aug-86 14:04:11" {QV}<NOTECARDS>1.3K>LIBRARY>NCMAILCARD.;1 777 changes to: (VARS 
+NCMAILCARDCOMS CHAT.ALLHOSTS))
+(PRETTYCOMPRINT NCMAILCARDCOMS)
+(RPAQQ NCMAILCARDCOMS ((* * Fake Mail Card. All it does is inherit everything from TextCard for 
+purposes of converting old files.) (FILES NCTEXTCARD) (P (NCP.CreateCardType (QUOTE Mail) (QUOTE Text)
+ NIL NIL))))
+(FILESLOAD NCTEXTCARD)
+(NCP.CreateCardType (QUOTE Mail) (QUOTE Text) NIL NIL)
+(PUTPROPS NCMAILCARD COPYRIGHT ("Xerox Corporation" 1986))
+NIL

@@ -1,0 +1,569 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 3-Nov-2020 16:11:09" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCPARAMETERS.;5 52508        previous date%: " 8-Jan-94 23:12:07" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCPARAMETERS.;4)(* ; "Copyright (c) 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1993, 1994, 2020 by Venue & Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCPARAMETERSCOMS)(RPAQQ NCPARAMETERSCOMS       ((* ;;; "Tailoring parameters for the user to set.")        (GLOBALVARS NC.FixedMenuFlg NC.AdviseWindowMenuFlg NC.ForceSourcesFlg NC.ForceFilingFlg                NC.ForceTitlesFlg NC.MarkersInFileBoxesFlg NC.AlphabetizedFileBoxChildrenFlg                NC.LinkIconAttachBitmapFlg NC.LinkIconShowLinkTypeFlg NC.LinkIconShowTitleFlg                NC.MainMenuPosition NC.ShowNoteFileOnCards NC.IncludeCardObjectInShowInfo                NC.SpecialBrowserSpecsFlg NC.AnnoFlg NC.LinkDashingInBrowser NC.ArrowHeadsInBrowser                NC.DefaultFont NC.LinkIconFont NC.NoteFileIndicatorFont NC.MenuFont NC.DefaultCardType               NC.BringUpCardAtOldPosFlg NC.CloseCardsOffScreenFlg NC.NoteCardsParameters                NC.SpecialBrowserMiddleButtonFn NCINITIALGLOBALPARAMS                NC.UseDeletedLinkIconIndicatorsFlg NC.DelTEditProcessAtShrinkFlg                NC.UserSpecifiedTEditProps NC.AskTEditPropsWindowWidth NC.AskTEditPropsWindowHeight                NC.NoteFileMenuLingerFlg NC.DefaultIndexSizeInEntries NC.MsgDelay                NC.LinkIconMultiLineMode NC.LinkIconMaxWidth NC.SetAttachSketchMenu NC.ShowTEditProps               NC.ParametersMenuFont NC.ParametersMenuBoldFont NC.BringUpTOC)        (INITVARS (NC.FixedMenuFlg NIL)               (NC.ShortWindowMenuFlg T)               (NC.ShowNoteFileOnCards T)               (NC.IncludeCardObjectInShowInfo NIL)               (NC.ForceSourcesFlg NIL)               (NC.ForceFilingFlg T)               (NC.ForceTitlesFlg NIL)               (NC.MarkersInFileBoxesFlg T)               (NC.AlphabetizedFileBoxChildrenFlg NIL)               (NC.LinkIconAttachBitmapFlg T)               (NC.LinkIconShowTitleFlg T)               (NC.LinkIconShowLinkTypeFlg NIL)               (NC.LinkDashingInBrowser NIL)               (NC.ArrowHeadsInBrowser 'None)               (NC.MainMenuPosition NIL)               (NC.SpecialBrowserSpecsFlg NIL)               (NC.AnnoFlg NIL)               (NC.DefaultCardType 'Text)               (NC.CloseCardsOffScreenFlg NIL)               (NC.BringUpCardAtOldPosFlg NIL)               (NC.DefaultFont (FONTCREATE 'HELVETICA 12))               (NC.LinkIconFont (FONTCREATE 'HELVETICA 10 'BOLD))               (NC.NoteFileIndicatorFont (FONTCREATE 'HELVETICA 10 'BOLD))               (NC.MenuFont (FONTCREATE 'HELVETICA 10 'BOLD))               (NC.ParametersMenuFont (FONTCREATE 'HELVETICA 10 'REGULAR))               (NC.ParametersMenuBoldFont (FONTCREATE 'HELVETICA 14 'BOLD))               (NCINITIALGLOBALPARAMS NIL)               (NC.UseDeletedLinkIconIndicatorsFlg T)               (NC.DelTEditProcessAtShrinkFlg NIL)               (NC.UserSpecifiedTEditProps NIL)               (NC.AskTEditPropsWindowWidth 425)               (NC.AskTEditPropsWindowHeight 70)               (NC.NoteFileMenuLingerFlg T)               (NC.DefaultIndexSizeInEntries 1000)               (NC.MsgDelay 1500)               (NC.LinkIconMultiLineMode NIL)               (NC.LinkIconMaxWidth SCREENWIDTH)               (NC.AttachSketchMenu NIL)               (NC.ShowTEditProps T)               (NC.BringUpTOC T))        (GLOBALVARS NC.ListOfFontFamilies NC.ListOfFontSizes NC.ListOfFontFaces)        [INITVARS (NC.ListOfFontFamilies '(TIMESROMAN HELVETICA GACHA CLASSIC MODERN TERMINAL TITAN                                                  CREAM OLDENGLISH))               (NC.ListOfFontSizes '(8 9 10 11 12 14 18 24 30 36 72))               (NC.ListOfFontFaces '(STANDARD BOLD ITALIC BOLDITALIC]        (INITPROPS (NC.NoteCardsParameters (|NoteCards System Parameters| NIL)                          (|Extra TEdit Props| (NC.UserSpecifiedTEditProps NC.ShowSomeProps                                                       NC.UserSpecifiedTEditPropsSelectionFn                                                       NC.UserSpecifiedTEditPropsCheckFn))                          (|Include Card Object In ShowInfo| NC.IncludeCardObjectInShowInfo)                          (|Del TEdit Process When Shrinking| NC.DelTEditProcessAtShrinkFlg)                          (Fonts NIL)                          (Menu% Font (NC.MenuFont NC.DefaultFontFetchFn NC.DefaultFontSelectionFn                                              FONTP NC.MenuFontAfterChangeFn))                          (Default% Font (NC.DefaultFont NC.DefaultFontFetchFn                                                 NC.DefaultFontSelectionFn FONTP))                          (|Link Icon Font| (NC.LinkIconFont NC.DefaultFontFetchFn                                                    NC.DefaultFontSelectionFn FONTP))                          (|NoteFile Indicator Font| (NC.NoteFileIndicatorFont NC.DefaultFontFetchFn                                                            NC.DefaultFontSelectionFn FONTP))                          (NoteFiles NIL)                          (|Show NoteFile On Cards| NC.ShowNoteFileOnCards)                          (|New NoteFile Initial Size| (NC.DefaultIndexSizeInEntries EVAL                                                               NC.SetNewFileInitialSize                                                               NC.CheckNewFileInitialSize))                          (|Menu Lingers After NoteFile Close| NC.NoteFileMenuLingerFlg)                          (|Show Table of Contents on Open| NC.BringUpTOC)                          (Cards NIL)                          (Force% Filing NC.ForceFilingFlg)                          (Force% Titles NC.ForceTitlesFlg)                          (|Default Card Type| (NC.DefaultCardType EVAL NC.DefaultCardTypeSelectionFn                                                      NC.DefaultCardTypeCheckFn))                          (|Close Cards Off Screen| NC.CloseCardsOffScreenFlg)                          (|Bring Up Cards At Previous Pos| NC.BringUpCardAtOldPosFlg)                          (FileBox% Cards NIL)                          (|Markers In FileBoxes| NC.MarkersInFileBoxesFlg)                          (|Alphabetized FileBox Children| NC.AlphabetizedFileBoxChildrenFlg)                          (Browser% Cards NIL)                          (|Special Browser Specs| NC.SpecialBrowserSpecsFlg)                          (|Arrow Heads In Browsers| (NC.ArrowHeadsInBrowser EVAL                                                             NC.ArrowHeadsInBrowserSelectionFn                                                             NC.ArrowHeadsInBrowserCheckFn))                          (|Link Dashing In Browsers| NC.LinkDashingInBrowser)                          (Sketch% Cards NIL)                          (|Attach Sketch Menu| NC.AttachSketchMenu)                          (Links NIL)                          (|Link Icon Border Width| (NC.LinkIconBorderWidth EVAL                                                            NC.SetLinkIconBorderWidth NIL))                          (|Link Icon Multi Line Mode| NC.LinkIconMultiLineMode)                          (|Link Icon Max Width In Pixels| (NC.LinkIconMaxWidth EVAL                                                                   NC.SetLinkIconMaxWidth NIL))                          (|Cross File Link Mode| (NC.NewCrossFileLinksMode EVAL                                                          NC.NewCrossFileLinksModeSelectionFn                                                          NC.NewCrossFileLinksModeCheckFn))                          (|Link Icon Show Title Default| (NC.LinkIconShowTitleFlg NIL                                                               NC.DefaultLinkIconParametersSelectionFn                                                                 NIL))                          (|Link Icon Attach Bitmap Default| (NC.LinkIconAttachBitmapFlg NIL                                                               NC.DefaultLinkIconParametersSelectionFn                                                                    NIL))                          (|Link Icon Show Link Type Default| (NC.LinkIconShowLinkTypeFlg NIL                                                               NC.DefaultLinkIconParametersSelectionFn                                                                     NIL))                          (|Use Deleted Link Icon Indicators| NC.UseDeletedLinkIconIndicatorsFlg)))        [INITVARS (NC.NoteCardsParameters (PROPNAMES 'NC.NoteCardsParameters]        (* ;;; "Parameter Inspector & Editor")        (FNS NC.BuildInspector NC.InspectorFetchFn NC.InspectorSelectionFn NC.BuildFreeMenu              NC.FreeMenuFetchFn NC.FreeMenuSelectedFn NC.SessionParamsSelectedFn NC.MakeFreeMenuEntry             NC.ToggleShowTEditProps NC.SetShowTEditProps)        (FNS NC.DefaultCardTypeSelectionFn NC.DefaultCardTypeCheckFn              NC.ArrowHeadsInBrowserSelectionFn NC.ArrowHeadsInBrowserCheckFn NC.DefaultFontFetchFn              NC.DefaultFontSelectionFn NC.GetFontFromUser NC.FontFaceShorthand              NC.UserSpecifiedTEditPropsSelectionFn NC.UserSpecifiedTEditPropsCheckFn              NC.DefaultLinkIconParametersSelectionFn NC.ClearAllLinkIconImageBoxCaches              NC.SetNewFileInitialSize NC.MenuFontAfterChangeFn NC.NewCrossFileLinksModeSelectionFn              NC.NewCrossFileLinksModeCheckFn NC.CheckNewFileInitialSize NC.ShowSomeProps)        (FNS NC.SetLinkIconMaxWidth NC.SetLinkIconBorderWidth)        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)              NCPARAMETERS)))(* ;;; "Tailoring parameters for the user to set.")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.FixedMenuFlg NC.AdviseWindowMenuFlg NC.ForceSourcesFlg NC.ForceFilingFlg        NC.ForceTitlesFlg NC.MarkersInFileBoxesFlg NC.AlphabetizedFileBoxChildrenFlg        NC.LinkIconAttachBitmapFlg NC.LinkIconShowLinkTypeFlg NC.LinkIconShowTitleFlg        NC.MainMenuPosition NC.ShowNoteFileOnCards NC.IncludeCardObjectInShowInfo        NC.SpecialBrowserSpecsFlg NC.AnnoFlg NC.LinkDashingInBrowser NC.ArrowHeadsInBrowser        NC.DefaultFont NC.LinkIconFont NC.NoteFileIndicatorFont NC.MenuFont NC.DefaultCardType        NC.BringUpCardAtOldPosFlg NC.CloseCardsOffScreenFlg NC.NoteCardsParameters        NC.SpecialBrowserMiddleButtonFn NCINITIALGLOBALPARAMS NC.UseDeletedLinkIconIndicatorsFlg        NC.DelTEditProcessAtShrinkFlg NC.UserSpecifiedTEditProps NC.AskTEditPropsWindowWidth        NC.AskTEditPropsWindowHeight NC.NoteFileMenuLingerFlg NC.DefaultIndexSizeInEntries NC.MsgDelay       NC.LinkIconMultiLineMode NC.LinkIconMaxWidth NC.SetAttachSketchMenu NC.ShowTEditProps        NC.ParametersMenuFont NC.ParametersMenuBoldFont NC.BringUpTOC))(RPAQ? NC.FixedMenuFlg NIL)(RPAQ? NC.ShortWindowMenuFlg T)(RPAQ? NC.ShowNoteFileOnCards T)(RPAQ? NC.IncludeCardObjectInShowInfo NIL)(RPAQ? NC.ForceSourcesFlg NIL)(RPAQ? NC.ForceFilingFlg T)(RPAQ? NC.ForceTitlesFlg NIL)(RPAQ? NC.MarkersInFileBoxesFlg T)(RPAQ? NC.AlphabetizedFileBoxChildrenFlg NIL)(RPAQ? NC.LinkIconAttachBitmapFlg T)(RPAQ? NC.LinkIconShowTitleFlg T)(RPAQ? NC.LinkIconShowLinkTypeFlg NIL)(RPAQ? NC.LinkDashingInBrowser NIL)(RPAQ? NC.ArrowHeadsInBrowser 'None)(RPAQ? NC.MainMenuPosition NIL)(RPAQ? NC.SpecialBrowserSpecsFlg NIL)(RPAQ? NC.AnnoFlg NIL)(RPAQ? NC.DefaultCardType 'Text)(RPAQ? NC.CloseCardsOffScreenFlg NIL)(RPAQ? NC.BringUpCardAtOldPosFlg NIL)(RPAQ? NC.DefaultFont (FONTCREATE 'HELVETICA 12))(RPAQ? NC.LinkIconFont (FONTCREATE 'HELVETICA 10 'BOLD))(RPAQ? NC.NoteFileIndicatorFont (FONTCREATE 'HELVETICA 10 'BOLD))(RPAQ? NC.MenuFont (FONTCREATE 'HELVETICA 10 'BOLD))(RPAQ? NC.ParametersMenuFont (FONTCREATE 'HELVETICA 10 'REGULAR))(RPAQ? NC.ParametersMenuBoldFont (FONTCREATE 'HELVETICA 14 'BOLD))(RPAQ? NCINITIALGLOBALPARAMS NIL)(RPAQ? NC.UseDeletedLinkIconIndicatorsFlg T)(RPAQ? NC.DelTEditProcessAtShrinkFlg NIL)(RPAQ? NC.UserSpecifiedTEditProps NIL)(RPAQ? NC.AskTEditPropsWindowWidth 425)(RPAQ? NC.AskTEditPropsWindowHeight 70)(RPAQ? NC.NoteFileMenuLingerFlg T)(RPAQ? NC.DefaultIndexSizeInEntries 1000)(RPAQ? NC.MsgDelay 1500)(RPAQ? NC.LinkIconMultiLineMode NIL)(RPAQ? NC.LinkIconMaxWidth SCREENWIDTH)(RPAQ? NC.AttachSketchMenu NIL)(RPAQ? NC.ShowTEditProps T)(RPAQ? NC.BringUpTOC T)(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.ListOfFontFamilies NC.ListOfFontSizes NC.ListOfFontFaces))(RPAQ? NC.ListOfFontFamilies '(TIMESROMAN HELVETICA GACHA CLASSIC MODERN TERMINAL TITAN CREAM                                          OLDENGLISH))(RPAQ? NC.ListOfFontSizes '(8 9 10 11 12 14 18 24 30 36 72))(RPAQ? NC.ListOfFontFaces '(STANDARD BOLD ITALIC BOLDITALIC))(LOADINITPROPS (NC.NoteCardsParameters (|NoteCards System Parameters| NIL)                      (|Extra TEdit Props| (NC.UserSpecifiedTEditProps NC.ShowSomeProps                                                   NC.UserSpecifiedTEditPropsSelectionFn                                                   NC.UserSpecifiedTEditPropsCheckFn))                      (|Include Card Object In ShowInfo| NC.IncludeCardObjectInShowInfo)                      (|Del TEdit Process When Shrinking| NC.DelTEditProcessAtShrinkFlg)                      (Fonts NIL)                      (Menu% Font (NC.MenuFont NC.DefaultFontFetchFn NC.DefaultFontSelectionFn FONTP                                         NC.MenuFontAfterChangeFn))                      (Default% Font (NC.DefaultFont NC.DefaultFontFetchFn NC.DefaultFontSelectionFn                                            FONTP))                      (|Link Icon Font| (NC.LinkIconFont NC.DefaultFontFetchFn                                                NC.DefaultFontSelectionFn FONTP))                      (|NoteFile Indicator Font| (NC.NoteFileIndicatorFont NC.DefaultFontFetchFn                                                         NC.DefaultFontSelectionFn FONTP))                      (NoteFiles NIL)                      (|Show NoteFile On Cards| NC.ShowNoteFileOnCards)                      (|New NoteFile Initial Size| (NC.DefaultIndexSizeInEntries EVAL                                                           NC.SetNewFileInitialSize                                                           NC.CheckNewFileInitialSize))                      (|Menu Lingers After NoteFile Close| NC.NoteFileMenuLingerFlg)                      (|Show Table of Contents on Open| NC.BringUpTOC)                      (Cards NIL)                      (Force% Filing NC.ForceFilingFlg)                      (Force% Titles NC.ForceTitlesFlg)                      (|Default Card Type| (NC.DefaultCardType EVAL NC.DefaultCardTypeSelectionFn                                                   NC.DefaultCardTypeCheckFn))                      (|Close Cards Off Screen| NC.CloseCardsOffScreenFlg)                      (|Bring Up Cards At Previous Pos| NC.BringUpCardAtOldPosFlg)                      (FileBox% Cards NIL)                      (|Markers In FileBoxes| NC.MarkersInFileBoxesFlg)                      (|Alphabetized FileBox Children| NC.AlphabetizedFileBoxChildrenFlg)                      (Browser% Cards NIL)                      (|Special Browser Specs| NC.SpecialBrowserSpecsFlg)                      (|Arrow Heads In Browsers| (NC.ArrowHeadsInBrowser EVAL                                                         NC.ArrowHeadsInBrowserSelectionFn                                                         NC.ArrowHeadsInBrowserCheckFn))                      (|Link Dashing In Browsers| NC.LinkDashingInBrowser)                      (Sketch% Cards NIL)                      (|Attach Sketch Menu| NC.AttachSketchMenu)                      (Links NIL)                      (|Link Icon Border Width| (NC.LinkIconBorderWidth EVAL                                                        NC.SetLinkIconBorderWidth NIL))                      (|Link Icon Multi Line Mode| NC.LinkIconMultiLineMode)                      (|Link Icon Max Width In Pixels| (NC.LinkIconMaxWidth EVAL                                                               NC.SetLinkIconMaxWidth NIL))                      (|Cross File Link Mode| (NC.NewCrossFileLinksMode EVAL                                                      NC.NewCrossFileLinksModeSelectionFn                                                      NC.NewCrossFileLinksModeCheckFn))                      (|Link Icon Show Title Default| (NC.LinkIconShowTitleFlg NIL                                                              NC.DefaultLinkIconParametersSelectionFn                                                             NIL))                      (|Link Icon Attach Bitmap Default| (NC.LinkIconAttachBitmapFlg NIL                                                               NC.DefaultLinkIconParametersSelectionFn                                                                NIL))                      (|Link Icon Show Link Type Default| (NC.LinkIconShowLinkTypeFlg NIL                                                               NC.DefaultLinkIconParametersSelectionFn                                                                 NIL))                      (|Use Deleted Link Icon Indicators| NC.UseDeletedLinkIconIndicatorsFlg)))(RPAQ? NC.NoteCardsParameters (PROPNAMES 'NC.NoteCardsParameters))(* ;;; "Parameter Inspector & Editor")(DEFINEQ(NC.BuildInspector
+  [LAMBDA NIL                                            (* ; "Edited  4-Jan-89 11:00 by rtk")
+
+(* ;;; "Build and dislay an inspector window on the user tailoring flgs")
+
+(* ;;; "rht 5/1/86: Now flashes existing window instead of moving it.")
+
+(* ;;; 
+"pmi 5/15/87: Removed NC.InspectorTitleCommandFn (TITLECOMMANDFN arg) from call to INSPECTW.CREATE")
+
+    (DECLARE (GLOBALVARS NC.NoteCardsParameters NC.NoteCardsParametersFreeMenuItems))
+    (PROG (InspectWindow)
+          (COND
+             [(SETQ InspectWindow (for Window in (NC.OpenWindows)
+                                     when (WINDOWPROP Window 'NoteCardsInspector)
+                                     do (NC.FlashHiddenWindow Window T)
+                                           (RETURN Window]
+             (T (LET* [(FREE-MENU-ITEMS (OR (AND (BOUNDP 'NC.NoteCardsParametersFreeMenuItems)
+                                                 NC.NoteCardsParametersFreeMenuItems)
+                                            (SETQ NC.NoteCardsParametersFreeMenuItems
+                                             (NC.BuildFreeMenu 'NC.NoteCardsParameters 
+                                                    "NoteCards Parameters" T]
+                      (if (AND (BOUNDP 'NC.NoteCardsParametersFreeMenuItems)
+                                   NC.NoteCardsParametersFreeMenuItems)
+                          then (OPENW NC.NoteCardsParametersFreeMenuItems)
+                        else (SETQ NC.NoteCardsParametersFreeMenuItems (NC.BuildFreeMenu
+                                                                            'NC.NoteCardsParameters 
+                                                                            "NoteCards Parameters" T)
+                                  ))
+                      (SETQ InspectWindow NC.NoteCardsParametersFreeMenuItems)
+                      (WINDOWPROP NC.NoteCardsParametersFreeMenuItems 'NoteCardsInspector T])(NC.InspectorFetchFn
+  (LAMBDA (Object Property)                                  (* rht%: " 1-May-86 17:12")
+          
+          (* * Fetches the value of the atom specified by property.
+          Object is a dummy argument in this case.)
+          
+          (* * rht 10/25/84%: Now find relevant globalvar on proplist of 
+          NC.NoteCardsParameters. If there is a valuesfn, then we just display the value.
+          If not, then it's assumed to be a binary T/NIL type globalvar and we display 
+          either Yes or No.)
+          
+          (* * rht 3/19/85%: Rewrote to use the new GLOBALPARAMETER record which contains 
+          GlobalVar's name and fetchFn among other stuff.)
+
+    (LET ((ParameterInfo (GETPROP 'NC.NoteCardsParameters Property))
+          GlobalVar FetchFn Value)
+         (if (LISTP ParameterInfo)
+             then (SETQ GlobalVar (fetch (GLOBALPARAMETER PARAMGLOBALVAR) of ParameterInfo))
+                  (SETQ FetchFn (fetch (GLOBALPARAMETER PARAMFETCHFN) of ParameterInfo))
+           else (SETQ GlobalVar ParameterInfo))
+         (COND
+            (FetchFn (APPLY* FetchFn GlobalVar))
+            ((EVAL GlobalVar)
+             'Yes)
+            (T 'No)))))(NC.InspectorSelectionFn
+  (LAMBDA (Property ValueFlg InspectWindow)                  (* pmi%: " 6-Apr-87 12:20")
+          
+          (* * Actions to be taken when the user selects an item in the Inspector.
+          If a value, then ignore. If a property, ask for a new value.)
+          
+          (* * KLUDGED to hadle the NC.DefaultcardType property ---
+          should be fixed to be general!!!!!!! fgh |10/23/84|)
+          
+          (* * rht 10/25/84%: Rewritten to access the NC.NoteCardsParameters variable's 
+          prop list to get all info including the name of the relevant globalvar for this 
+          parameter and an optional function. The latter returns a list of possible 
+          values. If no such function, then just toggle between Yes and No.)
+          
+          (* * rht 3/19/85%: Rewritten to use new GLOBALPARAMETER record which contains 
+          globalvar's name and selection fn among other stuff.)
+          
+          (* * rht 5/1/86%: Now can toggle either by clicking attribute or value.)
+          
+          (* * pmi 4/1/87%: Added fifth field to GLOBALPARAMETER record%: 
+          PARAMAFTERCHANGEFN. This function is called after the Global parameter has been 
+          changed.)
+          
+          (* * pmi 4/6/87%: Added check for non-NIL AfterChangeFn before trying to apply 
+          it to the GlobalVar.)
+
+    (PROG (Answer (ParameterInfo (GETPROP 'NC.NoteCardsParameters Property))
+                 SelectionFn AfterChangeFn GlobalVar)
+          (if (LISTP ParameterInfo)
+              then (SETQ GlobalVar (fetch (GLOBALPARAMETER PARAMGLOBALVAR) of ParameterInfo))
+                   (SETQ SelectionFn (fetch (GLOBALPARAMETER PARAMSELECTIONFN) of ParameterInfo))
+                   (SETQ AfterChangeFn (fetch (GLOBALPARAMETER PARAMAFTERCHANGEFN) of ParameterInfo))
+            else (SETQ GlobalVar ParameterInfo))
+          (COND
+             (SelectionFn (if (NEQ 'NOTCHANGED (SETQ Answer (APPLY* SelectionFn GlobalVar)))
+                              then (SET GlobalVar Answer)
+                                   (if AfterChangeFn
+                                       then (APPLY* AfterChangeFn GlobalVar))
+                                   (INSPECTW.REDISPLAY InspectWindow Property)))
+             (T (COND
+                   ((EVAL GlobalVar)
+                    (SET GlobalVar NIL))
+                   (T (SET GlobalVar T)))
+                (INSPECTW.REDISPLAY InspectWindow Property)))
+          (INSPECTW.SELECTITEM InspectWindow))))(NC.BuildFreeMenu
+  [LAMBDA (PARAMETER-SYMBOL WINDOW-TITLE OPEN-WINDOW?)(* ; "Edited 13-Feb-89 17:33 by krivacic")
+    (PROMPTPRINT "Creating Free Menu for: " WINDOW-TITLE)
+
+(* ;;; "Make a free menu from the inspect props found at the top level of the symbol pointed to by PARAMETER-SYMBOL")
+
+(* ;;; "2/13/89 bk: Add the RESETLST & RESETSAVE so (CURSOR WAITINGCURSOR) could be used.")
+
+    (RESETLST
+        (RESETSAVE (CURSOR WAITINGCURSOR))
+        (LET* ([FREE-MENU-LIST (APPEND (LIST (LIST 'PROPS 'FONT NC.DefaultFont))
+                                      (for PARMETER-INFO in (EVAL PARAMETER-SYMBOL)
+                                         collect (NC.MakeFreeMenuEntry PARMETER-INFO
+                                                            (GETPROP PARAMETER-SYMBOL PARMETER-INFO]
+               (FREE-MENU-WINDOW (FREEMENU FREE-MENU-LIST WINDOW-TITLE))
+               REGION)
+              (WINDOWPROP FREE-MENU-WINDOW 'NoteCardsInspector T)
+              (WINDOWPROP FREE-MENU-WINDOW 'WINDOW-PROP-SYMBOL PARAMETER-SYMBOL)
+              (if OPEN-WINDOW?
+                  then (SETQ REGION (WINDOWPROP FREE-MENU-WINDOW 'REGION))
+                        (MOVEW FREE-MENU-WINDOW (GETBOXPOSITION (fetch (REGION WIDTH)
+                                                                   of REGION)
+                                                       (fetch (REGION HEIGHT) of REGION)))
+                        (OPENW FREE-MENU-WINDOW))
+              FREE-MENU-WINDOW))])(NC.FreeMenuFetchFn
+  [LAMBDA (Object Property ParmInfo)                     (* ; "Edited 27-Dec-88 12:46 by rtk")
+
+(* ;;; 
+"Fetches the value of the atom specified by property.  Object is a dummy argument in this case.")
+
+(* ;;; "rht 10/25/84: Now find relevant globalvar on proplist of NC.NoteCardsParameters.  If there is a valuesfn, then we just display the value.  If not, then it's assumed to be a binary T/NIL type globalvar and we display either Yes or No.")
+
+(* ;;; "rht 3/19/85: Rewrote to use the new GLOBALPARAMETER record which contains GlobalVar's name and fetchFn among other stuff.")
+
+    (if Property
+        then [LET ((ParameterInfo ParmInfo)
+                       GlobalVar FetchFn Value)
+                      (if (LISTP ParameterInfo)
+                          then (SETQ GlobalVar (fetch (GLOBALPARAMETER PARAMGLOBALVAR)
+                                                      of ParameterInfo))
+                                (SETQ FetchFn (fetch (GLOBALPARAMETER PARAMFETCHFN) of 
+                                                                                        ParameterInfo
+                                                     ))
+                        else (SETQ GlobalVar ParameterInfo))
+                      (COND
+                         (FetchFn (MKSTRING (APPLY* FetchFn GlobalVar)))
+                         ((EVAL GlobalVar)
+                          'Yes)
+                         (T 'No]
+      else ""])(NC.FreeMenuSelectedFn
+  [LAMBDA (MENU-ITEM WINDOW)                          (* ; "Edited  8-Feb-89 17:46 by krivacic")
+
+(* ;;; "A Free menu Item was Selected,  Reset the value in the display & set the global value.  The (FREEMENUITEM FM.ID) is the global symbol to set with the new value in (FREEMENUITEM FM.STATE).  The name of the ID in the FreeMenu is the same as the global symbol with %"-VALUE%" appended to it.")
+
+(* ;;; "bk 1/8/89: Add AFTER-CHANGE-FN function & call.")
+
+    (LET* ((SELECTED-ITEM-ID (fetch (FREEMENUITEM FM.ID) of MENU-ITEM))
+           (NEW-VALUE (fetch (FREEMENUITEM FM.STATE) of MENU-ITEM))
+           (PARAMETER-INFO (GETPROP (WINDOWPROP WINDOW 'WINDOW-PROP-SYMBOL)
+                                  SELECTED-ITEM-ID))
+           GLOBAL-VAR FETCHFN SELECTFN CHECKFN AFTER-CHANGE-FN)
+          (if (LISTP PARAMETER-INFO)
+              then (SETQ GLOBAL-VAR (fetch (GLOBALPARAMETER PARAMGLOBALVAR) of 
+                                                                                       PARAMETER-INFO
+                                               ))
+                    (SETQ FETCHFN (fetch (GLOBALPARAMETER PARAMFETCHFN) of PARAMETER-INFO))
+                    (SETQ SELECTFN (fetch (GLOBALPARAMETER PARAMSELECTIONFN) of 
+                                                                                       PARAMETER-INFO
+                                          ))
+                    (SETQ CHECKFN (fetch (GLOBALPARAMETER PARAMCHECKFN) of PARAMETER-INFO))
+                    (SETQ AFTER-CHANGE-FN (fetch (GLOBALPARAMETER PARAMAFTERCHANGEFN)
+                                             of PARAMETER-INFO))
+            else (SETQ GLOBAL-VAR PARAMETER-INFO))
+          [COND
+             [SELECTFN (if (NEQ 'NOTCHANGED (SETQ NEW-VALUE (APPLY* SELECTFN GLOBAL-VAR WINDOW)))
+                           then (if CHECKFN
+                                        then (if (APPLY* CHECKFN NEW-VALUE)
+                                                     then (SET GLOBAL-VAR NEW-VALUE))
+                                      else (SET GLOBAL-VAR NEW-VALUE]
+             (T (SET GLOBAL-VAR (NOT (EVAL GLOBAL-VAR]
+          (LET* [(VALUE-ITEM (FM.GETITEM (PACK (LIST SELECTED-ITEM-ID '-VALUE))
+                                    NIL WINDOW))
+                 (NEW-LABEL (NC.FreeMenuFetchFn NIL SELECTED-ITEM-ID PARAMETER-INFO))
+                 (VALUE-REGION (FM.ITEMPROP VALUE-ITEM 'REGION))
+                 [CLEAR-REGION (- (fetch (REGION WIDTH) of VALUE-REGION)
+                                  (STRINGWIDTH NEW-LABEL (FM.ITEMPROP VALUE-ITEM 'FONT]
+                 (NEW-REGION (create REGION copying VALUE-REGION LEFT _
+                                                      (+ (fetch (REGION LEFT) of VALUE-REGION
+                                                                )
+                                                         CLEAR-REGION]
+                (FM.ITEMPROP VALUE-ITEM 'REGION NEW-REGION)
+                (BLTSHADE 0 WINDOW (fetch (REGION LEFT) of VALUE-REGION)
+                       (fetch (REGION BOTTOM) of VALUE-REGION)
+                       (fetch (REGION WIDTH) of VALUE-REGION)
+                       (fetch (REGION HEIGHT) of VALUE-REGION)
+                       'REPLACE)
+                (FM.CHANGELABEL VALUE-ITEM NEW-LABEL WINDOW))
+          (if AFTER-CHANGE-FN
+              then (APPLY* AFTER-CHANGE-FN NEW-VALUE])(NC.SessionParamsSelectedFn
+  [LAMBDA (MENU-ITEM WINDOW)                             (* ; "Edited  3-Jan-89 15:48 by rtk")
+
+(* ;;; "A Free menu Item was Selected,  Reset the value in the display & set the global value.  The (FREEMENUITEM FM.ID) is the global symbol to set with the new value in (FREEMENUITEM FM.STATE).  The name of the ID in the FreeMenu is the same as the global symbol with %"-VALUE%" appended to it.")
+
+    (LET* ((SELECTED-ITEM-ID (fetch (FREEMENUITEM FM.ID) of MENU-ITEM))
+           (NEW-VALUE (fetch (FREEMENUITEM FM.STATE) of MENU-ITEM))
+           (PARAMETER-INFO (GETPROP (WINDOWPROP WINDOW 'WINDOW-PROP-SYMBOL)
+                                  SELECTED-ITEM-ID))
+           GLOBAL-VAR FETCHFN SELECTFN)
+          (if (LISTP PARAMETER-INFO)
+              then (SETQ GLOBAL-VAR (fetch (GLOBALPARAMETER PARAMGLOBALVAR) of 
+                                                                                       PARAMETER-INFO
+                                               ))
+                    (SETQ FETCHFN (fetch (GLOBALPARAMETER PARAMFETCHFN) of PARAMETER-INFO))
+                    (SETQ SELECTFN (fetch (GLOBALPARAMETER PARAMSELECTIONFN) of 
+                                                                                       PARAMETER-INFO
+                                          ))
+                    (SETQ CHECKFN (fetch (GLOBALPARAMETER PARAMCHECKFN) of PARAMETER-INFO))
+            else (SETQ GLOBAL-VAR PARAMETER-INFO))
+          [COND
+             [SELECTFN (if (NEQ 'NOTCHANGED (SETQ NEW-VALUE (APPLY* SELECTFN GLOBAL-VAR)))
+                           then (SET GLOBAL-VAR NEW-VALUE)
+                                 (if CHECKFN
+                                     then (APPLY* CHECKFN GLOBAL-VAR]
+             (T (SET GLOBAL-VAR (NOT (EVAL GLOBAL-VAR]
+          (FM.CHANGELABEL (PACK (LIST SELECTED-ITEM-ID '-VALUE))
+                 (NC.InspectorFetchFn NIL SELECTED-ITEM-ID PARAMETER-INFO)
+                 WINDOW T])(NC.MakeFreeMenuEntry
+  [LAMBDA (ENTRY-LABEL ENTRY-PROPS)                   (* ; "Edited 15-Feb-89 17:37 by krivacic")
+    (LET* ([VALUE-SYMBOL (PACK (LIST ENTRY-LABEL '-VALUE]
+           (SIMPLE-FLAG (NOT (LISTP ENTRY-PROPS)))
+           (ENTRY-SYMBOL (OR (AND SIMPLE-FLAG ENTRY-PROPS)
+                             (fetch (GLOBALPARAMETER PARAMGLOBALVAR) of ENTRY-PROPS)))
+           (FETCHFN (AND (NOT SIMPLE-FLAG)
+                         (fetch (GLOBALPARAMETER PARAMFETCHFN) of ENTRY-PROPS)))
+           (SELECTFN (AND (NOT SIMPLE-FLAG)
+                          (fetch (GLOBALPARAMETER PARAMSELECTIONFN) of ENTRY-PROPS)))
+           (CHECKFN (AND (NOT SIMPLE-FLAG)
+                         (fetch (GLOBALPARAMETER PARAMCHECKFN) of ENTRY-PROPS)))
+           (AFTERFN (AND (NOT SIMPLE-FLAG)
+                         (fetch (GLOBALPARAMETER PARAMAFTERCHANGEFN) of ENTRY-PROPS)))
+           (TYPE (OR (AND (NOT SIMPLE-FLAG)
+                          (CDDR (CDDDDR ENTRY-PROPS))
+                          (CADDDR (CDDDR ENTRY-PROPS)))
+                     (AND SIMPLE-FLAG (OR (AND ENTRY-PROPS 'MY-TOGGLE)
+                                          'DISPLAY))
+                     'MOMENTARY))
+           (INITIAL-VALUE (NC.FreeMenuFetchFn NIL ENTRY-LABEL ENTRY-PROPS))
+           (FONT NC.ParametersMenuFont)
+           (VALUE-FONT FONT)
+           (EXTRA-SPACES "      "))
+          (SELECTQ TYPE
+              (DISPLAY `((LABEL ,ENTRY-LABEL ID ,ENTRY-LABEL FONT ,NC.ParametersMenuBoldFont TYPE 
+                                DISPLAY HJUSTIFY CENTER)))
+              (MY-TOGGLE `((LABEL ,ENTRY-LABEL ID ,ENTRY-LABEL FONT ,FONT TYPE MOMENTARY SELECTEDFN 
+                                  NC.FreeMenuSelectedFn INITIALSTATE ,INITIAL-VALUE HJUSTIFY LEFT)
+                           (LABEL ,EXTRA-SPACES TYPE DISPLAY)
+                           (LABEL ,INITIAL-VALUE ID ,VALUE-SYMBOL TYPE DISPLAY FONT ,VALUE-FONT 
+                                  HJUSTIFY RIGHT)))
+              (STATE `((LABEL ,ENTRY-LABEL ID ,ENTRY-LABEL FONT ,FONT TYPE STATE MENUITEMS
+                              ,ENTRY-MENU-ITEMS SELECTEDFN NC.FreeMenuSelectedFn INITIALSTATE
+                              ,INITIAL-VALUE HJUSTIFY LEFT)
+                       (LABEL ,EXTRA-SPACES TYPE DISPLAY)
+                       (LABEL ,INITIAL-VALUE ID ,VALUE-SYMBOL TYPE DISPLAY FONT ,VALUE-FONT HJUSTIFY
+                              RIGHT)))
+              (MOMENTARY `((LABEL ,ENTRY-LABEL ID ,ENTRY-LABEL FONT ,FONT TYPE MOMENTARY SELECTEDFN 
+                                  NC.FreeMenuSelectedFn INITIALSTATE ,INITIAL-VALUE HJUSTIFY LEFT)
+                           (LABEL ,EXTRA-SPACES TYPE DISPLAY)
+                           (LABEL ,INITIAL-VALUE ID ,VALUE-SYMBOL TYPE DISPLAY FONT ,VALUE-FONT 
+                                  HJUSTIFY RIGHT)))
+              (ERROR "Unknown Free menu Type: " TYPE])(NC.ToggleShowTEditProps
+  [LAMBDA NIL                                         (* ; "Edited 13-Feb-89 17:11 by krivacic")
+    (SETQ NC.NoteCardsParametersFreeMenuItems NIL)
+
+(* ;;; "Toggle wether TEdit Props is show in the NoteCards Parameters Menu")
+
+    [if NC.ShowTEditProps
+        then 
+
+              (* ;; "Remove the TEdit Props")
+
+              (SETQ NC.NoteCardsParameters (CL:REMOVE '|Extra TEdit Props| NC.NoteCardsParameters))
+      else 
+
+            (* ;; "Add the TEdit props back")
+
+            (SETQ NC.NoteCardsParameters (CONS (CAR NC.NoteCardsParameters)
+                                               (CONS '|Extra TEdit Props| (CDR NC.NoteCardsParameters
+                                                                               ]
+
+(* ;;; "Re-set NC.ShowTEditProps")
+
+    (NC.SetShowTEditProps])(NC.SetShowTEditProps
+  [LAMBDA NIL                                         (* ; "Edited 13-Feb-89 17:09 by krivacic")
+    (SETQ NC.ShowTEditProps (AND (FMEMB '|Extra TEdit Props| NC.NoteCardsParameters)
+                                 T]))(DEFINEQ(NC.DefaultCardTypeSelectionFn
+  [LAMBDA (GlobalVar)                                 (* ; "Edited 20-Dec-88 11:46 by krivacic")
+
+(* ;;; "Let user choose from a menu of card types.")
+
+(* ;;; "pmi 3/25/87: Added NC.MenuFont to all menus and cleaned up to use NC.NoteCardTypeMenu")
+
+(* ;;; "rht 6/12/87: Somehow this was broken in such a way that it wasn't calling MENU when NC.NoteCardTypeMenu was bound.")
+
+(* ;;; "bk 12/20/88: Just call NC.AskNoteCardType to get card type")
+
+    (DECLARE (GLOBALVARS NC.NoteCardTypeMenu NC.MenuFont))
+    (OR (NC.AskNoteCardType)
+        'NOTCHANGED])(NC.DefaultCardTypeCheckFn
+  (LAMBDA (CandidateVal)                                     (* rht%: "18-Mar-85 18:23")
+          
+          (* * Must be a valid card type.)
+
+    (FMEMB CandidateVal (NC.ListOfCardTypes))))(NC.ArrowHeadsInBrowserSelectionFn
+  (LAMBDA (GlobalVar)                                        (* pmi%: "25-Mar-87 10:03")
+          
+          (* * Ask user for new value from a menu of choices.)
+          
+          (* * pmi 3/25/87%: Added NC.MenuFont to all menus and cleaned up for 
+          consistency.)
+
+    (DECLARE (GLOBALVARS NC.MenuFont))
+    (OR (MENU (create MENU
+                     ITEMS _ '((At% Midpoint 'AtMidpoint 
+                                      "Place arrow heads at midpoints of browser links.")
+                               (At% Endpoint 'AtEndpoint 
+                                      "Place arrow heads at endpoints of browser links.")
+                               (None 'None "Do not draw arrow heads in browsers."))
+                     TITLE _ " Arrow Head Types "
+                     CENTERFLG _ T
+                     MENUFONT _ NC.MenuFont
+                     ITEMHEIGHT _ (IPLUS (FONTPROP NC.MenuFont 'HEIGHT)
+                                         1)))
+        'NOTCHANGED)))(NC.ArrowHeadsInBrowserCheckFn
+  (LAMBDA (CandidateVar)                                     (* rht%: "18-Mar-85 18:36")
+          
+          (* * Check candidate against list of possible values.)
+
+    (FMEMB CandidateVar '(AtMidpoint AtEndpoint None))))(NC.DefaultFontFetchFn
+  (LAMBDA (GlobalVar)                                        (* rht%: "19-Mar-85 10:47")
+          
+          (* * Return the shorthand display of font.)
+
+    (PROG ((Font (EVAL GlobalVar)))
+          (RETURN (LIST (FONTPROP Font 'FAMILY)
+                        (FONTPROP Font 'SIZE)
+                        (NC.FontFaceShorthand (FONTPROP Font 'FACE)))))))(NC.DefaultFontSelectionFn
+  (LAMBDA (GlobalVar)                                        (* rht%: "19-Mar-85 11:15")
+          
+          (* * Just go get a font from the user.)
+
+    (OR (NC.GetFontFromUser (EVAL GlobalVar))
+        'NOTCHANGED)))(NC.GetFontFromUser
+  (LAMBDA (CurrentFont)                                      (* ; "Edited  3-Dec-87 18:59 by rht:")
+          
+          (* * Get a font from the user. Current font characteristics serve as the 
+          default.)
+          
+          (* * fgh |6/5/86| Fixed so that never returns a font it cannot find.
+          If font is not found, returns old font.)
+          
+          (* * rht 2/7/87%: Fixed bug |#411:| now returns NIL when stylesheet was 
+          aborted. Also does nicer things with prompt window in case of bad font choice.
+          Lists of font families, sizes, and faces are now in global vars so users can 
+          change them in their init files.)
+
+    (DECLARE (GLOBALVARS NC.ListOfFontFamilies NC.ListOfFontSizes NC.ListOfFontFaces))
+    (LET ((Answer (STYLESHEET (CREATE.STYLE 'TITLE "Please select a font:" 'ITEM.TITLES
+                                     '(Family Size Face)
+                                     'ITEM.TITLE.FONT
+                                     '(TIMESROMAN 12 BOLD)
+                                     'ITEMS
+                                     (LIST (create MENU
+                                                  ITEMS _ NC.ListOfFontFamilies)
+                                           (create MENU
+                                                  ITEMS _ (SORT NC.ListOfFontSizes))
+                                           (create MENU
+                                                  ITEMS _ NC.ListOfFontFaces))
+                                     'SELECTIONS
+                                     (LIST (FONTPROP CurrentFont 'FAMILY)
+                                           (FONTPROP CurrentFont 'SIZE)
+                                           (NC.FontFaceShorthand (FONTPROP CurrentFont 'FACE)))
+                                     'NEED.NOT.FILL.IN NIL))))
+         (RESETLST (RESETSAVE (SETQ HELPFLAG NIL)
+                          `(SETQ HELPFLAG ,(KWOTE HELPFLAG)))
+                (COND
+                   ((NULL Answer)
+                    NIL)
+                   ((CAR (NLSETQ (APPLY (FUNCTION FONTCREATE)
+                                        Answer))))
+                   (T (NC.PrintMsg (LET ((InspectWindow (for Window in (OPENWINDOWS)
+                                                           when (WINDOWPROP Window '
+                                                                       NoteCardsInspector)
+                                                           do (RETURN Window)))
+                                         PromptWin)
+                                        (if (AND InspectWindow (SETQ PromptWin (GETPROMPTWINDOW
+                                                                                InspectWindow)))
+                                            then (FLASHW PromptWin)
+                                                 PromptWin
+                                          else NIL))
+                             T "Cannot find font: " Answer)
+                      NIL))))))(NC.FontFaceShorthand
+  (LAMBDA (FontFace)                                         (* rht%: " 6-Mar-85 18:17")
+          
+          (* * If there's a shorthand atomic representation of this face, then return it, 
+          else just return the 3-tuple representation.)
+
+    (PROG ((Regular '(MEDIUM REGULAR REGULAR))
+           (Italic '(MEDIUM ITALIC REGULAR))
+           (Bold '(BOLD REGULAR REGULAR))
+           (BoldItalic '(BOLD ITALIC REGULAR)))
+          (RETURN (COND
+                     ((EQUAL FontFace Regular)
+                      'STANDARD)
+                     ((EQUAL FontFace Italic)
+                      'ITALIC)
+                     ((EQUAL FontFace Bold)
+                      'BOLD)
+                     ((EQUAL FontFace BoldItalic)
+                      'BOLDITALIC)
+                     (T FontFace))))))(NC.UserSpecifiedTEditPropsSelectionFn
+  (LAMBDA (GlobalVar)                                        (* rht%: " 1-May-86 21:24")
+          
+          (* * Get the user's tedit props by letting her type in a TTYIN window.)
+
+    (LET ((TTYINWindow (CREATEW (CREATEREGION LASTMOUSEX LASTMOUSEY NC.AskTEditPropsWindowWidth 
+                                       NC.AskTEditPropsWindowHeight)
+                              "TEdit Props?"))
+          (OldValue (EVAL GlobalVar))
+          NewValue)
+         (NC.MoveWindowOntoScreen TTYINWindow)
+         (PRIN1 (CONCAT "Type sequence of pairs of attributes and values" (CHARACTER 13)
+                       "followed by carriage return."
+                       (CHARACTER 13)
+                       "(Preface expressions with ctrl-Y to have them eval'ed.)"
+                       (CHARACTER 13))
+                TTYINWindow)
+         (SETQ NewValue (RESETFORM (TTYDISPLAYSTREAM TTYINWindow)
+                               (CAR (NLSETQ (TTYIN ">> " NIL NIL '(LISPXREAD) NIL NIL OldValue T)))))
+         (CLOSEW TTYINWindow)
+         (if (NC.UserSpecifiedTEditPropsCheckFn NewValue)
+             then NewValue
+           else (NC.PrintMsg NIL T "List must contain an even number of items.")
+                (FLASHW PROMPTWINDOW)
+                OldValue))))(NC.UserSpecifiedTEditPropsCheckFn
+  (LAMBDA (CandidateVar)                                     (* rht%: " 1-May-86 18:34")
+          
+          (* * Check that candidate is a list of pairs.)
+
+    (OR (NULL CandidateVar)
+        (AND (LISTP CandidateVar)
+             (EVENP (LENGTH CandidateVar))))))(NC.DefaultLinkIconParametersSelectionFn
+  (LAMBDA (GlobalVar)                                        (* rht%: "18-Nov-86 15:23")
+          
+          (* * Toggle setting of parameter and then update every card on the screen.)
+          
+          (* * fgh |6/5/86| First created.)
+          
+          (* * rht 11/18/86%: Commented out the clearing of all link icon caches.
+          This functionality should be made available somewhere else than the session 
+          params window.)
+
+    (PROG1 (COND
+              ((EVAL GlobalVar)
+               (SET GlobalVar NIL))
+              (T (SET GlobalVar T)))                         (* NC.ClearAllLinkIconImageBoxCaches)
+           )))(NC.ClearAllLinkIconImageBoxCaches
+  (LAMBDA NIL                                                (* fgh%: " 5-Jun-86 18:01")
+          
+          (* * FOr all cards on the screen, clear the image box caches for all the link 
+          icons in thee cards)
+          
+          (* * fgh |6/5/86| First created.)
+
+    (bind Card for Window in (OPENWINDOWS) when (SETQ Card (NC.CoerceToCard Window))
+       do (for LinkIcon in (CAR (NC.CollectReferences Card NIL T NIL))
+             do (IMAGEOBJPROP LinkIcon 'BOUNDBOX (NC.LinkIconImageBoxFn LinkIcon (WINDOWPROP
+                                                                                  Window
+                                                                                  'DSP)))
+                (if (WINDOWPROP Window 'TEXTSTREAM)
+                    then (TEDIT.OBJECT.CHANGED (TEXTSTREAM Window)
+                                LinkIcon)
+                  else (REDISPLAYW Window))))))(NC.SetNewFileInitialSize
+  (LAMBDA NIL                                                (* kirk%: "14-Aug-86 21:11")
+          
+          (* * kirk 14Aug86 first created)
+
+    (OR (RNUMBER "Initial Size of New NoteFiles" NIL NIL NIL T NIL)
+        NC.DefaultIndexSizeInEntries)))(NC.MenuFontAfterChangeFn
+  (LAMBDA (GlobalVar)                                        (* pmi%: " 1-Apr-87 14:14")
+          
+          (* * pmi 4/1/87%: Reset menu global variables to force their recomputation 
+          later.)
+
+    (NC.ResetCachedMenus)))(NC.NewCrossFileLinksModeSelectionFn
+  (LAMBDA (GlobalVar)                                        (* rht%: " 3-Jun-87 18:13")
+          
+          (* * Ask user for new value from a menu of choices.)
+
+    (DECLARE (GLOBALVARS NC.MenuFont))
+    (OR (MENU (create MENU
+                     ITEMS _ '((Two-way 'TWOWAY 
+           "Make new cross-file links be two-way, i.e. back link is created in destination notefile."
+                                      )
+                               (One-way 'ONEWAY 
+      "Make new cross-file links be one-way, i.e. no record of link is made in destination notefile."
+                                      )
+                               (Ask% User 'ASK 
+                         "Ask user to find out whether cross-file link should be one-way or two-way."
+                                      ))
+                     TITLE _ "New cross-file links mode"
+                     CENTERFLG _ T
+                     MENUFONT _ NC.MenuFont
+                     ITEMHEIGHT _ (IPLUS (FONTPROP NC.MenuFont 'HEIGHT)
+                                         1)))
+        'NOTCHANGED)))(NC.NewCrossFileLinksModeCheckFn
+  (LAMBDA (CandidateVar)                                     (* rht%: " 3-Jun-87 18:07")
+          
+          (* * Check candidate against list of possible values.)
+
+    (FMEMB CandidateVar '(TWOWAY ONEWAY ASK))))(NC.CheckNewFileInitialSize
+  [LAMBDA (SIZE)
+    (if (GREATERP (ADD1 (fetch (NoteFileVersion NumberOfReservedCards) of (
+                                                                         NCLocalDevice.CurrentVersion
+                                                                                       )))
+                   SIZE)
+        then [PROMPTPRINT "Initial File Size MUST be greater than " (ADD1 (fetch (
+                                                                                      NoteFileVersion
+                                                                                          
+                                                                                NumberOfReservedCards
+                                                                                          )
+                                                                                 of (
+                                                                         NCLocalDevice.CurrentVersion
+                                                                                         ]
+              NIL
+      else SIZE])(NC.ShowSomeProps
+  [LAMBDA (VAR-NAME)                                     (* ; "Edited 12-Jan-89 13:09 by rtk")
+    (if (EVAL VAR-NAME)
+        then "(.......)"
+      else "None"]))(DEFINEQ(NC.SetLinkIconMaxWidth
+  (LAMBDA NIL                                                (* pmi%: "13-Feb-87 14:33")
+    (DECLARE (GLOBALVARS NC.LinkIconMaxWidth))
+    (LET ((MaxScreenSpace (DIFFERENCE SCREENWIDTH 18))
+          NewLinkIconMaxWidth InspectWindow)
+         (SETQ NewLinkIconMaxWidth (OR (RNUMBER "Maximum Width of Link Icons (in Pixels)" NIL NIL NIL 
+                                              T NIL)
+                                       NC.LinkIconMaxWidth))
+         (if (GREATERP NewLinkIconMaxWidth MaxScreenSpace)
+             then (NC.PrintMsg (if (SETQ InspectWindow (for Window in (OPENWINDOWS)
+                                                          when (WINDOWPROP Window 'NoteCardsInspector
+                                                                      ) do (RETURN Window)))
+                                   then (GETPROMPTWINDOW InspectWindow 1)
+                                 else NIL)
+                         T "You are limited to screen width of " MaxScreenSpace)
+                  MaxScreenSpace
+           else NewLinkIconMaxWidth))))(NC.SetLinkIconBorderWidth
+  (LAMBDA NIL                                                (* pmi%: "13-Feb-87 14:33")
+    (DECLARE (GLOBALVARS NC.LinkIconBorderWidth))
+    (LET ((MaxBorderWidth 20)
+          NewLinkIconBorderWidth InspectWindow)
+         (SETQ NewLinkIconBorderWidth (OR (RNUMBER "Width of Link Icon Borders (in Pixels)" NIL NIL 
+                                                 NIL T NIL)
+                                          NC.LinkIconBorderWidth))
+         (if (GREATERP NewLinkIconBorderWidth MaxBorderWidth)
+             then (NC.PrintMsg (if (SETQ InspectWindow (for Window in (OPENWINDOWS)
+                                                          when (WINDOWPROP Window 'NoteCardsInspector
+                                                                      ) do (RETURN Window)))
+                                   then (GETPROMPTWINDOW InspectWindow 1)
+                                 else NIL)
+                         T "You are limited to a maximum border width of " MaxBorderWidth)
+                  MaxBorderWidth
+           else NewLinkIconBorderWidth)))))(PUTPROPS NCPARAMETERS FILETYPE :FAKE-COMPILE-FILE)(PUTPROPS NCPARAMETERS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))(PUTPROPS NCPARAMETERS COPYRIGHT ("Venue & Xerox Corporation" 1984 1985 1986 1987 1988 1989 1990 1993 1994 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (18027 36599 (NC.BuildInspector 18037 . 20043) (NC.InspectorFetchFn 20045 . 21277) (NC.InspectorSelectionFn 21279 . 23840) (NC.BuildFreeMenu 23842 . 25384) (NC.FreeMenuFetchFn 25386 . 26903) (NC.FreeMenuSelectedFn 26905 . 30474) (NC.SessionParamsSelectedFn 30476 . 32540) (NC.MakeFreeMenuEntry 32542 . 35474) (NC.ToggleShowTEditProps 35476 . 36343) (NC.SetShowTEditProps 36345 . 36597)) (36600 49915 (NC.DefaultCardTypeSelectionFn 36610 . 37227) (NC.DefaultCardTypeCheckFn 37229 . 37451) (NC.ArrowHeadsInBrowserSelectionFn 37453 . 38494) (NC.ArrowHeadsInBrowserCheckFn 38496 . 38753) (NC.DefaultFontFetchFn 38755 . 39144) (NC.DefaultFontSelectionFn 39146 . 39400) (NC.GetFontFromUser 39402 . 42465) (NC.FontFaceShorthand 42467 . 43300) (NC.UserSpecifiedTEditPropsSelectionFn 43302 . 44622) (NC.UserSpecifiedTEditPropsCheckFn 44624 . 44929) (NC.DefaultLinkIconParametersSelectionFn 44931 . 45622) (NC.ClearAllLinkIconImageBoxCaches 45624 . 46619) (NC.SetNewFileInitialSize 46621 . 46903) (NC.MenuFontAfterChangeFn 46905 . 47167) (NC.NewCrossFileLinksModeSelectionFn 47169 . 48297) (NC.NewCrossFileLinksModeCheckFn 48299 . 48549) (NC.CheckNewFileInitialSize 48551 . 49706) (NC.ShowSomeProps 49708 . 49913)) (49916 52207 (NC.SetLinkIconMaxWidth 49926 . 51059) (NC.SetLinkIconBorderWidth 51061 . 52205)))))STOP

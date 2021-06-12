@@ -1,0 +1,64 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 8-Nov-2020 14:36:04" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>MEDLEYTEDITPATCHES.;4 8794         changes to%:  (VARS MEDLEYTEDITPATCHESCOMS)      previous date%: " 5-Nov-2020 19:56:24" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>MEDLEYTEDITPATCHES.;3)(* ; "Copyright (c) 1988, 1989, 1990, 2020 by Venue & Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT MEDLEYTEDITPATCHESCOMS)(RPAQQ MEDLEYTEDITPATCHESCOMS       (        (* ;; " Does WINDOWP check in both fns to avoid infamous %"DON'T%" case.")        (FNS TEDIT.GETINPUT TEDIT.PROMPTPRINT)                (* ;; "\TEDIT.COMMAND.LOOP now checks EDITFINISHEDFLG while waiting for TTY, so can't get hung forever, also checks TTY.PROCESSP before calling TEDIT.FLASHCARET, to eliminate spurious caret images hanging around.")                (* ;; "(DECLARE%%: DONTCOPY DONTEVAL@LOAD EVAL@COMPILE (FILES (FROM {ERIS}<TEDIT>) TEDITDECLS (FROM LISPUSERS) EXPORTS.ALL))")        (DECLARE%: EVAL@COMPILE DONTCOPY (CONSTANTS (NONE.TTC 0)                                                (CHARDELETE.TTC 1)                                                (WORDDELETE.TTC 2)                                                (DELETE.TTC 3)                                                (FUNCTIONCALL.TTC 4)                                                (REDO.TTC 5)                                                (UNDO.TTC 6)                                                (CMD.TTC 7)                                                (NEXT.TTC 8)                                                (EXPAND.TTC 9)                                                (PUNCT.TTC 20)                                                (TEXT.TTC 21)                                                (WHITESPACE.TTC 22)                                                (\SCRATCHLEN 10))               (FILES (PROP)                      PROC))                (* ;; "\TEDIT.COMMAND.LOOP from TEDITCOMMAND, \TEDIT.WAITFORSYSBUFP is new")                                                             (* ;                                                   "(FNS \TEDIT.COMMAND.LOOP \TEDIT.WAITFORSYSBUFP)")                (* ;; "First advice makes tedit menu run in a new process, second fixes promptwindow problem in TEDIT.GET (from TEDITFILE).")        (ADVISE (PROCESS.APPLY :IN \TEDIT.BUTTONEVENTFN))        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)              MEDLEYTEDITPATCHES)))(* ;; " Does WINDOWP check in both fns to avoid infamous %"DON'T%" case.")(DEFINEQ(TEDIT.GETINPUT
+  [LAMBDA (STREAM PROMPTSTRING DEFAULTSTRING DELIMITER.LIST) (* ; "Edited 13-Dec-87 23:27 by rht:")
+                                                             (* Ask for input (file names, &c) for 
+                                                             TEdit, perhaps with a default.)
+
+    (* ;; "rg 12/3/87: fixed ambiguous record fetch of PROMPTWINDOW.")
+
+    (* ;; "rht 12/13/87: Now does WINDOWP check on TEXTOBJ's PROMPTWINDOW to avoid %"DON'T%" case.")
+
+    (PROG [(TEXTOBJ (TEXTOBJ STREAM))
+           (TPROMPT (OR (WINDOWP (fetch (TEXTOBJ PROMPTWINDOW) of (TEXTOBJ STREAM)))
+                        (GETPROMPTWINDOW (\TEDIT.MAINW STREAM)
+                               NIL NIL T]
+          (COND
+             (TPROMPT                                        (* If it's our own promptwindow, just 
+                                                             clear it.)
+                    (CLEARW TPROMPT))
+             (T                                              (* If it's the system's window, just 
+                                                             move to a new line.)
+                (FRESHLINE PROMPTWINDOW)))
+          (RETURN (PROG1 (PROMPTFORWORD PROMPTSTRING DEFAULTSTRING NIL (OR TPROMPT PROMPTWINDOW)
+                                NIL
+                                'TTY
+                                (OR DELIMITER.LIST (CHARCODE (EOL LF TAB ESCAPE)))
+                                NIL)                         (* Get what the guy wants to tell us)
+                      (WINDOWPROP (OR TPROMPT PROMPTWINDOW)
+                             'PROCESS NIL)                   (* Now detach the prompt window from 
+                                                             its process, to avoid a circularity.)
+                      )])(TEDIT.PROMPTPRINT
+  [LAMBDA (TEXTSTREAM MSG CLEAR?)                           (* ; "Edited 14-Oct-88 18:01 by Gobbel")
+
+    (* ;; "Print a message in the editor's prompt window (if none, use the global promptwindow).  Optionally clear the window first.")
+
+    (* ;; "rg 10/10/88: Added in rht's patch from Lyric - check for (WINDOWP WINDOW) before clearing or printing")
+
+    (PROG (WINDOW PWINDOW (TEXTOBJ (TEXTOBJ TEXTSTREAM))
+                 MAINTEXTOBJ)
+          (COND
+             [(AND TEXTOBJ (fetch (TEXTOBJ MENUFLG) of TEXTOBJ))
+                                                             (* ; 
+                 "There is a known textobj, and it's a menu.  Go use the main editor's promptwindow.")
+              (SETQ MAINTEXTOBJ (WINDOWPROP (\TEDIT.MAINW TEXTOBJ)
+                                       'TEXTOBJ))            (* ; 
+                           "Find the TEXTOBJ for the main edit window, and use ITS prompting window.")
+              (SETQ WINDOW (AND MAINTEXTOBJ (fetch (TEXTOBJ PROMPTWINDOW) of MAINTEXTOBJ]
+             ((AND TEXTOBJ (SETQ WINDOW (fetch (TEXTOBJ PROMPTWINDOW) of TEXTOBJ)))
+                                                             (* ; 
+                                        "There IS an editor window to get to;  use its prompt window")
+              )
+             ([SETQ WINDOW (CAR (NLSETQ (GETPROMPTWINDOW (\TEDIT.MAINW TEXTSTREAM)
+                                               NIL NIL T]    (* ; 
+                                   "Failing that, try any prompt window attached to the edit window.")
+              ))                                             (* ; 
+                                              "Try to find an editor's prompt window for our message")
+          (COND
+             ((AND WINDOW (WINDOWP WINDOW))                  (* ; 
+                                                      "We found a window to use.  Print the message.")
+              (COND
+                 (CLEAR? (CLEARW WINDOW)))
+              (PRIN1 MSG WINDOW))
+             (T                                              (* ; 
+                                                             "Failing all else, use PROMPTWINDOW.")
+                (FRESHLINE PROMPTWINDOW)
+                (printout PROMPTWINDOW MSG]))(* ;; "\TEDIT.COMMAND.LOOP now checks EDITFINISHEDFLG while waiting for TTY, so can't get hung forever, also checks TTY.PROCESSP before calling TEDIT.FLASHCARET, to eliminate spurious caret images hanging around.")(* ;; "(DECLARE%%: DONTCOPY DONTEVAL@LOAD EVAL@COMPILE (FILES (FROM {ERIS}<TEDIT>) TEDITDECLS (FROM LISPUSERS) EXPORTS.ALL))")(DECLARE%: EVAL@COMPILE DONTCOPY (DECLARE%: EVAL@COMPILE (RPAQQ NONE.TTC 0)(RPAQQ CHARDELETE.TTC 1)(RPAQQ WORDDELETE.TTC 2)(RPAQQ DELETE.TTC 3)(RPAQQ FUNCTIONCALL.TTC 4)(RPAQQ REDO.TTC 5)(RPAQQ UNDO.TTC 6)(RPAQQ CMD.TTC 7)(RPAQQ NEXT.TTC 8)(RPAQQ EXPAND.TTC 9)(RPAQQ PUNCT.TTC 20)(RPAQQ TEXT.TTC 21)(RPAQQ WHITESPACE.TTC 22)(RPAQQ \SCRATCHLEN 10)(CONSTANTS (NONE.TTC 0)       (CHARDELETE.TTC 1)       (WORDDELETE.TTC 2)       (DELETE.TTC 3)       (FUNCTIONCALL.TTC 4)       (REDO.TTC 5)       (UNDO.TTC 6)       (CMD.TTC 7)       (NEXT.TTC 8)       (EXPAND.TTC 9)       (PUNCT.TTC 20)       (TEXT.TTC 21)       (WHITESPACE.TTC 22)       (\SCRATCHLEN 10)))(FILESLOAD (PROP)       PROC))(* ;; "\TEDIT.COMMAND.LOOP from TEDITCOMMAND, \TEDIT.WAITFORSYSBUFP is new")(* ; "(FNS \TEDIT.COMMAND.LOOP \TEDIT.WAITFORSYSBUFP)")(* ;; "First advice makes tedit menu run in a new process, second fixes promptwindow problem in TEDIT.GET (from TEDITFILE).")[XCL:REINSTALL-ADVICE '(PROCESS.APPLY :IN \TEDIT.BUTTONEVENTFN)       :AROUND       '((:LAST (ADD.PROCESS (LIST USERFN (KWOTE W](READVISE (PROCESS.APPLY :IN \TEDIT.BUTTONEVENTFN))(PUTPROPS MEDLEYTEDITPATCHES FILETYPE :TCOMPL)(PUTPROPS MEDLEYTEDITPATCHES MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE                                                                 10))(PUTPROPS MEDLEYTEDITPATCHES COPYRIGHT ("Venue & Xerox Corporation" 1988 1989 1990 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (2710 6827 (TEDIT.GETINPUT 2720 . 4529) (TEDIT.PROMPTPRINT 4531 . 6825)))))STOP

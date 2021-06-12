@@ -1,0 +1,158 @@
+(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
+(FILECREATED "14-Oct-88 13:40:34" {QV}<NOTECARDS>1.3MNEXT>LIBRARY>NCIDEASKETCHCARD.;1 6737   
+
+      changes to%:  (VARS NCIDEASKETCHCARDCOMS)
+
+      previous date%: "13-Aug-88 15:27:18" {QV}<NOTECARDS>1.3L>LIBRARY>NCIDEASKETCHCARD.;3)
+
+
+(* "
+Copyright (c) 1986, 1987, 1988 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCIDEASKETCHCARDCOMS)
+
+(RPAQQ NCIDEASKETCHCARDCOMS
+       (
+
+(* ;;; "This package makes a card type IdeaSketch implementing Richard's idea sketch package.")
+
+        
+
+(* ;;; "kirk 11Aug86 converted to 1.3k")
+
+        [DECLARE%: DONTEVAL@LOAD FIRST (P (NC.LoadFileFromDirectories 'NCSKETCHCARD)
+                                          (NC.LoadFileFromDirectories 'IDEASKETCH 
+                                                 'LISPUSERSDIRECTORIES]
+        (FNS NCAddStub.IdeaSketchCard)
+        (FNS NCIDEASKETCH.CreateIdeaSketchCard NCIDEASKETCH.MakeIdeaSketchCard 
+             NCIDEASKETCH.BringUpIdeaSketchCard)
+        (DECLARE%: DONTEVAL@LOAD (P (NCIDEASKETCH.CreateIdeaSketchCard)))
+        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)
+              NCIDEASKETCHCARD)))
+
+
+
+(* ;;; "This package makes a card type IdeaSketch implementing Richard's idea sketch package.")
+
+
+
+
+(* ;;; "kirk 11Aug86 converted to 1.3k")
+
+(DECLARE%: DONTEVAL@LOAD FIRST 
+
+(NC.LoadFileFromDirectories 'NCSKETCHCARD)
+
+(NC.LoadFileFromDirectories 'IDEASKETCH 'LISPUSERSDIRECTORIES)
+)
+(DEFINEQ
+
+(NCAddStub.IdeaSketchCard
+  (LAMBDA NIL                                                (* rht%: " 8-Nov-86 19:19")
+          
+          (* * kirk 18Jun86 Add the IDEASKETCH card stub)
+
+    (NC.AddCardTypeStub 'IdeaSketch 'Sketch 'NCIDEASKETCHCARD NIL '((DisplayedInMenuFlg T))
+           '(LinkIconAttachedBitMap))))
+)
+(DEFINEQ
+
+(NCIDEASKETCH.CreateIdeaSketchCard
+  (LAMBDA NIL                                                (* ; "Edited  3-Dec-87 19:02 by rht:")
+          
+          (* * This mostly stolen from NC.AddSketchCard)
+
+    (NC.AddCardType 'IdeaSketch 'Sketch `((MakeFn ,(FUNCTION NCIDEASKETCH.MakeIdeaSketchCard))
+                                          (EditFn ,(FUNCTION NCIDEASKETCH.BringUpIdeaSketchCard))
+                                          (MiddleButtonMenuItems ,(SK.WRITING.MENU)))
+           `((DisplayedInMenuFlg T)))))
+
+(NCIDEASKETCH.MakeIdeaSketchCard
+  [LAMBDA (Card Title NoDisplayFlg ParamList InterestedWindow RegionOrPosition)
+                                                             (* ; "Edited  5-Aug-88 15:41 by Trigg")
+
+(* ;;; "Create an idea sketch card.  This is almost a copy of NC.MakeSketchCard.")
+
+    (* ;; "kirk 10Aug86 Converted to 1.3k")
+
+    (* ;; "rht 8/5/88: Added RegionOrPosition arg and passed to NC.DetermineDisplayRegion.  Also added ParamList and InterestedWindow args.")
+
+    (if NoDisplayFlg
+        then (NC.SetSubstance Card (SKETCH.ADD.ELEMENT NIL NIL))
+             Card
+      else (LET (Window CardType)
+                (SETQ CardType (NC.RetrieveType Card))
+                [SETQ Window (WRITEW.CREATE NIL NIL (NC.DetermineDisplayRegion Card RegionOrPosition)
+                                    (OR Title "Untitled")
+                                    NIL
+                                    (SKETCH.COMMANDMENU (NC.GetCardTypeField MiddleButtonMenuItems 
+                                                               CardType]
+                (WINDOWPROP Window 'DONTQUERYCHANGES T)
+                (WINDOWPROP Window 'COPYBUTTONEVENTFN (FUNCTION NC.SK.COPY.BUTTONEVENTFN))
+                (WINDOWPROP Window 'SHRINKFN (FUNCTION NC.SketchCardShrinkFn))
+                (NC.InstallTitleBarButtonEventFn Window (FUNCTION NC.SketchTitleBarButtonEventFn))
+                (NC.InstallTitleBarLeftMenu Window CardType)
+                (NC.SetSubstance Card (INSURE.SKETCH Window))
+                Window])
+
+(NCIDEASKETCH.BringUpIdeaSketchCard
+  (LAMBDA (Card Substance Region/Position)                   (* kirk%: "11-Aug-86 16:17")
+          
+          (* Bring up a sketch card containing substance in specified region)
+          
+          (* * rht 2/1/85%: Added windowprop to prevent sketch asking about saving 
+          changes.)
+          
+          (* * rht 10/10/85%: Now sets substance if was nil.)
+          
+          (* * fgh |11/14/85| Updated to handle Card object.)
+          
+          (* * rht 5/5/86%: Replaced call to NC.SetupTitleBarMenu with calls to 
+          NC.InstallTitleBarButtonEventFn and NC.InstallTitleBarLeftMenu and 
+          NC.InstallSketchTitleBarMiddleMenu.)
+          
+          (* * fgh |6/30/86| Added NC.SK.COPY.BUTTONEVENTFN to sketch window.
+          Made Substance to be INSURE.SKETCH of the sketch window.)
+
+    (LET ((SketchName (AND (NULL Substance)
+                           (MKATOM (fetch (Card UID) of Card))))
+          Region Title SketchViewer CardType)
+         (COND
+            ((SETQ SketchViewer (NC.FetchWindow Card))
+             (RPTQ 2 (FLASHW SketchViewer))
+             (TOTOPW SketchViewer)
+             (TTY.PROCESS (WINDOWPROP SketchViewer 'PROCESS)))
+            (T (SETQ CardType (NC.RetrieveType Card))
+               (SETQ SketchViewer (WRITEW.CREATE (OR Substance SketchName)
+                                         (NC.FetchRegionViewed Card)
+                                         (NC.DetermineDisplayRegion Card Region/Position)
+                                         (NC.RetrieveTitle Card)
+                                         (NC.FetchScale Card)
+                                         (SKETCH.COMMANDMENU (NC.GetCardTypeField 
+                                                                    MiddleButtonMenuItems CardType)))
+                )
+               (WINDOWPROP SketchViewer 'DONTQUERYCHANGES T)
+               (WINDOWPROP SketchViewer 'COPYBUTTONEVENTFN (FUNCTION NC.SK.COPY.BUTTONEVENTFN))
+               (WINDOWPROP SketchViewer 'SHRINKFN (FUNCTION NC.SketchCardShrinkFn))
+               (NC.InstallTitleBarButtonEventFn SketchViewer (FUNCTION NC.SketchTitleBarButtonEventFn
+                                                              ))
+               (NC.InstallTitleBarLeftMenu SketchViewer CardType)
+               (OR Substance (NC.SetSubstance Card (INSURE.SKETCH SketchViewer)))))
+         SketchViewer)))
+)
+(DECLARE%: DONTEVAL@LOAD 
+
+(NCIDEASKETCH.CreateIdeaSketchCard)
+)
+
+(PUTPROPS NCIDEASKETCHCARD FILETYPE :TCOMPL)
+
+(PUTPROPS NCIDEASKETCHCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 
+                                                               10))
+(PUTPROPS NCIDEASKETCHCARD COPYRIGHT ("Xerox Corporation" 1986 1987 1988))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (1480 1812 (NCAddStub.IdeaSketchCard 1490 . 1810)) (1813 6346 (
+NCIDEASKETCH.CreateIdeaSketchCard 1823 . 2349) (NCIDEASKETCH.MakeIdeaSketchCard 2351 . 3912) (
+NCIDEASKETCH.BringUpIdeaSketchCard 3914 . 6344)))))
+STOP

@@ -1,0 +1,1492 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP")
+(FILECREATED " 6-Apr-89 17:04:15" |{BASALT:PARC:XEROX}<PIRISH>NOTECARDS>GT>NCGUIDEDTOURCARD.;2| 86606  
+
+      changes to%:  (FNS NCGT.NextTourStop NCGT.MakeGuidedTourCard NCGT.EditGuidedTourCard 
+                         NCGT.JumpToTourStop NCGT.GuidedTourAfterRepaintFn NCGT.StartTourAtRoot 
+                         NCGT.ResetTour NCGT.AddGuidedTourCard NCGT.CreateTableTop)
+                    (VARS NCGUIDEDTOURCARDCOMS)
+
+      previous date%: "21-Oct-88 14:59:16" {QV}<NOTECARDS>1.3L>LIBRARY>NCGUIDEDTOURCARD.;34)
+
+
+(* "
+Copyright (c) 1988, 1989 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT NCGUIDEDTOURCARDCOMS)
+
+(RPAQQ NCGUIDEDTOURCARDCOMS
+       ((DECLARE%: DONTCOPY (PROPS (NCGUIDEDTOURCARD MAKEFILE-ENVIRONMENT)
+                                   (NCGUIDEDTOURCARD FILETYPE)))
+        [DECLARE%: COPY FIRST (P (NC.LoadFileFromDirectories 'NCBROWSERCARD)
+                                 (NC.LoadFileFromDirectories 'NCTABLETOPCARD]
+        
+
+(* ;;; "This library package contains the card type definition and accompanying software for the guided tour module.  This provides support for creation and use of browser-based guided tours, which are basically just branching paths formed by linking together TableTop cards with global GuidedTour links.")
+
+        
+
+(* ;;; "Hooks for hackers:  ")
+
+        
+
+(* ;;; "GuidedTourBringUpFn.  If this prop is on a card type's atom, then cards of that type when encountered in guided tours are brought up by calling this function.")
+
+        
+
+(* ;;; "GuidedTourCloseDownFn.  If this prop is on a card type's atom, then cards of that type when encountered in guided tours are closed down by calling this function.")
+
+        (FNS NCGT.MakeGuidedTourCard NCGT.EditGuidedTourCard NCGT.GuidedTourCardQuitFn)
+        (FNS NCGT.SetUpGraphEditMenus NCGT.CreateTableTopFn NCGT.CreateTableTop 
+             NCGT.CreateGuidedTourLinkFn NCGT.CreateGuidedTourLink NCGT.CloseLinksLegendMenuWin)
+        (FNS NCGT.AttachOperationsMenu NCGT.OperationsMenuWhenSelectedFn)
+        (FNS NCGT.StartTourAtRoot NCGT.NextTourStop NCGT.PreviousTourStop NCGT.JumpToTourStop 
+             NCGT.ResetTour NCGT.SetGTState NCGT.FetchGTState NCGT.NextTTOrCard 
+             NCGT.CloseDownTTOrCard NCGT.BringUpTTOrCard NCGT.HighlightEdge NCGT.UnHighlightEdge 
+             NCGT.HighlightNode NCGT.UnHighlightNode NCGT.FlipNodeIfWinOpen NCGT.MarkWindowDirty 
+             NCGT.MarkGraphNodeDirty NCGT.RecomputeAndRedisplayWindow NCGT.RedisplayAffectedNodes 
+             NCGT.RedisplayAffectedLinks NCGT.CloseOrUndisplayCards)
+        (FNS NCGT.GuidedTourBeforeRepaintFn NCGT.GuidedTourAfterRepaintFn NCGT.GuidedTourExpandFn 
+             NCGT.ShrunkenWinButtonEventFn)
+        
+        (* ;; "No longer used")
+
+        (FNS NCGT.GuidedTourShrinkFn)
+        
+        (* ;; "")
+
+        (RECORDS GTState)
+        (BITMAPS NCGT.LinkIconBitmap NCGT.ShrunkenIconBitmap)
+        (GLOBALVARS NCGT.GuidedTourLinkTypes NCGT.OperationsMenuItems NCGT.GraphEditMenuItems 
+               NCGT.GraphEditUnfixedMenuItems NCGT.HighlightLineWidth 
+               NCGT.VisitedNodesBorderWidthIncrement NCGT.ShrunkenIconTemplate 
+               NCGT.ShrunkenIconControlFlg)
+        [INITVARS (NCGT.HighlightLineWidth 3)
+               (NCGT.VisitedNodesBorderWidthIncrement 2)
+               (NCGT.ShrunkenIconControlFlg T)
+               
+               (* ;; "No longer used")
+
+               [NCGT.ShrunkenIconTemplate (create TITLEDICON ICON _ NCGT.ShrunkenIconBitmap MASK _ 
+                                                 NIL TITLEREG _ '(5 2 50 30]
+               
+               (* ;; "")
+
+               (NCGT.GuidedTourLinkTypes 'GuidedTour)
+               [NCGT.OperationsMenuItems '((START (FUNCTION NCGT.StartTourAtRoot)
+                                                  "Start the tour at a root of the browser.")
+                                           (NEXT (FUNCTION NCGT.NextTourStop)
+                                                 "Shut down current TableTop and move to the next.")
+                                           (PREVIOUS (FUNCTION NCGT.PreviousTourStop)
+                                                  
+                                          "Shut down current TableTop and move to some previous one."
+                                                  )
+                                           (JUMP (FUNCTION NCGT.JumpToTourStop)
+                                                 
+                                             "Shut down current TableTop and jump to some other one."
+                                                 )
+                                           (RESET (FUNCTION NCGT.ResetTour)
+                                                  "Shut down current TableTop and reset the browser."
+                                                  ]
+               [NCGT.GraphEditMenuItems '((|Create TT Card| NCGT.CreateTableTopFn 
+                                                 "Create a new TableTop card and add to browser."
+                                                 (SUBITEMS (|Create card of type| 
+                                                                  NC.BrowserCreateCardFn 
+                                              "Create a new card of a given type and add to browser."
+                                                                  )))
+                                          (Create% Link NCGT.CreateGuidedTourLinkFn 
+                                         "Create a new GuidedTour link between cards in the browser."
+                                                 )
+                                          (Delete% Card NC.BrowserDeleteCardFn 
+                                                 "Delete one of the cards appearing in the browser.")
+                                          (Delete% Link NC.BrowserDeleteLinkFn 
+                                       "Delete one of the GuidedTour links appearing in the browser."
+                                                 )
+                                          (Add% Label NC.BrowserAddLabelFn 
+                                                 "Annotate graph with a label.")
+                                          (Add% Node NC.BrowserAddNodeFn "Add a card to the browser."
+                                                 )
+                                          (Add% Edge NC.BrowserAddEdgeFn 
+                                                 "Annotate graph with a line.")
+                                          (Remove% Node NC.BrowserRemoveNodeFn 
+                                  "Remove a node from graph (doesn't delete the corresponding card)."
+                                                 )
+                                          (Remove% Edge NC.BrowserRemoveEdgeFn 
+                                            "Remove a line from the graph (doesn't delete the link)."
+                                                 )
+                                          (Move% Node NC.BrowserMoveNodeFn "Move a guided tour node."
+                                                 (SUBITEMS (|Move Single Node| NC.BrowserMoveNodeFn 
+                                                                  "Move a guided tour node.")
+                                                        (|Move Node & Subtree| 
+                                                               NC.BrowserMoveSubtreeFn 
+                                        "Move a subtree of nodes following the movement of the root."
+                                                               )
+                                                        (Move% Region NC.BrowserMoveNodesInRegionFn 
+                                        "Move all nodes within a specified region to another region."
+                                                               )))
+                                          (Label% Smaller NC.BrowserShrinkLabelFn 
+                                                 "Reduce font size for a guided tour label.")
+                                          (Label% Larger NC.BrowserGrowLabelFn 
+                                                 "Increase font size for a guided tour label.")
+                                          ("<-> Shade" EDITTOGGLELABEL 
+                                                 "Inverts label shade for a guided tour label."]
+               (NCGT.GraphEditUnfixedMenuItems (APPEND NCGT.GraphEditMenuItems
+                                                      '((FIX% MENU NC.BrowserFixGraphEditMenuFn 
+                                                        "Attach this menu to edge of browser window."
+                                                               ]
+        
+        (* ;; "Stuff that supports the shapeable shrunken icon, which displays the guided tour scaled to fit inside the %"icon%".")
+
+        (FNS NCGT.MarkDirtyFn NCGT.GuidedTourIconFn NCGT.RedrawShrunkenIconWindow 
+             NCGT.ShrunkenWinRepaintFn NCGT.ShrunkenWinReshapeFn NCGT.ShrunkenWinExpandFn 
+             NCGT.AttachShrunkenIconMenus NCGT.ShrunkenIconOperationsMenuWhenSelectedFn 
+             NCGT.ShrinkGraphToWindow)
+        (GLOBALVARS NCGT.ShrunkenIconDefaultWidth NCGT.ShrunkenIconDefaultHeight NCGT.HashArraySize 
+               NCGT.ScaledGraphNodeHashArray NCGT.ShrunkenOperationsMenuItems)
+        [INITVARS (NCGT.ShrunkenIconDefaultWidth 147)
+               (NCGT.ShrunkenIconDefaultHeight 20)
+               (NCGT.ShrunkenIconMenu NIL)
+               (NCGT.HashArraySize 500)
+               (NCGT.ScaledGraphNodeHashArray (HASHARRAY NCGT.HashArraySize))
+               (NCGT.ShrunkenOperationsMenuItems '((START (FUNCTION NCGT.StartTourAtRoot)
+                                                          "Start the tour at a root of the browser.")
+                                                   (NEXT (FUNCTION NCGT.NextTourStop)
+                                                         
+                                                   "Shut down current TableTop and move to the next."
+                                                         )
+                                                   (PREV. (FUNCTION NCGT.PreviousTourStop)
+                                                          
+                                          "Shut down current TableTop and move to some previous one."
+                                                          )
+                                                   (JUMP (FUNCTION NCGT.JumpToTourStop)
+                                                         
+                                             "Shut down current TableTop and jump to some other one."
+                                                         )
+                                                   (RESET (FUNCTION NCGT.ResetTour)
+                                                          
+                                                  "Shut down current TableTop and reset the browser."
+                                                          ]
+        
+        (* ;; "Add this card type")
+
+        (FNS NCGT.AddGuidedTourCard)
+        (P (NCGT.AddGuidedTourCard))))
+(DECLARE%: DONTCOPY 
+
+(PUTPROPS NCGUIDEDTOURCARD MAKEFILE-ENVIRONMENT (:PACKAGE "INTERLISP" :READTABLE "INTERLISP"))
+
+(PUTPROPS NCGUIDEDTOURCARD FILETYPE :TCOMPL)
+)
+(DECLARE%: COPY FIRST 
+
+(NC.LoadFileFromDirectories 'NCBROWSERCARD)
+
+(NC.LoadFileFromDirectories 'NCTABLETOPCARD)
+)
+
+
+
+(* ;;; 
+"This library package contains the card type definition and accompanying software for the guided tour module.  This provides support for creation and use of browser-based guided tours, which are basically just branching paths formed by linking together TableTop cards with global GuidedTour links."
+)
+
+
+
+
+(* ;;; "Hooks for hackers:  ")
+
+
+
+
+(* ;;; 
+"GuidedTourBringUpFn.  If this prop is on a card type's atom, then cards of that type when encountered in guided tours are brought up by calling this function."
+)
+
+
+
+
+(* ;;; 
+"GuidedTourCloseDownFn.  If this prop is on a card type's atom, then cards of that type when encountered in guided tours are closed down by calling this function."
+)
+
+(DEFINEQ
+
+(NCGT.MakeGuidedTourCard
+  [LAMBDA (Card Title NoDisplayFlg ParamList InterestedWindow RegionOrPosition)
+                                                             (* ; "Edited 27-Mar-89 15:25 by pmi")
+
+    (* ;; "Create a new GuidedTour card - basically just wraps a call to NC.MakeBrowserCard.")
+
+    (* ;; "pmi 2/26/88: Added InterestedWindow argument which is passed to NC.MakeBrowserCard.  Also checks that NC.MakeBrowserCard doesn't return NIL (as when the user cancels out of selecting TableTop cards).")
+
+    (* ;; "14-jun-88 jrc.  Fixed bug setting ParamList (old version SETQ ParamList to result of LISTPUT, which doesn't return new list).")
+
+    (* ;; "rht 7/13/88: Now handles NCGT.GuidedTourLinkTypes, a list of link types. ")
+
+    (* ;; "rht 8/1/88: Now hangs both NCGT.GuidedTourBeforeRepaintFn and NCGT.GuidedTourAfterRepaintFn as REPAINTFNs.")
+
+    (* ;; "rht 8/5/88: Added RegionOrPosition arg and passed to NC.MakeBrowserCard.")
+
+    (* ;; 
+  "jrc 29-sep-88: if there are multiple NCGT.GuidedTourLinkTypes, don't omit the links legend.")
+
+    (* ;; "pmi 3/27/89: Changed window props to use new shrunken icon.")
+
+    (DECLARE (GLOBALVARS NCGT.GuidedTourLinkTypes NCGT.ShrunkenIconTemplate))
+    (LET ((NoteFile (NCP.CardNoteFile Card))
+          (GTLinkTypes (MKLIST NCGT.GuidedTourLinkTypes))
+          CardOrWindow)                                      (* ; 
+                                                     "Should only follow forward GuidedTour links.")
+         (for LinkType in GTLinkTypes unless (NCP.ValidLinkTypeP LinkType NoteFile)
+            do (NCP.CreateLinkType LinkType NoteFile))
+         [if ParamList
+             then (LISTPUT ParamList 'LINKTYPES GTLinkTypes)
+           else (SETQ ParamList `(LINKTYPES ,GTLinkTypes](* ; 
+                                            "Forget links legend and link labels in browser specs.")
+         (NCP.CardUserDataProp Card 'OmitLinksLegendFlg (NOT (CDR GTLinkTypes)))
+         (NCP.CardUserDataProp Card 'OmitLinkLabelsFromBrowserSpecsFlg T)
+                                                             (* ; "Build a browser card")
+         (if (SETQ CardOrWindow (NC.MakeBrowserCard Card Title NoDisplayFlg ParamList 
+                                           InterestedWindow RegionOrPosition))
+             then (if (WINDOWP CardOrWindow)
+                          then (NCGT.SetUpGraphEditMenus CardOrWindow)
+                                (NCGT.AttachOperationsMenu CardOrWindow)
+                                (WINDOWADDPROP CardOrWindow 'REPAINTFN (FUNCTION 
+                                                                       NCGT.GuidedTourBeforeRepaintFn
+                                                                        )
+                                       T)
+                                (WINDOWADDPROP CardOrWindow 'REPAINTFN (FUNCTION 
+                                                                        NCGT.GuidedTourAfterRepaintFn
+                                                                        ))
+                                (WINDOWPROP CardOrWindow 'ShrunkenIconTemplate 
+                                       NCGT.ShrunkenIconTemplate) 
+                                                             (* ; 
+                        "(WINDOWADDPROP CardOrWindow 'SHRINKFN (FUNCTION NCGT.GuidedTourShrinkFn))")
+                                (WINDOWDELPROP CardOrWindow 'SHRINKFN (FUNCTION NC.GraphCardShrinkFn)
+                                       )
+                                (WINDOWPROP CardOrWindow 'ICONFN (FUNCTION NCGT.GuidedTourIconFn))
+                                (WINDOWADDPROP CardOrWindow 'EXPANDFN (FUNCTION 
+                                                                       NCGT.GuidedTourExpandFn))
+                                (WINDOWADDPROP CardOrWindow 'EXPANDFN (FUNCTION 
+                                                                       NCGT.ShrunkenWinExpandFn)))
+                   (NCGT.SetGTState Card (create GTState))
+                   CardOrWindow])
+
+(NCGT.EditGuidedTourCard
+  [LAMBDA (Card Substance Region/Position)               (* ; "Edited 27-Mar-89 15:26 by pmi")
+
+    (* ;; "Bring up a guided tour card - basically just wraps a call to NC.BringUpBrowserCard.")
+
+    (* ;; "rht 8/1/88: Now hangs both NCGT.GuidedTourBeforeRepaintFn and NCGT.GuidedTourAfterRepaintFn as REPAINTFNs.")
+                                                             (* ; 
+                                            "Forget links legend and link labels in browser specs.")
+
+    (* ;; "jrc 29-sep-88. Don't omil links legend if there are multiple NCGT.GuidedTourLinkTypes.")
+
+    (* ;; "pmi 3/27/89: Changed window props to use new shrunken icon.")
+
+    (DECLARE (GLOBALVARS NCGT.GuidedTourLinkTypes))
+    [NCP.CardUserDataProp Card 'OmitLinksLegendFlg (OR (ATOM NCGT.GuidedTourLinkTypes)
+                                                       (NOT (CDR NCGT.GuidedTourLinkTypes]
+    (NCP.CardUserDataProp Card 'OmitLinkLabelsFromBrowserSpecsFlg T)
+    (LET ((Window (NC.BringUpBrowserCard Card Substance Region/Position)))
+         (if (WINDOWP Window)
+             then (NCGT.SetUpGraphEditMenus Window)
+                   (NCGT.AttachOperationsMenu Window)
+                   (WINDOWADDPROP Window 'REPAINTFN (FUNCTION NCGT.GuidedTourBeforeRepaintFn)
+                          T)
+                   (WINDOWADDPROP Window 'REPAINTFN (FUNCTION NCGT.GuidedTourAfterRepaintFn))
+                   (WINDOWPROP Window 'ShrunkenIconTemplate NCGT.ShrunkenIconTemplate) 
+                                                             (* ; 
+                              "(WINDOWADDPROP Window 'SHRINKFN (FUNCTION NCGT.GuidedTourShrinkFn))")
+                   (WINDOWDELPROP Window 'SHRINKFN (FUNCTION NC.GraphCardShrinkFn))
+                   (WINDOWPROP Window 'ICONFN (FUNCTION NCGT.GuidedTourIconFn))
+                   (WINDOWADDPROP Window 'EXPANDFN (FUNCTION NCGT.GuidedTourExpandFn))
+                   (WINDOWADDPROP Window 'EXPANDFN (FUNCTION NCGT.ShrunkenWinExpandFn)))
+         (NCGT.SetGTState Card (create GTState))
+         Window])
+
+(NCGT.GuidedTourCardQuitFn
+  [LAMBDA (Card)                                             (* ; "Edited 21-Sep-88 15:05 by jrc")
+
+    (* ;; "Need to reset tour if we were in the middle of one before closing.")
+
+    (* ;; "pmi 2/5/88: Added check for card being deleted.")
+
+    (* ;; "jrc 20-sep-88 added call to GuidedTourCachingFn")
+
+    [if (NOT (NCP.CardBeingDeletedP Card))
+        then (LET ((GTState (NCGT.FetchGTState Card)))
+                  (if (AND GTState (fetch (GTState CurrentNode) of GTState))
+                      then (NCGT.ResetTour Card T]
+    (IF (NCP.ValidCardP Card)
+        THEN (LET [(cachingfn (NCP.CardUserDataProp Card 'GTCleanUpCachingFn]
+                  (if cachingfn
+                      then (APPLY* cachingfn Card])
+)
+(DEFINEQ
+
+(NCGT.SetUpGraphEditMenus
+  [LAMBDA (Window)                                           (* ; "Edited 14-Jan-88 21:13 by Trigg")
+          
+          (* ;; "Create the %"fixed%" and %"unfixed%" menus for guided tour cards and set them up on the window so that NC.GetGraphEditMenu will find them.")
+
+    (DECLARE (GLOBALVARS NCGT.GraphEditMenuItems NCGT.GraphEditUnfixedMenuItems NC.MenuFont))
+    (LET [(Menu (create MENU
+                       ITEMS _ NCGT.GraphEditMenuItems
+                       TITLE _ "Editor Menu"
+                       WHENSELECTEDFN _ (FUNCTION NC.GraphEditMenuWhenSelectedFn)
+                       CHANGEOFFSETFLG _ T
+                       CENTERFLG _ T
+                       MENUOFFSET _ (CONS -1 0)
+                       MENUFONT _ NC.MenuFont
+                       ITEMHEIGHT _ (IPLUS (FONTPROP NC.MenuFont 'HEIGHT)
+                                           1]
+         (WINDOWPROP Window 'GRAPHEDITUNFIXABLEMENU Menu)
+         (WINDOWPROP Window 'GRAPHEDITFIXABLEMENU (create MENU using Menu ITEMS _ 
+                                                                     NCGT.GraphEditUnfixedMenuItems])
+
+(NCGT.CreateTableTopFn
+  [LAMBDA (Window)                                           (* ; "Edited 14-Jan-88 23:35 by Trigg")
+          
+          (* ;; "Called from graph edit menu to create TableTop card and node.  Just sets up the proper ADDNODEFN in graph record and invokes grapher editor.")
+
+    (replace (GRAPH GRAPH.ADDNODEFN) of (WINDOWPROP Window 'GRAPH) with (FUNCTION NCGT.CreateTableTop
+                                                                         ))
+    (EDITADDNODE Window])
+
+(NCGT.CreateTableTop
+  [LAMBDA (Graph Window)                                 (* ; "Edited 24-Mar-89 15:58 by pmi")
+
+    (* ;; "Called from grapher ADDNODE fn.  Used to create a new Tabletop card and corresponding browser node.  Note kludge of passing WIndow as NoDisplayFlg argument to NCP.CreateCard.  This allows interaction over creating tabletop to happen using the guided tour window as InterestedWindow.")
+
+    (* ;; "pmi 2/18/88: Added check for non-NIL card returned by NCP.CreateCard, in case user cancels out of creating a tabletop card")
+
+    (* ;; "pmi 2/26/88: Added InterestedWindow argument to NCP.CreateCard, so kludge to pass it as NoDisplayFlg no longer needed.")
+
+    (LET ((GraphCard (NC.CoerceToCard Window))
+          Link GraphNodeID Card)
+         (NC.ProtectedCardOperation GraphCard "Create card from browser" Window
+                (if (NCP.AskYesOrNo "Use a template? " NIL "" T Window)
+                    then
+                  else (SETQ Card (NCP.CreateCard 'TableTop (NCP.CardNoteFile GraphCard)
+                                             (OR (NC.AskUser "Title of new TableTop card: " NIL "" T
+                                                        Window)
+                                                 "Untitled")
+                                             T NIL NIL NIL Window)))
+                (if (SETQ Link (AND Card (NC.MakeLink Window NC.BrowserContentsLinkLabel Card 
+                                                    GraphCard)))
+                    then (ALLOW.BUTTON.EVENTS)           (* ; 
+                                                           "Create hash array if haven't already.")
+                          (NC.GetBrowserHashArray GraphCard Graph)
+                          (SETQ GraphNodeID (NC.GetBrowserNodeID GraphCard Card))
+                          (NC.MarkCardDirty GraphCard)
+                          (NODECREATE GraphNodeID (NC.MakeLinkIcon Link)
+                                 (CURSORPOSITION NIL Window))
+                  else NIL])
+
+(NCGT.CreateGuidedTourLinkFn
+  [LAMBDA (Window)                                           (* ; "Edited  8-Sep-88 11:55 by jrc")
+
+    (* ;; "Called from graph edit menu to create a GuidedTour global link and edge.")
+
+    (* ;; "jrc 7-sep-88.  Added call to GETPROP GTCreateGuidedTourLinkFn")
+
+    (LET [(Graph (WINDOWPROP Window 'GRAPH]
+         (if (fetch (GRAPH GRAPHNODES) of Graph)
+             then (EDITAPPLYTOLINK (OR (GETPROP (NCP.CardType (NCP.CardFromWindow Window))
+                                              'GTCreateGuidedTourLinkFn)
+                                       (FUNCTION NCGT.CreateGuidedTourLink))
+                         'added
+                         (WINDOWPROP Window 'GRAPH)
+                         Window)
+           else (FLASHW PROMPTWINDOW)
+                (NC.PrintMsg NIL T "Can't create global links: graph has no nodes."])
+
+(NCGT.CreateGuidedTourLink
+  [LAMBDA (FromNode ToNode Win Graph)                        (* ; "Edited 13-Jul-88 10:55 by Trigg")
+          
+          (* ;; 
+    "This function just allows us to get a GlobalLinkFlg and proper linktype into NC.BrowserAddLink.")
+          
+          (* ;; 
+          "rht 7/13/88: Now handles case when there are multiple possible guided tour link types.")
+
+    (DECLARE (GLOBALVARS NCGT.GuidedTourLinkTypes))
+    (LET ((GTLinkTypes (MKLIST NCGT.GuidedTourLinkTypes))
+          LinkType)
+         (if (SETQ LinkType (if (CDR GTLinkTypes)
+                                then (MENU (create MENU
+                                                  ITEMS _ GTLinkTypes
+                                                  TITLE _ "Link Type?"))
+                              else (CAR GTLinkTypes)))
+             then (NC.BrowserAddLink FromNode ToNode Win Graph T LinkType])
+
+(NCGT.CloseLinksLegendMenuWin
+  [LAMBDA (BrowserWindow)                                    (* ; "Edited 16-Jan-88 15:33 by Trigg")
+          
+          (* ;; "Close any links legend menu window attached to this browser window.")
+
+    (for AttachedWin in (ATTACHEDWINDOWS BrowserWindow) when (WINDOWPROP AttachedWin 'LINKSLEGENDWINP
+                                                                    ) do (REMOVEWINDOW AttachedWin])
+)
+(DEFINEQ
+
+(NCGT.AttachOperationsMenu
+  [LAMBDA (Window)                                           (* ; "Edited 18-Jan-88 18:07 by Trigg")
+          
+          (* ;; "Build a menu of guided tour operations and attach to top of Window.")
+
+    (DECLARE (GLOBALVARS NCGT.OperationsMenuItems))
+    (if (for Win in (ATTACHEDWINDOWS Window) never (WINDOWPROP Win 'GUIDEDTOUROPSMENUFLG))
+        then (WINDOWPROP (ATTACHMENU (create MENU
+                                            ITEMS _ NCGT.OperationsMenuItems
+                                            WHENSELECTEDFN _ (FUNCTION 
+                                                              NCGT.OperationsMenuWhenSelectedFn)
+                                            MENUROWS _ 1
+                                            CENTERFLG _ T
+                                            MENUBORDERSIZE _ 1)
+                                Window
+                                'TOP
+                                'JUSTIFY)
+                    'GUIDEDTOUROPSMENUFLG T])
+
+(NCGT.OperationsMenuWhenSelectedFn
+  [LAMBDA (Item Menu MouseKey)                               (* ; "Edited 19-Jan-88 15:04 by Trigg")
+          
+          (* ;; "User selected some operation from the menu.  Just apply the appropriate function.")
+
+    (APPLY* (EVAL (CADR Item))
+           (NCP.CardFromWindow (MAINWINDOW (WFROMMENU Menu])
+)
+(DEFINEQ
+
+(NCGT.StartTourAtRoot
+  [LAMBDA (GTCard)                                       (* ; "Edited 27-Mar-89 15:33 by pmi")
+
+    (* ;; "Probably in a brand new guided tour browser.  Need to start tour off at one of its roots.  If browser hasn't been recomputed, then any node without %"fromnodes%" is considered a root.")
+
+    (* ;; "rht 8/4/88: No longer puts label nodes on menu of choices of starting card.")
+
+    (* ;; "jrc 6-sep-88: added GTCard as arg to NCGT.BringUpTTOrCard")
+
+    (* ;; "jrc 22-sep-88 moved BringUpTT to last call in fn so Immediately going to next node doesn't screw up gtstate.")
+
+    (* ;; "pmi 3/27/89: Now inverts start node in shrunken icon as well.")
+
+    (DECLARE (GLOBALVARS NCGT.ScaledGraphNodeHashArray))
+    (PROG ((Window (NCP.CardWindow GTCard))
+           (ShrunkenWindow (NC.GetShrunkenWin GTCard))
+           (InterestedWindow (NCP.CoerceToInterestedWindow GTCard))
+           (GTState (NCGT.FetchGTState GTCard))
+           (Graph (NCP.CardSubstance GTCard))
+           CurrentNode RootPairs RootPair GraphNodes)
+          (SETQ CurrentNode (fetch (GTState CurrentNode) of GTState))
+          (SETQ GraphNodes (fetch (GRAPH GRAPHNODES) of Graph))
+          (if CurrentNode
+              then (NC.PrintMsg InterestedWindow T "You are in the middle of a tour."
+                              (CHARACTER 13))
+                    (if (NC.AskYesOrNo "Want to reset tour first?" NIL 'Yes NIL InterestedWindow)
+                        then (NCGT.ResetTour GTCard)
+                      else (RETURN NIL)))
+          [SETQ RootPairs (OR (for RootCard in (NC.FetchBrowserRoots GTCard) bind 
+                                                                                          StartNodeID
+                                 when (SETQ StartNodeID (NC.GetBrowserNodeID GTCard RootCard))
+                                 collect (LIST (FASSOC StartNodeID GraphNodes)
+                                                   RootCard))
+                              (for Node in GraphNodes bind Card
+                                 when (AND (NULL (fetch (GRAPHNODE FROMNODES) of Node))
+                                               (SETQ Card (NC.CardFromBrowserNode Node)))
+                                 collect (LIST Node Card]
+          [SETQ RootPair (SELECTQ (LENGTH RootPairs)
+                             (0 (NC.PrintMsg InterestedWindow T (if GraphNodes
+                                                                    then 
+                                                                          "No cards in this browser."
+                                                                  else (CONCAT 
+                                                                          "No roots in this browser."
+                                                                                  (CHARACTER 13)
+                                                                                  
+                                                                 "You should do JUMP to get started."
+                                                                                  )))
+                                NIL)
+                             (1 (CAR RootPairs))
+                             (* ;; "Multiple roots.  User needs to help by choosing among them.")
+                             (MENU (create MENU
+                                          ITEMS _ [for Pair in RootPairs
+                                                     collect `(,(NCP.CardTitle (CADR Pair))
+                                                                   ',Pair]
+                                          TITLE _ "Where to start?"]
+          (if RootPair
+              then (replace (GTState CurrentNode) of GTState with (CAR RootPair))
+                    (replace (GTState NodesVisited) of GTState with NIL)
+                    (replace (GTState EdgesVisited) of GTState with NIL)
+                    (NCGT.FlipNodeIfWinOpen (CAR RootPair)
+                           Window)
+                    (NCGT.FlipNodeIfWinOpen (GETHASH (CAR RootPair)
+                                                       NCGT.ScaledGraphNodeHashArray)
+                           ShrunkenWindow)
+                    (NCGT.BringUpTTOrCard (CADR RootPair)
+                           GTCard])
+
+(NCGT.NextTourStop
+  [LAMBDA (GTCard Don'tCloseCurrentFlg)                  (* ; "Edited  6-Apr-89 14:05 by pmi")
+
+    (* ;; "Move along path in guided tour from current card to next card.  Add the link followed to Path and stick current card on to CardsVisited stack.")
+
+    (* ;; "pmi 2/11/88: Changed REDISPLAYW to NCGT.RecomputeAndRedisplayWindow, which is smarter about recalculating the contents of the window.")
+
+    (* ;; 
+  "rht 8/1/88: No longer calls NCGT.HighlightEdge - taken care of when window is redisplayed.")
+
+    (* ;; "jrc 6-sep-88: added GTCard as arg to NCGT.NextTTOrCard. ")
+
+    (* ;; "Also, changed the call from (SETQ GTNextTourStopFn (GETPROP (NCP.CardType GTCard) 'GTNextTourStopFn)) to get the GTNextTourStopFn from the current node (card) first, then from the GTCard")
+
+    (* ;; "jrc 16-sep-88 replaced call to NCGT.RecomputeAndRedisplayWindow with call to NCGT.RedisplayAffectedNodes")
+
+    (* ;; "jrc 22-sep-88 put call to NextTTOrCard last so that Immediatelygotonextnode works w/o screwing up gtstate.")
+
+    (* ;; "pmi 3/27/89: Now inverts current and next nodes in shrunken icon as well.")
+
+    (DECLARE (GLOBALVARS NCGT.ScaledGraphNodeHashArray))
+    (LET ((Window (NCP.CardWindow GTCard))
+          (ShrunkenWindow (NC.GetShrunkenWin GTCard))
+          (InterestedWindow (NCP.CoerceToInterestedWindow GTCard))
+          (GTState (NCGT.FetchGTState GTCard))
+          (Graph (NCP.CardSubstance GTCard))
+          CurrentNode ShrunkenCurrentNode NodesVisited EdgesVisited Edge NextCards NextCard ToNodes 
+          NextNode ShrunkenNextNode NextNodeID GTNextTourStopFn CurrentCard NodeAlreadyVisitedFlg 
+          EdgeAlreadyVisitedFlg)
+         (SETQ CurrentNode (fetch (GTState CurrentNode) of GTState))
+         (SETQ CurrentCard (NC.CardFromBrowserNode CurrentNode))
+         (SETQ ShrunkenCurrentNode (GETHASH CurrentNode NCGT.ScaledGraphNodeHashArray))
+         (if CurrentNode
+             then (SETQ NodesVisited (fetch (GTState NodesVisited) of GTState))
+                   (SETQ EdgesVisited (fetch (GTState EdgesVisited) of GTState))
+                   (SETQ ToNodes (fetch (GRAPHNODE TONODES) of CurrentNode))
+                   (SETQ NextCards (for ToNode in ToNodes collect (NC.CardFromBrowserNode
+                                                                               ToNode))) 
+
+                   (* ;; "Run user's GTNextTourStopFn, if any, to filter the candidate next tour stops before putting up a menu. ")
+
+                   (if [SETQ GTNextTourStopFn (OR (GETPROP (NCP.CardType CurrentCard)
+                                                             'GTNextTourStopFn)
+                                                      (GETPROP (NCP.CardType GTCard)
+                                                             'GTNextTourStopFn]
+                       then (SETQ NextCards (APPLY* GTNextTourStopFn GTCard NextCards CurrentCard
+                                                       )))
+                   [SETQ NextCard (COND
+                                     ((NC.CardP NextCards)
+                                      NextCards)
+                                     ((EQ (LENGTH NextCards)
+                                          1)
+                                      (CAR NextCards))
+                                     ((ZEROP (LENGTH ToNodes))
+                                      (NC.PrintMsg InterestedWindow T 
+                                             "You're at the end of the path!")
+                                      NIL)
+                                     ((ATOM NextCards)
+                                      NIL)
+                                     (T                      (* ; 
+                                                           "Still there are choices.  Ask user.")
+                                        (MENU (create MENU
+                                                     ITEMS _
+                                                     [for Card in NextCards
+                                                        collect `(,(NCP.CardTitle Card)
+                                                                      ',Card]
+                                                     TITLE _ "Which Path?"]
+                   (if [AND (NC.CardP NextCard)
+                                (SETQ Edge (for ToNode in ToNodes
+                                              thereis (NC.SameCardP (NC.CardFromBrowserNode
+                                                                         ToNode)
+                                                                 NextCard)))
+                                (SETQ NextNodeID (NC.CoerceToGraphNodeID Edge))
+                                (SETQ NextNode (FASSOC NextNodeID (fetch (GRAPH GRAPHNODES)
+                                                                     of Graph]
+                       then (replace (GTState CurrentNode) of GTState with NextNode)
+                             (replace (GTState NodesVisited) of GTState
+                                with (CONS CurrentNode NodesVisited))
+                             (replace (GTState EdgesVisited) of GTState
+                                with (CONS Edge EdgesVisited))
+                             (NCGT.FlipNodeIfWinOpen CurrentNode Window)
+                             (NCGT.HighlightNode CurrentNode Window) 
+                                                             (* ; "No longer true with call to NCGT.RedisplayAffectedNodes: Note that REDISPLAYW (called from NCGT.RecomputeAndRedisplayWindow) will force highlighting of new current node through our REPAINTFN.")
+                             (if (OPENWP Window)
+                                 then (NCGT.RedisplayAffectedNodes Window Graph CurrentNode 
+                                                 NextNode GTState)
+                               else (NCGT.MarkWindowDirty Window))
+                             (SETQ ShrunkenNextNode (GETHASH NextNode NCGT.ScaledGraphNodeHashArray))
+                             (NCGT.FlipNodeIfWinOpen ShrunkenCurrentNode ShrunkenWindow)
+                             (NCGT.FlipNodeIfWinOpen ShrunkenNextNode ShrunkenWindow)
+                             (NCGT.NextTTOrCard (NC.CardFromBrowserNode CurrentNode)
+                                    NextCard Don'tCloseCurrentFlg GTCard))
+           else (NC.PrintMsg InterestedWindow T "No current node.  Try START tour first."])
+
+(NCGT.PreviousTourStop
+  [LAMBDA (GTCard Don'tCloseCurrentFlg)                      (* ; "Edited 23-Jan-88 19:45 by Trigg")
+          
+          (* ;; "Jump to some previously visited stop in guided tour.  Make no change to Path.")
+
+    (LET ((Window (NCP.CardWindow GTCard))
+          (InterestedWindow (NCP.CoerceToInterestedWindow GTCard))
+          (GTState (NCGT.FetchGTState GTCard))
+          NodesVisited NextNode)
+         (if (SETQ NodesVisited (fetch (GTState NodesVisited) of GTState))
+             then (if (SETQ NextNode (MENU (create MENU
+                                                  ITEMS _ [for Node in NodesVisited bind Card
+                                                             when (SETQ Card (NC.CardFromBrowserNode
+                                                                              Node))
+                                                             collect `(,(NCP.CardTitle Card)
+                                                                       ',Node]
+                                                  TITLE _ "Which previous?")))
+                      then (NCGT.JumpToTourStop GTCard Don'tCloseCurrentFlg NextNode))
+           else (NC.PrintMsg InterestedWindow T "No previous nodes to visit."])
+
+(NCGT.JumpToTourStop
+  [LAMBDA (GTCard Don'tCloseCurrentFlg NextNode)         (* ; "Edited 27-Mar-89 15:43 by pmi")
+
+    (* ;; "Jump to new point in guided tour.  Make no change to Path but stick current card on CardsVisited stack.  If NextNode is nil, ask user to select from graph.")
+
+    (* ;; "pmi 2/5/88: Instead of just redisplaying the window if it is open, we need to recompute the image boxes for the graph nodes that end up having their border changed.")
+
+    (* ;; "jrc 19-jun-88 IF NC.SelectGraphNode returns NIL, don't call NCGT.FlipNodeIfWinOpen")
+
+    (* ;; "jrc 6-sep-88: passed GTCard as arg to NCGT.NextTTOrCard")
+
+    (* ;; "jrc 16-sep-88: replaced call to NCGT.RecomputeAndRedisplayWindow with call to NCGT.RedisplayAffectedNodes")
+
+    (* ;; " jrc 22-sep-88. Put call to NextTTOrCard last so that GTSTATE isn't crapified if ImmediatelyGoToNextNode is called.")
+
+    (* ;; "pmi 3/27/89: Now inverts current and next nodes in shrunken icon as well.")
+
+    (DECLARE (GLOBALVARS NCGT.ScaledGraphNodeHashArray))
+    (LET ((Window (NCP.CardWindow GTCard))
+          (ShrunkenWindow (NC.GetShrunkenWin GTCard))
+          (GTState (NCGT.FetchGTState GTCard))
+          (Graph (NCP.CardSubstance GTCard))
+          CurrentNode ShrunkenCurrentNode ShrunkenNextNode NodesVisited CurrentCard NextCard)
+         (SETQ CurrentNode (fetch (GTState CurrentNode) of GTState))
+         (SETQ ShrunkenCurrentNode (GETHASH CurrentNode NCGT.ScaledGraphNodeHashArray))
+         (SETQ NodesVisited (fetch (GTState NodesVisited) of GTState))
+         (if [AND [OR NextNode (PROG2 (if ShrunkenWindow
+                                              then (EXPANDW Window))
+                                          (SETQ NextNode (NC.SelectGraphNode Window Graph 
+                                                                "Select node to jump to."))
+                                          (if NextNode
+                                              then (SETQ ShrunkenNextNode (GETHASH NextNode 
+                                                                        NCGT.ScaledGraphNodeHashArray
+                                                                                     ))
+                                                    (NCGT.FlipNodeIfWinOpen NextNode Window]
+                      (NCP.ValidCardP (SETQ NextCard (NC.CardFromBrowserNode NextNode]
+             then (replace (GTState CurrentNode) of GTState with NextNode)
+                   (if CurrentNode
+                       then (replace (GTState NodesVisited) of GTState
+                                   with (CONS CurrentNode (REMOVE CurrentNode NodesVisited)))
+                             (NCGT.FlipNodeIfWinOpen CurrentNode Window)
+                             (NCGT.HighlightNode CurrentNode Window))
+                   (if ShrunkenWindow
+                       then (SHRINKW Window))            (* ; "No longer true with call to NCGT.RedisplayAffectedNodes: Redisplay of window will cause NextNode to get flipped.")
+                   (if (OPENWP Window)
+                       then (NCGT.RedisplayAffectedNodes Window Graph CurrentNode NextNode 
+                                       NIL)
+                     else (NCGT.MarkWindowDirty Window))
+                   (NCGT.NextTTOrCard (NC.CardFromBrowserNode CurrentNode)
+                          NextCard Don'tCloseCurrentFlg GTCard])
+
+(NCGT.ResetTour
+  [LAMBDA (GTCard Don'tCloseCurrentFlg)                  (* ; "Edited 27-Mar-89 15:33 by pmi")
+
+    (* ;; "Reset guided tour by closing any current TT, unhighlighting any paths and nodes and clearing GTState.")
+
+    (* ;; "pmi 2/11/88: Changed REDISPLAYW to NCGT.RecomputeAndRedisplayWindow, which is smarter about recalculating the contents of the window.")
+
+    (* ;; "jrc 12-sep-88: added call to GTResetGuidedTourFn")
+
+    (* ;; " jrc 19-sep-88: added GTCard as param to NCGT.CloseDownTTOrCard call.")
+
+    (* ;; "pmi 3/27/89: Now inverts current node in shrunken icon as well.")
+
+    (DECLARE (GLOBALVARS NCGT.ScaledGraphNodeHashArray))
+    (LET ((Window (NCP.CardWindow GTCard))
+          (ShrunkenWindow (NC.GetShrunkenWin GTCard))
+          (GTState (NCGT.FetchGTState GTCard))
+          (Graph (NCP.CardSubstance GTCard))
+          CurrentNode EdgesVisited NodesVisited ResetFn)
+         (SETQ CurrentNode (fetch (GTState CurrentNode) of GTState))
+         (SETQ EdgesVisited (fetch (GTState EdgesVisited) of GTState))
+         (SETQ NodesVisited (fetch (GTState NodesVisited) of GTState))
+         (if (SETQ ResetFn (GETPROP (NCP.CardType GTCard)
+                                      'GTResetGuidedTourFn))
+             then (APPLY* ResetFn GTCard))
+         (replace (GTState CurrentNode) of GTState with NIL)
+         (replace (GTState NodesVisited) of GTState with NIL)
+         (replace (GTState EdgesVisited) of GTState with NIL)
+         (if CurrentNode
+             then (NCGT.FlipNodeIfWinOpen CurrentNode Window)
+                   (NCGT.FlipNodeIfWinOpen (GETHASH CurrentNode NCGT.ScaledGraphNodeHashArray)
+                          ShrunkenWindow)
+                   (CL:UNLESS Don'tCloseCurrentFlg
+                       (NCGT.CloseDownTTOrCard (NC.CardFromBrowserNode CurrentNode)
+                              GTCard)))
+         (for Edge in EdgesVisited do (NCGT.UnHighlightEdge Edge))
+         (for Node in NodesVisited do (NCGT.UnHighlightNode Node Window))
+                                                             (* ; 
+                                                "Have to redisplay if any edges got unhighlighted.")
+         (AND EdgesVisited (if (OPENWP Window)
+                               then (NCGT.RecomputeAndRedisplayWindow Window)
+                             else (NCGT.MarkWindowDirty Window])
+
+(NCGT.SetGTState
+  [LAMBDA (GuidedTourCard NewGTState)                        (* ; "Edited 17-Jan-88 15:44 by Trigg")
+          
+          (* ;; "Hang NewGTState off of the card's user data props. ")
+
+    (NCP.CardUserDataProp GuidedTourCard 'GTState NewGTState])
+
+(NCGT.FetchGTState
+  [LAMBDA (GuidedTourCard)                                   (* ; "Edited 17-Jan-88 15:44 by Trigg")
+          
+          (* ;; "Grab GTState off of the card's user data props.")
+
+    (NCP.CardUserDataProp GuidedTourCard 'GTState])
+
+(NCGT.NextTTOrCard
+  [LAMBDA (CurrentTTOrCard NextTTOrCard Don'tCloseCurrentFlg GTCard)
+                                                             (* ; "Edited 22-Sep-88 10:25 by jrc")
+
+    (* ;; "Unless Don'tCloseCurrentFlg is non-nil, bring down CurrentTTOrCard and then bring up NextTTOrCard.  The trick is to not bother closing those cards in CurrentTTOrCard that would just get brought up again by NextTTOrCard.  CurrentTTOrCard can be nil in which case we just bring up NextTTOrCard.")
+
+    (* ;; "pmi 2/3/88: Added checks for valid card before closing cards from previous tabletop.")
+
+    (* ;; "jrc 6/27/88: Now works for card types inheriting from TableTop.")
+
+    (* ;; "jrc 6-sep-88 added GTCard as parameter and passed it along to NCGT.BringUpTTOrCard")
+
+    (* ;; "jrc 20-sep-88.  Calls CloseOrUndisplayCards instead of just NCP.CloseCards.  No longer attempts to Uncache an undisplayed NextTTOrCard")
+
+    (LET (CardsToOpen CardsToClose)
+         (if (AND (NOT Don'tCloseCurrentFlg)
+                  (NCP.ValidCardP CurrentTTOrCard))
+             then (SETQ CardsToOpen (if (NCTableTop.TableTopBasedP NextTTOrCard)
+                                        then (if (NOT (NCP.CardCachedP NextTTOrCard))
+                                                 then        (* ; 
+                                                       "Cache next TT so we can get at its contents.")
+                                                      (NCP.CacheCards NextTTOrCard))
+                                             (for TableTopEntry in (NCP.CardSubstance NextTTOrCard)
+                                                collect (fetch (TableTopEntry Card) of TableTopEntry)
+                                                  )
+                                      else (LIST NextTTOrCard)))
+                  [SETQ CardsToClose (if (NCTableTop.TableTopBasedP CurrentTTOrCard)
+                                         then (if (NOT (NCP.CardCachedP CurrentTTOrCard))
+                                                  then (NCP.CacheCards CurrentTTOrCard))
+                                              (SETQ CardsToClose
+                                               (for TableTopEntry CardToClose
+                                                  in (NCP.CardSubstance CurrentTTOrCard)
+                                                  when (NC.ValidCardP (SETQ CardToClose
+                                                                       (fetch (TableTopEntry Card)
+                                                                          of TableTopEntry)))
+                                                  collect CardToClose))
+                                              (if (NOT (FMEMB CurrentTTOrCard CardsToClose))
+                                                  then (SETQ CardsToClose (CONS CurrentTTOrCard 
+                                                                                CardsToClose)))
+                                              (for Cardc in CardsToClose
+                                                 when (for Cardo in CardsToOpen
+                                                         never (NC.SameCardP Cardo Cardc))
+                                                 collect Cardc)
+                                       else (if (for Card in CardsToOpen
+                                                   never (NC.SameCardP CurrentTTOrCard Card))
+                                                then (LIST CurrentTTOrCard]
+                  (NCGT.CloseOrUndisplayCards CardsToClose GTCard))
+
+         (* ;; "Bring up the next tabletop.")
+
+         (NCGT.BringUpTTOrCard NextTTOrCard GTCard])
+
+(NCGT.CloseDownTTOrCard
+  [LAMBDA (Card GTCard)                                      (* ; "Edited 21-Sep-88 14:31 by jrc")
+
+    (* ;; "If Card is a TableTop, then close its cards down, otherwise just close the card.")
+
+    (* ;; "13-jun-88 or if it inherits from a tabletop")
+
+    (* ;; "20-sep-88 jrc.  Call NCGT.CloseOrUndisplayCards instead of NCTableTop.CloseDownTableTop or NCP.CloseCards.  ")
+
+    (LET ((CardType (NCP.CardType Card))
+          CardsClosed)
+         (SETQ CardsClosed (COND
+                              ((NCP.IsSubTypeOfP CardType 'TableTop)
+                               (SETQ CardsClosed (NCTableTop.CardsInTableTop Card))
+                               (NCGT.CloseOrUndisplayCards (IF (FMEMB Card CardsClosed)
+                                                               THEN CardsClosed
+                                                             ELSE (CONS Card CardsClosed))
+                                      GTCard))
+                              (T (NCGT.CloseOrUndisplayCards Card GTCard])
+
+(NCGT.BringUpTTOrCard
+  [LAMBDA (Card GTCard)                                      (* ; "Edited 30-Sep-88 12:13 by jrc")
+
+    (* ;; "If Card is a TableTop, then close its cards down, otherwise just close the card.")
+
+    (* ;; "jrc 13-jun-88. Now performs GuidedTourBringUpFn if any.")
+
+    (* ;; "jrc 20-sep-88.  performs ImmediatelyGoToNextFn and BringUpCachingFn, looks at UndisplayFlg to decide whether or not to uncache Card, no longer uncaches undisplayed Card ")
+
+    (LET ((CardType (NCP.CardType Card))
+          (cachingfn (NCP.CardUserDataProp GTCard 'GTBringUpCachingFn))
+          GuidedTourBringUpFn GoToNextFn CardsBroughtUp)
+         [SETQ CardsBroughtUp (COND
+                                 ((SETQ GuidedTourBringUpFn (GETPROP CardType 'GuidedTourBringUpFn))
+
+                                  (* ;; 
+                                "assumes GuidedTourBringUpFn returns all cards brought up or cached.")
+
+                                  (APPLY* GuidedTourBringUpFn Card GTCard))
+                                 ((NCTableTop.TableTopBasedP CardType)
+                                  (SETQ CardsBroughtUp (NCTableTop.BringUpTableTop Card T))
+                                  (IF (NOT (FMEMB Card CardsBroughtUp))
+                                      THEN (CONS Card CardsBroughtUp)
+                                    ELSE CardsBroughtUp))
+                                 (T                          (* ; 
+                             "Case of single card.  Cache before displaying so as to get the region.")
+                                    (if (NOT (NCP.CardCachedP Card))
+                                        then (NCP.CacheCards Card))
+                                    (NCP.OpenCard Card (NC.FetchRegion Card))
+                                    (LIST Card]
+         (if cachingfn
+             then (APPLY* cachingfn GTCard CardsBroughtUp))
+         (if (AND (SETQ GoToNextFn (GETPROP CardType 'ImmediatelyGoToNextGTStopFn))
+                  (APPLY* GoToNextFn Card GTCard))
+             then (NCGT.NextTourStop GTCard NIL])
+
+(NCGT.HighlightEdge
+  [LAMBDA (GraphToNode)                                      (* ; "Edited 17-Jan-88 19:01 by Trigg")
+          
+          (* ;; "Change the LINEWIDTH field of this linkparameters thingie.")
+
+    (if (EQ LINKPARAMS (CAR GraphToNode))
+        then (LISTPUT (CDDR GraphToNode)
+                    'LINEWIDTH NCGT.HighlightLineWidth])
+
+(NCGT.UnHighlightEdge
+  [LAMBDA (GraphToNode)                                      (* ; "Edited 17-Jan-88 19:02 by Trigg")
+
+    (if (EQ LINKPARAMS (CAR GraphToNode))
+        then (if (LISTGET (CDDR GraphToNode)
+                        'LINEWIDTH)
+                 then (LISTPUT (CDDR GraphToNode)
+                             'LINEWIDTH NIL])
+
+(NCGT.HighlightNode
+  [LAMBDA (GraphNode Window)                                 (* ; "Edited  5-Feb-88 18:29 by pmi")
+          
+          (* ;; "Increase the border width of the link icon imageobj for this graphnode.")
+          
+          (* ;; "pmi 2/5/88: Added call to NCGT.MarkGraphNodeDirty.")
+
+    (DECLARE (GLOBALVARS NCGT.VisitedNodesBorderWidthIncrement))
+    (LET ((NodeLabel (fetch (GRAPHNODE NODELABEL) of GraphNode)))
+         (if (NC.LinkIconImageObjP NodeLabel)
+             then (IMAGEOBJPROP NodeLabel 'BorderWidthIncrement NCGT.VisitedNodesBorderWidthIncrement
+                         ) 
+          
+          (* ;; "This node needs to be recalculated, so mark it (and its window) as dirty.")
+
+                  (NCGT.MarkGraphNodeDirty GraphNode Window])
+
+(NCGT.UnHighlightNode
+  [LAMBDA (GraphNode Window)                                 (* ; "Edited  5-Feb-88 18:29 by pmi")
+          
+          (* ;; "Reset the border width increment of the link icon imageobj to zippo.")
+          
+          (* ;; "pmi 2/5/88: Added call to NCGT.MarkGraphNodeDirty.")
+
+    (LET ((NodeLabel (fetch (GRAPHNODE NODELABEL) of GraphNode)))
+         (if (NC.LinkIconImageObjP NodeLabel)
+             then (IMAGEOBJPROP NodeLabel 'BorderWidthIncrement NIL) 
+          
+          (* ;; "This node needs to be recalculated, so mark it (and its window) as dirty.")
+
+                  (NCGT.MarkGraphNodeDirty GraphNode Window])
+
+(NCGT.FlipNodeIfWinOpen
+  [LAMBDA (GraphNode Window)                                 (* ; "Edited 23-Jan-88 20:14 by Trigg")
+          
+          (* ;; 
+          "Do a FLIPNODE if the window is open.  We might be running the tour from a shrunken icon.")
+
+    (if (OPENWP Window)
+        then (FLIPNODE GraphNode Window)
+      else (NCGT.MarkWindowDirty Window])
+
+(NCGT.MarkWindowDirty
+  [LAMBDA (Window)                                           (* ; "Edited 23-Jan-88 20:04 by Trigg")
+          
+          (* ;; "Mark the window as being in need of repainting.")
+
+    (WINDOWPROP Window 'GuidedTourNeedsRepainting T])
+
+(NCGT.MarkGraphNodeDirty
+  [LAMBDA (GraphNode Window)                                 (* ; "Edited 11-Feb-88 11:02 by pmi")
+          
+          (* ;; "Mark this window as needing repainting, as well as keeping a list of the nodes that need recomputing.")
+
+    (NCGT.MarkWindowDirty Window)
+    (WINDOWADDPROP Window 'GraphNodesToBeRecomputed GraphNode])
+
+(NCGT.RecomputeAndRedisplayWindow
+  [LAMBDA (Window)                                           (* ; "Edited  5-Feb-88 18:40 by pmi")
+          
+          (* ;; " Recompute the link icons for all dirty graph nodes on this window")
+
+    (for GraphNode in (WINDOWPROP Window 'GraphNodesToBeRecomputed) do (NC.GraphNodeLinkIconUpdate
+                                                                        Window GraphNode))
+    (REDISPLAYW Window)
+          
+          (* ;; "Reset the nodes needing recomputing.")
+
+    (WINDOWPROP Window 'GraphNodesToBeRecomputed NIL])
+
+(NCGT.RedisplayAffectedNodes
+  [LAMBDA (Window Graph FromNode ToNode GTState)             (* ; "Edited 21-Sep-88 16:29 by jrc")
+
+    (* ;; "Recompute the link icons for all dirty graph nodes on this window")
+
+    (* ;; "This function supercedes the function NCGT.RecomputeAndRedisplayWindow wich forced the whole graph to redisplay -- NCGT.RedisplayAffectedNodes only redisplays selected nodes. The call to NCGT.RecomputeAndRedisplayWindow was changed in NCGT.JumpToTourStop and NCGT.NextTourStop")
+
+    (LET ((trans (create POSITION
+                        XCOORD _ 0
+                        YCOORD _ 0))
+          (clip (DSPCLIPPINGREGION NIL Window))
+          NodeLabel NodePos NodeXLoc NodeYLoc NodeWidth NodeHeight)
+         (if GTState
+             then (NCGT.RedisplayAffectedLinks Window Graph FromNode ToNode GTState)
+           else (NC.GraphNodeLinkIconUpdate Window FromNode))
+         (if FromNode
+             then (SETQ NodeWidth (fetch (GRAPHNODE NODEWIDTH) of FromNode))
+                  (SETQ NodeHeight (fetch (GRAPHNODE NODEHEIGHT) of FromNode))
+                  [SETQ NodeXLoc (fetch (POSITION XCOORD) of (SETQ NodePos (fetch (GRAPHNODE 
+                                                                                         NODEPOSITION
+                                                                                         )
+                                                                              of FromNode]
+                  (SETQ NodeYLoc (fetch (POSITION YCOORD) of NodePos))
+                  (SETQ NodeLabel (fetch (GRAPHNODE NODELABEL) of FromNode))
+                  (BLTSHADE WHITESHADE Window (IDIFFERENCE NodeXLoc (RSH NodeWidth 1))
+                         (IDIFFERENCE NodeYLoc (RSH NodeHeight 1))
+                         NodeWidth NodeHeight 'REPLACE)
+                  (PRINTDISPLAYNODE FromNode trans Window clip))
+         (NCGT.FlipNodeIfWinOpen ToNode Window))
+
+    (* ;; "Reset the nodes needing recomputing.")
+
+    (WINDOWPROP Window 'GraphNodesToBeRecomputed NIL])
+
+(NCGT.RedisplayAffectedLinks
+  [LAMBDA (Window Graph FromNode ToNode GTState trans clip)  (* ; "Edited 29-Sep-88 11:59 by jrc")
+    (LET (EdgesVisited NodesVisited OldOp KludgeOldOp)       (* erase old link and draw new link)
+         (SETQ EdgesVisited (fetch (GTState EdgesVisited) of GTState))
+         (if (NOT (FMEMB (CAR EdgesVisited)
+                         (CDR EdgesVisited)))
+             then                                            (* edge must be redrawn)
+
+         (* change dspoperation kludge because there's a bug in DRAWLINE s.t.
+         lines drawn w/ width > 1 and dashing in windows with DSPOPERATION = INVERT don't 
+         work)
+
+                  (CL:UNWIND-PROTECT
+                      [PROGN (SETQ KludgeOldOp (DSPOPERATION 'REPLACE Window))
+                             (if (NOT trans)
+                                 then (SETQ trans (create POSITION
+                                                         XCOORD _ 0
+                                                         YCOORD _ 0)))
+                             (if (NOT clip)
+                                 then (SETQ clip (DSPCLIPPINGREGION NIL Window)))
+                             (SETQ NodesVisited (fetch (GTState NodesVisited) of GTState))
+                             (if (FMEMB (CAR NodesVisited)
+                                        (CDR NodesVisited))
+                                 then                        (* node already has border --
+                                                             redraw single link)
+                                      (CL:UNWIND-PROTECT
+                                          (PROGN (SETQ OldOp (DSPOPERATION 'ERASE Window))
+                                                 (DISPLAYLINK FromNode ToNode trans Window Graph NIL
+                                                        (LINKPARAMETERS FromNode ToNode)))
+                                          (DSPOPERATION OldOp Window))
+                                      (NC.GraphNodeLinkIconUpdate Window FromNode)
+                                      (CL:UNWIND-PROTECT
+                                          (PROGN (NCGT.HighlightEdge (CAR EdgesVisited))
+                                                 (DISPLAYLINK FromNode ToNode trans Window Graph NIL
+                                                        (LINKPARAMETERS FromNode ToNode)))
+                                          (NCGT.UnHighlightEdge (CAR EdgesVisited)))
+                               else                          (* node will get new border --
+                                                             redraw all links from ToNode)
+                                    (CL:UNWIND-PROTECT
+                                        (PROGN (NCGT.GuidedTourBeforeRepaintFn Window)
+                                               (NCGT.UnHighlightEdge (CAR EdgesVisited))
+                                               (CL:UNWIND-PROTECT
+                                                   (PROGN (SETQ OldOp (DSPOPERATION 'ERASE Window))
+                                                          (DISPLAYNODELINKS FromNode trans Window 
+                                                                 Graph))
+                                                   (DSPOPERATION OldOp Window))
+                                               (NCGT.HighlightEdge (CAR EdgesVisited))
+                                               (NC.GraphNodeLinkIconUpdate Window FromNode)
+                                               (DISPLAYNODELINKS FromNode trans Window Graph))
+                                        (NCGT.GuidedTourAfterRepaintFn Window)
+                                                             (* unflips node flipped by 
+                                                             NCGT.GuidedTourAfterRepaintFn)
+                                        (NCGT.FlipNodeIfWinOpen ToNode Window))]
+                      (DSPOPERATION KludgeOldOp Window))])
+
+(NCGT.CloseOrUndisplayCards
+  [LAMBDA (Cards GTCard)                                     (* ; "Edited 22-Sep-88 13:40 by jrc")
+
+    (* ;; "Undisplays rather than closes Cards if UserDataProp set.  This is mostly for use in conjunction with some kind of caching scheme.")
+
+    (LET [(cachingfn (NCP.CardUserDataProp GTCard 'GTCloseDownCachingFn]
+         (SETQ Cards (MKLIST Cards))
+         (if cachingfn
+             then (NCP.UndisplayCards Cards)
+                  (APPLY* cachingfn GTCard Cards)
+           else (NCP.CloseCards Cards))
+         Cards])
+)
+(DEFINEQ
+
+(NCGT.GuidedTourBeforeRepaintFn
+  [LAMBDA (Window)                                           (* ; "Edited  1-Aug-88 15:55 by Trigg")
+
+    (* ;; "Highlight the edges visited in the graph for upcoming call to REDISPLAYGRAPH.  They'll be unhighlighted afterwards by NCGT.GuidedTourAfterRepaintFn.")
+
+    (LET ((Card (NCP.CardFromWindow Window))
+          GTState)
+         (if (AND (NCP.ValidCardP Card)
+                  (SETQ GTState (NCGT.FetchGTState Card)))
+             then (for Edge in (fetch (GTState EdgesVisited) of GTState) do (NCGT.HighlightEdge
+                                                                             Edge])
+
+(NCGT.GuidedTourAfterRepaintFn
+  [LAMBDA (Window)                                       (* ; "Edited  1-Aug-88 15:51 by Trigg")
+
+    (* ;; "Be sure the CurrentNode goes inverse-video.  Also unhighlight edges visited.")
+
+    (WINDOWPROP Window 'GuidedTourNeedsRepainting NIL)
+    (LET ((Card (NCP.CardFromWindow Window))
+          GTState CurrentNode)
+         (if (AND (NCP.ValidCardP Card)
+                      (SETQ GTState (NCGT.FetchGTState Card)))
+             then (if (SETQ CurrentNode (fetch (GTState CurrentNode) of GTState))
+                          then (NCGT.FlipNodeIfWinOpen CurrentNode Window))
+                   (for Edge in (fetch (GTState EdgesVisited) of GTState)
+                      do (NCGT.UnHighlightEdge Edge])
+
+(NCGT.GuidedTourExpandFn
+  [LAMBDA (Window)                                           (* ; "Edited  5-Feb-88 18:46 by pmi")
+          
+          (* ;; "If Window got dirtied while shrunk, then redisplay it.")
+          
+          (* ;; "pmi 2/5/88: Changed REDISPLAYW TO NCGT.RecomputeAndRedisplayWindow.")
+
+    (if (WINDOWPROP Window 'GuidedTourNeedsRepainting)
+        then (NCGT.RecomputeAndRedisplayWindow Window])
+
+(NCGT.ShrunkenWinButtonEventFn
+  [LAMBDA (ShrunkenWin)                                      (* ; "Edited 23-Jan-88 19:34 by Trigg")
+          
+          (* ;; "Our BUTTONEVENTFN for shrunken guided tour windows.  Allows running the guided tour to happen from the middle button from the icon.")
+
+    (DECLARE (GLOBALVARS NCGT.OperationsMenuItems NCGT.ShrunkenIconControlFlg))
+    (if (AND NCGT.ShrunkenIconControlFlg (LASTMOUSESTATE MIDDLE))
+        then [LET [(Selection (MENU (create MENU
+                                           ITEMS _ `(,@NCGT.OperationsMenuItems
+                                                     (----- NIL NIL)
+                                                     (ExpandW (FUNCTION EXPANDW)
+                                                            
+                                                      "Expand the window for which this is the icon."
+                                                            ]
+                  (SELECTQ Selection
+                      (EXPANDW (EXPANDW ShrunkenWin))
+                      (NIL NIL)
+                      (APPLY* Selection (NCP.CardFromWindow (WINDOWPROP ShrunkenWin 'ICONFOR]
+      else (ICONBUTTONEVENTFN ShrunkenWin])
+)
+
+
+
+(* ;; "No longer used")
+
+(DEFINEQ
+
+(NCGT.GuidedTourShrinkFn
+  [LAMBDA (Window OldIcon)                                   (* ; "Edited 23-Jan-88 19:34 by Trigg")
+          
+          (* ;; "Take this function off of ICONFN windowprop and call SHRINKW (recursively).  Replace the BUTTONEVENTFN of the shrunken win icon with our own.")
+
+    (WINDOWDELPROP Window 'SHRINKFN (FUNCTION NCGT.GuidedTourShrinkFn))
+    (LET ((ShrunkenWin (WINDOWPROP Window 'ICON))
+          CurButtonEventFn)
+         (if (NEQ (SETQ CurButtonEventFn (WINDOWPROP ShrunkenWin 'BUTTONEVENTFN))
+                  (FUNCTION NCGT.ShrunkenWinButtonEventFn))
+             then (WINDOWPROP ShrunkenWin 'BUTTONEVENTFN (FUNCTION NCGT.ShrunkenWinButtonEventFn])
+)
+
+
+
+(* ;; "")
+
+(DECLARE%: EVAL@COMPILE
+
+(DATATYPE GTState (CurrentNode NodesVisited EdgesVisited UserData))
+)
+
+(/DECLAREDATATYPE 'GTState '(POINTER POINTER POINTER POINTER)
+       '((GTState 0 POINTER)
+         (GTState 2 POINTER)
+         (GTState 4 POINTER)
+         (GTState 6 POINTER))
+       '8)
+
+(RPAQQ NCGT.LinkIconBitmap #*(21 18)OOOOOH@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@IOON@H@@KOOO@H@@JDIC@H@@JDIC@H@@KOOOLH@@KOOONH@@KOOONH@@KOOONH@@HN@CHH@@HD@A@H@@H@@@@H@@OOOOOH@@
+)
+
+(RPAQQ NCGT.ShrunkenIconBitmap #*(60 75)OOOOOOOOOOOOOOO@OOOOOOOOOOOOOOO@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@COOL@@@@@C@L@@@@GOON@@@@@C@L@@@@DIBF@@@@@C@L@@@@DIBF@@@@@C@L@@@@GOOOH@@A@C@L@@@@GOOOL@@B@C@L@@@@GOOOL@@D@C@L@@@@GOOOL@@H@C@L@@@@AL@G@@A@@C@L@@@@@H@B@@B@@C@L@@@@@@@@@@D@@C@L@@@@@@@@@@H@@C@L@AOOOOOOOO@@@C@L@B@@@@@@@@H@@C@L@D@@@@@@@@D@@C@L@H@@@@@@@@B@@C@LA@@@@@@@@@A@@C@LB@@@@@@@@@@H@C@LD@@@@@@@@@@D@C@LH@@@@@@@@@@B@C@M@@@A@@@@@@@A@C@LH@@B@@@@@@@@@C@LD@@D@@@@@@@@@C@LB@@H@@@@@@@@@C@LA@A@@@@@@@@@@C@L@HB@@@@@@@@@@C@L@DD@@@@@@@@@@C@L@BH@@@@@@@@@@C@L@A@@@@@@@@@@@C@L@@H@@@@@@@@@@C@L@@D@@@@@@@@@@C@L@@B@@@@@@@@@@C@L@@A@@@@@@@@@@C@L@@@H@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@L@@@@@@@@@@@@@C@OOOOOOOOOOOOOOO@OOOOOOOOOOOOOOO@
+)
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NCGT.GuidedTourLinkTypes NCGT.OperationsMenuItems NCGT.GraphEditMenuItems 
+       NCGT.GraphEditUnfixedMenuItems NCGT.HighlightLineWidth NCGT.VisitedNodesBorderWidthIncrement 
+       NCGT.ShrunkenIconTemplate NCGT.ShrunkenIconControlFlg)
+)
+
+(RPAQ? NCGT.HighlightLineWidth 3)
+
+(RPAQ? NCGT.VisitedNodesBorderWidthIncrement 2)
+
+(RPAQ? NCGT.ShrunkenIconControlFlg T)
+
+(RPAQ? NCGT.ShrunkenIconTemplate (create TITLEDICON ICON _ NCGT.ShrunkenIconBitmap MASK _ NIL 
+                                            TITLEREG _ '(5 2 50 30)))
+
+(RPAQ? NCGT.GuidedTourLinkTypes 'GuidedTour)
+
+(RPAQ? NCGT.OperationsMenuItems
+       '((START (FUNCTION NCGT.StartTourAtRoot)
+                "Start the tour at a root of the browser.")
+         (NEXT (FUNCTION NCGT.NextTourStop)
+               "Shut down current TableTop and move to the next.")
+         (PREVIOUS (FUNCTION NCGT.PreviousTourStop)
+                "Shut down current TableTop and move to some previous one.")
+         (JUMP (FUNCTION NCGT.JumpToTourStop)
+               "Shut down current TableTop and jump to some other one.")
+         (RESET (FUNCTION NCGT.ResetTour)
+                "Shut down current TableTop and reset the browser.")))
+
+(RPAQ? NCGT.GraphEditMenuItems
+       '((|Create TT Card| NCGT.CreateTableTopFn "Create a new TableTop card and add to browser."
+                (SUBITEMS (|Create card of type| NC.BrowserCreateCardFn 
+                                 "Create a new card of a given type and add to browser.")))
+         (Create% Link NCGT.CreateGuidedTourLinkFn 
+                "Create a new GuidedTour link between cards in the browser.")
+         (Delete% Card NC.BrowserDeleteCardFn "Delete one of the cards appearing in the browser.")
+         (Delete% Link NC.BrowserDeleteLinkFn 
+                "Delete one of the GuidedTour links appearing in the browser.")
+         (Add% Label NC.BrowserAddLabelFn "Annotate graph with a label.")
+         (Add% Node NC.BrowserAddNodeFn "Add a card to the browser.")
+         (Add% Edge NC.BrowserAddEdgeFn "Annotate graph with a line.")
+         (Remove% Node NC.BrowserRemoveNodeFn 
+                "Remove a node from graph (doesn't delete the corresponding card).")
+         (Remove% Edge NC.BrowserRemoveEdgeFn 
+                "Remove a line from the graph (doesn't delete the link).")
+         (Move% Node NC.BrowserMoveNodeFn "Move a guided tour node." (SUBITEMS (|Move Single Node|
+                                                                                NC.BrowserMoveNodeFn
+                                                                                
+                                                                           "Move a guided tour node."
+                                                                                )
+                                                                            (|Move Node & Subtree|
+                                                                             NC.BrowserMoveSubtreeFn
+                                                                             
+                                        "Move a subtree of nodes following the movement of the root."
+                                                                             )
+                                                                            (Move% Region 
+                                                                        NC.BrowserMoveNodesInRegionFn
+                                                                                   
+                                        "Move all nodes within a specified region to another region."
+                                                                                   )))
+         (Label% Smaller NC.BrowserShrinkLabelFn "Reduce font size for a guided tour label.")
+         (Label% Larger NC.BrowserGrowLabelFn "Increase font size for a guided tour label.")
+         ("<-> Shade" EDITTOGGLELABEL "Inverts label shade for a guided tour label.")))
+
+(RPAQ? NCGT.GraphEditUnfixedMenuItems [APPEND NCGT.GraphEditMenuItems '((FIX% MENU 
+                                                                         NC.BrowserFixGraphEditMenuFn
+                                                                                   
+                                                        "Attach this menu to edge of browser window."
+                                                                                   ])
+
+
+
+(* ;; 
+"Stuff that supports the shapeable shrunken icon, which displays the guided tour scaled to fit inside the %"icon%"."
+)
+
+(DEFINEQ
+
+(NCGT.MarkDirtyFn
+  [LAMBDA (Card ResetFlg)                                (* ; "Edited 27-Mar-89 15:45 by pmi")
+
+    (* ;; "Need to recompute the shrunken icon if the graph is dirtied.")
+
+    (NCP.CardUserDataProp Card 'GuidedTourShrunkenIconNeedsRepainting T)
+    (NCP.ApplySuperTypeFn MarkDirtyFn Card ResetFlg])
+
+(NCGT.GuidedTourIconFn
+  [LAMBDA (Window OldIcon)                               (* ; "Edited 27-Mar-89 15:51 by pmi")
+
+    (* ;; "For the guided tour shrunken icon, make a shapeable window containing a shrunken bitmap of the entire guided tour .")
+
+    (DECLARE (GLOBALVARS NCGT.ShrunkenIconDefaultWidth NCGT.ShrunkenIconDefaultHeight 
+                        NC.ShrunkenIconDefaultPosition NC.OffScreenPosition))
+    (LET ((Card (NC.CoerceToCard Window)))
+         (NC.ProtectedCardOperation Card "Build Guided Tour Shrunken Icon" NIL
+                (LET (ShrunkenIconWindow ShrunkenIconRegion)
+                     (SETQ ShrunkenIconWindow (WINDOWPROP Window 'ICON))
+                     (if (WINDOWP ShrunkenIconWindow)
+                       else 
+
+                             (* ;; "Make a new shrunken icon window.")
+
+                             (if (SETQ ShrunkenIconRegion (WINDOWPROP Window 'ShrunkenIconRegion)
+                                      )
+                               else 
+
+                                     (* ;; "Ask user for a region.")
+
+                                     (SETQ ShrunkenIconRegion (GETREGION 
+                                                                     NCGT.ShrunkenIconDefaultWidth 
+                                                                     NCGT.ShrunkenIconDefaultHeight))
+                                     (WINDOWPROP Window 'ShrunkenIconRegion ShrunkenIconRegion))
+                             (SETQ ShrunkenIconWindow (CREATEW ShrunkenIconRegion))
+                             (NCP.CardUserDataProp Card 'GuidedTourShrunkenIconNeedsRepainting T))
+                     (NCGT.AttachShrunkenIconMenus ShrunkenIconWindow)
+                     (NCGT.RedrawShrunkenIconWindow ShrunkenIconWindow Window])
+
+(NCGT.RedrawShrunkenIconWindow
+  [LAMBDA (ShrunkenWindow GTWindow)                      (* ; "Edited 27-Mar-89 15:56 by pmi")
+
+    (* ;; "Recompute the shrunken graph for the guided tour shrunken icon.  Turn off any highlighted nodes or edges while shrinking.  Inverted the current node when finished.")
+
+    (DECLARE (GLOBALVARS NCGT.ScaledGraphNodeHashArray))
+    (LET ((Card (NCP.CardFromWindow GTWindow))
+          GTState EdgesVisited NodesVisited CurrentNode InvertedNode)
+         (if (AND (NCP.ValidCardP Card)
+                      (SETQ GTState (NCGT.FetchGTState Card)))
+             then (SETQ CurrentNode (fetch (GTState CurrentNode) of GTState))
+                   (SETQ InvertedNode (NCP.CardUserDataProp Card 'GuidedTourInvertedNode))
+                   (if (NCP.CardUserDataProp Card 'GuidedTourShrunkenIconNeedsRepainting)
+                       then 
+
+                             (* ;; "Re-shrink the graph for the shrunken icon.")
+
+                             (SETQ EdgesVisited (fetch (GTState EdgesVisited) of GTState))
+                             (SETQ NodesVisited (fetch (GTState NodesVisited) of GTState))
+                             (for Edge in EdgesVisited do (NCGT.UnHighlightEdge
+                                                                       Edge))
+                             (for Node in NodesVisited do (NCGT.UnHighlightNode
+                                                                       Node GTWindow))
+                             (NCGT.ShrinkGraphToWindow (WINDOWPROP GTWindow 'GRAPH)
+                                    ShrunkenWindow)
+                             (for Edge in EdgesVisited do (NCGT.HighlightEdge Edge))
+                             (for Node in NodesVisited do (NCGT.HighlightNode Node 
+                                                                             GTWindow))
+                             (NCP.CardUserDataProp Card 'GuidedTourShrunkenIconNeedsRepainting NIL)
+                     else 
+
+                           (* ;; "Clear the node currently inverted. ")
+
+                           (if InvertedNode
+                               then (FLIPNODE (GETHASH InvertedNode NCGT.ScaledGraphNodeHashArray
+                                                         )
+                                               ShrunkenWindow))) 
+
+                   (* ;; "Invert the current node.")
+
+                   (if CurrentNode
+                       then (FLIPNODE (GETHASH CurrentNode NCGT.ScaledGraphNodeHashArray)
+                                       ShrunkenWindow)) 
+
+                   (* ;; "Update the card with the currently inverted node.")
+
+                   (NCP.CardUserDataProp Card 'GuidedTourInvertedNode CurrentNode) 
+
+                   (* ;; "Fix up window.")
+
+                   (WINDOWPROP ShrunkenWindow 'REPAINTFN (FUNCTION NCGT.ShrunkenWinRepaintFn))
+                   (WINDOWPROP ShrunkenWindow 'RESHAPEFN (FUNCTION NCGT.ShrunkenWinReshapeFn))
+                   (WINDOWPROP ShrunkenWindow 'SCROLLFN NIL)
+                   (WINDOWDELPROP ShrunkenWindow 'BUTTONEVENTFN (FUNCTION APPLYTOSELECTEDNODE))
+                   (WINDOWPROP ShrunkenWindow 'BUTTONEVENTFN (FUNCTION ICONBUTTONEVENTFN))
+                   (WINDOWPROP GTWindow 'ICON ShrunkenWindow)
+                   ShrunkenWindow])
+
+(NCGT.ShrunkenWinRepaintFn
+  [LAMBDA (ShrunkenIconWindow Region)                    (* ; "Edited  1-Feb-89 15:11 by pmi")
+
+    (* ;; "Recompute the GT shrunken icon.")
+
+    (NCGT.RedrawShrunkenIconWindow ShrunkenIconWindow (WINDOWPROP ShrunkenIconWindow 'ICONFOR])
+
+(NCGT.ShrunkenWinReshapeFn
+  [LAMBDA (ShrunkenIconWindow OldWinBitmap OldWinRegion) (* ; "Edited 22-Mar-89 12:32 by pmi")
+
+    (* ;; "When GT shrunken icon is reshaped, we need to recompute its contents from scratch.")
+
+    (LET [(GTWindow (WINDOWPROP ShrunkenIconWindow 'ICONFOR]
+         (WINDOWPROP GTWindow 'ShrunkenIconRegion (WINDOWREGION ShrunkenIconWindow))
+         (NCP.CardUserDataProp (NCP.CardFromWindow GTWindow)
+                'GuidedTourShrunkenIconNeedsRepainting T)
+         (NCGT.RedrawShrunkenIconWindow ShrunkenIconWindow GTWindow])
+
+(NCGT.ShrunkenWinExpandFn
+  [LAMBDA (GTWindow)                                     (* ; "Edited 27-Mar-89 16:20 by pmi")
+
+    (* ;; "Need to remember which node was inverted when we expanded, so we can un-invert it when we shrink again.")
+
+    (LET ((Card (NCP.CardFromWindow GTWindow)))
+         (NCP.CardUserDataProp Card 'GuidedTourInvertedNode (fetch (GTState CurrentNode)
+                                                               of (NCGT.FetchGTState Card)))
+         (DETACHALLWINDOWS (WINDOWPROP GTWindow 'ICON])
+
+(NCGT.AttachShrunkenIconMenus
+  [LAMBDA (ShrunkenIconWindow)                           (* ; "Edited 27-Mar-89 16:21 by pmi")
+
+    (* ;; "Attach the guided tour operations buttons to the top of the shrunken icon.")
+
+    (ATTACHMENU (create MENU
+                       ITEMS _ NCGT.ShrunkenOperationsMenuItems
+                       MENUFONT _ (FONTCREATE '(MODERN 8 STANDARD))
+                       WHENSELECTEDFN _ (FUNCTION NCGT.ShrunkenIconOperationsMenuWhenSelectedFn)
+                       MENUBORDERSIZE _ 1
+                       CENTERFLG _ T)
+           ShrunkenIconWindow
+           'TOP
+           'JUSTIFY)
+    ShrunkenIconWindow])
+
+(NCGT.ShrunkenIconOperationsMenuWhenSelectedFn
+  [LAMBDA (Item Menu MouseKey)                           (* ; "Edited  2-Feb-89 16:10 by pmi")
+
+    (* ;; "User selected some operation from the menu.  Just apply the appropriate function.")
+
+    (APPLY* (EVAL (CADR Item))
+           (NCP.CardFromWindow (WINDOWPROP (MAINWINDOW (WFROMMENU Menu))
+                                      'ICONFOR])
+
+(NCGT.ShrinkGraphToWindow
+  [LAMBDA (Graph Window)                                 (* ; "Edited 27-Mar-89 17:07 by pmi")
+
+    (* ;; "Bitblt's into Window a shrunken bitmap of the graph just big enough to fit.")
+
+    (DECLARE (GLOBALVARS NCGT.ScaledGraphNodeHashArray))
+    (LET ((GraphWindow (MAINWINDOW Window))
+          (ShrunkenGraph (create GRAPH using Graph))
+          Scales Scale XScale YScale)
+
+         (* ;; "Don't  try to calculate the scale of an empty graph.")
+
+         [if (fetch (GRAPH GRAPHNODES) of Graph)
+             then (SETQ Scales (NC.ComputeOverviewScale Graph Window))
+                   [SETQ Scale (SETQ XScale (SETQ YScale (FMIN (CAR Scales)
+                                                               (CDR Scales]
+           else (SETQ Scale (SETQ XScale (SETQ YScale 1] (* ; "Shrink the graphnodes.")
+         [replace (GRAPH GRAPHNODES) of ShrunkenGraph
+            with (for GraphNode in (fetch (GRAPH GRAPHNODES) of ShrunkenGraph)
+                        eachtime (BLOCK) bind ScaledGraphNode
+                        collect (PROG1 (SETQ ScaledGraphNode (NC.ScaleGraphNode (create
+                                                                                     GRAPHNODE
+                                                                                       using
+                                                                                       GraphNode)
+                                                                        Scale XScale YScale 
+                                                                        GraphWindow))
+                                           (PUTHASH GraphNode ScaledGraphNode 
+                                                  NCGT.ScaledGraphNodeHashArray]
+         (SHOWGRAPH ShrunkenGraph Window)
+         (WINDOWPROP Window 'Scale Scale)
+         (WINDOWPROP Window 'XScale XScale)
+         (WINDOWPROP Window 'YScale YScale)
+         (WINDOWPROP Window 'GRAPH ShrunkenGraph])
+)
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NCGT.ShrunkenIconDefaultWidth NCGT.ShrunkenIconDefaultHeight NCGT.HashArraySize 
+       NCGT.ScaledGraphNodeHashArray NCGT.ShrunkenOperationsMenuItems)
+)
+
+(RPAQ? NCGT.ShrunkenIconDefaultWidth 147)
+
+(RPAQ? NCGT.ShrunkenIconDefaultHeight 20)
+
+(RPAQ? NCGT.ShrunkenIconMenu NIL)
+
+(RPAQ? NCGT.HashArraySize 500)
+
+(RPAQ? NCGT.ScaledGraphNodeHashArray (HASHARRAY NCGT.HashArraySize))
+
+(RPAQ? NCGT.ShrunkenOperationsMenuItems
+       '((START (FUNCTION NCGT.StartTourAtRoot)
+                "Start the tour at a root of the browser.")
+         (NEXT (FUNCTION NCGT.NextTourStop)
+               "Shut down current TableTop and move to the next.")
+         (PREV. (FUNCTION NCGT.PreviousTourStop)
+                "Shut down current TableTop and move to some previous one.")
+         (JUMP (FUNCTION NCGT.JumpToTourStop)
+               "Shut down current TableTop and jump to some other one.")
+         (RESET (FUNCTION NCGT.ResetTour)
+                "Shut down current TableTop and reset the browser.")))
+
+
+
+(* ;; "Add this card type")
+
+(DEFINEQ
+
+(NCGT.AddGuidedTourCard
+  [LAMBDA NIL                                            (* ; "Edited 27-Mar-89 19:05 by pmi")
+
+    (* ;; "Make the GuidedTour card type.  Inherits from BrowserCard.")
+
+    (* ;; "pmi 3/27/89: Added MarkDirtyFn for the new shrunken icon.")
+
+    (DECLARE (GLOBALVARS NCGT.LinkIconBitmap))
+    (NC.AddCardType 'GuidedTour 'Browser `[(MakeFn ,(FUNCTION NCGT.MakeGuidedTourCard))
+                                           (EditFn ,(FUNCTION NCGT.EditGuidedTourCard))
+                                           (QuitFn ,(FUNCTION NCGT.GuidedTourCardQuitFn))
+                                           (MarkDirtyFn ,(FUNCTION NCGT.MarkDirtyFn]
+           `((LinkDisplayMode Title)
+             (DefaultHeight 300)
+             (DefaultWidth 350)
+             (DisplayedInMenuFlg ,T)
+             (LinkIconAttachedBitMap ,NCGT.LinkIconBitmap])
+)
+
+(NCGT.AddGuidedTourCard)
+(PUTPROPS NCGUIDEDTOURCARD COPYRIGHT ("Xerox Corporation" 1988 1989))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (12268 19425 (NCGT.MakeGuidedTourCard 12278 . 16454) (NCGT.EditGuidedTourCard 16456 . 
+18600) (NCGT.GuidedTourCardQuitFn 18602 . 19423)) (19426 25539 (NCGT.SetUpGraphEditMenus 19436 . 20606
+) (NCGT.CreateTableTopFn 20608 . 21135) (NCGT.CreateTableTop 21137 . 23208) (
+NCGT.CreateGuidedTourLinkFn 23210 . 24116) (NCGT.CreateGuidedTourLink 24118 . 25071) (
+NCGT.CloseLinksLegendMenuWin 25073 . 25537)) (25540 26962 (NCGT.AttachOperationsMenu 25550 . 26602) (
+NCGT.OperationsMenuWhenSelectedFn 26604 . 26960)) (26963 63905 (NCGT.StartTourAtRoot 26973 . 31474) (
+NCGT.NextTourStop 31476 . 38144) (NCGT.PreviousTourStop 38146 . 39473) (NCGT.JumpToTourStop 39475 . 
+43014) (NCGT.ResetTour 43016 . 45563) (NCGT.SetGTState 45565 . 45844) (NCGT.FetchGTState 45846 . 46112
+) (NCGT.NextTTOrCard 46114 . 49956) (NCGT.CloseDownTTOrCard 49958 . 51024) (NCGT.BringUpTTOrCard 51026
+ . 53169) (NCGT.HighlightEdge 53171 . 53545) (NCGT.UnHighlightEdge 53547 . 53917) (NCGT.HighlightNode 
+53919 . 54743) (NCGT.UnHighlightNode 54745 . 55439) (NCGT.FlipNodeIfWinOpen 55441 . 55839) (
+NCGT.MarkWindowDirty 55841 . 56112) (NCGT.MarkGraphNodeDirty 56114 . 56488) (
+NCGT.RecomputeAndRedisplayWindow 56490 . 57089) (NCGT.RedisplayAffectedNodes 57091 . 59219) (
+NCGT.RedisplayAffectedLinks 59221 . 63317) (NCGT.CloseOrUndisplayCards 63319 . 63903)) (63906 67117 (
+NCGT.GuidedTourBeforeRepaintFn 63916 . 64607) (NCGT.GuidedTourAfterRepaintFn 64609 . 65420) (
+NCGT.GuidedTourExpandFn 65422 . 65872) (NCGT.ShrunkenWinButtonEventFn 65874 . 67115)) (67150 67875 (
+NCGT.GuidedTourShrinkFn 67160 . 67873)) (74266 84482 (NCGT.MarkDirtyFn 74276 . 74607) (
+NCGT.GuidedTourIconFn 74609 . 76439) (NCGT.RedrawShrunkenIconWindow 76441 . 79915) (
+NCGT.ShrunkenWinRepaintFn 79917 . 80201) (NCGT.ShrunkenWinReshapeFn 80203 . 80777) (
+NCGT.ShrunkenWinExpandFn 80779 . 81332) (NCGT.AttachShrunkenIconMenus 81334 . 81998) (
+NCGT.ShrunkenIconOperationsMenuWhenSelectedFn 82000 . 82407) (NCGT.ShrinkGraphToWindow 82409 . 84480))
+ (85586 86483 (NCGT.AddGuidedTourCard 85596 . 86481)))))
+STOP

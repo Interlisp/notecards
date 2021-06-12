@@ -1,0 +1,83 @@
+(DEFINE-FILE-INFO §READTABLE "XCL" §PACKAGE "INTERLISP")
+(FILECREATED " 8-Jan-87 17:20:45" 
+{QV}<NOTECARDS>1.3L>LIBRARY>SHAPETOFIT.\;2 2778   
+
+      |changes| |to:|  (VARS SHAPETOFITCOMS)
+
+      |previous| |date:| " 8-Jan-87 17:05:02" 
+{QV}<NOTECARDS>1.3L>LIBRARY>SHAPETOFIT.\;1)
+
+
+; Copyright (c) 1987 by Xerox Corporation.  All rights reserved.
+
+(PRETTYCOMPRINT SHAPETOFITCOMS)
+
+(RPAQQ SHAPETOFITCOMS 
+       ((* |;;;| "tries to save away a region that just fits the substance at card close time"
+           )
+        (INITVARS |NC.MaxSEditLength| SCREENHEIGHT 
+               |NC.MaxSEditWidth| (IQUOTIENT SCREENWIDTH 2)
+               )
+        (FNS |NC.SetRegionToFit|)
+        (P (ADVISE '(|NC.SetSavedRegion| IN |NC.QuitCard|)
+                  'AROUND
+                  '(|NC.SetRegionToFit| |Card| |Window|)))))
+
+
+
+(* |;;;| 
+"tries to save away a region that just fits the substance at card close time"
+)
+
+
+(RPAQ? |NC.MaxSEditLength| NIL)
+
+(RPAQ? SCREENHEIGHT NIL)
+
+(RPAQ? |NC.MaxSEditWidth| NIL)
+
+(RPAQ? IQUOTIENT SCREENWIDTH 2)
+(DEFINEQ
+
+(|NC.SetRegionToFit|
+  (LAMBDA (|Card| |Window|)  (* \; 
+                          "Edited 30-Dec-86 00:49 by kirk:")
+      
+      (* * |adjusts| |the| |region| |to| |fit| 
+      |the| |extent.|)
+
+    (LET*
+     ((|Extent| (WINDOWPROP |Window| 'EXTENT))
+      (|Region| (WINDOWPROP |Window| 'REGION)))
+      
+      (* |;;| "what we also want here is the extent bottom that will maintain the same same Region top.  So new bottom + extent's height = region's bottom + region's height.  Thus new bottom = region's bottom + region's height - extent's height.")
+
+     (|NC.SetSavedRegion|
+      |Card|
+      (|if| (AND |Extent| (ILESSP (|fetch| HEIGHT
+                                     |of| |Extent|)
+                                 |NC.MaxSEditLength|))
+          |then| (CREATEREGION
+                  (|fetch| LEFT |of| |Region|)
+                  (IPLUS (|fetch| BOTTOM |of| |Region|)
+                         (|fetch| HEIGHT |of| |Region|)
+                         (MINUS (|fetch| HEIGHT
+                                   |of| |Extent|)))
+                  (MAX (|fetch| WIDTH |of| |Region|)
+                       (MIN (|fetch| WIDTH |of| |Extent|)
+                            |NC.MaxSEditWidth|))
+                  (IPLUS (|fetch| HEIGHT |of| |Extent|)
+                         (|fetch| HEIGHT |of| |Region|)
+                         (MINUS (WINDOWPROP |Window|
+                                       'HEIGHT))
+                         10))
+        |else| |Region|)))))
+)
+(ADVISE '(|NC.SetSavedRegion| IN |NC.QuitCard|)
+       'AROUND
+       '(|NC.SetRegionToFit| |Card| |Window|))
+(PUTPROPS SHAPETOFIT COPYRIGHT ("Xerox Corporation" 1987))
+(DECLARE\: DONTCOPY
+  (FILEMAP (NIL (1070 2586 (|NC.SetRegionToFit| 1080 . 2584)))
+))
+STOP

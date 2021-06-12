@@ -1,0 +1,482 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP")
+(FILECREATED " 5-Jan-89 19:54:56" {QV}<IDE>1.41>DESTNOTEFILEBROWSER.;3 24900  
+
+      changes to%:  (VARS DESTNOTEFILEBROWSERCOMS)
+
+      previous date%: " 5-Jan-89 18:19:33" {QV}<IDE>1.41>DESTNOTEFILEBROWSER.;2)
+
+
+(* "
+Copyright (c) 1989 by Xerox Corporation.  All rights reserved.
+")
+
+(PRETTYCOMPRINT DESTNOTEFILEBROWSERCOMS)
+
+(RPAQQ DESTNOTEFILEBROWSERCOMS
+       [
+
+(* ;;; "dsj. 9/22/88.  NC package for browsing, viewing and modifying crossfile links' destination notefile.")
+
+        (FNS DNFB.AddEditParameters DNFB.AddSessionMenuItem DNFB.BrowserFontFetchFn 
+             DNFB.BrowserFontSelectFn DNFB.BrowserMenuWhenSelectedFn DNFB.BrowserSourceNoteFiles 
+             DNFB.CreateBrowser DNFB.DestinationNoteFiles DNFB.Initialize DNFB.OpenClosedNoteFiles 
+             DNFB.PrintFn DNFB.RecomputeBrowser DNFB.RenameBrowserItem DNFB.SessionMenuItems)
+        (INITVARS (DNFB.BrowserFont)
+               (DNFB.BrowserHeaderWindowFont))
+        
+        (* ;; "Additional files to load in.")
+
+        (FILES (FROM VALUEOF (LIST (IF (AND (BOUNDP '*NOTECARDS-PATCH-DIR*)
+                                            *NOTECARDS-PATCH-DIR*)
+                                       ELSE NOTECARDSNEXTDIRECTORIES)))
+               DSJPATCH075 DSJPATCH076 RARPATCH026)
+        (P (DNFB.Initialize))
+        (DECLARE%: DONTCOPY (PROPS (DESTNOTEFILEBROWSER MAKEFILE-ENVIRONMENT)
+                                   (DESTNOTEFILEBROWSER FILETYPE)))
+        
+        (* ;; " Make sure needed decls are loaded if file is not compiled ")
+
+        (DECLARE%: EVAL@COMPILE DONTCOPY (FILES (SOURCE)
+                                                TABLEBROWSERDECLS))
+        (DECLARE%: DONTEVAL@LOAD DOEVAL@COMPILE DONTCOPY COMPILERVARS (ADDVARS (NLAMA)
+                                                                             (NLAML)
+                                                                             (LAMA 
+                                                                          DNFB.BrowserSourceNoteFiles
+                                                                                   ])
+
+
+
+(* ;;; 
+"dsj. 9/22/88.  NC package for browsing, viewing and modifying crossfile links' destination notefile."
+)
+
+(DEFINEQ
+
+(DNFB.AddEditParameters
+  [LAMBDA NIL                                                (* ; "Edited 23-Sep-88 16:58 by DSJ")
+
+    (* ;; "dsj. 9/23/88.  Add edit params.")
+
+    (NCP.AddEditParameter 'DestinationNoteFileBrowserFont 'DNFB.BrowserFont DNFB.BrowserFont
+           'NoteFileIndicatorFont
+           (FUNCTION DNFB.BrowserFontFetchFn)
+           (FUNCTION DNFB.BrowserFontSelectFn])
+
+(DNFB.AddSessionMenuItem
+  [LAMBDA NIL                                                (* ; "Edited 22-Sep-88 19:40 by DSJ")
+
+         (* * DSJ%: 22-Sep-88 {BrokenAtom}#360,163776 Add the menu for DNFB to Notecards 
+         ops.)
+
+    (NCP.AddSessionIconMenuItem 'Other (DNFB.SessionMenuItems])
+
+(DNFB.BrowserFontFetchFn
+  [LAMBDA (variableName)                                     (* ; "Edited 23-Sep-88 16:59 by DSJ")
+    (NC.DefaultFontFetchFn variableName])
+
+(DNFB.BrowserFontSelectFn
+  [LAMBDA (GlobalVar)                                        (* ; "Edited 23-Sep-88 16:59 by DSJ")
+
+         (* * dsj. |9/23/88.|)
+
+    (NC.DefaultFontSelectionFn GlobalVar])
+
+(DNFB.BrowserMenuWhenSelectedFn
+  [LAMBDA (ITEM MENU KEY)                                    (* ; "Edited 29-Sep-88 19:44 by DSJ")
+
+    (* ;; "dsj. 9/29/88.  Do the selection in the destination nf browser")
+
+    (PROG [(Browser (GETMENUPROP MENU 'Browser]
+          (AND (LISTP ITEM)
+               (SETQ ITEM (CAR ITEM)))
+          (SELECTQ ITEM
+              (Rename (DNFB.RenameBrowserItem Browser))
+              ((Recompute |Same source notefiles|) 
+                   (DNFB.RecomputeBrowser Browser))
+              (|New source notefiles| 
+                   (DNFB.RecomputeBrowser Browser T))
+              (SHOULDNT])
+
+(DNFB.BrowserSourceNoteFiles
+  [LAMBDA Args                                               (* ; "Edited 29-Sep-88 19:38 by DSJ")
+
+    (* ;; 
+   "Put/Get the source notefiles associated with this browser.  Args is (Browser NewSourceNotefiles)")
+
+    (if (EQ 1 Args)
+        then                                                 (* ; " Get it")
+             (LISTGET (TB.USERDATA (ARG Args 1))
+                    'SourceNoteFiles)
+      else                                                   (* ; "put it")
+           (if (TB.USERDATA (ARG Args 1))
+               then (TB.USERDATA (ARG Args 1)
+                           (LISTPUT (TB.USERDATA (ARG Args 1))
+                                  'SourceNoteFiles
+                                  (ARG Args 2)))
+             else)
+           (TB.USERDATA (ARG Args 1)
+                  (LIST 'SourceNoteFiles (ARG Args 2])
+
+(DNFB.CreateBrowser
+  [LAMBDA NIL                                                (* ; "Edited 30-Sep-88 14:17 by DSJ")
+    (GLOBALVARS DNFB.BrowserFont DNFB.BrowserHeaderWindowFont)
+    (PROG (SourceNotefiles DestNotefiles BrowserHeaderWindow BrowserHeaderWindowRegion 
+                 BrowserMainWindowRegion BrowserTotalRegion BrowserMainWindow BrowserMenu Browser
+                 (BrowserHeaderWindowHeight 70))
+
+     (* ;; "Get region from user")
+
+          (NCP.PrintMsg NC.NoteCardsIconWindow NIL 
+                 "Specify a region for the Destination Notefile Browser   ")
+          (SETQ BrowserTotalRegion (GETREGION))
+          (NCP.ClearMsg NC.NoteCardsIconWindow T)            (* ; "Make command menu")
+          (SETQ BrowserMenu (create MENU
+                                   ITEMS _ '(Rename (Recompute NIL "Recompute browser items"
+                                                           (SUBITEMS |Same source notefiles| 
+                                                                  |New source notefiles|)))
+                                   CENTERFLG _ T
+                                   TITLE _ "Commands"
+                                   WHENSELECTEDFN _ (FUNCTION DNFB.BrowserMenuWhenSelectedFn)))
+                                                             (* ; "Make main window ")
+          (SETQ BrowserMainWindow (CREATEMENUEDWINDOW BrowserMenu "Destination NoteFiles"
+                                         'RIGHT BrowserTotalRegion))
+
+     (* ;; "This next is a kludge to get NC interface fns like NCP.PrintMsg to place a prompt window above this window.")
+
+          (WINDOWPROP BrowserMainWindow 'NoteFile T)
+
+     (* ;; "Set up header window")
+
+          (SETQ BrowserMainWindowRegion (WINDOWPROP BrowserMainWindow 'REGION))
+          (SETQ BrowserHeaderWindow (CREATEW (CREATEREGION (fetch LEFT of BrowserMainWindowRegion)
+                                                    (fetch TOP of BrowserMainWindowRegion)
+                                                    (fetch WIDTH of BrowserMainWindowRegion)
+                                                    BrowserHeaderWindowHeight)
+                                           "Crossfile Links Destination NoteFile Browser"))
+          (DSPFONT DNFB.BrowserHeaderWindowFont BrowserHeaderWindow)
+          (ATTACHWINDOW BrowserHeaderWindow BrowserMainWindow 'TOP 'JUSTIFY)
+          (WINDOWPROP BrowserMainWindow 'BrowserHeaderWindow BrowserHeaderWindow)
+          (PRIN1 "Select Source Notefiles for Crossfile Links
+" BrowserHeaderWindow)
+
+     (* ;; "")
+
+     (* ;; "Select source notefiles and Open those that are closed")
+
+          (SETQ SourceNotefiles (DNFB.OpenClosedNoteFiles (NCP.SelectNoteFiles BrowserHeaderWindow 
+                                                                 "Browse Crossfile Links Notefile" 
+                                                                 BrowserMainWindow T NIL T)
+                                       BrowserMainWindow))
+
+     (* ;; "")
+
+     (* ;; "Now get all destination notefiles for SourceNotefiles' crosslinks.")
+
+          (SETQ DestNotefiles (DNFB.DestinationNoteFiles SourceNotefiles))
+                                                             (* ; 
+                                                             "Now reshape header window to fit info")
+          [SETQ BrowserHeaderWindowHeight (IMIN BrowserHeaderWindowHeight (ITIMES (IPLUS 4
+                                                                                         (LENGTH
+                                                                                          
+                                                                                      SourceNotefiles
+                                                                                          ))
+                                                                                 (FONTPROP
+                                                                                  
+                                                                         DNFB.BrowserHeaderWindowFont
+                                                                                  'HEIGHT]
+          (SETQ BrowserHeaderWindowRegion (WINDOWPROP BrowserHeaderWindow 'REGION))
+          (SHAPEW BrowserHeaderWindow (CREATEREGION (fetch LEFT of BrowserHeaderWindowRegion)
+                                             (fetch BOTTOM of BrowserHeaderWindowRegion)
+                                             (fetch WIDTH of BrowserHeaderWindowRegion)
+                                             BrowserHeaderWindowHeight))
+          (CLEARW BrowserHeaderWindow)
+          (for X in (APPEND (LIST "Source Notefiles for Crossfile Links:")
+                           (for NF in SourceNotefiles collect NF))
+             do (PRIN1 (CONCAT X "
+")
+                       BrowserHeaderWindow))                 (* ; 
+                                                        "Make sure header window is always this size")
+          (WINDOWPROP BrowserHeaderWindow 'MINSIZE (CONS 10 BrowserHeaderWindowHeight))
+          (WINDOWPROP BrowserHeaderWindow 'MAXSIZE (CONS 10 BrowserHeaderWindowHeight))
+
+     (* ;; "And compute the browser ")
+
+          [SETQ Browser (TB.MAKE.BROWSER (for NF in DestNotefiles
+                                            collect (create TABLEITEM
+                                                           TIDATA _ NF))
+                               BrowserMainWindow
+                               `(PRINTFN DNFB.PrintFn FONT ,DNFB.BrowserFont TITLE 
+                                       "Destination NoteFile Browser"]
+
+     (* ;; "Hang needed props")
+
+          (PUTMENUPROP BrowserMenu 'Browser Browser)
+          (DNFB.BrowserSourceNoteFiles Browser SourceNotefiles)
+          (RETURN Browser])
+
+(DNFB.DestinationNoteFiles
+  [LAMBDA (SourceNoteFiles)                                  (* ; "Edited 29-Sep-88 18:54 by DSJ")
+
+    (* ;; 
+ "dsj. 9/22/88.  Collect all destination nfs for all crossfile links found in all SourceNoteFiles.  ")
+
+    (PROG (DestNoteFiles FinalDestNoteFiles)
+
+     (* ;; "Get destination nfs.")
+
+          (for DestNFList in (for SourceNF in (MKLIST SourceNoteFiles)
+                                collect [NCP.MapCardsOfType 'CrossFileLink (NCP.NoteFileFromFileName
+                                                                            SourceNF)
+                                               (LAMBDA (Card)
+                                                 (if (NOT (NCP.CardCachedP Card))
+                                                     then 
+                                                          (* ;; "cache it; leave it cached ")
+
+                                                          (NCP.CacheCards Card))
+                                                 (pushnew DestNoteFiles (fetch (
+                                                                               CrossFileLinkSubstance
+                                                                                
+                                                                            CrossFileLinkDestFileHint
+                                                                                ) of (
+                                                                                    NC.FetchSubstance
+                                                                                      Card]
+                                      DestNoteFiles) do (for DestNF in DestNFList
+                                                           do (pushnew FinalDestNoteFiles DestNF)))
+          (RETURN FinalDestNoteFiles])
+
+(DNFB.Initialize
+  [LAMBDA NIL                                                (* ; "Edited 26-Sep-88 20:08 by DSJ")
+
+    (* ;; "dsj. 9/23/88.  Do init things.  ")
+
+    (DNFB.AddSessionMenuItem)
+
+    (* ;; "Vars")
+
+    [OR DNFB.BrowserFont (SETQ DNFB.BrowserFont (FONTCREATE '(GACHA 10 STANDARD]
+    [OR DNFB.BrowserHeaderWindowFont (SETQ DNFB.BrowserHeaderWindowFont
+                                      (FONTCREATE '(GACHA 8 STANDARD]
+    (DNFB.AddEditParameters])
+
+(DNFB.OpenClosedNoteFiles
+  [LAMBDA (SourceNoteFiles InterestedWindow)                 (* ; "Edited 29-Sep-88 17:35 by DSJ")
+
+    (* ;; "dsj. 9/29/88.  Open those notefiles that are closed if user agrees.  ")
+
+    (PROG (ClosedNFs)
+
+     (* ;; "Collect all non-open nfs and open them if user really wants it")
+
+          [if [SETQ ClosedNFs (for NF in SourceNoteFiles collect NF when (NOT (NCP.OpenNoteFileP
+                                                                               NF]
+              then (if (NCP.AskYesOrNo (CONCAT "The following notefile"
+                                              (if (EQ 1 (LENGTH ClosedNFs))
+                                                  then " is "
+                                                else "s are ")
+                                              "not open:
+" ClosedNFs "
+May I open " (if (EQ 1 (LENGTH ClosedNFs))
+                 then "it"
+               else "them")
+                                              " to compute the browser?")
+                              "-->" "Yes" T InterestedWindow)
+                       then                                  (* ; "open them")
+                            (for NF in ClosedNFs do (NCP.OpenNoteFile NF T))
+                     else                                    (* ; "remove them from the list")
+                          (SETQ SourceNoteFiles (for NF in SourceNoteFiles collect NF
+                                                   unless (MEMBER NF ClosedNFs]
+          (RETURN SourceNoteFiles])
+
+(DNFB.PrintFn
+  [LAMBDA (Browser Item Window)                              (* ; "Edited 23-Sep-88 16:44 by DSJ")
+
+    (* ;; "dsj.  9/23/88.  Print browser item in window")
+
+    (PRINT (fetch (TABLEITEM TIDATA) of Item)
+           Window])
+
+(DNFB.RecomputeBrowser
+  [LAMBDA (Browser NewSourcesFlg)                            (* ; "Edited 29-Sep-88 19:37 by DSJ")
+
+    (* ;; "dsj. 9/29/88.  REcompute the dest notefile browser.")
+
+    (PROG (SourceNotefiles DestNotefiles BrowserHeaderWindow BrowserHeaderWindowRegion 
+                 BrowserMainWindowRegion BrowserTotalRegion BrowserMainWindow BrowserMenu
+                 (BrowserHeaderWindowHeight 70))
+
+     (* ;; "Get main window ")
+
+          (SETQ BrowserMainWindow (TB.WINDOW Browser))
+          (SETQ BrowserMainWindowRegion (WINDOWPROP BrowserMainWindow 'REGION))
+          (SETQ BrowserTotalRegion (WINDOWREGION BrowserMainWindow))
+          (SETQ BrowserHeaderWindow (WINDOWPROP BrowserMainWindow 'BrowserHeaderWindow))
+          [if NewSourcesFlg
+              then 
+                   (* ;; "Reset up header window")
+
+                   (SHAPEW BrowserHeaderWindow (CREATEREGION (fetch LEFT of BrowserMainWindowRegion)
+                                                      (fetch TOP of BrowserMainWindowRegion)
+                                                      (fetch WIDTH of BrowserTotalRegion)
+                                                      BrowserHeaderWindowHeight))
+                   (CLEARW BrowserHeaderWindow)
+                   (PRIN1 "Select New Source Notefiles for Crossfile Links
+" BrowserHeaderWindow) 
+
+                   (* ;; "")
+
+                   (* ;; "Select source notefiles and Open those that are closed")
+
+                   (DNFB.BrowserSourceNoteFiles Browser (SETQ SourceNotefiles
+                                                         (DNFB.OpenClosedNoteFiles (
+                                                                                  NCP.SelectNoteFiles
+                                                                                    
+                                                                                  BrowserHeaderWindow
+                                                                                    
+                                                                    "Browse Crossfile Links Notefile"
+                                                                                    BrowserMainWindow
+                                                                                    T NIL T)
+                                                                BrowserMainWindow)))
+            else 
+                 (* ;; "Make sure old sources are still open ")
+
+                 (DNFB.BrowserSourceNoteFiles Browser (SETQ SourceNotefiles (DNFB.OpenClosedNoteFiles
+                                                                             (
+                                                                          DNFB.BrowserSourceNoteFiles
+                                                                              Browser)
+                                                                             BrowserMainWindow]
+
+     (* ;; "")
+
+     (* ;; "Now get all destination notefiles for SourceNotefiles' crosslinks.")
+
+          (SETQ DestNotefiles (DNFB.DestinationNoteFiles SourceNotefiles))
+                                                             (* ; 
+                                                             "Now reshape header window to fit info")
+          [SETQ BrowserHeaderWindowHeight (IMIN BrowserHeaderWindowHeight (ITIMES (IPLUS 4
+                                                                                         (LENGTH
+                                                                                          
+                                                                                      SourceNotefiles
+                                                                                          ))
+                                                                                 (FONTPROP
+                                                                                  
+                                                                         DNFB.BrowserHeaderWindowFont
+                                                                                  'HEIGHT]
+          (SETQ BrowserHeaderWindowRegion (WINDOWPROP BrowserHeaderWindow 'REGION))
+          (SHAPEW BrowserHeaderWindow (CREATEREGION (fetch LEFT of BrowserHeaderWindowRegion)
+                                             (fetch BOTTOM of BrowserHeaderWindowRegion)
+                                             (fetch WIDTH of BrowserHeaderWindowRegion)
+                                             BrowserHeaderWindowHeight))
+          (CLEARW BrowserHeaderWindow)
+          (for X in (APPEND (LIST "Source Notefiles for Crossfile Links:")
+                           (for NF in SourceNotefiles collect NF))
+             do (PRIN1 (CONCAT X "
+")
+                       BrowserHeaderWindow))                 (* ; 
+                                                        "Make sure header window is always this size")
+          (WINDOWPROP BrowserHeaderWindow 'MINSIZE (CONS 10 BrowserHeaderWindowHeight))
+          (WINDOWPROP BrowserHeaderWindow 'MAXSIZE (CONS 10 BrowserHeaderWindowHeight))
+
+     (* ;; "")
+
+     (* ;; "And recompute the browser")
+
+          (TB.REPLACE.ITEMS Browser (for NF in DestNotefiles collect (create TABLEITEM
+                                                                            TIDATA _ NF])
+
+(DNFB.RenameBrowserItem
+  [LAMBDA (Browser)                                          (* ; "Edited 30-Sep-88 15:38 by DSJ")
+
+    (* ;; "dsj. 9/29/88.  Rename the destination notefile selected in the browser window.")
+
+    (PROG (SelectedNoteFiles SourceNotefiles NewDestNoteFile)
+
+     (* ;; "Get main window and ask for new name")
+
+          (SETQ BrowserMainWindow (TB.WINDOW Browser))
+          (if (SETQ SelectedNoteFiles (for ITEM in (TB.COLLECT.ITEMS Browser 'SELECTED)
+                                         collect (fetch (TABLEITEM TIDATA) of ITEM)))
+              then (if (SETQ NewDestNoteFile (NCP.AskUser (CONCAT 
+                                           "Rename the following crossfile link destination notefile"
+                                                                 (if (EQ 1 (LENGTH SelectedNoteFiles)
+                                                                         )
+                                                                     then ""
+                                                                   else "s")
+                                                                 " to what directory or notefile?
+" SelectedNoteFiles "
+")
+                                                    "-->" NIL T BrowserMainWindow))
+                       then 
+                            (* ;; "Now change the selected destination notefiles for all source notefiles.  Make sure source nfs are open. ")
+
+                            (SETQ SourceNotefiles (DNFB.OpenClosedNoteFiles (
+                                                                          DNFB.BrowserSourceNoteFiles
+                                                                             Browser)
+                                                         BrowserMainWindow))
+                            (if (NCP.RenameCrossFileLinksDestination SourceNotefiles 
+                                       SelectedNoteFiles NewDestNoteFile BrowserMainWindow)
+                                then 
+                                     (* ;; 
+            "Finally, recompute browser to update.  Reset browser sources in case they have changed.")
+
+                                     (DNFB.BrowserSourceNoteFiles Browser SourceNotefiles)
+                                     (DNFB.RecomputeBrowser Browser)
+                                     (NCP.ClearMsg BrowserMainWindow T))
+                     else (NCP.PrintMsg BrowserMainWindow T "No notefiles renamed.")
+                          (NCP.ClearMsg BrowserMainWindow T 2000))
+            else (NCP.PrintMsg BrowserMainWindow T "No notefiles in browser selected")
+                 (NCP.ClearMsg BrowserMainWindow T 2000])
+
+(DNFB.SessionMenuItems
+  [LAMBDA NIL                                                (* ; "Edited 30-Sep-88 16:07 by DSJ")
+
+         (* * dsj. Returns a list of main menu items for DNFB to appear in the NC session 
+         menu.)
+
+    `(" Destination NoteFile Browser " (ADD.PROCESS '(DNFB.CreateBrowser))
+            "Creates a filebrowser on the destination notefiles found in crossfile links. "])
+)
+
+(RPAQ? DNFB.BrowserFont )
+
+(RPAQ? DNFB.BrowserHeaderWindowFont )
+
+
+
+(* ;; "Additional files to load in.")
+
+
+(FILESLOAD (FROM VALUEOF (LIST (IF (AND (BOUNDP '*NOTECARDS-PATCH-DIR*)
+                                        *NOTECARDS-PATCH-DIR*)
+                                 ELSE NOTECARDSNEXTDIRECTORIES)))
+       DSJPATCH075 DSJPATCH076 RARPATCH026)
+
+(DNFB.Initialize)
+(DECLARE%: DONTCOPY 
+)
+
+
+
+(* ;; " Make sure needed decls are loaded if file is not compiled ")
+
+(DECLARE%: EVAL@COMPILE DONTCOPY 
+
+(FILESLOAD (SOURCE)
+       TABLEBROWSERDECLS)
+)
+(DECLARE%: DONTEVAL@LOAD DOEVAL@COMPILE DONTCOPY COMPILERVARS 
+
+(ADDTOVAR NLAMA )
+
+(ADDTOVAR NLAML )
+
+(ADDTOVAR LAMA DNFB.BrowserSourceNoteFiles)
+)
+(PUTPROPS DESTNOTEFILEBROWSER COPYRIGHT ("Xerox Corporation" 1989))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (2304 24065 (DNFB.AddEditParameters 2314 . 2720) (DNFB.AddSessionMenuItem 2722 . 3040) (
+DNFB.BrowserFontFetchFn 3042 . 3219) (DNFB.BrowserFontSelectFn 3221 . 3437) (
+DNFB.BrowserMenuWhenSelectedFn 3439 . 4092) (DNFB.BrowserSourceNoteFiles 4094 . 5011) (
+DNFB.CreateBrowser 5013 . 10980) (DNFB.DestinationNoteFiles 10982 . 12898) (DNFB.Initialize 12900 . 
+13394) (DNFB.OpenClosedNoteFiles 13396 . 15033) (DNFB.PrintFn 15035 . 15297) (DNFB.RecomputeBrowser 
+15299 . 20844) (DNFB.RenameBrowserItem 20846 . 23638) (DNFB.SessionMenuItems 23640 . 24063)))))
+STOP
