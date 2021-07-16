@@ -1,0 +1,26 @@
+(DEFINE-FILE-INFO READTABLE "XCL" PACKAGE "INTERLISP")
+(FILECREATED " 2-Jul-2021 00:00:07" |{DSK}<home>frank>il>notecards>patches>NC2021PATCHES.;3| 873    
+
+      |changes| |to:|  (VARS NC2021PATCHESCOMS)
+
+      |previous| |date:| " 1-Jul-2021 23:49:38" 
+|{DSK}<home>frank>il>notecards>patches>NC2021PATCHES.;1|)
+
+
+(PRETTYCOMPRINT NC2021PATCHESCOMS)
+
+(RPAQQ NC2021PATCHESCOMS
+       ((DECLARE\: DONTEVAL@LOAD DOCOPY (* FGH 2021-07-01 |For| |unknown| |reasons| \\MY.NSHOSTNUMBER
+                                           |doesn't| |get| |set| |on| |some| |systems.| S\o |we| 
+                                           |set| |it| |here.|)
+               (P (COND ((NOT \\MY.NSHOSTNUMBER)
+                         (\\SETLOCALNSNUMBERS)))))))
+(DECLARE\: DONTEVAL@LOAD DOCOPY 
+
+(COND
+   ((NOT \\MY.NSHOSTNUMBER)
+    (\\SETLOCALNSNUMBERS)))
+)
+(DECLARE\: DONTCOPY
+  (FILEMAP (NIL)))
+STOP

@@ -1,9 +1,9 @@
 (DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
-(FILECREATED "10-Jun-2021 13:18:09" {DSK}<home>pi>il>notecards>system>NCCONFIG.;8 12200  
+(FILECREATED " 2-Jul-2021 00:09:36" {DSK}<home>frank>il>notecards>system>NCCONFIG.;2 11810  
 
       changes to%:  (VARS NCCONFIGCOMS)
 
-      previous date%: " 2-Nov-2020 16:43:12" {DSK}<home>pi>il>notecards>system>NCCONFIG.;7)
+      previous date%: "10-Jun-2021 13:18:09" {DSK}<home>frank>il>notecards>system>NCCONFIG.;1)
 
 
 (* ; "
@@ -14,10 +14,10 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 
 (RPAQQ NCCONFIGCOMS
        [
-        (* ;; "NoteCards version control --- the stuff kept in this file is all concerned with getting the user a consistent version of NoteCards.  Anything that depends on getting a particular version of a particular file is indirected through here.  In addition, card type stub functions and pointers to other autoloadable functions are stored here.")
+        (* ;; "NoteCards version control --- the stuff kept in this file is all concerned with getting the user a consistent version of NoteCards.  Anything that depends on getting a particular version of a particular file is indirected through here.  In addition, card type stub functions and pointers to other autoloadable functions are stored here.")
 
         
-        (* ;; "WARNING! DO NOT SYSLOAD THIS FILE --- THE VALUES OF NC.Files, NC.AutoloadableFns, AND NC.AutoloadStubFns WILL BE SMASHED!")
+        (* ;; "WARNING! DO NOT SYSLOAD THIS FILE --- THE VALUES OF NC.Files, NC.AutoloadableFns, AND NC.AutoloadStubFns WILL BE SMASHED!")
 
         (GLOBALVARS NC.CoreFiles NC.Files NC.NoUpdateFlg NC.InstallFlg NC.ForceLoadFlg 
                NC.SketchCardIcon NC.IdeaSketchCardIcon NC.GraphCardIcon NC.BrowserCardIcon 
@@ -30,15 +30,15 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
         [INITVARS (NC.CoreFiles '(NCDECLS NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE 
                                         NCLOCALDEVICE NCCARDS NCLINKS NCTYPESMECH NCPROGINT 
                                         NCCROSSFILELINKS MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES 
-                                        MEDLEYROOMSPATCHES MODERNIZEPATCHES))
+                                        MEDLEYROOMSPATCHES MODERNIZEPATCHES NC2021PATCHES))
                (NC.Files '(NOTECARDS NCDECLS NCCONFIG NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE
                                  NCLOCALDEVICE NCCOMPACT NCREPAIR NCCARDS NCLINKS NCTYPESMECH 
                                  NCPROGINT NCCROSSFILELINKS NCHASHCARD NCTEXTCARD NCSKETCHCARD 
                                  NCGRAPHCARD NCFILEBOXCARD NCBROWSERCARD NCSEARCHCARD NCDOCUMENTCARD
                                  NCTABLETOPCARD NCLINKINDEXCARD NCLISTCARD NCCONVERTVERSION2TO3 
                                  NCGESTURES MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES
-                                 POSTRELEASEPATCHES GRAPHERPATCH NCMAPS NCHACKS NCFILECARD 
-                                 NEWSHADEITEM NOTECARDS.HASH]
+                                 POSTRELEASEPATCHES MODERNIZEPATCHES NC2021PATCHES GRAPHERPATCH 
+                                 NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH]
         (DECLARE%: DONTEVAL@LOAD (IFPROP ConfigProps * NC.Files)
                (CONFIGPROPS * NC.Files)
                (IFPROP File * NC.AutoloadableFns))
@@ -83,7 +83,7 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 (RPAQ? NC.CoreFiles '(NCDECLS NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE NCLOCALDEVICE 
                                 NCCARDS NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS 
                                 MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES 
-                                MODERNIZEPATCHES))
+                                MODERNIZEPATCHES NC2021PATCHES))
 
 (RPAQ? NC.Files
        '(NOTECARDS NCDECLS NCCONFIG NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE NCLOCALDEVICE 
@@ -91,7 +91,8 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
                NCTEXTCARD NCSKETCHCARD NCGRAPHCARD NCFILEBOXCARD NCBROWSERCARD NCSEARCHCARD 
                NCDOCUMENTCARD NCTABLETOPCARD NCLINKINDEXCARD NCLISTCARD NCCONVERTVERSION2TO3 
                NCGESTURES MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES 
-               POSTRELEASEPATCHES GRAPHERPATCH NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
+               POSTRELEASEPATCHES MODERNIZEPATCHES NC2021PATCHES GRAPHERPATCH NCMAPS NCHACKS 
+               NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
 (DECLARE%: DONTEVAL@LOAD 
 
 (RPAQQ NC.Files
@@ -112,19 +113,7 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
               GRAPHERPATCH NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
 
 
-(RPAQQ NC.AutoloadableFns (NC.CompactNoteFileToTarget NC.CompactNoteFileInPlace 
-                                     NC.ScavengerPhase1 NC.FindNextCardPart 
-                                     NC.ConvertNoteFileVersion2To3))
-
-(PUTPROPS NC.CompactNoteFileToTarget File NCCOMPACT)
-
-(PUTPROPS NC.CompactNoteFileInPlace File NCCOMPACT)
-
-(PUTPROPS NC.ScavengerPhase1 File NCREPAIR)
-
-(PUTPROPS NC.FindNextCardPart File NCREPAIR)
-
-(PUTPROPS NC.ConvertNoteFileVersion2To3 File NCCONVERTVERSION2TO3)
+(RPAQQ NC.AutoloadableFns NIL)
 )
 
 (RPAQQ NC.AutoloadStubFns (NCAddStub.SketchCard NCAddStub.GraphCard NCAddStub.BrowserCard 
@@ -180,7 +169,7 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 )
 (PUTPROPS NCCONFIG COPYRIGHT ("Venue & Xerox Corporation" 1987 1988 1989 1990 1993 1994 2020 2021))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (7033 10379 (NCAddStub.SketchCard 7043 . 7616) (NCAddStub.GraphCard 7618 . 8181) (
-NCAddStub.BrowserCard 8183 . 8760) (NCAddStub.SearchCard 8762 . 9261) (NCAddStub.DocumentCard 9263 . 
-9783) (NCAddStub.LinkIndexCard 9785 . 10377)))))
+  (FILEMAP (NIL (6643 9989 (NCAddStub.SketchCard 6653 . 7226) (NCAddStub.GraphCard 7228 . 7791) (
+NCAddStub.BrowserCard 7793 . 8370) (NCAddStub.SearchCard 8372 . 8871) (NCAddStub.DocumentCard 8873 . 
+9393) (NCAddStub.LinkIndexCard 9395 . 9987)))))
 STOP
