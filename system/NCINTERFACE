@@ -1,9 +1,9 @@
 (DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
-(FILECREATED "12-Jun-2021 12:47:43" {DSK}<home>pi>il>notecards>system>NCINTERFACE.;12 306389 
+(FILECREATED "30-Jul-2021 10:46:28" {DSK}<home>frank>il>notecards>system>NCINTERFACE.;2 306582 
 
-      changes to%:  (FNS NC.InstallTitleBarLeftMenu)
+      changes to%:  (VARS NCINTERFACECOMS)
 
-      previous date%: " 9-Jun-2021 14:17:38" {DSK}<home>pi>il>notecards>system>NCINTERFACE.;11)
+      previous date%: "12-Jun-2021 12:47:43" {DSK}<home>frank>il>notecards>system>NCINTERFACE.;1)
 
 
 (* ; "
@@ -15,7 +15,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 (RPAQQ NCINTERFACECOMS
        (
 
-(* ;;; "Internal variables")
+(* ;;; "Internal variables")
 
         (GLOBALVARS NC.NoticedNoteFilesMenuNewItem NC.NoticedNoteFilesMenu NC.CachedMenus 
                NC.NoteCardsIconPosition NC.SelectionInProgress NC.SelectedCards 
@@ -48,7 +48,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
                (NC.MaxFileNameChars 18))
         
 
-(* ;;; "Setup and top level interaction")
+(* ;;; "Setup and top level interaction")
 
         [DECLARE%: DONTEVAL@LOAD DONTCOPY EVAL@COMPILE (P (LOAD? (NC.FindFile 'FILEBROWSER NIL NIL T
                                                                         'LISPUSERSDIRECTORIES)
@@ -58,7 +58,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
              NC.PromptWindowOpenP)
         
 
-(* ;;; "Menus of all sorts")
+(* ;;; "Menus of all sorts")
 
         (INITVARS (NC.CachedMenus '(NC.NoteCardTypeMenu NC.LinkIconMiddleButtonMenu NC.CardOpsMenu 
                                           NC.NoteFileOpsMenu NC.OtherOpsMenu))
@@ -75,7 +75,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
              NC.MakeTEditReadWrite NC.MakeMenusReadOnly NC.MakeMenusReadWrite)
         
 
-(* ;;; "Selection Mechanism")
+(* ;;; "Selection Mechanism")
 
         (INITVARS (NC.SelectionInProgress NIL)
                (NC.CardImageObjFns (IMAGEFNSCREATE)))
@@ -85,27 +85,27 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
         (GLOBALVARS NC.CardImageObjFns)
         
 
-(* ;;; "Fix up Lisp")
+(* ;;; "Fix up Lisp")
 
         [INITADVISE (LOGOUT (NIL (BEFORE NIL (if (NULL (NC.LogoutAdvice))
                                                  then
                                                  (RETURN]
         
 
-(* ;;; "Stuff for creating and operating the NoteCards session icon.")
+(* ;;; "Stuff for creating and operating the NoteCards session icon.")
 
         (GLOBALVARS NC.CardOpsMenu NC.CardOpsItems NC.NoteFileOpsMenu NC.NoteFileOpsItems 
                NC.OtherOpsMenu NC.OtherOpsItems NC.NoteCardsIconBitmap)
         (INITVARS (NC.NoteCardsIconWindow NIL))
         
 
-(* ;;; "Bitmaps")
+(* ;;; "Bitmaps")
 
         (BITMAPS NC.NoteCardsIconBitmap NC.NewCardsIconBitmap NC.BoxesIconBitmap NC.NoteCardsIconMask
                NC.NoteCardsIconShrunkenBitmap NC.NoteCardsIconShrunkenMask)
         
 
-(* ;;; "")
+(* ;;; "")
 
         (FNS NC.NoteCardsWindowP NC.NoteCardsIconWindowP NC.MakeNoteCardsIcon NC.BringUpNoteCardsIcon
              NC.NoteCardsIconAfterMoveFn NC.FileBrowserMenu NC.ListOfNoteFilesMenu 
@@ -427,13 +427,13 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
              NC.MakeNewStyleNoteCardsIcon NC.MakeOldStyleNoteCardsIcon)
         
 
-(* ;;; "Command Menu interface to NC functions")
+(* ;;; "Command Menu interface to NC functions")
 
         (FNS NC.CloseNoteCards NC.CopyStructure NC.CloseStructure NC.DeleteStructure NC.MoveStructure
              )
         
 
-(* ;;; "NoteFile interface")
+(* ;;; "NoteFile interface")
 
         (FNS NC.NoteFileMenuWindowP NC.SetUpNoteFileInterface NC.ResetNoteFileInterface 
              NC.NoteFileIconButtonEventFn NC.NoteFileOperations NC.NoteFileIconMiddleButtonFn 
@@ -446,13 +446,13 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
                                                                     ]
         
 
-(* ;;; "Show NoteFile Indicators")
+(* ;;; "Show NoteFile Indicators")
 
         (FNS NC.ShowNoteFiles NC.AttachNoteFileName NC.MakeNoteFileNameIndicator 
              NC.NoteFileIndicatorWinHeight)
         
 
-(* ;;; "File Browser")
+(* ;;; "File Browser")
 
         (GLOBALVARS NC.FileBrowserMenuItemsToRemove NC.FileBrowserMenuItemsToAdd 
                NC.FileBrowserMenuItems NC.FileBrowserPatterns NC.FileBrowserDefaultPatterns)
@@ -523,7 +523,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
                                                                       ]
         
 
-(* ;;; "Build the menu items for notecards file browser.")
+(* ;;; "Build the menu items for notecards file browser.")
 
         [INITVARS (NC.FileBrowserMenuItems (APPEND NC.FileBrowserMenuItemsToAdd
                                                   (for MenuItem in FB.MENU.ITEMS when
@@ -542,10 +542,11 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
                                                                   NC.FileBrowserMenuItemsToKeep))
                                                        collect MenuItem]
         [INITVARS (NC.FileBrowserPatterns NIL)
-               (NC.FileBrowserDefaultPatterns '({DSK}*.NOTEFILE;*]
+               (NC.FileBrowserDefaultPatterns '({DSK}/HOME/IL/NOTECARDS/NOTEFILES/*.NOTEFILE;* 
+                                                      {DSK}*.NOTEFILE;*]
         
 
-(* ;;; "Functions called from file browser menu.")
+(* ;;; "Functions called from file browser menu.")
 
         (FNS NC.FileBrowserOpen NC.FileBrowserClose NC.FileBrowserCheckpoint NC.FileBrowserAbort 
              NC.FileBrowserCompact NC.FileBrowserInspect&Repair NC.FileBrowserExpunge 
@@ -765,7 +766,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 (* ;;; "Fix up Lisp")
 
 
-[LOADINITADVISE NC-ADVICE0167 (LOGOUT (NIL (BEFORE NIL (if (NULL (NC.LogoutAdvice))
+[LOADINITADVISE NC-ADVICE0111 (LOGOUT (NIL (BEFORE NIL (if (NULL (NC.LogoutAdvice))
                                                            then (RETURN]
 
 
@@ -1284,7 +1285,8 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 
 (RPAQ? NC.FileBrowserPatterns NIL)
 
-(RPAQ? NC.FileBrowserDefaultPatterns '({DSK}*.NOTEFILE;*))
+(RPAQ? NC.FileBrowserDefaultPatterns '({DSK}/HOME/IL/NOTECARDS/NOTEFILES/*.NOTEFILE;* 
+                                                 {DSK}*.NOTEFILE;*))
 
 
 
@@ -1325,42 +1327,42 @@ Done, but only ")                                                         (T "d
 (PUTPROPS NCINTERFACE COPYRIGHT ("Venue & Xerox Corporation" 1984 1985 1986 1987 1988 1989 1990 1993 
 1994 2020 2021))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (41736 69126 (NoteCards 41746 . 42118) (NC.MakeMainMenu 42120 . 51477) (NC.LogoutAdvice 
-51479 . 53612) (NC.AttachPromptWindow 53614 . 54890) (NC.AttachPromptWindowOffScreen 54892 . 55523) (
-NC.GETPROMPTWINDOW 55525 . 67558) (NC.MaxPromptWindowWidth 67560 . 68734) (NC.PromptWindowOpenP 68736
- . 69124)) (69514 128098 (NC.AskLinkLabel 69524 . 76151) (NC.AskNoteCardType 76153 . 80622) (
-NC.SortCardTypes 80624 . 83005) (NC.ExpandBars 83007 . 84552) (NC.ChooseTopLevelCard 84554 . 88684) (
-NC.RemoveSketchMenuItems 88686 . 89537) (NC.SelectionMenusWhenSelectedFn 89539 . 91315) (
-NC.InstallTitleBarButtonEventFn 91317 . 91962) (NC.InstallTitleBarLeftMenu 91964 . 93368) (
-NC.InstallCopyButtonEventFn 93370 . 93839) (NC.NoteFileTitleLeftWhenSelectedFn 93841 . 98482) (
-NC.MakeNoteFileIconOperationsMenus 98484 . 100965) (NC.ResetCachedMenus 100967 . 101396) (
-NC.CreateNoteFileMenuItems 101398 . 107784) (NC.GetNoteFileMenu 107786 . 108804) (NC.SetNoteFileMenu 
-108806 . 110055) (NC.PrintReadOnlyMsg 110057 . 113168) (NC.CopyMenu 113170 . 113907) (
-NC.ReadOnlyTEditSelFn 113909 . 114582) (NC.MakeTEditReadOnly 114584 . 119503) (NC.MakeTEditReadWrite 
-119505 . 120425) (NC.MakeMenusReadOnly 120427 . 125916) (NC.MakeMenusReadWrite 125918 . 128096)) (
-128226 159431 (NC.SelectNoteCards 128236 . 150468) (NC.BinLoopProcess 150470 . 151694) (
-NC.ZapBinLoopProcess 151696 . 152033) (NC.SelectNoteCardsCopyInsertFn 152035 . 153715) (
-NC.CopyButtonEventFn 153717 . 156242) (NC.ShrukenIconButtonEventFn 156244 . 159024) (NC.CardImageObjP 
-159026 . 159198) (NC.MakeCardImageObject 159200 . 159429)) (171055 185066 (NC.NoteCardsWindowP 171065
- . 171439) (NC.NoteCardsIconWindowP 171441 . 171708) (NC.MakeNoteCardsIcon 171710 . 172192) (
-NC.BringUpNoteCardsIcon 172194 . 173238) (NC.NoteCardsIconAfterMoveFn 173240 . 173861) (
-NC.FileBrowserMenu 173863 . 176978) (NC.ListOfNoteFilesMenu 176980 . 182518) (NC.CheckpointSession 
-182520 . 183444) (NC.CloseSession 183446 . 185064)) (203335 226215 (NC.RedisplayNoteCardsIconWindow 
-203345 . 204301) (NC.NoteCardsIconButtonEventFn 204303 . 207411) (NC.DoNoteFileOp 207413 . 216371) (
-NC.NoteCardsIconCursorEventFn 216373 . 217033) (NC.NoteCardsIconFn 217035 . 217426) (
-NC.ResetNoteCardsIcon 217428 . 218187) (NC.MakeNewStyleNoteCardsIcon 218189 . 221798) (
-NC.MakeOldStyleNoteCardsIcon 221800 . 226213)) (226273 239936 (NC.CloseNoteCards 226283 . 228958) (
-NC.CopyStructure 228960 . 232850) (NC.CloseStructure 232852 . 235680) (NC.DeleteStructure 235682 . 
-238678) (NC.MoveStructure 238680 . 239934)) (239974 274448 (NC.NoteFileMenuWindowP 239984 . 240325) (
-NC.SetUpNoteFileInterface 240327 . 251461) (NC.ResetNoteFileInterface 251463 . 255714) (
-NC.NoteFileIconButtonEventFn 255716 . 263116) (NC.NoteFileOperations 263118 . 265314) (
-NC.NoteFileIconMiddleButtonFn 265316 . 267433) (NC.PopUpNoteFileName 267435 . 268856) (
-NC.DisplayFileCapacity 268858 . 274446)) (275001 281385 (NC.ShowNoteFiles 275011 . 275331) (
-NC.AttachNoteFileName 275333 . 280430) (NC.MakeNoteFileNameIndicator 280432 . 281010) (
-NC.NoteFileIndicatorWinHeight 281012 . 281383)) (286984 305145 (NC.FileBrowserOpen 286994 . 288036) (
-NC.FileBrowserClose 288038 . 288930) (NC.FileBrowserCheckpoint 288932 . 289926) (NC.FileBrowserAbort 
-289928 . 290739) (NC.FileBrowserCompact 290741 . 298296) (NC.FileBrowserInspect&Repair 298298 . 299356
-) (NC.FileBrowserExpunge 299358 . 301631) (NC.GetFileBrowserPattern 301633 . 303072) (
-NC.FileBrowserRecomputeWithNewPattern 303074 . 304333) (NC.FindFileBrowserWinForPattern 304335 . 
-305143)) (305146 306086 (NC.FlashFileBrowserWin 305156 . 306084)))))
+  (FILEMAP (NIL (41832 69222 (NoteCards 41842 . 42214) (NC.MakeMainMenu 42216 . 51573) (NC.LogoutAdvice 
+51575 . 53708) (NC.AttachPromptWindow 53710 . 54986) (NC.AttachPromptWindowOffScreen 54988 . 55619) (
+NC.GETPROMPTWINDOW 55621 . 67654) (NC.MaxPromptWindowWidth 67656 . 68830) (NC.PromptWindowOpenP 68832
+ . 69220)) (69610 128194 (NC.AskLinkLabel 69620 . 76247) (NC.AskNoteCardType 76249 . 80718) (
+NC.SortCardTypes 80720 . 83101) (NC.ExpandBars 83103 . 84648) (NC.ChooseTopLevelCard 84650 . 88780) (
+NC.RemoveSketchMenuItems 88782 . 89633) (NC.SelectionMenusWhenSelectedFn 89635 . 91411) (
+NC.InstallTitleBarButtonEventFn 91413 . 92058) (NC.InstallTitleBarLeftMenu 92060 . 93464) (
+NC.InstallCopyButtonEventFn 93466 . 93935) (NC.NoteFileTitleLeftWhenSelectedFn 93937 . 98578) (
+NC.MakeNoteFileIconOperationsMenus 98580 . 101061) (NC.ResetCachedMenus 101063 . 101492) (
+NC.CreateNoteFileMenuItems 101494 . 107880) (NC.GetNoteFileMenu 107882 . 108900) (NC.SetNoteFileMenu 
+108902 . 110151) (NC.PrintReadOnlyMsg 110153 . 113264) (NC.CopyMenu 113266 . 114003) (
+NC.ReadOnlyTEditSelFn 114005 . 114678) (NC.MakeTEditReadOnly 114680 . 119599) (NC.MakeTEditReadWrite 
+119601 . 120521) (NC.MakeMenusReadOnly 120523 . 126012) (NC.MakeMenusReadWrite 126014 . 128192)) (
+128322 159527 (NC.SelectNoteCards 128332 . 150564) (NC.BinLoopProcess 150566 . 151790) (
+NC.ZapBinLoopProcess 151792 . 152129) (NC.SelectNoteCardsCopyInsertFn 152131 . 153811) (
+NC.CopyButtonEventFn 153813 . 156338) (NC.ShrukenIconButtonEventFn 156340 . 159120) (NC.CardImageObjP 
+159122 . 159294) (NC.MakeCardImageObject 159296 . 159525)) (171151 185162 (NC.NoteCardsWindowP 171161
+ . 171535) (NC.NoteCardsIconWindowP 171537 . 171804) (NC.MakeNoteCardsIcon 171806 . 172288) (
+NC.BringUpNoteCardsIcon 172290 . 173334) (NC.NoteCardsIconAfterMoveFn 173336 . 173957) (
+NC.FileBrowserMenu 173959 . 177074) (NC.ListOfNoteFilesMenu 177076 . 182614) (NC.CheckpointSession 
+182616 . 183540) (NC.CloseSession 183542 . 185160)) (203431 226311 (NC.RedisplayNoteCardsIconWindow 
+203441 . 204397) (NC.NoteCardsIconButtonEventFn 204399 . 207507) (NC.DoNoteFileOp 207509 . 216467) (
+NC.NoteCardsIconCursorEventFn 216469 . 217129) (NC.NoteCardsIconFn 217131 . 217522) (
+NC.ResetNoteCardsIcon 217524 . 218283) (NC.MakeNewStyleNoteCardsIcon 218285 . 221894) (
+NC.MakeOldStyleNoteCardsIcon 221896 . 226309)) (226369 240032 (NC.CloseNoteCards 226379 . 229054) (
+NC.CopyStructure 229056 . 232946) (NC.CloseStructure 232948 . 235776) (NC.DeleteStructure 235778 . 
+238774) (NC.MoveStructure 238776 . 240030)) (240070 274544 (NC.NoteFileMenuWindowP 240080 . 240421) (
+NC.SetUpNoteFileInterface 240423 . 251557) (NC.ResetNoteFileInterface 251559 . 255810) (
+NC.NoteFileIconButtonEventFn 255812 . 263212) (NC.NoteFileOperations 263214 . 265410) (
+NC.NoteFileIconMiddleButtonFn 265412 . 267529) (NC.PopUpNoteFileName 267531 . 268952) (
+NC.DisplayFileCapacity 268954 . 274542)) (275097 281481 (NC.ShowNoteFiles 275107 . 275427) (
+NC.AttachNoteFileName 275429 . 280526) (NC.MakeNoteFileNameIndicator 280528 . 281106) (
+NC.NoteFileIndicatorWinHeight 281108 . 281479)) (287177 305338 (NC.FileBrowserOpen 287187 . 288229) (
+NC.FileBrowserClose 288231 . 289123) (NC.FileBrowserCheckpoint 289125 . 290119) (NC.FileBrowserAbort 
+290121 . 290932) (NC.FileBrowserCompact 290934 . 298489) (NC.FileBrowserInspect&Repair 298491 . 299549
+) (NC.FileBrowserExpunge 299551 . 301824) (NC.GetFileBrowserPattern 301826 . 303265) (
+NC.FileBrowserRecomputeWithNewPattern 303267 . 304526) (NC.FindFileBrowserWinForPattern 304528 . 
+305336)) (305339 306279 (NC.FlashFileBrowserWin 305349 . 306277)))))
 STOP
