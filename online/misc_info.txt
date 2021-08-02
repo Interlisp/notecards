@@ -1,0 +1,18 @@
+ssh -i NoteCards001.pem ubuntu@54.183.135.10
+ 
+xpra start --video-scaling=off --exit-with-children=yes --bind-tcp=0.0.0.0:3222 --html=on --start-child "run-medley -full"
+
+xpra start --video-scaling=off --exit-with-children=yes --bind-tcp=0.0.0.0:3222 --html=on --start-child xterm
+
+ docker build -t notecards001 .
+
+docker run -it --rm --network host --name fgh001 notecards001 bash
+
+ docker run -it --rm --network host --name fgh001 notecards001 /home/il/bin/run-notecards
+
+docker run -d --rm --network host --name fgh001 --mount type=volume,source=0986AAB4,target=/home/il notecards001 /home/il/bin/run-xterm
+
+dev-27859221.okta.com
+client id: ***REMOVED***
+Client Secret: ***REMOVED***
+API Token: ***REMOVED***

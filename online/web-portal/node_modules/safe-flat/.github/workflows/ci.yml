@@ -1,0 +1,31 @@
+name: Build
+# This workflow is triggered on pushes to the repository.
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-16.04
+    strategy:
+      matrix:
+        node: [ '12' ]
+    name: Node ${{ matrix.node }}
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Test
+        env:
+          COVERALLS_SERVICE_NAME: GitHub Actions CI
+          COVERALLS_GIT_BRANCH: ${{ steps.extract_branch.outputs.branch }}
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: |
+          npm ci
+          npm test
+          npm run lint
+          npm run coverage

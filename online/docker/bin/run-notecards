@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /home/il/medley
+xpra start --daemon=no --video-scaling=off --exit-with-children=yes --bind-tcp=0.0.0.0:${PORT} --html=on --server-idle-timeout=300  --start-child="./run-medley -sc 1024x808 -g 1024x808 /home/il/notecards/NOTECARDS.SYSOUT"
+

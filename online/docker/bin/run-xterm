@@ -1,0 +1,2 @@
+#!/bin/bash
+xpra start --daemon=no --video-scaling=off --exit-with-children=yes --bind-tcp=0.0.0.0:${PORT} --html=on --start-child "xterm"

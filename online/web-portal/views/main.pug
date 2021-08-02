@@ -1,0 +1,37 @@
+extends layout
+
+block variables
+  - var title = "Notecards Online"
+
+block headeradds
+
+
+block content
+  h2.text-center Notecards Online
+
+  .row
+      div(id="logged-in-as").jumbotron.text-center
+         != 'Logged in as: ' + login
+
+  .row
+      .jumbotron.text-center
+         button(type="button" onclick='window.location.assign("/notecards/start");').main-button Start Notecards
+
+  //-.row
+      .jumbotron.text-center
+         button(type="button" onclick='window.location.assign("/notecards/xterm");').main-button Start Xterm
+
+  .row
+      .jumbotron.text-center
+         button(type="button" onclick='alert("Not yet implemented.");').main-button Upload Notefile
+
+  .row
+      .jumbotron.text-center
+         button(type="button" onclick='alert("Not yet implemented.");').main-button Download Notefile
+
+  .row
+      .jumbotron.text-center
+          form(method="POST" action="/logout")
+            button(type="submit" id="button_to_link").main-button Logout
+
+
