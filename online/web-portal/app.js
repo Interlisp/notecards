@@ -5,6 +5,8 @@ var logger = require('morgan');
 var session = require("express-session");
 var okta = require("@okta/okta-sdk-nodejs");
 var ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
+var oktaEnv = require("./okta_env");
+
 
 const publicRouter = require("./routes/public");
 const usersRouter = require("./routes/users");
@@ -12,13 +14,13 @@ const notecardsRouter = require("./routes/notecards");
 
 var app = express();
 var oktaClient = new okta.Client({
-  orgUrl: 'https://dev-27859221.okta.com',
-  token: '***REMOVED***'
+  orgUrl: oktaEnv.orgUrl,
+  token: oktaEnv.token
 });
 const oidc = new ExpressOIDC({
-  issuer: "https://dev-27859221.okta.com/oauth2/default",
-  client_id: "***REMOVED***",
-  client_secret: "***REMOVED***",
+  issuer: oktaEnv.issuer,
+  client_id: oktaEnv.client_id,
+  client_secret: oktaEnv.client_secret,
   redirect_uri: 'http://notecards.online/authorization-code/callback',
   appBaseUrl:'http://notecards.online',
   scope: "openid profile",
@@ -27,7 +29,6 @@ const oidc = new ExpressOIDC({
       path: "/users/login"
     },
     loginCallback: {
-//      afterCallback: "/notecards/start"
         afterCallback: "/main"
     }
   }
