@@ -35,7 +35,7 @@ router.get("/start", (req, res) => {
                               + ` --name ${emailish}`
                               + ` --mount type=volume,source=${emailish},target=/home/il/notecards/notefiles`
                               + ` --env PORT=${port}`
-                              + ` notecards003`
+                              + ` notecards004`
                               + ` /home/il/bin/run-notecards`)
 	             .then(data => { res.redirect(`loading?port=${port}`); })
 	             .catch(err => { console.log(err); res.send(err.stderr); })
@@ -56,7 +56,7 @@ router.get("/xterm", (req, res) => {
                               + ` --name ${emailish}`
                               + ` --mount type=volume,source=${emailish},target=/home/il/notecards/notefiles`
                               + ` --env PORT=${port}`
-                              + ` notecards003`
+                              + ` notecards004`
                               + ` /home/il/bin/run-xterm`)
 	             .then(data => { res.redirect(`loading?port=${port}`); })
 	             .catch(err => { console.log(err); res.send(err.stderr); })
@@ -72,7 +72,7 @@ router.get("/loading", (req, res) => {
 // load xpra HTML5 client
 router.get('/xpra-client',
      (req, res, next) =>
-         { res.sendFile("/home/ubuntu/notecards_online/web-portal/xpra/index.html"); }
+         { res.sendFile("/home/ubuntu/il/notecards/online/web-portal/xpra/index.html"); }
 );
 
 

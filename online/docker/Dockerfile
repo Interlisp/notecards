@@ -16,8 +16,5 @@ RUN mkdir /home/il
 COPY medley/ /home/il/medley
 COPY maiko/ /home/il/maiko
 COPY notecards/ /home/il/notecards
-COPY bin/ /home/il/bin
-#
-COPY xpra/Client.js /usr/share/xpra/www/js
-COPY xpra/index.html /usr/share/xpra/www
+COPY notecards/online/docker/scripts /home/il/bin
 

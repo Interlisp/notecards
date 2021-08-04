@@ -1,0 +1,15 @@
+[Unit]
+Description=Notecards Online Service (nodejs on port 80)
+After=network.target
+Requires=xpra.socket
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/il/notecards/online/web-portal
+ExecStart=/usr/bin/npm start
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
