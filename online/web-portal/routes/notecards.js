@@ -72,7 +72,9 @@ router.get("/loading", (req, res) => {
 // load xpra HTML5 client
 router.get('/xpra-client',
      (req, res, next) =>
-         { res.sendFile("/home/ubuntu/il/notecards/online/web-portal/xpra/index.html"); }
+	 // this will redirect to notecards/index.html, which will be picked up by the use static path
+	 // specified above (which points to xpra subdir)
+         { res.redirect("index.html"); }
 );
 
 
