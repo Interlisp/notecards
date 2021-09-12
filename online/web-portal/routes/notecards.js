@@ -16,16 +16,19 @@ const docker = new Docker(options);
 
 const badchars = new RegExp("[!#$%&'*+/=?^`{|}~]", "g");
 
-var port = 2999;
+var port = (process.env.DEV_OR_PROD && (process.env.DEV_OR_PROD == "dev")) ? 6999 : 2999;
+const port_min = port;
+const port_max = port + 2000; 
 
 // css and js file for xpra
-router.use(express.static(path.join(__dirname, '..', 'xpra')));
+const xpra_path = path.join(__dirname, '..', 'xpra');
+router.use(express.static(xpra_path));
 
 // start notecards
 router.get("/start", (req, res) => {
    const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
    port = port + 1;
-   if (port > 4999) port = 3000;
+   if (port > port_max) port = port_min;
    docker
         .command(`container kill ${emailish}`)
 	.finally(() =>
@@ -46,7 +49,7 @@ router.get("/start", (req, res) => {
 router.get("/xterm", (req, res) => {
    const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
    port = port + 1;
-   if (port > 4999) port = 3000;
+   if (port > port_max) port = port_min;
    docker
         .command(`container kill ${emailish}`)
 	.finally(() =>
@@ -72,9 +75,7 @@ router.get("/loading", (req, res) => {
 // load xpra HTML5 client
 router.get('/xpra-client',
      (req, res, next) =>
-	 // this will redirect to notecards/index.html, which will be picked up by the use static path
-	 // specified above (which points to xpra subdir)
-         { res.redirect("index.html"); }
+	   { res.sendFile(path.join(xpra_path, 'index.html')); }
 );
 
 
