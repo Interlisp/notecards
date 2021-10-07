@@ -1,0 +1,21 @@
+{
+  "name": "web-portal",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "PORT=80 node ./bin/www"
+  },
+  "dependencies": {
+    "@okta/oidc-middleware": "^4.1.0",
+    "@okta/okta-sdk-nodejs": "^5.0.0",
+    "cookie-parser": "*",
+    "debug": "^4.3.2",
+    "docker-cli-js": "^2.8.0",
+    "express": "^4.17.1",
+    "express-session": "*",
+    "http-errors": "^1.8.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.3",
+    "pug": "^3.0.2"
+  }
+}

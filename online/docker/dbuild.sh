@@ -7,8 +7,8 @@
 #
 CDIR=$(pwd)
 if [ "X${1}X" == "XX" ]; then
-    NAME=notecards004
+    NAME=notecards-dev
 else
-    NAME-$1
-fi 
-docker build -t ${NAME} -f ${CDIR}/Dockerfile /home/ubuntu/il
+    NAME=$1
+fi
+docker build --no-cache -t ${NAME} -f ${CDIR}/Dockerfile /home/ubuntu/il

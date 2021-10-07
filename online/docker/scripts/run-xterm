@@ -1,2 +1,5 @@
 #!/bin/bash
-xpra start --daemon=no --video-scaling=off --exit-with-children=yes --bind-tcp=0.0.0.0:${PORT} --html=on --start-child "xterm"
+#xpra start --daemon=no --video-scaling=off --exit-with-children=yes --bind-tcp=0.0.0.0:${PORT} --html=on --start-child "xterm"
+/usr/bin/websockify --daemon ${PORT} localhost:1${PORT}
+/usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} :0 &
+DISPLAY=:0 /usr/bin/xterm

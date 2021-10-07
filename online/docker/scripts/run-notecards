@@ -1,4 +1,16 @@
 #!/bin/bash
-cd /home/il/medley
-xpra start --daemon=no --video-scaling=off --exit-with-children=yes --bind-tcp=0.0.0.0:${PORT} --html=on --server-idle-timeout=300  --start-child="./run-medley -sc 1024x808 -g 1024x808 /home/il/notecards/NOTECARDS.SYSOUT"
-
+cd /app/medley
+if [ $# -gt 0 ]; then
+	width=$1
+else
+	width=1024
+fi
+if [$# -gt 1 ]; then
+	height=$2
+else
+	height=808
+fi
+#xpra start --daemon=no --video-scaling=off --exit-with-children=yes --bind-tcp=0.0.0.0:${PORT} --html=on --server-idle-timeout=300  --start-child="./run-medley -sc ${width}x${height} -g ${width}x${height} /home/il/notecards/NOTECARDS.SYSOUT"
+/usr/bin/websockify --daemon ${PORT} localhost:1${PORT}
+/usr/bin/Xvnc -nolisten tcp -geometry ${width}x${height} -rfbport 1${PORT} -localhost :0 &
+DISPLAY=:0 PATH="/app/maiko:$PATH" ./run-medley -g ${width}x${height} -sc ${width}x${height} /home/medley/notecards/NOTECARDS.SYSOUT

@@ -1,0 +1,189 @@
+extends layout
+
+block variables
+    - var title = "Notecards Online"
+
+block headeradds
+
+    link(rel="stylesheet", href="/stylesheets/modal.css")
+    
+    script.
+        window.addEventListener('load', (event) => {
+            const local_store = window.localStorage;
+            document.getElementById("screen-width").value = local_store.getItem("screen_width") || 1024;
+            document.getElementById("screen-height").value = local_store.getItem("screen_height") || 808;
+        });
+
+    script.
+        function start_notecards () {
+            const local_store = window.localStorage;
+            const screen_width = document.getElementById("screen-width").value;
+            const screen_height = document.getElementById("screen-height").value;
+            local_store.setItem("screen_width", screen_width);
+            local_store.setItem("screen_height", screen_height);
+            window.location.assign(`/notecards/start?screen_width=${screen_width}&screen_height=${screen_height}`);
+        }
+
+    script.
+        function upload_onchange() {
+            upload_submit();
+        }
+
+    script.
+        function upload_submit() {
+            const form = document.getElementById("upload_form");
+            const formData = new FormData(form);
+            const old_cursor = document.body.style.cursor;
+            document.body.style.cursor = "progress";
+            fetch("/notecards/upload_notefile", {
+                    body: formData,
+                    method: "POST"
+            })
+            .then(response => {
+                        var responseText	= "";		
+                        const reader = response.body.getReader();
+                        reader.read()
+                        .then(function accumulate_text({ done, value }) { 
+                                responseText += (new TextDecoder("utf-8")).decode(value);
+                                if(done) {
+                                    document.body.style.cursor = old_cursor;                      
+                                    setTimeout(()=>{alert('"' + responseText + '"' + ' uploaded.');}, 100);
+                                    return;
+                                }
+                                return reader.read().then(accumulate_text);				
+                        });
+            })
+            .catch(err => { alert(err); });
+        }
+
+    script.
+        function download_notefile() {
+            fetch("notecards/download_list", {method: "GET"})
+            .then(response => {
+                    var responseText	= "";		
+                    const reader = response.body.getReader();
+                    reader.read()
+                    .then(function accumulate_text({ done, value }) { 
+                                responseText += (new TextDecoder("utf-8")).decode(value);
+                                if(done) {
+                                    var files = JSON.parse(responseText);
+                                    if(files[files.length - 1] == "") files = files.slice(0, -1);
+                                    list_notefiles(files);
+                                    return;
+                                }
+                                else return reader.read().then(accumulate_text);				
+                    });
+            })
+            .catch(err => { alert(err); });
+        }
+
+    script.       
+        function list_notefiles(files) {
+            // Get the modal
+            const modal = document.getElementById('notefilesModal');
+            // Get the <span> element that closes the modal
+            const cancel_btn = document.getElementById("cancel_btn");
+            // Add the files to the modal
+            const notefiles_form = document.getElementById('notefiles_form');
+            if(notefiles_form.children.length > 0) Array.from(notefiles_form.children).forEach((el, idx) => { el.remove(); });
+            files.forEach((file, index) => {
+                            const item = document.createElement("input");
+                            item.type = "radio";
+                            item.id = "notefile" + index;
+                            item.name = "notefile"
+                            notefiles_form.appendChild(item);
+                            const label = document.createElement("label");
+                            label.htmlFor = item.id;
+                            label.innerHTML = file;
+                            notefiles_form.appendChild(label);
+                            const br = document.createElement("br");
+                            notefiles_form.appendChild(br);
+            });
+            // Show the modal
+            modal.style.display = "block";
+            // Scroll list to top
+            notefiles_form.scroll({ top:0, behavior:'auto' });
+ 
+            // When the user clicks on close (x), close the modal
+            cancel_btn.onclick = function() {
+                modal.style.display = "none";
+            }            
+            
+            // When the user clicks on download button, do the downloadsl
+            download_btn.onclick = function() {
+                modal.style.display = "none";
+                const notefiles_form = document.getElementById('notefiles_form');
+                Array.from(notefiles_form.children).forEach((el, i, nl) => {
+                            if((el.nodeName == "INPUT") && el.checked) {
+                                const file = nl[i+1].innerHTML;
+                                do_download(file);
+                            }
+                });
+
+            }
+            
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }            
+        }
+        
+    script.
+        function do_download(file) {
+            const a = document.createElement('a');
+            a.href = `notecards/download_file?file=${file}`;
+            a.download = "";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+
+block content
+    h2.text-center Notecards Online
+    
+    .row
+        div(id="logged-in-as").jumbotron.text-center
+            != 'Logged in as: ' + login
+    
+    .row
+        .jumbotron.text-center
+            button(type="button" onclick='start_notecards();').main-button Start Notecards
+            div(id="screen-size-div")
+                label with Screen Width: 
+                    input(type="number", id="screen-width", value=1024)
+                label and Screen Height: 
+                    input(type="number", id="screen-height", value=808)
+    
+    .row
+      .jumbotron.text-center
+         button(type="button" onclick='window.location.assign("/notecards/xterm");').main-button Start Xterm
+    
+    .row
+        .jumbotron.text-center
+            button(type="button" onclick='document.getElementById("notefile").click();').main-button Upload Notefile
+            form(enctype="multipart/form-data", id="upload_form")
+                input(type="file", id="notefile", name="notefile", style="display:none" onchange="upload_onchange()", accept=".notefile")
+      
+    .row
+        .jumbotron.text-center
+            form(method="GET" action="javascript:download_notefile();")
+                button(type="submit").main-button Download Notefile
+    
+    .row
+        .jumbotron.text-center
+            form(method="POST" action="/logout")
+                button(type="submit" id="button_to_link").main-button Logout
+
+    div(id="notefilesModal", class="modal")
+        div(class="modal-content")
+            .jumbotron.text-center
+                p(id="modal-title") Select Notefile to be downloaded
+                div(id="notefiles_form")
+                div(id="modal-buttons")
+                    button(id="download_btn").modal-button Download
+                    span(id="modal_btn_spacer") &nbsp;
+                    button(id="cancel_btn").modal-button Cancel
+                
