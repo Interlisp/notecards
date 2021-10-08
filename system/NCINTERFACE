@@ -1,9 +1,9 @@
-(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
-(FILECREATED "30-Jul-2021 10:46:28" {DSK}<home>frank>il>notecards>system>NCINTERFACE.;2 306582 
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+(FILECREATED " 7-Oct-2021 17:19:01" {DSK}<home>medley>notecards>system>NCINTERFACE.;4 306264 
 
-      changes to%:  (VARS NCINTERFACECOMS)
+      changes to%:  (FNS NC.InstallTitleBarButtonEventFn NC.InstallTitleBarLeftMenu)
 
-      previous date%: "12-Jun-2021 12:47:43" {DSK}<home>frank>il>notecards>system>NCINTERFACE.;1)
+      previous date%: "30-Jul-2021 10:46:28" {DSK}<home>medley>notecards>system>NCINTERFACE.;3)
 
 
 (* ; "
@@ -662,33 +662,27 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 (NC.SelectionMenusWhenSelectedFn  [LAMBDA (Item Menu Button)                                 (* ;                                                            "Edited 13-Dec-88 14:13 by krivacic")(* ;;; "rht 2/15/85: Added handler for Undo.")(* ;;; "fgh 12/20/85 Updated for use with 1.3 selection mechanism.")(* ;;; "rht & pmi 12/12/86: Now finds promptwindow using the MAINWINDOW windowprop rather than the MAINWINDOW function.")(* ;;; "rht 3/23/87: Now looks for PromptWindow on SelectionPromptWindow instead of looking for main window.")(* ;;; "rg 4/1/87 changed CANCELLED to DON'T")    (LET [(PromptWindow (WINDOWPROP (WFROMMENU Menu)                               'SelectionPromptWindow]         (SELECTQ (CAR Item)             ((Done)                   [WINDOWPROP PromptWindow 'SelectedCards (CONS 'DONE (WINDOWPROP PromptWindow                                                                             'SelectedCards])             ((Abort Cancel)                   (WINDOWPROP PromptWindow 'SelectedCards 'DON'T))             (New% Card [WINDOWPROP PromptWindow 'SelectedCards (CONS '*New% Card*                                                                      (WINDOWPROP PromptWindow                                                                             'SelectedCards])             (NoSource (WINDOWPROP PromptWindow 'SelectedCards (LIST 'NC00000)))             (Undo [WINDOWPROP PromptWindow 'SelectedCards (CONS '*Undo% Selection*                                                                 (WINDOWPROP PromptWindow                                                                        'SelectedCards])             NIL)         (NOTIFY.EVENT (WINDOWPROP PromptWindow 'CopyInsertEvent])
 
 (NC.InstallTitleBarButtonEventFn
-  [LAMBDA (Window TitleBarButtonEventFn)                 (* ; "Edited  9-Jun-2021 14:17 by pi")
+  [LAMBDA (Window TitleBarButtonEventFn)              (* ; "Edited  7-Oct-2021 13:17 by medley")
 
-         (* * Save the old BUTTONEVENTFN and replace with ours.)
+         (* * Save the old BUTTONEVENTFN and replace with ours.)
 
-         (* * fgh 2021-06-09 Added support for the MODERNIZE lispusers package which 
-       alters how the left button handling work within the title bar.)
+         (* * fgh 2021-06-09 Added support for the MODERNIZE lispusers package which 
+       alters how the left button handling work within the title bar.)
 
     (OR (EQ (WINDOWPROP Window 'BUTTONEVENTFN)
             TitleBarButtonEventFn)
         (WINDOWPROP Window 'OLDBUTTONEVENTFN (WINDOWPROP Window 'BUTTONEVENTFN TitleBarButtonEventFn)
                ))
     (AND (GETD 'MODERNWINDOW)
-         (MODERNWINDOW Window NIL])
+         (MODERNWINDOW Window NIL NC.ModernizeTITLEPROPORTION])
 
 (NC.InstallTitleBarLeftMenu
-  [LAMBDA (Window CardType)                              (* ; "Edited 12-Jun-2021 12:37 by pi")
+  [LAMBDA (Window CardType)                           (* ; "Edited  7-Oct-2021 15:33 by medley")
 
-         (* * Make a menu from the CardType's LeftButtonMenuItems and install on 
-       windowprop.)
+         (* * Make a menu from the CardType's LeftButtonMenuItems and install on 
+       windowprop.)
 
-         (* * pmi 3/25/87%: Added NC.MenuFont to all menus)
-
-         (* * fgh 2021-06-09 Convenient place to add WINDOWPROP to control the left 
-       button title bar actions of the MODERNIZE lispusers package.
-       Added here rather than in NC.InstallTitleBarButtonEventFn because not all card 
-       types use this latter function -
-       specifically TEdit-based cards do not.)
+         (* * pmi 3/25/87%: Added NC.MenuFont to all menus)
 
     (DECLARE (GLOBALVARS NC.MenuFont))
     (WINDOWPROP Window 'TitleBarLeftButtonMenu (create MENU
@@ -698,8 +692,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
                                                       MENUFONT _ NC.MenuFont
                                                       ITEMHEIGHT _ (IPLUS (FONTPROP NC.MenuFont
                                                                                  'HEIGHT)
-                                                                          1)))
-    (WINDOWPROP Window 'MODERN-STYLE2 0.3])
+                                                                          1])
 
 (NC.InstallCopyButtonEventFn  [LAMBDA (Window)                                           (* rht%: "13-May-87 10:52")         (* * Save the current COPYBUTTONEVENTFN and stash ours.)    (OR (EQ (WINDOWPROP Window 'COPYBUTTONEVENTFN)            (FUNCTION NC.CopyButtonEventFn))        (WINDOWPROP Window 'OldCopyButtonEventFn (WINDOWPROP Window 'COPYBUTTONEVENTFN                                                        (FUNCTION NC.CopyButtonEventFn])
 
@@ -766,7 +759,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 (* ;;; "Fix up Lisp")
 
 
-[LOADINITADVISE NC-ADVICE0111 (LOGOUT (NIL (BEFORE NIL (if (NULL (NC.LogoutAdvice))
+[LOADINITADVISE NC-ADVICE0140 (LOGOUT (NIL (BEFORE NIL (if (NULL (NC.LogoutAdvice))
                                                            then (RETURN]
 
 
@@ -1327,42 +1320,42 @@ Done, but only ")                                                         (T "d
 (PUTPROPS NCINTERFACE COPYRIGHT ("Venue & Xerox Corporation" 1984 1985 1986 1987 1988 1989 1990 1993 
 1994 2020 2021))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (41832 69222 (NoteCards 41842 . 42214) (NC.MakeMainMenu 42216 . 51573) (NC.LogoutAdvice 
-51575 . 53708) (NC.AttachPromptWindow 53710 . 54986) (NC.AttachPromptWindowOffScreen 54988 . 55619) (
-NC.GETPROMPTWINDOW 55621 . 67654) (NC.MaxPromptWindowWidth 67656 . 68830) (NC.PromptWindowOpenP 68832
- . 69220)) (69610 128194 (NC.AskLinkLabel 69620 . 76247) (NC.AskNoteCardType 76249 . 80718) (
-NC.SortCardTypes 80720 . 83101) (NC.ExpandBars 83103 . 84648) (NC.ChooseTopLevelCard 84650 . 88780) (
-NC.RemoveSketchMenuItems 88782 . 89633) (NC.SelectionMenusWhenSelectedFn 89635 . 91411) (
-NC.InstallTitleBarButtonEventFn 91413 . 92058) (NC.InstallTitleBarLeftMenu 92060 . 93464) (
-NC.InstallCopyButtonEventFn 93466 . 93935) (NC.NoteFileTitleLeftWhenSelectedFn 93937 . 98578) (
-NC.MakeNoteFileIconOperationsMenus 98580 . 101061) (NC.ResetCachedMenus 101063 . 101492) (
-NC.CreateNoteFileMenuItems 101494 . 107880) (NC.GetNoteFileMenu 107882 . 108900) (NC.SetNoteFileMenu 
-108902 . 110151) (NC.PrintReadOnlyMsg 110153 . 113264) (NC.CopyMenu 113266 . 114003) (
-NC.ReadOnlyTEditSelFn 114005 . 114678) (NC.MakeTEditReadOnly 114680 . 119599) (NC.MakeTEditReadWrite 
-119601 . 120521) (NC.MakeMenusReadOnly 120523 . 126012) (NC.MakeMenusReadWrite 126014 . 128192)) (
-128322 159527 (NC.SelectNoteCards 128332 . 150564) (NC.BinLoopProcess 150566 . 151790) (
-NC.ZapBinLoopProcess 151792 . 152129) (NC.SelectNoteCardsCopyInsertFn 152131 . 153811) (
-NC.CopyButtonEventFn 153813 . 156338) (NC.ShrukenIconButtonEventFn 156340 . 159120) (NC.CardImageObjP 
-159122 . 159294) (NC.MakeCardImageObject 159296 . 159525)) (171151 185162 (NC.NoteCardsWindowP 171161
- . 171535) (NC.NoteCardsIconWindowP 171537 . 171804) (NC.MakeNoteCardsIcon 171806 . 172288) (
-NC.BringUpNoteCardsIcon 172290 . 173334) (NC.NoteCardsIconAfterMoveFn 173336 . 173957) (
-NC.FileBrowserMenu 173959 . 177074) (NC.ListOfNoteFilesMenu 177076 . 182614) (NC.CheckpointSession 
-182616 . 183540) (NC.CloseSession 183542 . 185160)) (203431 226311 (NC.RedisplayNoteCardsIconWindow 
-203441 . 204397) (NC.NoteCardsIconButtonEventFn 204399 . 207507) (NC.DoNoteFileOp 207509 . 216467) (
-NC.NoteCardsIconCursorEventFn 216469 . 217129) (NC.NoteCardsIconFn 217131 . 217522) (
-NC.ResetNoteCardsIcon 217524 . 218283) (NC.MakeNewStyleNoteCardsIcon 218285 . 221894) (
-NC.MakeOldStyleNoteCardsIcon 221896 . 226309)) (226369 240032 (NC.CloseNoteCards 226379 . 229054) (
-NC.CopyStructure 229056 . 232946) (NC.CloseStructure 232948 . 235776) (NC.DeleteStructure 235778 . 
-238774) (NC.MoveStructure 238776 . 240030)) (240070 274544 (NC.NoteFileMenuWindowP 240080 . 240421) (
-NC.SetUpNoteFileInterface 240423 . 251557) (NC.ResetNoteFileInterface 251559 . 255810) (
-NC.NoteFileIconButtonEventFn 255812 . 263212) (NC.NoteFileOperations 263214 . 265410) (
-NC.NoteFileIconMiddleButtonFn 265412 . 267529) (NC.PopUpNoteFileName 267531 . 268952) (
-NC.DisplayFileCapacity 268954 . 274542)) (275097 281481 (NC.ShowNoteFiles 275107 . 275427) (
-NC.AttachNoteFileName 275429 . 280526) (NC.MakeNoteFileNameIndicator 280528 . 281106) (
-NC.NoteFileIndicatorWinHeight 281108 . 281479)) (287177 305338 (NC.FileBrowserOpen 287187 . 288229) (
-NC.FileBrowserClose 288231 . 289123) (NC.FileBrowserCheckpoint 289125 . 290119) (NC.FileBrowserAbort 
-290121 . 290932) (NC.FileBrowserCompact 290934 . 298489) (NC.FileBrowserInspect&Repair 298491 . 299549
-) (NC.FileBrowserExpunge 299551 . 301824) (NC.GetFileBrowserPattern 301826 . 303265) (
-NC.FileBrowserRecomputeWithNewPattern 303267 . 304526) (NC.FindFileBrowserWinForPattern 304528 . 
-305336)) (305339 306279 (NC.FlashFileBrowserWin 305349 . 306277)))))
+  (FILEMAP (NIL (41877 69267 (NoteCards 41887 . 42259) (NC.MakeMainMenu 42261 . 51618) (NC.LogoutAdvice 
+51620 . 53753) (NC.AttachPromptWindow 53755 . 55031) (NC.AttachPromptWindowOffScreen 55033 . 55664) (
+NC.GETPROMPTWINDOW 55666 . 67699) (NC.MaxPromptWindowWidth 67701 . 68875) (NC.PromptWindowOpenP 68877
+ . 69265)) (69655 127876 (NC.AskLinkLabel 69665 . 76292) (NC.AskNoteCardType 76294 . 80763) (
+NC.SortCardTypes 80765 . 83146) (NC.ExpandBars 83148 . 84693) (NC.ChooseTopLevelCard 84695 . 88825) (
+NC.RemoveSketchMenuItems 88827 . 89678) (NC.SelectionMenusWhenSelectedFn 89680 . 91456) (
+NC.InstallTitleBarButtonEventFn 91458 . 92132) (NC.InstallTitleBarLeftMenu 92134 . 93146) (
+NC.InstallCopyButtonEventFn 93148 . 93617) (NC.NoteFileTitleLeftWhenSelectedFn 93619 . 98260) (
+NC.MakeNoteFileIconOperationsMenus 98262 . 100743) (NC.ResetCachedMenus 100745 . 101174) (
+NC.CreateNoteFileMenuItems 101176 . 107562) (NC.GetNoteFileMenu 107564 . 108582) (NC.SetNoteFileMenu 
+108584 . 109833) (NC.PrintReadOnlyMsg 109835 . 112946) (NC.CopyMenu 112948 . 113685) (
+NC.ReadOnlyTEditSelFn 113687 . 114360) (NC.MakeTEditReadOnly 114362 . 119281) (NC.MakeTEditReadWrite 
+119283 . 120203) (NC.MakeMenusReadOnly 120205 . 125694) (NC.MakeMenusReadWrite 125696 . 127874)) (
+128004 159209 (NC.SelectNoteCards 128014 . 150246) (NC.BinLoopProcess 150248 . 151472) (
+NC.ZapBinLoopProcess 151474 . 151811) (NC.SelectNoteCardsCopyInsertFn 151813 . 153493) (
+NC.CopyButtonEventFn 153495 . 156020) (NC.ShrukenIconButtonEventFn 156022 . 158802) (NC.CardImageObjP 
+158804 . 158976) (NC.MakeCardImageObject 158978 . 159207)) (170833 184844 (NC.NoteCardsWindowP 170843
+ . 171217) (NC.NoteCardsIconWindowP 171219 . 171486) (NC.MakeNoteCardsIcon 171488 . 171970) (
+NC.BringUpNoteCardsIcon 171972 . 173016) (NC.NoteCardsIconAfterMoveFn 173018 . 173639) (
+NC.FileBrowserMenu 173641 . 176756) (NC.ListOfNoteFilesMenu 176758 . 182296) (NC.CheckpointSession 
+182298 . 183222) (NC.CloseSession 183224 . 184842)) (203113 225993 (NC.RedisplayNoteCardsIconWindow 
+203123 . 204079) (NC.NoteCardsIconButtonEventFn 204081 . 207189) (NC.DoNoteFileOp 207191 . 216149) (
+NC.NoteCardsIconCursorEventFn 216151 . 216811) (NC.NoteCardsIconFn 216813 . 217204) (
+NC.ResetNoteCardsIcon 217206 . 217965) (NC.MakeNewStyleNoteCardsIcon 217967 . 221576) (
+NC.MakeOldStyleNoteCardsIcon 221578 . 225991)) (226051 239714 (NC.CloseNoteCards 226061 . 228736) (
+NC.CopyStructure 228738 . 232628) (NC.CloseStructure 232630 . 235458) (NC.DeleteStructure 235460 . 
+238456) (NC.MoveStructure 238458 . 239712)) (239752 274226 (NC.NoteFileMenuWindowP 239762 . 240103) (
+NC.SetUpNoteFileInterface 240105 . 251239) (NC.ResetNoteFileInterface 251241 . 255492) (
+NC.NoteFileIconButtonEventFn 255494 . 262894) (NC.NoteFileOperations 262896 . 265092) (
+NC.NoteFileIconMiddleButtonFn 265094 . 267211) (NC.PopUpNoteFileName 267213 . 268634) (
+NC.DisplayFileCapacity 268636 . 274224)) (274779 281163 (NC.ShowNoteFiles 274789 . 275109) (
+NC.AttachNoteFileName 275111 . 280208) (NC.MakeNoteFileNameIndicator 280210 . 280788) (
+NC.NoteFileIndicatorWinHeight 280790 . 281161)) (286859 305020 (NC.FileBrowserOpen 286869 . 287911) (
+NC.FileBrowserClose 287913 . 288805) (NC.FileBrowserCheckpoint 288807 . 289801) (NC.FileBrowserAbort 
+289803 . 290614) (NC.FileBrowserCompact 290616 . 298171) (NC.FileBrowserInspect&Repair 298173 . 299231
+) (NC.FileBrowserExpunge 299233 . 301506) (NC.GetFileBrowserPattern 301508 . 302947) (
+NC.FileBrowserRecomputeWithNewPattern 302949 . 304208) (NC.FindFileBrowserWinForPattern 304210 . 
+305018)) (305021 305961 (NC.FlashFileBrowserWin 305031 . 305959)))))
 STOP

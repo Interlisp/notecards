@@ -1,10 +1,11 @@
-(DEFINE-FILE-INFO READTABLE "XCL" PACKAGE "INTERLISP")
-(FILECREATED " 2-Jul-2021 00:00:07" |{DSK}<home>frank>il>notecards>patches>NC2021PATCHES.;3| 873    
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "XCL" BASE 10)
+(FILECREATED " 7-Oct-2021 17:27:27" |{DSK}<home>medley>notecards>patches>NC2021PATCHES.;4| 1949   
 
-      |changes| |to:|  (VARS NC2021PATCHESCOMS)
+      |changes| |to:|  (ADVICE MODERNWINDOW.BUTTONEVENTFN)
+                       (VARS NC2021PATCHESCOMS)
 
-      |previous| |date:| " 1-Jul-2021 23:49:38" 
-|{DSK}<home>frank>il>notecards>patches>NC2021PATCHES.;1|)
+      |previous| |date:| " 2-Jul-2021 00:00:07" |{DSK}<home>medley>notecards>patches>NC2021PATCHES.;3|
+)
 
 
 (PRETTYCOMPRINT NC2021PATCHESCOMS)
@@ -14,13 +15,34 @@
                                            |doesn't| |get| |set| |on| |some| |systems.| S\o |we| 
                                            |set| |it| |here.|)
                (P (COND ((NOT \\MY.NSHOSTNUMBER)
-                         (\\SETLOCALNSNUMBERS)))))))
+                         (\\SETLOCALNSNUMBERS)))))
+        (* FGH 2021-10-07 |Make| |sure| |all| |Notecards| |windows| |have| TITLEPROPORTION |set| 
+           |when| |calling| MODERNIZE.BUTTONEVENTFN |since| |some| - |e.g.,| |Tedit| |cards,| |have|
+           |their| |buttoneventfns| |set| |by| MODERNIZE |without| \a TITLEPROPROTION |even| |before|
+           |Notecards| |is| |loaded.|)
+        (ADVISE MODERNWINDOW.BUTTONEVENTFN)))
 (DECLARE\: DONTEVAL@LOAD DOCOPY 
 
 (COND
    ((NOT \\MY.NSHOSTNUMBER)
     (\\SETLOCALNSNUMBERS)))
 )
+
+
+
+(* FGH 2021-10-07 |Make| |sure| |all| |Notecards| |windows| |have| TITLEPROPORTION |set| |when| 
+|calling| MODERNIZE.BUTTONEVENTFN |since| |some| - |e.g.,| |Tedit| |cards,| |have| |their| 
+|buttoneventfns| |set| |by| MODERNIZE |without| \a TITLEPROPROTION |even| |before| |Notecards| |is| 
+|loaded.|)
+
+
+(XCL:REINSTALL-ADVICE 'MODERNWINDOW.BUTTONEVENTFN :BEFORE
+       '((:LAST (COND
+                   ((AND (NOT (NUMBERP TITLEPROPORTION))
+                         (WINDOWPROP WINDOW '|NoteCardObject|))
+                    (SETQ TITLEPROPORTION |NC.ModernizeTITLEPROPORTION|))))))
+
+(READVISE MODERNWINDOW.BUTTONEVENTFN)
 (DECLARE\: DONTCOPY
   (FILEMAP (NIL)))
 STOP

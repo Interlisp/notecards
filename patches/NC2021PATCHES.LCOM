@@ -1,13 +1,20 @@
-(DEFINE-FILE-INFO READTABLE "XCL" PACKAGE "INTERLISP")
-(FILECREATED " 2-Jul-2021 00:00:40" ("compiled on " 
-|{DSK}<home>frank>il>notecards>patches>NC2021PATCHES.;3|) " 6-May-2021 15:26:48" |tcompl'd| |in| 
-"FULL  6-May-2021 ..." |dated| " 6-May-2021 15:26:52")
-(FILECREATED " 2-Jul-2021 00:00:07" |{DSK}<home>frank>il>notecards>patches>NC2021PATCHES.;3| 873 
-|changes| |to:| (VARS NC2021PATCHESCOMS) |previous| |date:| " 1-Jul-2021 23:49:38" 
-|{DSK}<home>frank>il>notecards>patches>NC2021PATCHES.;1|)
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "XCL" BASE 10)
+(FILECREATED " 7-Oct-2021 17:27:57" ("compiled on " 
+|{DSK}<home>medley>notecards>patches>NC2021PATCHES.;4|) "23-Sep-2021 13:02:28" |tcompl'd| |in| 
+"FULL 23-Sep-2021 ..." |dated| "23-Sep-2021 13:02:31")
+(FILECREATED " 7-Oct-2021 17:27:27" |{DSK}<home>medley>notecards>patches>NC2021PATCHES.;4| 1949 
+|changes| |to:| (ADVICE MODERNWINDOW.BUTTONEVENTFN) (VARS NC2021PATCHESCOMS) |previous| |date:| 
+" 2-Jul-2021 00:00:07" |{DSK}<home>medley>notecards>patches>NC2021PATCHES.;3|)
 (PRETTYCOMPRINT NC2021PATCHESCOMS)
 (RPAQQ NC2021PATCHESCOMS ((DECLARE\: DONTEVAL@LOAD DOCOPY (* FGH 2021-07-01 |For| |unknown| |reasons| 
 \\MY.NSHOSTNUMBER |doesn't| |get| |set| |on| |some| |systems.| S\o |we| |set| |it| |here.|) (P (COND (
-(NOT \\MY.NSHOSTNUMBER) (\\SETLOCALNSNUMBERS)))))))
+(NOT \\MY.NSHOSTNUMBER) (\\SETLOCALNSNUMBERS))))) (* FGH 2021-10-07 |Make| |sure| |all| |Notecards| 
+|windows| |have| TITLEPROPORTION |set| |when| |calling| MODERNIZE.BUTTONEVENTFN |since| |some| - 
+|e.g.,| |Tedit| |cards,| |have| |their| |buttoneventfns| |set| |by| MODERNIZE |without| \a 
+TITLEPROPROTION |even| |before| |Notecards| |is| |loaded.|) (ADVISE MODERNWINDOW.BUTTONEVENTFN)))
 (COND ((NOT \\MY.NSHOSTNUMBER) (\\SETLOCALNSNUMBERS)))
+(XCL:REINSTALL-ADVICE (QUOTE MODERNWINDOW.BUTTONEVENTFN) :BEFORE (QUOTE ((:LAST (COND ((AND (NOT (
+NUMBERP TITLEPROPORTION)) (WINDOWPROP WINDOW (QUOTE |NoteCardObject|))) (SETQ TITLEPROPORTION 
+|NC.ModernizeTITLEPROPORTION|)))))))
+(READVISE MODERNWINDOW.BUTTONEVENTFN)
 NIL

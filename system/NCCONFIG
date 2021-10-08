@@ -1,9 +1,9 @@
-(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
-(FILECREATED " 2-Jul-2021 00:09:36" {DSK}<home>frank>il>notecards>system>NCCONFIG.;2 11810  
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+(FILECREATED " 7-Oct-2021 23:46:25" {DSK}<home>medley>notecards>system>NCCONFIG.;5 12483  
 
       changes to%:  (VARS NCCONFIGCOMS)
 
-      previous date%: "10-Jun-2021 13:18:09" {DSK}<home>frank>il>notecards>system>NCCONFIG.;1)
+      previous date%: " 7-Oct-2021 17:32:49" {DSK}<home>medley>notecards>system>NCCONFIG.;4)
 
 
 (* ; "
@@ -21,12 +21,14 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 
         (GLOBALVARS NC.CoreFiles NC.Files NC.NoUpdateFlg NC.InstallFlg NC.ForceLoadFlg 
                NC.SketchCardIcon NC.IdeaSketchCardIcon NC.GraphCardIcon NC.BrowserCardIcon 
-               NC.SearchCardIcon NC.DocumentCardIcon NC.LinkIndexCardIcon)
+               NC.SearchCardIcon NC.DocumentCardIcon NC.LinkIndexCardIcon NC.ModernizeTITLEPROPORTION
+               )
         (E (NC.UpdateConfig))
         (INITVARS (NC.NoUpdateFlg NIL)
                (NC.InstallFlg NIL)
                (NC.ForceLoadFlg NIL)
-               (NC.AutoloadableFns NIL))
+               (NC.AutoloadableFns NIL)
+               (NC.ModernizeTITLEPROPORTION 0.25))
         [INITVARS (NC.CoreFiles '(NCDECLS NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE 
                                         NCLOCALDEVICE NCCARDS NCLINKS NCTYPESMECH NCPROGINT 
                                         NCCROSSFILELINKS MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES 
@@ -69,7 +71,7 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 
 (GLOBALVARS NC.CoreFiles NC.Files NC.NoUpdateFlg NC.InstallFlg NC.ForceLoadFlg NC.SketchCardIcon 
        NC.IdeaSketchCardIcon NC.GraphCardIcon NC.BrowserCardIcon NC.SearchCardIcon 
-       NC.DocumentCardIcon NC.LinkIndexCardIcon)
+       NC.DocumentCardIcon NC.LinkIndexCardIcon NC.ModernizeTITLEPROPORTION)
 )
 
 (RPAQ? NC.NoUpdateFlg NIL)
@@ -79,6 +81,8 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 (RPAQ? NC.ForceLoadFlg NIL)
 
 (RPAQ? NC.AutoloadableFns NIL)
+
+(RPAQ? NC.ModernizeTITLEPROPORTION 0.25)
 
 (RPAQ? NC.CoreFiles '(NCDECLS NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE NCLOCALDEVICE 
                                 NCCARDS NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS 
@@ -113,7 +117,19 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
               GRAPHERPATCH NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
 
 
-(RPAQQ NC.AutoloadableFns NIL)
+(RPAQQ NC.AutoloadableFns (NC.CompactNoteFileToTarget NC.CompactNoteFileInPlace 
+                                     NC.ScavengerPhase1 NC.FindNextCardPart 
+                                     NC.ConvertNoteFileVersion2To3))
+
+(PUTPROPS NC.CompactNoteFileToTarget File NCCOMPACT)
+
+(PUTPROPS NC.CompactNoteFileInPlace File NCCOMPACT)
+
+(PUTPROPS NC.ScavengerPhase1 File NCREPAIR)
+
+(PUTPROPS NC.FindNextCardPart File NCREPAIR)
+
+(PUTPROPS NC.ConvertNoteFileVersion2To3 File NCCONVERTVERSION2TO3)
 )
 
 (RPAQQ NC.AutoloadStubFns (NCAddStub.SketchCard NCAddStub.GraphCard NCAddStub.BrowserCard 
@@ -169,7 +185,7 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 )
 (PUTPROPS NCCONFIG COPYRIGHT ("Venue & Xerox Corporation" 1987 1988 1989 1990 1993 1994 2020 2021))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (6643 9989 (NCAddStub.SketchCard 6653 . 7226) (NCAddStub.GraphCard 7228 . 7791) (
-NCAddStub.BrowserCard 7793 . 8370) (NCAddStub.SearchCard 8372 . 8871) (NCAddStub.DocumentCard 8873 . 
-9393) (NCAddStub.LinkIndexCard 9395 . 9987)))))
+  (FILEMAP (NIL (7316 10662 (NCAddStub.SketchCard 7326 . 7899) (NCAddStub.GraphCard 7901 . 8464) (
+NCAddStub.BrowserCard 8466 . 9043) (NCAddStub.SearchCard 9045 . 9544) (NCAddStub.DocumentCard 9546 . 
+10066) (NCAddStub.LinkIndexCard 10068 . 10660)))))
 STOP
