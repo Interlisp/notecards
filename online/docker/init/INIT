@@ -1,0 +1,69 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+(FILECREATED " 8-Oct-2021 22:09:45" {DSK}<home>nc>notecards>online>docker>init>INIT.;18 3129   
+
+      changes to%:  (ADVICE IDLE)
+                    (VARS INITCOMS)
+
+      previous date%: " 8-Oct-2021 21:55:59" {DSK}<home>nc>notecards>online>docker>init>INIT.;17)
+
+
+(PRETTYCOMPRINT INITCOMS)
+
+(RPAQQ INITCOMS
+       [(ADVISE IDLE)
+        [P (PROGN (CNDIR '/home/nc)
+                  (LISTPUT IDLE.PROFILE 'TIMEOUT 10)
+                  (NC.BringUpNoteCardsIcon (create POSITION XCOORD _ 870 YCOORD _ 600))
+                  (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
+                         (CREATEREGION 700 440 450 150]
+        [P (PROGN (MAPC (OPENWINDOWS)
+                        (FUNCTION (LAMBDA (W)
+                                         (COND ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
+                                                    'WHEN-WHO-LINE-SELECTED-FN)
+                                                (MOVEW W (CAR (WINDOWPROP W 'REGION))
+                                                       (IDIFFERENCE SCREENHEIGHT 18)))
+                                               ((STREQUAL (WINDOWPROP W 'TITLE)
+                                                       "Prompt Window")
+                                                (CLEARW W]
+        (P (PROGN [MAPC (OPENWINDOWS)
+                        (FUNCTION (LAMBDA (W)
+                                         (COND ((STREQUAL (WINDOWPROP W 'TITLE)
+                                                       "Exec  (XCL)")
+                                                (WINDOWPROP W 'TITLE "Exec  (INTERLISP)"]
+                  (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
+                  (XCL:SET-EXEC-TYPE 'INTERLISP])
+
+[XCL:REINSTALL-ADVICE 'IDLE :BEFORE '((:LAST (LOGOUT]
+
+(READVISE IDLE)
+
+(PROGN (CNDIR '/home/nc)
+       (LISTPUT IDLE.PROFILE 'TIMEOUT 10)
+       (NC.BringUpNoteCardsIcon (create POSITION
+                                       XCOORD _ 870
+                                       YCOORD _ 600))
+       (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
+              (CREATEREGION 700 440 450 150)))
+
+[PROGN (MAPC (OPENWINDOWS)
+             (FUNCTION (LAMBDA (W)
+                         (COND
+                            ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
+                                 'WHEN-WHO-LINE-SELECTED-FN)
+                             (MOVEW W (CAR (WINDOWPROP W 'REGION))
+                                    (IDIFFERENCE SCREENHEIGHT 18)))
+                            ((STREQUAL (WINDOWPROP W 'TITLE)
+                                    "Prompt Window")
+                             (CLEARW W]
+
+(PROGN [MAPC (OPENWINDOWS)
+             (FUNCTION (LAMBDA (W)
+                         (COND
+                            ((STREQUAL (WINDOWPROP W 'TITLE)
+                                    "Exec  (XCL)")
+                             (WINDOWPROP W 'TITLE "Exec  (INTERLISP)"]
+       (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
+       (XCL:SET-EXEC-TYPE 'INTERLISP))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL)))
+STOP

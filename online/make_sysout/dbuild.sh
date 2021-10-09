@@ -7,8 +7,11 @@
 #
 CDIR=$(pwd)
 if [ "X${1}X" == "XX" ]; then
-    NAME=notecards-dev
+    NAME=notecards-sysout
 else
     NAME=$1
 fi
+cp -p  ${CDIR}/full.sysout /home/frank/il/full.sysout
 docker build --no-cache -t ${NAME} -f ${CDIR}/Dockerfile /home/frank/il
+rm /home/frank/il/full.sysout
+

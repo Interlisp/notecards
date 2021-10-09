@@ -1,3 +1,4 @@
 #!/bin/bash
-sudo docker run -it -v /home/frank/il/notecards:/home/medley/notecards -p 5900:5900 notecards-dev
+sudo docker run -it -v /home/frank/il/notecards:/home/nc/notecards -p 5900:5900 notecards-sysout
+
 

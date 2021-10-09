@@ -1,0 +1,5 @@
+#!/bin/bash
+(sleep 5;vncviewer localhost:0) &
+docker run -it -p 5900:5900 notecards-dev 
+
+
