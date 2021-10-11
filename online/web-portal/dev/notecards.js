@@ -16,32 +16,43 @@ const multer = require('multer');
 
 const badchars = new RegExp("[!#$%&'*+/=?^`{|}~]", "g");
 
-var port = (process.env.DEV_OR_PROD && (process.env.DEV_OR_PROD == "dev")) ? 4999 : 2999;
+const is_dev = (process.env.DEV_OR_PROD && (process.env.DEV_OR_PROD == "dev"));
+var port = is_dev ? 4999 : 2999;
 const port_min = port;
 const port_max = port + 2000;
 
-const docker_image = (process.env.DEV_OR_PROD && (process.env.DEV_OR_PROD == "dev")) ? 'notecards-dev' : 'notecards004';
+const docker_image = is_dev ? 'notecards-dev' : 'notecards004';
 
 // start notecards
 router.get("/start", (req, res) => {
-   const screen_width = req.query.screen_width || 1024;
-   const screen_height = req.query.screen_height || 808;
-   const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
-   port = port + 1;
-   if (port > port_max) port = port_min;
-   docker
+    const resume = req.query.resume && ((req.query.resume == "1") || (req.query.resume.toLowerCase() == "true"));
+    const screen_width = req.query.screen_width || 1024;
+    const screen_height = req.query.screen_height || 808;
+    const devmode = req.query.devmode && ((req.query.devmode == "1") || (req.query.devmode.toLowerCase() == "true"));
+    const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
+    port = port + 1;
+    if (port > port_max) port = port_min;
+    const run_cmd =
+        `run -d `
+        + ` --network host`
+        + ` --name ${emailish}-${Math.floor(Math.random() * 99999)}`
+        + ` --mount type=volume,source=${emailish},target=/home/nc/notefiles`
+        + ` --mount type=volume,source=${emailish}_vmem,target=/home/nc/vmem`
+        + (devmode ? ` --mount type=volume,source=${emailish}_source,target=/home/nc/notecards` : ` `)
+        + ` --env PORT=${port}`
+        + ` --entrypoint /home/nc/bin/run-notecards`
+        + ` ${docker_image}`
+        + (resume ? ` resume` : ` new`)
+        + ` ${screen_width} ${screen_height}`
+        ;
+    console.log(req.query);
+    console.log(run_cmd);
+    docker
         .command(`container kill ${emailish}`)
-	.finally(() =>
-		docker
-	             .command(`run -d --rm`
-                              + ` --network host`
-                              + ` --name ${emailish}`
-                              + ` --mount type=volume,source=${emailish},target=/home/medley/notecards/notefiles`
-                              + ` --env PORT=${port}`
-                              + ` --entrypoint /home/medley/bin/run-notecards`
-                              + ` ${docker_image}`
-                              + ` ${screen_width} ${screen_height}`
-                )
+        .catch((err)=>{ if(is_dev) { console.log("Expected error after container kill: " + err); } } )
+	    .finally(() =>
+		    docker
+	             .command(run_cmd)
 	            .then(data => { res.redirect(`loading?port=${port}`); })
 	            .catch(err => { console.log(err); res.send(err.stderr); })
                 );
@@ -49,21 +60,27 @@ router.get("/start", (req, res) => {
 
 // start xterm (for debugging only)
 router.get("/xterm", (req, res) => {
-   const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
-   port = port + 1;
-   if (port > port_max) port = port_min;
+    const devmode = req.query.devmode && ((req.query.devmode == "1") || (req.query.devmode.toLowerCase() == "true"));
+    const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
+    port = port + 1;
+    if (port > port_max) port = port_min;
+    const run_cmd =
+        `run -d `
+        + ` --network host`
+        + ` --name ${emailish}-${Math.floor(Math.random() * 99999)}`
+        + ` --mount type=volume,source=${emailish},target=/home/nc/notefiles`
+        + ` --mount type=volume,source=${emailish}_vmem,target=/home/nc/vmem`
+        + (devmode ? ` --mount type=volume,source=${emailish}_source,target=/home/nc/notecards` : ` `)
+        + ` --env PORT=${port}`
+        + ` --entrypoint /home/nc/bin/run-xterm`
+        + ` ${docker_image}`
+        ;
    docker
         .command(`container kill ${emailish}`)
-	.finally(() =>
-		docker
-	            .command(`run -d --rm`
-                              + ` --network host`
-                              + ` --name ${emailish}`
-                              + ` --mount type=volume,source=${emailish},target=/home/medley/notecards/notefiles`
-                              + ` --env PORT=${port}`
-                              + ` --entrypoint /home/medley/bin/run-xterm`
-                              + ` ${docker_image}`
-                )    
+        .catch((err)=>{ if(is_dev) { console.log("Expected error after container kill: " + err); } } )
+	    .finally(() =>
+		    docker
+	            .command(run_cmd)    
 	            .then(data => { res.redirect(`loading?port=${port}`); })
 	            .catch(err => { console.log(err); res.send(err.stderr); })
                 );

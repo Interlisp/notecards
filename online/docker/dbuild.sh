@@ -11,5 +11,5 @@ if [ "X${1}X" == "XX" ]; then
 else
     NAME=$1
 fi
-docker build --no-cache -t ${NAME} -f ${CDIR}/Dockerfile /home/`whoami`/il
+docker build  -t ${NAME} -f ${CDIR}/Dockerfile /home/`whoami`/il
 

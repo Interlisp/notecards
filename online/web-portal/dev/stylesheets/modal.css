@@ -106,3 +106,18 @@
 #screen-size-div {
     margin-top: 15px;
 }
+
+#start-options-div label {
+    font-size: 16px;
+    display: block;
+}
+
+#start-options-div input {
+    font-size: 16px;
+    width: 4em;
+}
+
+#start-options-div {
+    margin-top: 15px;
+}
+

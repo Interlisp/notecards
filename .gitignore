@@ -1,4 +1,5 @@
 *.~*~
 *.SYSOUT
 *.sysout
+.c9
 

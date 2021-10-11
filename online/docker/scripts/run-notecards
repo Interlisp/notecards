@@ -1,16 +1,54 @@
 #!/bin/bash
+
+#{
+	
+set -x
+
+SYSOUT_PATH="/home/nc/notecards/NOTECARDS.SYSOUT"
+VMEM_PATH="/home/nc/vmem/lisp.virtualmem"
+
 cd /app/medley
+
 if [ $# -gt 0 ]; then
-	width=$1
+	if [ "$1" == "new" ]; then
+		sysout=${SYSOUT_PATH}
+	else
+		if [ -f ${VMEM_PATH} ]; then
+			sysout=""
+		else 
+			sysout=${SYSOUT_PATH}
+		fi
+	fi
+else
+	sysout=${SYSOUT_PATH}
+fi
+
+if [ $# -gt 1 ]; then
+	width=$2
 else
 	width=1024
 fi
-if [$# -gt 1 ]; then
-	height=$2
+
+if [ $# -gt 2 ]; then
+	height=$3
 else
 	height=808
 fi
-#xpra start --daemon=no --video-scaling=off --exit-with-children=yes --bind-tcp=0.0.0.0:${PORT} --html=on --server-idle-timeout=300  --start-child="./run-medley -sc ${width}x${height} -g ${width}x${height} /home/il/notecards/NOTECARDS.SYSOUT"
+
 /usr/bin/websockify --daemon ${PORT} localhost:1${PORT}
-/usr/bin/Xvnc -nolisten tcp -geometry ${width}x${height} -rfbport 1${PORT} -localhost :0 &
-DISPLAY=:0 PATH="/app/maiko:$PATH" ./run-medley -g ${width}x${height} -sc ${width}x${height} /home/medley/notecards/NOTECARDS.SYSOUT
+/usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -nolisten tcp -localhost -nevershared -dontdisconnect :0 &
+sleep 1
+export DISPLAY=:0
+for i in {1..10}
+    do
+        xdpyinfo > /dev/null
+        if [ $? -eq 0 ]; 
+            then
+                break
+            else
+                sleep 1
+        fi
+    done
+PATH="/app/maiko:$PATH" ./run-medley -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
+
+#} >>/home/nc/vmem/log_stdout 2>>/home/nc/vmem/log_stderr

@@ -12,6 +12,8 @@ block headeradds
             const local_store = window.localStorage;
             document.getElementById("screen-width").value = local_store.getItem("screen_width") || 1024;
             document.getElementById("screen-height").value = local_store.getItem("screen_height") || 808;
+            document.getElementById("resume").checked = (local_store.getItem("resume") == "true");
+            document.getElementById("devmode").checked = (local_store.getItem("devmode") == "true");
         });
 
     script.
@@ -19,9 +21,19 @@ block headeradds
             const local_store = window.localStorage;
             const screen_width = document.getElementById("screen-width").value;
             const screen_height = document.getElementById("screen-height").value;
+            const resume = document.getElementById("resume").checked ? "true" : "false";
+            const devmode = document.getElementById("devmode").checked ? "true" : "false";
             local_store.setItem("screen_width", screen_width);
             local_store.setItem("screen_height", screen_height);
-            window.location.assign(`/notecards/start?screen_width=${screen_width}&screen_height=${screen_height}`);
+            local_store.setItem("resume", resume);
+            local_store.setItem("devmode", devmode);
+            window.location.assign(
+                `/notecards/start`
+                + `?screen_width=${screen_width}`
+                + `&screen_height=${screen_height}`
+                + `&resume=${resume}`
+                + `&devmode=${devmode}`
+            );
         }
 
     script.
@@ -156,6 +168,11 @@ block content
                     input(type="number", id="screen-width", value=1024)
                 label and Screen Height: 
                     input(type="number", id="screen-height", value=808)
+            div(id="start-options-div")
+                label Resume previous session: 
+                    input(type="checkbox", id="resume")
+                label Developer mode (persist source code changes): 
+                    input(type="checkbox", id="devmode")
     
     .row
       .jumbotron.text-center
