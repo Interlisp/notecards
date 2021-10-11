@@ -1,4 +1,4 @@
-FROM interlisp/medley:5a9bc566
+FROM interlisp/medley:e222743f
 SHELL ["/bin/bash", "-c"]
 #
 USER root:root
