@@ -33,9 +33,9 @@ router.get("/start", (req, res) => {
     port = port + 1;
     if (port > port_max) port = port_min;
     const run_cmd =
-        `run -d `
+        `run -d ${is_dev ? "" : "--rm"}`
         + ` --network host`
-        + ` --name ${emailish}-${Math.floor(Math.random() * 99999)}`
+        + ` --name ${emailish}${is_dev ? `-${Math.floor(Math.random() * 99999)}` : ``}`
         + ` --mount type=volume,source=${emailish},target=/home/nc/notefiles`
         + ` --mount type=volume,source=${emailish}_vmem,target=/home/nc/vmem`
         + (devmode ? ` --mount type=volume,source=${emailish}_source,target=/home/nc/notecards` : ` `)
@@ -45,8 +45,7 @@ router.get("/start", (req, res) => {
         + (resume ? ` resume` : ` new`)
         + ` ${screen_width} ${screen_height}`
         ;
-    console.log(req.query);
-    console.log(run_cmd);
+    if(is_dev) console.log(run_cmd);
     docker
         .command(`container kill ${emailish}`)
         .catch((err)=>{ if(is_dev) { console.log("Expected error after container kill: " + err); } } )
@@ -65,18 +64,20 @@ router.get("/xterm", (req, res) => {
     port = port + 1;
     if (port > port_max) port = port_min;
     const run_cmd =
-        `run -d `
+        `run -d ${is_dev ? "" : "--rm"}`
         + ` --network host`
-        + ` --name ${emailish}-${Math.floor(Math.random() * 99999)}`
+        + ` --name ${emailish}${is_dev ? `-${Math.floor(Math.random() * 99999)}` : ``}`
         + ` --mount type=volume,source=${emailish},target=/home/nc/notefiles`
         + ` --mount type=volume,source=${emailish}_vmem,target=/home/nc/vmem`
         + (devmode ? ` --mount type=volume,source=${emailish}_source,target=/home/nc/notecards` : ` `)
         + ` --env PORT=${port}`
         + ` --entrypoint /home/nc/bin/run-xterm`
         + ` ${docker_image}`
+        + ` 1024 808`
         ;
+   if(is_dev) console.log(run_cmd);
    docker
-        .command(`container kill ${emailish}`)
+        .command(`container ${is_dev ? `ls` : `kill ${emailish}`}`)
         .catch((err)=>{ if(is_dev) { console.log("Expected error after container kill: " + err); } } )
 	    .finally(() =>
 		    docker

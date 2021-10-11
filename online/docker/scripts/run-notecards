@@ -1,8 +1,6 @@
 #!/bin/bash
 
-#{
-	
-set -x
+#set -x
 
 SYSOUT_PATH="/home/nc/notecards/NOTECARDS.SYSOUT"
 VMEM_PATH="/home/nc/vmem/lisp.virtualmem"
@@ -50,5 +48,3 @@ for i in {1..10}
         fi
     done
 PATH="/app/maiko:$PATH" ./run-medley -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
-
-#} >>/home/nc/vmem/log_stdout 2>>/home/nc/vmem/log_stderr

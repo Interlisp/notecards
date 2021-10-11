@@ -1,6 +1,15 @@
 #!/bin/bash
-width=1024
-height=808
+if [ $# -gt 0 ]; then
+	width=$1
+else
+	width=1024
+fi
+
+if [ $# -gt 1 ]; then
+	height=$2
+else
+	height=808
+fi
 /usr/bin/websockify --daemon ${PORT} localhost:1${PORT}
 /usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -nolisten tcp -localhost -nevershared -dontdisconnect :0 &
 export DISPLAY=:0
@@ -14,4 +23,5 @@ for i in {1..10}
                 sleep 1
         fi
     done
-/usr/bin/xterm
+/usr/bin/xterm -geometry ${width}x${height}
+
