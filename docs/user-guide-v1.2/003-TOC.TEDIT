@@ -1,0 +1,437 @@
+1
+
+ENVOS NOTECARDS 1.1, BETA RELEASE OF DOCUMENTATION
+1
+
+ENVOS NOTECARDS 1.1, BETA RELEASE OF DOCUMENTATION
+TABLE OF CONTENTS
+1
+
+TABLE OF CONTENTS
+1
+
+
+TABLE of CONTENTS
+6
+
+1
+
+Preface	iii
+I	Introduction and Installation
+1.  Introduction 	1-1
+NoteCards	1-1
+System Overview	1-1
+Useful SunOS and UNIX Conventions	1-2
+NoteCards Device Conventions	1-2
+Stylistic Conventions	1-2
+	Prompts	1-2
+	Font Usage	1-3
+	Keyboard Conventions	1-3
+2.  System Requirements 	2-1
+Prerequisites	2-1
+	Processor Hardware	2-1
+	Memory	2-1
+	Swap Space	2-1
+	Disk Space	2-1
+	Input/Output Devices	2-1
+		Bitmap Display	2-2
+		Printers	2-2
+	Tape Access	2-2
+	Operating System Requirements	2-2
+Constraints	2-2
+	Resource Constraints	2-2
+	Shared Sun Workstations	2-2
+Release Contents	2-3
+	Documentation	2-3
+	Software	2-3
+3.  Software Installation 	3-1
+Insuring Adequate Swap Space	3-1
+Installing Software	3-1
+Copy Protection	3-3
+Configuring the Software	3-3
+	Relinking	3-4
+	Enabling PUP/XNS Ethernet	3-4
+	Using/Installing the Host Access Key	3-4
+4.  System Use Issues 	4-1
+Site Initialization File	4-1
+Starting NoteCards	4-1
+Exiting NoteCards and Saving State	4-2
+Keyboard Interpretation	4-4
+	Sun Type 2 Keyboard	4-4
+	Sun Type 3 Keyboard	4-5
+	Sun Type 4 Keyboard	4-6
+Consol Messages	4-6
+File Compatibility	4-7
+	Sysout Compatibility between Sun and Xerox Workstations	4-7
+	File Compatibility between Sun and Xerox Workstations	4-7
+	Notefile Compatibility with Prerelease Versions of NoteCards	4-8
+Using SunOS Files from NoteCards	4-8
+	File Naming Conventions	4-9
+	Common {DSK} and {UNIX} Naming Conventions	4-9
+	{DSK} Naming Conventions	4-10
+		Version Numbering	4-10
+		Pathnames	4-12
+	{UNIX} Naming Conventions	4-12
+	Directories	4-13
+		Directory Enumeration	4-13
+		Directory Creation	4-13
+	Open File Limit	4-14
+	Default Pathname	4-14
+File Attributes	4-14
+File System Errors	4-15
+II	NoteCards Tutorial
+5.  NoteCards Basics 	5-1
+A Few Pointers on Mouse Etiquette	5-1
+	Mouse Button Use	5-2
+		Left Mouse Button	5-2
+		Middle Mouse Button	5-2
+		Right Mouse Button	5-2
+	Regions Sensitive to Mouse Activity	5-2
+		The Background	5-2
+		Windows and the Window Title Bar	5-3
+		Icons	5-5
+		Scroll Bars	5-5
+Dealing with Simple Error Conditions	5-6
+Starting NoteCards	5-7
+Closing Notefiles and Exiting NoteCards	5-8
+	Closing Notefiles	5-8
+		Close	5-9
+		Abort	5-9
+6.  Building NoteCards Structures and Modes of Use 	6-1
+Introduction	6-1
+A Standard View of Building NoteCards Structures	6-1
+A Non-Standard View of Building NoteCards Structures	6-1
+	FileBoxes and Hierarchies	6-1
+		The Flat System	6-2
+		The Almost Flat System	6-2
+	Link Types	6-2
+	Multiple Users	6-2
+	Cards and Information Chunk Size	6-2
+Types of Structures People Have Built with Notecards	6-3
+Specalizing NoteCard	6-3
+III	Reference Manual
+7.  The User Interface 	7-1
+8.  Links 	8-1
+Links and Link Types	8-1
+	System-Reserved Link Types	8-1
+	User-Specified Link Types	8-2
+	Link Directions and Link Ends	8-3
+		Link Categories	8-3
+		Other Link Terminology	8-3
+	Link Types vs. Card Types	8-3
+Link Access and Use	8-4
+	Link Icon Functionality	8-4
+		Active Regions of Link Icons	8-4
+		Mouse-Button Actions in Link Icons	8-5
+	Viewing Local and Global Links	8-7
+	Unfiled and Lost Cards	8-8
+Creating Links	8-9
+	Creating Links in Text Cards	8-9
+		Insert Link	8-9
+		Insert Links	8-12
+		Add Global Link	8-13
+		Add Global Links	8-13
+	Creating Links in Other Card Types	8-13
+		Text-Based Cards	8-13
+		Sketch-Based Cards	8-13
+		Graph-Based Cards	8-14
+Deleting Links	8-14
+	Deleting Links from Card Contents	8-15
+		Text-Based Cards	8-15
+		Sketch-Based Cards	8-15
+		Graph-Based Cards	8-15
+	Deleting Links from the Show Links Display	8-16
+Tailoring Links	8-16
+	Link Ops Menu	8-16
+		Bring Up Card/Box	8-16
+		Change Link Type	8-16
+		Change Card Title	8-16
+		Change Display Mode	8-16
+	System Parameters for Links	8-18
+Cross-File Links	8-18
+	Appearance	8-18
+	Missing Notefiles	8-19
+9.  Cards and Banners 	9-1
+The Notefile Banner	9-1
+The Banner Title Bar	9-1
+	Notefile Ops Menus	9-1
+	Middle-Mouse-Button Title-Bar Menu	9-3
+		Full File Name	9-3
+		File Capacity	9-3
+Special Cards	9-4
+	Table of Contents FileBox	9-5
+	To Be Filed FileBox	9-5
+	Orphans FileBox	9-6
+New Cards	9-6
+User Cards and System Cards	9-7
+Text-, Sketch-, and Graph-Based Cards	9-8
+The Card Menu	9-8
+	The Standard Card Menu	9-8
+		Edit Property List	9-8
+		Show Links	9-9
+		Show Info	9-10
+		Designate FileBoxes	9-11
+		Assign Title	9-11
+		Title/FileBoxes	9-12
+		Insert Link	9-12
+		Close and Save	9-13
+	The FileBox Card Menu	9-13
+		Add Global Link	9-13
+		Put Cards Here	9-14
+10.  User Cards 	10-1
+Text Cards  	10-1
+		The Text-Card Menu	10-1
+FileBox Cards	10-2
+	Suggested FileBoxes and Note Cards	10-3
+		Bibliography	10-3
+		Index	10-3
+		Read Me	10-3
+		Active Cards	10-3
+	The FileBox-Card Menu	10-3
+	System Parameters Affecting FileBoxes	10-3
+Sketch Cards	10-3
+	The Sketch-Card Menu	10-3
+		The Map Option	10-4
+	System Parameters Affecting Sketch Cards	10-4
+Graph Cards	10-4
+	The Graph-Card Menu	10-5
+	The Grapher Menu	10-5
+	The Graph-Card and Grapher Menu Options	10-6
+		Move Node	Move Node	10-6
+		Remove Node	Delete Node	10-7
+		Connect Nodes	Add Link	10-7
+		Disconnect Nodes	Delete Link	10-7
+		Add Label	Add Node	10-8
+		Change Label	Change Label	10-8
+		Smaller Label	Label Smaller	10-8
+		Larger Label	Label Larger	10-8
+		Toggle Shade	<-> Shade	10-8
+		Toggle Border	<-> Border	10-8
+		Directed/Undirected	<-> Directed	10-8
+		Sides/Centers	<-> Sides	10-9
+		Fix Menu		10-10
+			Stop	10-10
+Bit Map Editor	10-10
+	Inserting Bit Maps into Cards	10-10
+		Text-Based Cards	10-10
+		Sketch-Based Cards	10-11
+	Bit Map Operations	10-11
+		Change Scale	10-11
+		Hand Edit	10-12
+		Trim	10-12
+		Reflect Left-to-right	10-12
+		Reflect Top-to-Bottom	10-12
+		Reflect Diagonally	10-12
+		Rotate Left	10-12
+		Rotate Right	10-12
+		Expand on Right	10-12
+		Expand on Left	10-13
+		Expand on Bottom	10-13
+		Expand on Top	10-13
+		Switch Black & White	10-13
+		Add Border	10-13
+	The Bit Map Editor	10-14
+		Paint	10-16
+		ShowAsTile	10-16
+		Grid On/Off	10-16
+		GridSize	10-16
+		Reset	10-17
+		Clear	10-17
+		Cursor	10-17
+		OK	10-17
+		Abort	10-18
+11.  System Cards 	11-1
+Search Cards	11-1
+Link Index Cards	11-2
+Document Cards	11-3
+	HeadingsFromFileBoxes	11-3
+	TitlesFromNoteCards	11-4
+	BuildBackLinks	11-4
+	CopyEmbeddedLinks	11-4
+	ExpandEmbeddedLinks	11-4
+Browser Cards	11-5
+	Changes to the NoteCards Browser	11-6
+		Multiple Roots	11-7
+		Dashed Links	11-7
+		Arrowheads	11-7
+		Browser Specs	11-7
+		New Middle-Button Title-Bar Menu Options	11-9
+		Editing the Browser Manually and Structure Editing	11-9
+	Overview Windows on Browser Cards	11-12
+		Creating an Overview Window	11-12
+		Reshaping the Overview Window	11-13
+		Scrolling and the Wire Frame	11-13
+		Recomputing the Overview Contents	11-13
+		The Browser Overview Stylesheet	11-13
+		Tidbits	11-14
+12.  The MenuBox Icon 	12-1
+Notefile Options	12-1
+	Open	12-2
+	Compact	12-3
+	Inspect & Repair	 12-4
+	Copy		12-4
+	Rename	12-4
+	Delete	12-4
+	Create	12-4
+	Checkpoint	12-5
+	Close	12-6
+	Abort	12-6
+	NC FileBrowser	12-6
+Card Options	12-6
+	Close	12-7
+	Delete	12-8
+	Copy		12-8
+	Move	12-8
+Other Options	12-9
+	Edit Parameters	12-9
+	NF Indicators On	12-9
+	TEdit Killer On	12-9
+13.  System Parameters 	13-1
+Accessing System Parameters	13-1
+NoteCards System Parameters	13-3
+	Extra TEdit Props	13-3
+	Include Card Object In ShowInfo	13-3
+	Del TEdit Process When Shrinking	13-3
+Font Parameters	13-4
+	Menu Font	13-4
+	Default Font	13-4
+	Link Icon Font	13-4
+Notefile Parameters	13-5
+	Show Notefile On Cards	13-5
+	New Notefile Initial Size	13-6
+	Menu Lingers After Notefile Close	13-6
+Card Parameters	13-6
+	Force Filing	13-6
+	Force Titles	13-6
+	Default Card Type	13-6
+	Close Cards Off Screen	13-7
+	Bring Up cards At Previous Pos	13-7
+FileBox Card Parameters	13-7
+	Markers In FileBoxes	13-7
+	Alphabetize FileBox Children	13-7
+Browser Card Parameters	13-7
+	Special Browser Specs	13-7
+	Arrow Heads In Browsers	13-8
+	Link Dashing In Browsers	13-8
+Sketch Card Parameters	13-8
+	Attach Sketch Menu	13-8
+Link Parameters	13-8
+	Link Icon Border Width	13-8
+	Link 	Icon Multi Line Mode	13-9
+	Cross File Link Mode	13-9
+	Link Icon Max Width in Pixels	 13-9
+	Link Icon Show Title Default	13-9
+	Link Icon Attach Bitmap Default	13-10
+	Link Icon Show Link Type Default	13-10
+	Use Deleted Link Icon Indicators	13-10
+14.  The FileBrowser 	14-1
+User Interface	14-1
+	Starting FileBrowser	14-1
+	Specifying What Files to Browse	14-1
+		Examples	14-2
+	Using the FileBrowser Window	14-3
+		Selecting Files	14-5
+		Commands the Require Input	14-5
+		Aborting Commands	14-6
+		Quitting the FileBrowser	14-6
+		Copy-Selecting Files	14-7
+		Getting Hardcopy Directory Listings	14-7
+FileBrowser Commands	14-8
+	Delete, Undelete	14-8
+	Copy		14-9
+	Rename	14-11
+	Hardcopy	14-12
+	See		14-13
+	FileBrowse	14-15
+	Edit		14-15
+	Load		14-16
+	Compile	14-16
+	Expunge	14-16
+	Recompute	14-16
+	New Info	14-17
+	Set Depth	14-19
+	Sort		14-19
+Troubleshooting Problems with FileBrowser	14-20
+15.  Other Tools 	15-1
+Digital Clock	15-1
+	Introduction	15-1
+	Starting the Digital Clock	15-1
+	Stopping the Digital Clock	15-2
+	Changing the Digital Clock	15-2
+		Set Font	15-3
+		Set Time	15-4
+		Set Alarm	15-4
+		Quiet Alarm/Loud Alarm	15-5
+		Delete Alarm Setting	15-5
+		Shape to Fit	15-5
+		12-Hour/24-Hour Clock	15-5
+		Set Local Time Zone	15-5
+		Add New Regional Time Zone	15-5
+		Delete This Window	15-6
+		Set Font for Aux Clocks	15-6
+		Set Aux Clock Font In Just This Window	15-6
+		Set Time-Zone Heading	15-6
+		Set Regional Time Zone	15-7
+Analog Clock	15-7
+	Introduction	15-7
+	Starting the Analog Clock	15-7
+	Stopping the Analog Clock	15-8
+	Changing the Analog Clock	15-8
+		Numbers	15-9
+		Points	15-9
+		No Numbers	15-9
+		Rings	15-9
+		No Rings	15-9
+		Hands	15-9
+		No Hands	15-9
+		Times	15-9
+		No Times	15-9
+		Show Style	15-9
+		Set to Default	15-9
+		Change Default	15-10
+		Set Time	15-10
+	Known Problems	15-10
+Directory Connector	15-10
+	Starting the Directory Connector	15-10
+	Stopping the Directory Connector	15-10
+	Changing the Directory Connector Fonts	15-10
+	Using the Directory Connector	15-11
+		Left Mouse Button	15-11
+		Middle Mouse Button	15-12
+16.  Printing 	16-1
+17.  Error Recovery and Known Problems	17-1
+System Status, Aborting Operations, and Spawning a New Mouse	17-1
+	System Status	17-1
+	Aborting Operations	17-1
+	Spawning a New Mouse	17-3
+Break Windows	17-3
+	Errors While Running NoteCards	17-4
+	I/O Errors	17-4
+	Virtual Memory Errors	17-5
+URAID		17-5
+Entering URAID	17-5
+ 	URAID Commands	17-5
+Other Fatal Error Conditions	17-6
+System Error Conditions	17-6
+Known Problems	17-7
+	Printing Browsers	17-7
+	Notefile Indicator Window	17-8
+	PostScript Fonts	17-8
+Appendices, Glossary, and Index
+Appendix A.  Notefile Concepts	A-1
+Appendix B.  Notefile Inspector	B-1
+Appendix C.  Installation Files	C-1
+Appendix D.  Checksum Control	D-1
+Glossary	GLOSSARY-1
+Index	INDEX-1
+[This page intentionally left blank]     (LIST ((PAGE NIL (PAPERSIZE Letter FOLIOINFO (LOWERROMAN "" "") STARTINGPAGE# 7) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD RIGHT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (LOWERROMAN "" "")) (270 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGR) (54 27 558 36) NIL) (TEXT NIL NIL (54 54 504 723) NIL))) (PAGE NIL (PAPERSIZE Letter FOLIOINFO (LOWERROMAN "" "")) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD LEFT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (LOWERROMAN "" "")) (54 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGV) (54 27 558 36) NIL) (HEADING NIL (HEADINGTYPE VERSOHEAD) (54 762 558 36) NIL) (TEXT NIL NIL (54 54 504 684) NIL))) (PAGE NIL (PAPERSIZE Letter FOLIOINFO (LOWERROMAN "" "")) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD RIGHT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (LOWERROMAN "" "")) (270 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGR) (54 27 558 36) NIL) (HEADING NIL (HEADINGTYPE RECTOHEAD) (54 762 558 36) NIL) (TEXT NIL NIL (54 54 504 684) NIL)))))       ,    ø "                                 > T Tø        T  l  „  ø                             ; T Tø        T  l  „ ø                             2    ø       ø                             2    ø       ø                             2    ø "      ø                             2    ø       ø                             -    ø      äì           T             5 ¨ ¨ø         ¨ ø                             5 ¨ ¨ø        ¨ ø                             5 ¨ ¨ø         ¨ ø                             F    ø        ø       PAGEHEADING 	VERSOHEAD                   F    ø        ø       PAGEHEADING 	RECTOHEAD                   E    ø      ø       PAGEHEADING FOOTINGV                   E    ø      ø       PAGEHEADING FOOTINGR                          MODERN          MODERN        €  MODERN       €  MODERN           MODERN          MODERN          MODERN                    HRULE.GETFN  MODERN                         3               HRULE.GETFN  MODERN                         3          
+             
+     HRULE.GETFN  MODERN                                        HRULE.GETFN  MODERN                                   	     HRULE.GETFN  MODERN                          HRULE.GETFN  MODERN                                                                                                         &             !                                                                                                                                                                                                                                                      
+                                        "                                                                                                          
+                                 !                                                                                                   )                                                           '                                                                                                                       <                    :                    A             %                                        /                                                                                                                                                                                                                                                            &                                                                                                    (                                        %                                                     )                          ,                                                                         2                                 5             9                                                                                                                        %             9                                                                  	                                                                                "                                                                                                                 !                    '                    #                                                     !                                                                                                    (                                                                                             '                                                                                0                                                                                                                                     !                                                                                                                                           '                                                                                                                                                         *                                                                                                                                                                                                                                                                                                                                                          (                                                            
+                                                            +                                                                         .                                                                         -                                                                                "                                                            !                                                                                &                                                                                             $                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                    	                                                                                                                                                                                                                    &                                                                                                    .                    8                    (                    "                    $                    #                    (                    &                                                                                             
+                                                                                                                                                                                                                                                                                                                                                                                           !             !                                        %                    &                                                                                                                                                  '                                                                                                                 $                                                     "                                                                                                                                                                                                        $                    "                    &                    '                    '                                                                         %                                        "                                                                                                                         )                                                                         
+                                                                                                                                                                                                                                         0                                                                                                                                                                                                                                                                                                                                                                     ,                                                                                                                                                         
+                                                                                                                                                                                                                                                                                                     '                    '                    -                    $                                                     
+                    &                    B                                                                                             $                                                                                                   "                                                                                                                                                                                                                                                                                                               	             $      *¤zº
