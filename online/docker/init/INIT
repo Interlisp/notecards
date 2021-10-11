@@ -1,18 +1,23 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
-(FILECREATED " 8-Oct-2021 22:09:45" {DSK}<home>nc>notecards>online>docker>init>INIT.;18 3129   
+(FILECREATED "10-Oct-2021 23:44:56" {DSK}<home>frank>initx>INIT.;3 4162   
 
-      changes to%:  (ADVICE IDLE)
+      changes to%:  (ADVICE IDLE LOGOUT)
                     (VARS INITCOMS)
 
-      previous date%: " 8-Oct-2021 21:55:59" {DSK}<home>nc>notecards>online>docker>init>INIT.;17)
+      previous date%: "10-Oct-2021 22:22:13" {DSK}<home>frank>initx>INIT.;2)
 
 
 (PRETTYCOMPRINT INITCOMS)
 
 (RPAQQ INITCOMS
-       [(ADVISE IDLE)
+       [(GLOBALVARS NC.LogoutAdvisedByInitFlag NC.LogoutTimeout NCInit.BackFromLogout IDLE.PROFILE)
+        (INITVARS (NC.LogoutAdvisedByInitFlag T)
+               (NC.LogoutTimeout 10)
+               (NCInit.BackFromLogout NIL))
+        (ADVISE IDLE)
+        (ADVISE LOGOUT)
         [P (PROGN (CNDIR '/home/nc)
-                  (LISTPUT IDLE.PROFILE 'TIMEOUT 10)
+                  (LISTPUT IDLE.PROFILE 'TIMEOUT NC.LogoutTimeout)
                   (NC.BringUpNoteCardsIcon (create POSITION XCOORD _ 870 YCOORD _ 600))
                   (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
                          (CREATEREGION 700 440 450 150]
@@ -32,13 +37,34 @@
                                                 (WINDOWPROP W 'TITLE "Exec  (INTERLISP)"]
                   (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
                   (XCL:SET-EXEC-TYPE 'INTERLISP])
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
 
-[XCL:REINSTALL-ADVICE 'IDLE :BEFORE '((:LAST (LOGOUT]
+(GLOBALVARS NC.LogoutAdvisedByInitFlag NC.LogoutTimeout NCInit.BackFromLogout IDLE.PROFILE)
+)
+
+(RPAQ? NC.LogoutAdvisedByInitFlag T)
+
+(RPAQ? NC.LogoutTimeout 10)
+
+(RPAQ? NCInit.BackFromLogout NIL)
+
+[XCL:REINSTALL-ADVICE 'IDLE :BEFORE '((:LAST (if NCInit.BackFromLogout
+                                                 then (SETQ NCInit.BackFromLogout NIL)
+                                               else (LOGOUT]
 
 (READVISE IDLE)
 
+[XCL:REINSTALL-ADVICE 'LOGOUT :BEFORE '[(:LAST (if (NULL (NC.LogoutAdvice))
+                                                   then (RETURN]
+       :AFTER
+       '((:LAST (if (AND (BOUNDP NC.LogoutAdvisedByInitFlag)
+                             NC.LogoutAdvisedByInitFlag)
+                    then (SETQ NCInit.BackFromLogout T]
+
+(READVISE LOGOUT)
+
 (PROGN (CNDIR '/home/nc)
-       (LISTPUT IDLE.PROFILE 'TIMEOUT 10)
+       (LISTPUT IDLE.PROFILE 'TIMEOUT NC.LogoutTimeout)
        (NC.BringUpNoteCardsIcon (create POSITION
                                        XCOORD _ 870
                                        YCOORD _ 600))
