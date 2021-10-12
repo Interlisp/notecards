@@ -14,6 +14,8 @@ block headeradds
             document.getElementById("screen-height").value = local_store.getItem("screen_height") || 808;
             document.getElementById("resume").checked = (local_store.getItem("resume") == "true");
             document.getElementById("devmode").checked = (local_store.getItem("devmode") == "true");
+            document.getElementById("dev-options-checkbox").checked = (local_store.getItem("show_dev_options") == "true");
+            show_dev_options_on_click();
         });
 
     script.
@@ -25,14 +27,26 @@ block headeradds
             const devmode = document.getElementById("devmode").checked ? "true" : "false";
             local_store.setItem("screen_width", screen_width);
             local_store.setItem("screen_height", screen_height);
-            local_store.setItem("resume", resume);
-            local_store.setItem("devmode", devmode);
             window.location.assign(
                 `/notecards/start`
                 + `?screen_width=${screen_width}`
                 + `&screen_height=${screen_height}`
                 + `&resume=${resume}`
                 + `&devmode=${devmode}`
+            );
+        }
+
+    script.
+        function start_xterm () {
+            const local_store = window.localStorage;
+            //const screen_width = document.getElementById("screen-width").value;
+            //const screen_height = document.getElementById("screen-height").value;
+            const devmode = document.getElementById("devmode").checked ? "true" : "false";
+            //local_store.setItem("screen_width", screen_width);
+            //local_store.setItem("screen_height", screen_height);
+            window.location.assign(
+                `/notecards/xterm`
+                + `?devmode=${devmode}`
             );
         }
 
@@ -152,6 +166,49 @@ block headeradds
             document.body.removeChild(a);
         }
 
+    script.
+        function reset_source() {
+            let req = new Request('/notecards/reset_source');
+            fetch(req)
+                .then((response) => {
+                        if (!response.ok) {
+                            window.alert(`Reset failed! status: ${response.status}`);
+                        }
+                        else {
+                            window.alert(`Source reset succeeded.`);
+                        }
+                    }
+                );
+        }
+
+    script.
+        function show_dev_options_on_click() {
+           const dev_div = document.getElementById('dev-div');
+           const dev_cb = document.getElementById("dev-options-checkbox");
+           const local_store = window.localStorage;
+           if(dev_cb.checked) {
+                dev_div.style.display = "block";
+                local_store.setItem("show_dev_options", "true");
+            }
+            else {
+                dev_div.style.display = "none";
+                local_store.setItem("show_dev_options", "false");
+           }
+        }
+
+    script.
+        function devmode_on_click() {
+            const local_store = window.localStorage;
+            const devmode = document.getElementById("devmode").checked ? "true" : "false";
+            local_store.setItem("devmode", devmode);
+        }
+
+    script.
+        function resume_on_click() {
+            const local_store = window.localStorage;
+            const resume = document.getElementById("resume").checked ? "true" : "false";
+            local_store.setItem("resume", resume);
+        }
 
 block content
     h2.text-center Notecards Online
@@ -163,21 +220,15 @@ block content
     .row
         .jumbotron.text-center
             button(type="button" onclick='start_notecards();').main-button Start Notecards
-            div(id="screen-size-div")
+            div(id="screen-size-div" class="options-div")
                 label with Screen Width: 
                     input(type="number", id="screen-width", value=1024)
                 label and Screen Height: 
                     input(type="number", id="screen-height", value=808)
-            div(id="start-options-div")
+            div(id="start-options-div" class="options-div")
                 label Resume previous session: 
-                    input(type="checkbox", id="resume")
-                label Developer mode (persist source code changes): 
-                    input(type="checkbox", id="devmode")
-    
-    .row
-      .jumbotron.text-center
-         button(type="button" onclick='window.location.assign("/notecards/xterm");').main-button Start Xterm
-    
+                    input(type="checkbox", id="resume", onclick="resume_on_click()")
+
     .row
         .jumbotron.text-center
             button(type="button" onclick='document.getElementById("notefile").click();').main-button Upload Notefile
@@ -193,6 +244,21 @@ block content
         .jumbotron.text-center
             form(method="POST" action="/logout")
                 button(type="submit" id="button_to_link").main-button Logout
+
+    label Show Developer options: 
+        input(type="checkbox", id="dev-options-checkbox", onclick="show_dev_options_on_click();")
+    div(id="dev-div" style="display:none;")
+        .row
+            .jumbotron.text-center
+                div(id="dev-options-div" class="options-div")
+                    label Persist source code changes: 
+                        input(type="checkbox", id="devmode", , onclick="devmode_on_click()")
+    
+        .jumbotron.text-center
+             button(type="button" onclick='reset_source();').main-button Reset Source Code to Latest Version
+    
+        .jumbotron.text-center
+             button(type="button" onclick='start_xterm();').main-button Start Xterm
 
     div(id="notefilesModal", class="modal")
         div(class="modal-content")

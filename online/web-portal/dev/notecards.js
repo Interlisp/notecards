@@ -47,11 +47,11 @@ router.get("/start", (req, res) => {
         ;
     if(is_dev) console.log(run_cmd);
     docker
-        .command(`container kill ${emailish}`)
+        .command(`container ${is_dev ? `ls` : `kill ${emailish}`}`)
         .catch((err)=>{ if(is_dev) { console.log("Expected error after container kill: " + err); } } )
 	    .finally(() =>
 		    docker
-	             .command(run_cmd)
+	            .command(run_cmd)
 	            .then(data => { res.redirect(`loading?port=${port}`); })
 	            .catch(err => { console.log(err); res.send(err.stderr); })
                 );
@@ -112,17 +112,21 @@ router.post(
     (req, res) => {
         try {
             const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
+            const run_cmd = 
+                    `run --rm`
+                    + ` --mount type=volume,source=${emailish},target=/dest`
+                    + ` -v ${uploads_dir}:/source`
+                    + ` -w /source`
+                    + ` alpine`
+                    + ` mv "${req.file.originalname}" /dest`
+                    ;
+            if(is_dev) console.log(run_cmd);
             docker
-                .command(`container kill ${emailish}`)
-                .catch(() => {})
+                .command(`container ${is_dev ? `ls` : `kill ${emailish}`}`)
+                .catch((err)=>{ if(is_dev) { console.log("Expected error after container kill: " + err); } } )
                 .finally(() =>
                     docker
-                        .command(`run --rm`
-                                 + ` --mount type=volume,source=${emailish},target=/dest`
-                                 + ` -v ${uploads_dir}:/source`
-                                 + ` -w /source`
-                                 + ` alpine`
-                                 + ` mv "${req.file.originalname}" /dest`)
+                        .command(run_cmd)
                         .then(data => { res.send(req.file.originalname); })
                         .catch(err => { console.log(err); res.send(err.stderr); })
                 );
@@ -137,15 +141,19 @@ router.get(
     (req, res) => {
         try {
             const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
+            const run_cmd =
+                    `run --rm`
+                    + ` --mount type=volume,source=${emailish},target=/source`
+                    + ` alpine`
+                    + ` ls /source`
+                    ;
+            if(is_dev) console.log(run_cmd);
             docker
-                .command(`container kill ${emailish}`)
-                .catch(() => {})
+                .command(`container ${is_dev ? `ls` : `kill ${emailish}`}`)
+                .catch((err)=>{ if(is_dev) { console.log("Expected error after container kill: " + err); } } )
                 .finally(() =>
                     docker
-                        .command(`run --rm`
-                                 + ` --mount type=volume,source=${emailish},target=/source`
-                                 + ` alpine`
-                                 + ` ls /source`)
+                        .command(run_cmd)
                         .then(data => {
                                  const filelist = data.raw.split("\n"); 
                                  res.send(filelist);
@@ -164,17 +172,21 @@ router.get(
         try {
             const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
             const filename = req.query.file;
+            const run_cmd = 
+                `run --rm`
+                + ` --mount type=volume,source=${emailish},target=/source`
+                + ` -v ${uploads_dir}:/dest`
+                + ` -w /source`
+                + ` alpine`
+                + ` cp ${filename} /dest`
+                ;
+            if(is_dev) console.log(run_cmd);
             docker
-                .command(`container kill ${emailish}`)
-                .catch(() => {})
+                .command(`container ${is_dev ? `ls` : `kill ${emailish}`}`)
+                .catch((err)=>{ if(is_dev) { console.log("Expected error after container kill: " + err); } } )
                 .finally(() => {
                     docker
-                        .command(`run --rm`
-                                 + ` --mount type=volume,source=${emailish},target=/source`
-                                 + ` -v ${uploads_dir}:/dest`
-                                 + ` -w /source`
-                                 + ` alpine`
-                                 + ` cp ${filename} /dest`)
+                        .command(run_cmd)
                         .then(data => {
                                  res.download(`${uploads_dir}/${filename}`);
                              })
@@ -185,5 +197,26 @@ router.get(
          }
     }
 );
+
+
+router.get(
+    '/reset_source',
+    (req, res) => {
+        const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
+        const run_cmd = `volume rm ${emailish}_source`;
+        if(is_dev) console.log(run_cmd);
+        docker
+            .command(`container ${is_dev ? `ls` : `kill ${emailish}`}`)
+            .catch((err)=>{ if(is_dev) { console.log("Expected error after container kill: " + err); } } )
+            .finally(() => {
+                docker
+                    .command(run_cmd)
+	                .then(data => { res.status(200).end(); })
+	                .catch(err => { console.log(err); res.send(err.stderr); });
+                }
+            );
+    }
+);
+
 
 module.exports = router;

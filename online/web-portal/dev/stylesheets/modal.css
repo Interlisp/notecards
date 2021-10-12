@@ -93,31 +93,17 @@
     font-weight: bold;
 }
 
-#screen-size-div label {
+.options-div label {
     font-size: 16px;
     display: block;
 }
 
-#screen-size-div input {
+.options-div input {
     font-size: 16px;
     width: 4em;
 }
 
-#screen-size-div {
-    margin-top: 15px;
-}
-
-#start-options-div label {
-    font-size: 16px;
-    display: block;
-}
-
-#start-options-div input {
-    font-size: 16px;
-    width: 4em;
-}
-
-#start-options-div {
+.options-div {
     margin-top: 15px;
 }
 
