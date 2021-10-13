@@ -1,10 +1,11 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
-(FILECREATED "10-Oct-2021 23:44:56" {DSK}<home>frank>initx>INIT.;3 4162   
 
-      changes to%:  (ADVICE IDLE LOGOUT)
-                    (VARS INITCOMS)
+(FILECREATED "12-Oct-2021 18:02:13" {DSK}<home>nc>notecards>online>docker>init>INIT.;21 5292   
 
-      previous date%: "10-Oct-2021 22:22:13" {DSK}<home>frank>initx>INIT.;2)
+      changes to%:  (VARS INITCOMS)
+                    (ADVICE IDLE LOGOUT)
+
+      previous date%: "10-Oct-2021 23:44:56" {DSK}<home>nc>INIT.;1)
 
 
 (PRETTYCOMPRINT INITCOMS)
@@ -18,9 +19,12 @@
         (ADVISE LOGOUT)
         [P (PROGN (CNDIR '/home/nc)
                   (LISTPUT IDLE.PROFILE 'TIMEOUT NC.LogoutTimeout)
-                  (NC.BringUpNoteCardsIcon (create POSITION XCOORD _ 870 YCOORD _ 600))
+                  (NC.BringUpNoteCardsIcon (create POSITION XCOORD _ 800 YCOORD _ (IDIFFERENCE 
+                                                                                         SCREENHEIGHT
+                                                                                         225)))
                   (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
-                         (CREATEREGION 700 440 450 150]
+                         (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 710)
+                                550 150]
         [P (PROGN (MAPC (OPENWINDOWS)
                         (FUNCTION (LAMBDA (W)
                                          (COND ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
@@ -29,13 +33,16 @@
                                                        (IDIFFERENCE SCREENHEIGHT 18)))
                                                ((STREQUAL (WINDOWPROP W 'TITLE)
                                                        "Prompt Window")
-                                                (CLEARW W]
-        (P (PROGN [MAPC (OPENWINDOWS)
-                        (FUNCTION (LAMBDA (W)
-                                         (COND ((STREQUAL (WINDOWPROP W 'TITLE)
+                                                (PROGN (MOVEW W (create POSITION XCOORD _ 50 YCOORD _
+                                                                       (IDIFFERENCE SCREENHEIGHT 120)
+                                                                       ))
+                                                       (CLEARW W)))
+                                               ((STREQUAL (WINDOWPROP 'TITLE)
                                                        "Exec  (XCL)")
-                                                (WINDOWPROP W 'TITLE "Exec  (INTERLISP)"]
-                  (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
+                                                (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
+                                                       (MOVEW W (create POSITION XCOORD _ 50 YCOORD _
+                                                                       (IDIFFERENCE SCREENHEIGHT 460]
+        (P (PROGN (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
                   (XCL:SET-EXEC-TYPE 'INTERLISP])
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
@@ -66,10 +73,11 @@
 (PROGN (CNDIR '/home/nc)
        (LISTPUT IDLE.PROFILE 'TIMEOUT NC.LogoutTimeout)
        (NC.BringUpNoteCardsIcon (create POSITION
-                                       XCOORD _ 870
-                                       YCOORD _ 600))
+                                       XCOORD _ 800
+                                       YCOORD _ (IDIFFERENCE SCREENHEIGHT 225)))
        (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
-              (CREATEREGION 700 440 450 150)))
+              (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 710)
+                     550 150)))
 
 [PROGN (MAPC (OPENWINDOWS)
              (FUNCTION (LAMBDA (W)
@@ -80,15 +88,18 @@
                                     (IDIFFERENCE SCREENHEIGHT 18)))
                             ((STREQUAL (WINDOWPROP W 'TITLE)
                                     "Prompt Window")
-                             (CLEARW W]
-
-(PROGN [MAPC (OPENWINDOWS)
-             (FUNCTION (LAMBDA (W)
-                         (COND
-                            ((STREQUAL (WINDOWPROP W 'TITLE)
+                             (PROGN (MOVEW W (create POSITION
+                                                    XCOORD _ 50
+                                                    YCOORD _ (IDIFFERENCE SCREENHEIGHT 120)))
+                                    (CLEARW W)))
+                            ((STREQUAL (WINDOWPROP 'TITLE)
                                     "Exec  (XCL)")
-                             (WINDOWPROP W 'TITLE "Exec  (INTERLISP)"]
-       (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
+                             (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
+                                    (MOVEW W (create POSITION
+                                                    XCOORD _ 50
+                                                    YCOORD _ (IDIFFERENCE SCREENHEIGHT 460]
+
+(PROGN (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
        (XCL:SET-EXEC-TYPE 'INTERLISP))
 (DECLARE%: DONTCOPY
   (FILEMAP (NIL)))
