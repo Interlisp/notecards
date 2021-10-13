@@ -393,7 +393,7 @@ const UI = {
             case 'init':
                 break;
             case 'connecting':
-                transitionElem.textContent = _("Connecting...");
+                transitionElem.textContent = _(`Connecting to ${WebUtil.getQueryVar("target", "???")} ...`);
                 document.documentElement.classList.add("noVNC_connecting");
                 break;
             case 'connected':

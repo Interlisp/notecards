@@ -93,17 +93,52 @@
     font-weight: bold;
 }
 
-.options-div label {
+.options-div label, #dev-div-checkbox {
     font-size: 16px;
     display: block;
 }
 
-.options-div input {
+.number-input {
     font-size: 16px;
     width: 4em;
+}
+
+.checkbox-input {
+    font-size: 16px;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
 }
 
 .options-div {
     margin-top: 15px;
 }
 
+#dev-div {
+    width:auto;
+    margin-right: auto;
+    margin-left: auto;
+    border-style: double;
+    border-width: 5px;
+    border-color: #C0C0C0;
+}
+
+#dev-div-checkbox .jumbotron {
+    padding-bottom: 0em;
+}
+
+#dev-div .jumbotron {
+    padding-bottom: 0.25em;
+    padding-top: 0.25em;
+    display:inline-block;
+}
+
+h2 {
+    margin-bottom: 0em;
+    font-size: 30px;
+}
+
+#dev-options-div {
+    font-size: 20px;
+    width:auto;
+}

@@ -52,7 +52,7 @@ router.get("/start", (req, res) => {
 	    .finally(() =>
 		    docker
 	            .command(run_cmd)
-	            .then(data => { res.redirect(`loading?port=${port}`); })
+	            .then(data => { res.redirect(`loading?port=${port}&target=Notecards`); })
 	            .catch(err => { console.log(err); res.send(err.stderr); })
                 );
 });
@@ -82,7 +82,7 @@ router.get("/xterm", (req, res) => {
 	    .finally(() =>
 		    docker
 	            .command(run_cmd)    
-	            .then(data => { res.redirect(`loading?port=${port}`); })
+	            .then(data => { res.redirect(`loading?port=${port}&target=xterm`); })
 	            .catch(err => { console.log(err); res.send(err.stderr); })
                 );
 });
@@ -90,7 +90,9 @@ router.get("/xterm", (req, res) => {
 // wait N secs, then go to client page
 router.get("/loading", (req, res) => {
 	const port = req.query.port;
-	res.render("loading", {waittime: 10, client_url: `${router.base_url}/client/go?port=${port}&autoconnect=1`});
+	const target = req.query.target || "unknown";
+	res.redirect(`${router.base_url}/client/go?target=${target}&port=${port}&autoconnect=1`)
+	//res.render("loading", {waittime: 10, client_url: `${router.base_url}/client/go?port=${port}&autoconnect=1`});
 });
 
 // Upload notefile

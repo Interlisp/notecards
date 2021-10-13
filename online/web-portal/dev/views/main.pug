@@ -187,7 +187,7 @@ block headeradds
            const dev_cb = document.getElementById("dev-options-checkbox");
            const local_store = window.localStorage;
            if(dev_cb.checked) {
-                dev_div.style.display = "block";
+                dev_div.style.display = "inline-block";
                 local_store.setItem("show_dev_options", "true");
             }
             else {
@@ -222,12 +222,11 @@ block content
             button(type="button" onclick='start_notecards();').main-button Start Notecards
             div(id="screen-size-div" class="options-div")
                 label with Screen Width: 
-                    input(type="number", id="screen-width", value=1024)
+                    input(type="number", id="screen-width", class="number-input", value=1024)
                 label and Screen Height: 
-                    input(type="number", id="screen-height", value=808)
-            div(id="start-options-div" class="options-div")
-                label Resume previous session: 
-                    input(type="checkbox", id="resume", onclick="resume_on_click()")
+                    input(type="number", id="screen-height", class="number-input", value=808)
+                label.  
+                    <input type="checkbox" id="resume" onclick="resume_on_click()" class="checkbox-input">&nbsp;Resume previous session
 
     .row
         .jumbotron.text-center
@@ -245,21 +244,22 @@ block content
             form(method="POST" action="/logout")
                 button(type="submit" id="button_to_link").main-button Logout
 
-    label Show Developer options: 
-        input(type="checkbox", id="dev-options-checkbox", onclick="show_dev_options_on_click();")
+    div(id="dev-div-checkbox")
+        .jumbotron.text-center
+            label. 
+                <input type="checkbox" id="dev-options-checkbox" onclick="show_dev_options_on_click();" class="checkbox-input">&nbsp;Show Developer options
     div(id="dev-div" style="display:none;")
-        .row
-            .jumbotron.text-center
-                div(id="dev-options-div" class="options-div")
-                    label Persist source code changes: 
-                        input(type="checkbox", id="devmode", , onclick="devmode_on_click()")
-    
+        .jumbotron.text-center
+             button(type="button" onclick='start_xterm();').main-button Start Xterm
+        br
+        .jumbotron.text-center
+            div(id="dev-options-div")
+                label 
+                    <input type="checkbox" id="devmode" onclick="devmode_on_click()" class="checkbox-input">&nbsp;Persist ${HOME}/notecards (source code) directory
+        br
         .jumbotron.text-center
              button(type="button" onclick='reset_source();').main-button Reset Source Code to Latest Version
     
-        .jumbotron.text-center
-             button(type="button" onclick='start_xterm();').main-button Start Xterm
-
     div(id="notefilesModal", class="modal")
         div(class="modal-content")
             .jumbotron.text-center
