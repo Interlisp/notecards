@@ -1,6 +1,6 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "12-Oct-2021 18:10:47" {DSK}<home>nc>notecards>online>docker>init>INIT.;22 5296   
+(FILECREATED "12-Oct-2021 18:23:34" {DSK}<home>nc>notecards>online>docker>init>INIT.;23 5296   
 
       changes to%:  (VARS INITCOMS)
                     (ADVICE IDLE LOGOUT)
@@ -19,12 +19,12 @@
         (ADVISE LOGOUT)
         [P (PROGN (CNDIR '/home/nc)
                   (LISTPUT IDLE.PROFILE 'TIMEOUT NC.LogoutTimeout)
-                  (NC.BringUpNoteCardsIcon (create POSITION XCOORD _ 800 YCOORD _ (IDIFFERENCE 
+                  (NC.BringUpNoteCardsIcon (create POSITION XCOORD _ 750 YCOORD _ (IDIFFERENCE 
                                                                                          SCREENHEIGHT
-                                                                                         225)))
+                                                                                         228)))
                   (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
                          (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 710)
-                                550 150]
+                                550 250]
         [P (PROGN (MAPC (OPENWINDOWS)
                         (FUNCTION (LAMBDA (W)
                                          (COND ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
@@ -73,11 +73,11 @@
 (PROGN (CNDIR '/home/nc)
        (LISTPUT IDLE.PROFILE 'TIMEOUT NC.LogoutTimeout)
        (NC.BringUpNoteCardsIcon (create POSITION
-                                       XCOORD _ 800
-                                       YCOORD _ (IDIFFERENCE SCREENHEIGHT 225)))
+                                       XCOORD _ 750
+                                       YCOORD _ (IDIFFERENCE SCREENHEIGHT 228)))
        (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
               (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 710)
-                     550 150)))
+                     550 250)))
 
 [PROGN (MAPC (OPENWINDOWS)
              (FUNCTION (LAMBDA (W)
