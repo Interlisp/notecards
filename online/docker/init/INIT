@@ -1,6 +1,6 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "12-Oct-2021 18:02:13" {DSK}<home>nc>notecards>online>docker>init>INIT.;21 5292   
+(FILECREATED "12-Oct-2021 18:10:47" {DSK}<home>nc>notecards>online>docker>init>INIT.;22 5296   
 
       changes to%:  (VARS INITCOMS)
                     (ADVICE IDLE LOGOUT)
@@ -37,7 +37,7 @@
                                                                        (IDIFFERENCE SCREENHEIGHT 120)
                                                                        ))
                                                        (CLEARW W)))
-                                               ((STREQUAL (WINDOWPROP 'TITLE)
+                                               ((STREQUAL (WINDOWPROP W 'TITLE)
                                                        "Exec  (XCL)")
                                                 (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
                                                        (MOVEW W (create POSITION XCOORD _ 50 YCOORD _
@@ -92,7 +92,7 @@
                                                     XCOORD _ 50
                                                     YCOORD _ (IDIFFERENCE SCREENHEIGHT 120)))
                                     (CLEARW W)))
-                            ((STREQUAL (WINDOWPROP 'TITLE)
+                            ((STREQUAL (WINDOWPROP W 'TITLE)
                                     "Exec  (XCL)")
                              (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
                                     (MOVEW W (create POSITION
