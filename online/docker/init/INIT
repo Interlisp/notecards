@@ -1,6 +1,6 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "12-Oct-2021 18:23:34" {DSK}<home>nc>notecards>online>docker>init>INIT.;23 5296   
+(FILECREATED "12-Oct-2021 18:30:18" {DSK}<home>nc>notecards>online>docker>init>INIT.;24 5296   
 
       changes to%:  (VARS INITCOMS)
                     (ADVICE IDLE LOGOUT)
@@ -23,8 +23,8 @@
                                                                                          SCREENHEIGHT
                                                                                          228)))
                   (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
-                         (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 710)
-                                550 250]
+                         (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 700)
+                                550 220]
         [P (PROGN (MAPC (OPENWINDOWS)
                         (FUNCTION (LAMBDA (W)
                                          (COND ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
@@ -76,8 +76,8 @@
                                        XCOORD _ 750
                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT 228)))
        (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
-              (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 710)
-                     550 250)))
+              (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 700)
+                     550 220)))
 
 [PROGN (MAPC (OPENWINDOWS)
              (FUNCTION (LAMBDA (W)
