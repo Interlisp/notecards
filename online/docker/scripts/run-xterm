@@ -1,4 +1,5 @@
 #!/bin/bash
+#set -x
 if [ $# -gt 0 ]; then
 	width=$1
 else
@@ -10,6 +11,10 @@ if [ $# -gt 1 ]; then
 else
 	height=808
 fi
+export SSHPORT=2${PORT}
+/usr/sbin/sshd -e -p ${SSHPORT}
+su nc <<EOF
+#set -x
 /usr/bin/websockify --daemon ${PORT} localhost:1${PORT}
 /usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -nolisten tcp -localhost -nevershared -dontdisconnect :0 &
 export DISPLAY=:0
@@ -23,5 +28,9 @@ for i in {1..10}
                 sleep 1
         fi
     done
-/usr/bin/xterm -geometry ${width}x${height}
+twm&
+(echo ".         Files are now available by SFTP to notecards.online using port 2${PORT}.  Username is 'nc'.  Password is 'notecards'" | xmessage -file - -geometry ${width}x66+5+0) &
+export TMOUT=3600
+/usr/bin/xterm -geometry 168x55+5+60
+EOF
 

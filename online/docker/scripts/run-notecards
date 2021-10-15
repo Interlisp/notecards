@@ -5,8 +5,6 @@
 SYSOUT_PATH="/home/nc/notecards/NOTECARDS.SYSOUT"
 VMEM_PATH="/home/nc/vmem/lisp.virtualmem"
 
-cd /app/medley
-
 if [ $# -gt 0 ]; then
 	if [ "$1" == "new" ]; then
 		sysout=${SYSOUT_PATH}
@@ -32,6 +30,9 @@ if [ $# -gt 2 ]; then
 else
 	height=808
 fi
+su nc <<EOF
+#set -x
+cd /app/medley
 
 /usr/bin/websockify --daemon ${PORT} localhost:1${PORT}
 /usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -nolisten tcp -localhost -nevershared -dontdisconnect :0 &
@@ -48,3 +49,4 @@ for i in {1..10}
         fi
     done
 PATH="/app/maiko:$PATH" ./run-medley -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
+EOF

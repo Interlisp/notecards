@@ -72,6 +72,7 @@ router.get("/xterm", (req, res) => {
         + (devmode ? ` --mount type=volume,source=${emailish}_source,target=/home/nc/notecards` : ` `)
         + ` --env PORT=${port}`
         + ` --entrypoint /home/nc/bin/run-xterm`
+        + ` --privileged` 
         + ` ${docker_image}`
         + ` 1024 808`
         ;

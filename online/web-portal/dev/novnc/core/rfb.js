@@ -1001,11 +1001,14 @@ export default class RFB extends EventTargetMixin {
     _handleWheel(ev) {
         if (this._rfbConnectionState !== 'connected') { return; }
         if (this._viewOnly) { return; } // View only, skip mouse events
-
+        
         ev.stopPropagation();
         ev.preventDefault();
+        
+        // FGH Notecards Online - for now ignore wheel events 
+        return;
 
-        let pos = clientToElement(ev.clientX, ev.clientY,
+         let pos = clientToElement(ev.clientX, ev.clientY,
                                   this._canvas);
 
         let dX = ev.deltaX;

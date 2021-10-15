@@ -1,106 +1,24 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "12-Oct-2021 18:30:18" {DSK}<home>nc>notecards>online>docker>init>INIT.;24 5296   
+(FILECREATED "14-Oct-2021 21:46:10" {DSK}<home>nc>notecards>INIT.;4 671    
 
       changes to%:  (VARS INITCOMS)
-                    (ADVICE IDLE LOGOUT)
 
-      previous date%: "10-Oct-2021 23:44:56" {DSK}<home>nc>INIT.;1)
+      previous date%: "14-Oct-2021 20:25:07" {DSK}<home>nc>notecards>INIT.;3)
 
+
+(* ; "
+Copyright (c) 1992-1999, 2021 by Xerox Corporation.
+")
 
 (PRETTYCOMPRINT INITCOMS)
 
-(RPAQQ INITCOMS
-       [(GLOBALVARS NC.LogoutAdvisedByInitFlag NC.LogoutTimeout NCInit.BackFromLogout IDLE.PROFILE)
-        (INITVARS (NC.LogoutAdvisedByInitFlag T)
-               (NC.LogoutTimeout 10)
-               (NCInit.BackFromLogout NIL))
-        (ADVISE IDLE)
-        (ADVISE LOGOUT)
-        [P (PROGN (CNDIR '/home/nc)
-                  (LISTPUT IDLE.PROFILE 'TIMEOUT NC.LogoutTimeout)
-                  (NC.BringUpNoteCardsIcon (create POSITION XCOORD _ 750 YCOORD _ (IDIFFERENCE 
-                                                                                         SCREENHEIGHT
-                                                                                         228)))
-                  (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
-                         (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 700)
-                                550 220]
-        [P (PROGN (MAPC (OPENWINDOWS)
-                        (FUNCTION (LAMBDA (W)
-                                         (COND ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
-                                                    'WHEN-WHO-LINE-SELECTED-FN)
-                                                (MOVEW W (CAR (WINDOWPROP W 'REGION))
-                                                       (IDIFFERENCE SCREENHEIGHT 18)))
-                                               ((STREQUAL (WINDOWPROP W 'TITLE)
-                                                       "Prompt Window")
-                                                (PROGN (MOVEW W (create POSITION XCOORD _ 50 YCOORD _
-                                                                       (IDIFFERENCE SCREENHEIGHT 120)
-                                                                       ))
-                                                       (CLEARW W)))
-                                               ((STREQUAL (WINDOWPROP W 'TITLE)
-                                                       "Exec  (XCL)")
-                                                (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
-                                                       (MOVEW W (create POSITION XCOORD _ 50 YCOORD _
-                                                                       (IDIFFERENCE SCREENHEIGHT 460]
-        (P (PROGN (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
-                  (XCL:SET-EXEC-TYPE 'INTERLISP])
-(DECLARE%: DOEVAL@COMPILE DONTCOPY
+(RPAQQ INITCOMS ((FILES (SYSLOAD FROM {DSK}/home/nc/notecards/init/)
+                            ONLINE-INIT)))
 
-(GLOBALVARS NC.LogoutAdvisedByInitFlag NC.LogoutTimeout NCInit.BackFromLogout IDLE.PROFILE)
-)
-
-(RPAQ? NC.LogoutAdvisedByInitFlag T)
-
-(RPAQ? NC.LogoutTimeout 10)
-
-(RPAQ? NCInit.BackFromLogout NIL)
-
-[XCL:REINSTALL-ADVICE 'IDLE :BEFORE '((:LAST (if NCInit.BackFromLogout
-                                                 then (SETQ NCInit.BackFromLogout NIL)
-                                               else (LOGOUT]
-
-(READVISE IDLE)
-
-[XCL:REINSTALL-ADVICE 'LOGOUT :BEFORE '[(:LAST (if (NULL (NC.LogoutAdvice))
-                                                   then (RETURN]
-       :AFTER
-       '((:LAST (if (AND (BOUNDP NC.LogoutAdvisedByInitFlag)
-                             NC.LogoutAdvisedByInitFlag)
-                    then (SETQ NCInit.BackFromLogout T]
-
-(READVISE LOGOUT)
-
-(PROGN (CNDIR '/home/nc)
-       (LISTPUT IDLE.PROFILE 'TIMEOUT NC.LogoutTimeout)
-       (NC.BringUpNoteCardsIcon (create POSITION
-                                       XCOORD _ 750
-                                       YCOORD _ (IDIFFERENCE SCREENHEIGHT 228)))
-       (NC.FileBrowserMenu NC.NoteCardsIconWindow '{dsk}/home/nc/notefiles/*.notefile
-              (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 700)
-                     550 220)))
-
-[PROGN (MAPC (OPENWINDOWS)
-             (FUNCTION (LAMBDA (W)
-                         (COND
-                            ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
-                                 'WHEN-WHO-LINE-SELECTED-FN)
-                             (MOVEW W (CAR (WINDOWPROP W 'REGION))
-                                    (IDIFFERENCE SCREENHEIGHT 18)))
-                            ((STREQUAL (WINDOWPROP W 'TITLE)
-                                    "Prompt Window")
-                             (PROGN (MOVEW W (create POSITION
-                                                    XCOORD _ 50
-                                                    YCOORD _ (IDIFFERENCE SCREENHEIGHT 120)))
-                                    (CLEARW W)))
-                            ((STREQUAL (WINDOWPROP W 'TITLE)
-                                    "Exec  (XCL)")
-                             (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
-                                    (MOVEW W (create POSITION
-                                                    XCOORD _ 50
-                                                    YCOORD _ (IDIFFERENCE SCREENHEIGHT 460]
-
-(PROGN (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
-       (XCL:SET-EXEC-TYPE 'INTERLISP))
+(FILESLOAD (SYSLOAD FROM {DSK}/home/nc/notecards/init/)
+       ONLINE-INIT)
+(PUTPROPS INIT COPYRIGHT ("Xerox Corporation" 1992 1993 1994 1995 1996 1997 1998 1999 2021))
 (DECLARE%: DONTCOPY
   (FILEMAP (NIL)))
 STOP

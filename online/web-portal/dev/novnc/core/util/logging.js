@@ -53,4 +53,7 @@ export function getLogging() {
 export { Debug, Info, Warn, Error };
 
 // Initialize logging level
-initLogging();
+//initLogging('debug');
+initLogging('info');
+//initLogging('warn');
+//initLogging('error');
