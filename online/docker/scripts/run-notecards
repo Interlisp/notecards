@@ -48,5 +48,6 @@ for i in {1..10}
                 sleep 1
         fi
     done
+xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L" -e "keycode 15 = Meta_R"
 PATH="/app/maiko:$PATH" ./run-medley -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
 EOF

@@ -28,9 +28,11 @@ for i in {1..10}
                 sleep 1
         fi
     done
-twm&
-(echo ".         Files are now available by SFTP to notecards.online using port 2${PORT}.  Username is 'nc'.  Password is 'notecards'" | xmessage -file - -geometry ${width}x66+5+0) &
-export TMOUT=3600
+xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L" -e "keycode 15 = Meta_R"
+(echo ".         Files are now available by SFTP to notecards.online using port 2${PORT}.  Username is 'nc'.  Password is 'notecards'" | xmessage -file - -geometry ${width}x66+5+0)  &
+twm &
+sleep 1
+export TMOUT=300
 /usr/bin/xterm -geometry 168x55+5+60
 EOF
 

@@ -92,8 +92,9 @@ router.get("/xterm", (req, res) => {
 router.get("/loading", (req, res) => {
 	const port = req.query.port;
 	const target = req.query.target || "unknown";
-	res.redirect(`${router.base_url}/client/go?target=${target}&port=${port}&autoconnect=1`)
+	res.redirect(`${router.base_url}/client/go?target=${target}&port=${port}&autoconnect=1`);
 	//res.render("loading", {waittime: 10, client_url: `${router.base_url}/client/go?port=${port}&autoconnect=1`});
+	//res.redirect("/");
 });
 
 // Upload notefile

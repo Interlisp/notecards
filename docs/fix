@@ -1,0 +1,9 @@
+#!/bin/bash
+cd from_envos
+fs=$(ls *.TEDIT *.TED *.tedit *.ted)
+for f in $fs
+do
+    tr '\n\r' '\r\n' <$f >../$f
+done
+
+

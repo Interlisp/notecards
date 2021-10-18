@@ -1,1049 +1,51 @@
-1
-
-ENVOS NOTECARDS 1.1, BETA RELEASE OF DOCUMNTATION
-1
-
-ENVOS NOTECARDS 1.1, BETA RELEASE OF DOCUMENTATION
-4.  SYSTEM USE ISSUES
-1
-
-4.  SYSTEM USE ISSUES
-1
-
-
-4.	SYSTEM USE ISSUES
-6
-
-This chapter provides basic system information to get you started in NoteCards on your Sun Workstatio after your system administrator has installed NoteCards  1.1.
-2
-
-Site Initialization File
-1
-
-When NoteCards starts, it reads in the NoteCards site initialization file, init.NoteCards. This file sets the pointer to fonts, site le>)
-1
-
-These functions retrieve the three predefined FileBoxes for the currently open NoteFile.  These boxes can be modified (but not deleted) by the user in the same way as any other filebox.
- 5.    Creating and Accessing Links
-1
-
-Links consist of source card, destination card, link type, display mode and anchoring mode.  The new function NCP.CreateLink can be used to create any sort of link.  We still provide the four functions NCP.GlobalGlobalLink, NCP.LocalGlobalLink, etc. for those who have grown used to that style.
-(NCP.GetLinks <cards> <destinationCards> <labels> <NoteFile>)
-1
-
-See documentation in the previous section.
-(NCP.CreateLink <source> <destination> <linkType> <displayMode)
-1
-
-<source> can be either a card or a list of two elements (<sourceCard> <sourceLoc>).  <sourceCard> should be a card to use as the source of the link while <sourceLoc> should be either the atom GLOBAL (in which case a global-to-global link is created) or a Loc directive as described in NCP.CardAddText above, that is, an integer or one of the atoms START, END or NIL.  This creates and returns a new link with type <linkType>, connecting <sourceCard> to <destinationCard>.  For text cards, Loc, if present, designates where to insert the link.  If the link is local-to-global, then <displayMode> should be a valid displaymode or NIL.  (See description of NCP.LinkDisplayMode for the valid values for <displayMode>.)  (In the future, Locs for non-text cards will be specifiable.  In the far future, we hope to allow local anchoring at the destination end of the link as well as the source.)  
-(NCP.GlobalGlobalLink <label> <sourceCard> <destinationCard>)
-1
-
-Creates and returns a new link with label <label>, connecting <sourceCard> to <destinationCard>.
-(NCP.LocalGlobalLink <label> <sourceCard> <destinationCard> <fromloc> <displaymode>)
-1
-
-Creates and returns a new link with label <label>, connecting from <fromloc> of <sourceCard> card to <destinationCard>.  If <displaymode> is non-nil, then the new link is displayed in the given mode.  Otherwise the default displaymode for the source card's type is used.  See the description of NCP.LinkDisplayMode for the valid entries for the <displaymode> arg.
-(NCP.GlobalLocalLink <label> <sourceCard> <destinationCard> <toloc>)
-1
-
-Not implemented at this time.
-(NCP.LocalLocalLink <label> <sourceCard> <destinationCard> <fromloc> <toloc>)
-1
-
-Not implemented at this time.
-(NCP.LinkDesc <link> <followCrossFileLinkFlg)
-1
-
-Returns list of three items (<label> <sourceDesc> <destinationDesc>) where <label> is the link type and <sourceDesc> and <destinationDesc> have the form (<anchor mode> <card> <loc>).  <anchor mode> is either LOCAL or GLOBAL, <card> is the card at this end of the link, and <loc> gives a position in the text of <card> if <anchor type> is LOCAL and <card>'s substance's type is TEXT.  If the link is a cross-file link and if <followCrossFileLinkFlg> is non-nil, then the link will be traversed, opening the remote notefile if necessary to determine information about the source or destination card of the link.
-(NCP.LinkDisplayMode <link> [<newdisplaymode>])
-1
-
-Returns old display mode of <link>.  If <newdisplaymode> is present, then set <link>'s displaymode accordingly.  If non-nil, it can be an instance of the LINKDISPLAYMODE record.  Or it can be one of the litatoms Icon, Title, Label, or Both.  Finally, it can be a list of three elements (<ShowTitleFlg> <ShowLinkTypeFlg> <AttachBitmapFlg>).  Each element can have one of the three values T, NIL, or FLOAT.  If a field, say <ShowTitleFlg>, has value FLOAT then the corresponding global parameter (DefaultLinkIconShowTitle, in this case) will be consulted to decide whether or not to display the destination card's title in this icon.  (See Section 7 for a description of the global parameters.)
-(NCP.CoerceToLinkDisplayMode <thing>)
-1
-
-Returns a LINKDISPLAYMODE record.  Thing can be a LINKDISPLAYMODE record, cardtype, card, link, atom, or list.  If thing is a LINKDISPLAYMODE record, that record is returned.  If thing is a cardtype, the default LinkDisplayMode for that cardtype is returned.  If thing is a card, the LinkDisplayMode of that card is returned.  If thing is a link, the LinkDisplayMode of that link is returned.  If thing is an atom or a list, then the corresponding LinkDisplayMode, as specified under  NCP.LinkDisplayMode (see above),  is returned.
-(NCP.LinkType<link> [<newLinkType>])
-1
-
-Returns old linktype of <link>.  If <newLinkType> is present, set <link>'s type to <newLinkType>.
-(NCP.LinkSource <link>)
-1
-
-Returns the card at the source end of <link>.
-(NCP.LinkDestination <link>)
-1
-
-Returns the card at the destination end of <link>.
-(NCP.DeleteLinks <links>)
-1
-
-Removes all links in <links> (or just one if <links> is a single link object).
-(NCP.ValidLinkP <link>)
-1
-
-Returns non-nil if <link> is a link in the current notefile.
-(NCP.SameLinkP <link1> <link2>)
-1
-
-Returns non-nil if <link1> is the same link as <link2>.  Error if either arg is not a valid link.
-(NCP.AllLinks <NoteFile>)
-1
-
-Returns a list of all existing links in <NoteFile>.  (This is equivalent to but faster than (NCP.GetLinks NIL NIL NIL <NoteFile>).)
-(NCP.MapLinks <NoteFile> <fn> <collectResultsPredicate>)
-1
-
-Maps down the set of all links in the given notefile, applying <fn> to each.  If <collectResultsPredicate> is non-nil, then for those links satisfying the predicate, the values of <fn> applied to them are collected.
-(NCP.MapLinksOfType <types> <NoteFile> <fn> <collectResultsPredicate>)
-1
-
-This is similar to NCP.MapLinks, but only looks at links whose type appears on <types>.  <types> can be a single type or a list of types.
-6.   Creating and Accessing Link Labels
-1
-
-The following functions allow the user to manipulate link labels.
-(NCP.CreateLinkType <linkType> <NoteFile> <QuietFlg>)
-1
-
-Creates a new link type with name <LinkType> in <NoteFile> unless there is already one defined by that name.  A non-NIL <QuietFlg > suppresses the error message that is normally printed if the link type has already been defined for this notefile.
-(NCP.DeleteLinkType <linkType> <NoteFile>)
-1
-
-Deletes the link type <linkType> from <NoteFile>.  The link type must exist and must not be the type of any existing link, and it must not be a system-defined link type (e.g. SubBox or BrowserContents).
-(NCP.RenameLinkType <linkType> <newLinkType> <NoteFile>)
-1
-
-Changes any links in <NoteFile> having link type <linkType> to have type <newLinkType>.  <linkType> must exist and neither <linkType> nor <newLinkType> should be a system-defined type.
-(NCP.LinkTypes <NoteFile>)
-1
-
-Returns a list of all existing link types in <NoteFile> including system-defined ones.
-(NCP.ReverseLinkTypes <NoteFile>)
-1
-
-Returns a list of the reverse link types for every link type in <NoteFile>.  Thus, whereas SubBox would appear in the list returned by NCP.LinkTypes, _SubBox (<backarrow>SubBox) would appear in the list returned by NCP.ReverseLinkTypes.
-(NCP.UserLinkTypes <NoteFile>)
-1
-
-Returns a list of all existing user-defined link labels in <NoteFile>.
-(NCP.SystemLinkTypeP  <LinkType>)
-1
-
-Returns non-nil if <LinkType> is a system link type..
-(NCP.ValidLinkTypeP <LinkType> <NoteFile>)
-1
-
-Returns non-nil if <LinkType> is a defined link type for <NoteFile>.
-7.   Customizing the NoteCards Interface
-1
-
-There are currently several areas where the user may tailor the NoteCards user interface:  the NoteCards Session Icon menus, the left button menu on the title bar of a notefile's menu icon, the middle button menu of a notefile's menu icon,  the ShowCards middle button menu on a notefile's menu icon, and the title bar menus of displayed cards and card types key.ˇˇ  
-ˇ  	The BACK SPACE key is DELETE WORD.
- ˇˇ  	 T h e  ˇ DELETEˇˇ    k e y   i s  ˇ BACK SPACE.ˇˇ  
-ˇ  ˇˇ  	 T h e   R I G H T   k e y   i s   E X P A N Dˇ .	ˇˇ  	ˇ 
-Sun Type 3 Keyboard
-1
-
-Figures 4-1 through 4-3 show NoteCards's key assignments for the Sun Type 3 keypads. 
-((SKETCH  "figure from {ERIS}<DOC>MAIKO>BETA2>KEYBOARDS.TEDIT;4" VERSION 3 PRIRANGE  (95 . 0) SKETCHCONTEXT  ((ROUND 1 BLACK)  (GACHA 10  (MEDIUM REGULAR REGULAR))  (CENTER BASELINE)  (CURVE  18.0 8) NIL NIL  (CENTER CENTER)  (NIL NIL NIL) T NIL NIL 1 NIL))  ((0.04  20.0  (PRI 6))  (TEXTBOX  (0 40 40 40)  ("Find")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((8.5  53.5 23 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 7))  (TEXTBOX  (40 40 40 40)  ("Delete")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((41.0  53.5 38 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 24))  (TEXTBOX  (0 80 40 40)  ("Open")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((5.0  93.5 30 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 25))  (TEXTBOX  (40 80 40 40)  ("Copy")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((46.  93.5 28 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 42))  (TEXTBOX  (0 120 40 40)  ("Same")  1.0  (£tÔtoıØtÔt/µ∫∫¶¢Ï7toÔıè˚∫∫¶´Ï„wı+4<@£uoı+4<@£u/µ∑∫∫¶¶ä±˙∫∫èˇˇ±Ç∫ˇ˚∫èˇ∑∑∫π˝„ı∫¶+¨@Ôwı˚∫π˝£µ∫π˝„ı∫¶˙∫π˝„ıπ˝£µ∑∑∫∫¶¶˙±˙ä∫∫˚˙±˙∫∫¶j/˝ıäˇ∑∑∫∫¶t}CØÏ}ı∫¶ä˙∫è˚˙∫ä˙∫ä˙∑∫∫¶ª¢èÙø∑∫∫è±˙∫∫¶ØtÔtoıØtÔt/µ∫∫¶¢Ï7toÔıè˚∫∫¶´Ï„wı+ts the session icon window.
-(NCP.BringUpSessionIcon <IconPosition>)
-1
-
-Brings up the NoteCards icon at IconPosition.  If no IconPosition is given and the icon is already on the screen, it will be flashed.  If it is not on the screen, the user will be prompted to place it.
-The left button menu on the title bar of a notefile's menu icons:  The user may modify this menu using the following functions.
-(NCP.AddNoteFileIconMenuItem <Item> <OpenOrClosedOrBoth> )
-1
-
-Adds the menu item <Item> to the NoteFile icon menu.  <Item> should be a complete menu item and may contain subitems..  The second part of the menu item (and of any subitems) should be a function of two arguments: NoteFile and Window.  Window will be the icon window for the notefile.  This function will be applied to these arguments when this menu item is selected.  <OpenOrClosedOrBoth> specifies for which type of notefile the new operation will be valid.  If <OpenOrClosedOrBoth> is 'Open, the item will appear as an operation for open notefiles.  If <OpenOrClosedOrBoth> is 'Closed, the item will appear as an operation for closed notefiles.  If <OpenOrClosedOrBoth> is 'Both, the item will be available for both open and closed notefiles.
-Returns the full item added if successful, NIL otherwise.
-Example:  
-(NCP.AddNoteFileIconMenuItem '(Foo% Function NC.DoFoo "Performs the function Foo on this notefile") 'Open)
-(NCP.RemoveNoteFileIconMenuItem  <ItemName> )
-1
-
-Removes the menu item named <ItemName> from the NoteFile icon menu.
-Returns the full item removed if successful, NIL otherwise.
-Example:  
-(NCP.RemoveNoteFileIconMenuItem 'Foo% Function )
-(NCP.RestoreNoteFileIconMenu )
-1
-
-Restores the NoteFile Icon menu to its initial state.
-The middle button menu of a notefile's menu icon: It is now possible for users to add menu items to this menu using the following functions.
-(NCP.AddNoteFileIconMiddleButtonItems  <Notefile><MenuItems>)
-1
-
-Adds list of menu items <MenuItems> to the middle button menu of the main menu icon corresponding to <Notefile>.  These menu items will remain on the menu until the next time the notefile is closed.  The second item of each menu item should be an atom that is the name of a function to be called when selected.
-(NCP.AddDefaulltNoteFileIconMiddleButtonItems  <MenuItems>)
-1
-
-Adds list of menu items <MenuItems> to the middle button menu of the main menu icons for all notefiles.  These menu items will remain on the menus for the life of the session.  The second item of each menu item should be an atom that is the name of a function to be called when selected.
-The ShowCards middle button menu on the notefile icon:  Users can indicate that certain cards should be added to or deleted from this menu using the following functions.
-(NCP.AddSpecialCard   <Card>)
-1
-
-Adds <Card> to the list of special cards appearing in the middle button menu on the ShowCards option of the notefile icon (for the notefile containing <Card>).
-(NCP.RemoveSpecialCard    <Card>)
-1
-
-Removes <Card> from the list of special cards appearing in the middle button menu on the ShowCards option of the notefile icon (for the notefile containing <Card>).
-The title bar menus of cards and card types:  Users can add menu items to either a  specific window containing a card, or to the default menu of a card type.
-(NCP.AddTitleBarMenuItemsToWindow <Win> <Button> <NewMenuItems><TopOrBottom>)
-1
-
-Adds the menu items <NewMenuItems> to the title bar menu of <Win>.  <Button> should be one of 'Left or 'Middle, corresponding to either the LeftButtonTitleBarMenu or the MiddleButtonTitleBarMenu. <Win> should be the window of a visible notecard. <TopOrBottom> should be one of 'Top or 'Bottom, indicating where in the menu the new items should appear.
-(NCP.AddTitleBarMenuItemsToType <Type> <Button> <NewMenuItems> <TopOrBottom>)
-1
-
-Adds the menu items <NewMenuItems> to the title bar menu of all cards of type <Type>.  <Button> should be one of 'Left or 'Middle, corresponding to either the LeftButtonTitleBarMenu or the MiddleButtonTitleBarMenu. <TopOrBottom> should be one of 'Top or 'Bottom, indicating where in the menu the new items should appear.
-Menu of notefiles:  the user may use the list and menu of noticed notefiles maintained by NoteCards.
-NCP.NoticedNoteFileNames
-1
-
-Global var containing a list of the currently available notefile names noticed by NoteCards.
-(NCP.NoticedNoteFileNamesMenu <IncludeNewNoteFileFlg> <AllowedOperations> <InterestedWindow> <Operation>))
-1
-
-Provides user with a menu of noticed notefile names.  <IncludeNewNoteFileFlg> should be non-NIL if new notefiles are allowed.  <AllowedOperations> should be one of the atoms: OPEN, CLOSED or NIL for both. <Operation> should be a string or atom containing the name of the operation to be performed on the result and the word NoteFile; e.g. (QUOTE Open% NoteFile).  This is used in the prompt for a new notefile name.  <InterestedWindow> is the window to receive a prompt window for any messages printed.
-(NCP.ForgetNoteFileName <NoteFileOrFileName> )
-1
-
-The notefile is removed from the menu of noticed notefiles.  It will not be added to the menu again until explicitly remembered using NCP.RememberNoteFileName regardless of other operations performed on the notefile.
-(NCP.RememberNoteFileName <NoteFileOrFileName> )
-1
-
-The notefile is added to the menu of noticed notefiles. This is only necessary if the NoteFile name has been forgotten.  
-NCP.GrayShade
-1
-
-Global var containing the shade used for shading various menu items in the interface.  The default value of NCP.GrayShade is GRAYSHADE.  This variable should be changed with the function NCP.SetGrayShade (see below).
-(NCP.SetGrayShade  <Shade>)
-1
-
-This function should be used to change the value of NCP.GrayShade to <Shade>.  In addition to changing NCP.GrayShade, it also resets all cached menus that use NCP.GrayShade.  If <Shade> is NIL, NCP.GrayShade will not be changed, but the menus will still be reset.  Returns the new value of NCP.GrayShade.
-8.   Handy Miscellaneous Functions
-1
-
-(NCP.BringUpNoteCardsIcon <IconPosition> )
-1
-
-Brings up the NoteCards session icon at the position <IconPosition>.  If no position is given, will prompt the user th place the icon.  If the icon is already on the screen and no position is given, it will be flashed.  (equivalent to (NoteCards <IconPosition>).
-(NCP.TitleSearch <NoteFile> <keys> <caseSensitiveFlg> )
-1
-
-Returns a list of all cards in <NoteFile> having all of the <keys> (can be atom, string or list) within their titles.  Normally case insensitive unless <caseSensitiveFlg> is non-nil.
-(NCP.PropSearch <NoteFile> <propOrPair> <propOrPair>  ...)
-1
-
-Returns a list of all caTEXTBOX  (640.0 0  60.0 40)  ("Next")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((656.0  13.5 28 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  50.0  (PRI 8))  (TEXTBOX  (100.0 40  100.0 40)  ("Shift")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((136.5  53.5 27 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 9))  (TEXTBOX  (200.0 40 40 40)  ("Z
-"  "z")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((216.5  60.0 7 13)  (217.0  47.0 6 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 10))  (TEXTBOX  (240.0 40 40 40)  ("X
-"  "x")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((256.0  60.0 8 13)  (256.5  47.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 11))  (TEXTBOX  (280.0 40 40 40)  ("C
-"  "c")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((296.5  60.0 7 13)  (297.5  47.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 12))  (TEXTBOX  (320.0 40 40 40)  ("V
-"  "v")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((336.0  60.0 8 13)  (336.5  47.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 13))  (TEXTBOX  (360.0 40 40 40)  ("B
-"  "b")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((376.5  60.0 7 13)  (376.5  47.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 14))  (TEXTBOX  (400.0 40 40 40)  ("N
-"  "n")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((415.5  60.0 9 13)  (416.5  47.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 15))  (TEXTBOX  (440.0 40 40 40)  ("M
-"  "m")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((454.5  60.0 11 13)  (454.5  47.0 11 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 16))  (TEXTBOX  (480.0 40 40 40)  ("<
-"  ",")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((494.0  60.0 12 13)  (498.5  47.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 17))  (TEXTBOX  (520.0 40 40 40)  (">
-"  ".")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((534.0  60.0 12 13)  (538.5  47.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 18))  (TEXTBOX  (560.0 40 40 40)  ("?
-"  "/")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((577.0  60.0 6 13)  (578.5  47.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  30.0  (PRI 19))  (TEXTBOX  (600.0 40  60.0 40)  ("Shift")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((616.5  53.5 27 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 20))  (TEXTBOX  (660.0 40 40 40)  ("LF")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((674.0  53.5 12 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 26))  (TEXTBOX  (100.0 80 80 40)  ("Ctrl")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((130.0  93.5 20 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 27))  (TEXTBOX  (180.0 80 40 40)  ("A
-"  "a")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((195.5  100.0 9 13)  (196.5  87.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 28))  (TEXTBOX  (220.0 80 40 40)  ("S
-"  "s")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((236.5  100.0 7 13)  (237.5  87.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 29))  (TEXTBOX  (260.0 80 40 40)  ("D
-"  "d")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((275.5  100.0 9 13)  (276.5  87.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 30))  (TEXTBOX  (300.0 80 40 40)  ("F
-"  "f")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((317.0  100.0 6 13)  (317.5  87.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 31))  (TEXTBOX  (340.0 80 40 40)  ("G
-"  "g")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((355.5  100.0 9 13)  (356.5  87.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 32))  (TEXTBOX  (380.0 80 40 40)  ("H
-"  "h")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((395.5  100.0 9 13)  (396.5  87.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 33))  (TEXTBOX  (420.0 80 40 40)  ("J
-"  "j")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((437.5  100.0 5 13)  (438.5  87.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 34))  (TEXTBOX  (460.0 80 40 40)  ("K
-"  "k")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((476.0  100.0 8 13)  (476.5  87.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 35))  (TEXTBOX  (500.0 80 40 40)  ("L
-"  "l")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((517.0  100.0 6 13)  (518.5  87.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 36))  (TEXTBOX  (540.0 80 40 40)  (":
-"  ";")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((557.5  100.0 5 13)  (557.5  87.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 37))  (TEXTBOX  (580.0 80 40 40)  ("%"
-"  "'")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((596.5  100.0 7 13)  (598.5  87.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 38))  (TEXTBOX  (620.0 80 80 40)  ("Return")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((641.0  93.5 38 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  30.0  (PRI 44))  (TEXTBOX  (100.0 120  60.0 40)  ("Tab")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((119.5  133.5 21 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 45))  (TEXTBOX  (160.0 120 40 40)  ("Q
-"  "q")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((175.5  140.0 9 13)  (176.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 46))  (TEXTBOX  (200.0 120 40 40)  ("W
-"  "w")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((214.0  140.0 12 13)  (214.5  127.0 11 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 47))  (TEXTBOX  (240.0 120 40 40)  ("E
-"  "e")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((256.5  140.0 7 13)  (256.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 48))  (TEXTBOX  (280.0 120 40 40)  ("R
-"  "r")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((296.5  140.0 7 13)  (297.5  127.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 49))  (TEXTBOX  (320.0 120 40 40)  ("T
-"  "t")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((336.5  140.0 7 13)  (337.5  127.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 50))  (TEXTBOX  (360.0 120 40 40)  ("Y
-"  "y")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((376.0  140.0 8 13)  (376.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 51))  (TEXTBOX  (400.0 120 40 40)  ("U
-"  "u")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((415.5  140.0 9 13)  (416.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 52))  (TEXTBOX  (440.0 120 40 40)  ("I
-"  "i")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((458.5  140.0 3 13)  (458.5  127.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 53))  (TEXTBOX  (480.0 120 40 40)  ("O
-"  "o")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((495.5  140.0 9 13)  (496.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 54))  (TEXTBOX  (520.0 120 40 40)  ("P
-"  "p")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((536.5  140.0 7 13)  (536.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 55))  (TEXTBOX  (560.0 120 40 40)  ("{
-"  "[")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((577.0  140.0 6 13)  (578.0  127.0 4 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 56))  (TEXTBOX  (600.0 120 40 40)  ("}
-"  "]")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((617.0  140.0 6 13)  (618.0  127.0 4 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  30.0  (PRI 57))  (TEXTBOX  (640.0 120  60.0 40)  ("Backspace")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((641.5  133.5 57 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 63))  (TEXTBOX  (100.0 160 40 40)  ("Esc")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((111.5  173.5 17 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 64))  (TEXTBOX  (140.0 160 40 40)  ("!
-"  "1")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((157.5  180.0 5 13)  (156.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 65))  (TEXTBOX  (180.0 160 40 40)  ("@
-"  "2")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((194.0  180.0 12 13)  (196.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 66))  (TEXTBOX  (220.0 160 40 40)  ("#
-"  "3")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((235.5  180.0 9 13)  (236.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 67))  (TEXTBOX  (260.0 160 40 40)  ("$
-"  "4")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((276.5  180.0 7 13)  (276.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 68))  (TEXTBOX  (300.0 160 40 40)  ("%%
-"  "5")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((314.0  180.0 12 13)  (316.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 69))  (TEXTBOX  (340.0 160 40 40)  ("^
-"  "6")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((357.0  180.0 6 13)  (356.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 70))  (TEXTBOX  (380.0 160 40 40)  ("&
-"  "7")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((395.5  180.0 9 13)  (396.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 71))  (TEXTBOX  (420.0 160 40 40)  ("*
-"  "8")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((436.5  180.0 7 13)  (436.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 72))  (TEXTBOX  (460.0 160 40 40)  ("(
-"  "9")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((478.0  180.0 4 13)  (476.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 73))  (TEXTBOX  (500.0 160 40 40)  (")
-"  "0")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((518.0  180.0 4 13)  (516.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 74))  (TEXTBOX  (540.0 160 40 40)  ("_
-"  "-")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((554.0  180.0 12 13)  (558.0  167.0 4 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 75))  (TEXTBOX  (580.0 160 40 40)  ("+
-"  "=")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((594.0  180.0 12 13)  (594.0  167.0 12 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 76))  (TEXTBOX  (620.0 160 40 40)  ("|
-"  "\")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((638.5  180.0 3 13)  (638.5  167.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 77))  (TEXTBOX  (660.0 160 40 40)  ("~
-"  "`")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((677.0  180.0 6 13)  (677.0  167.0 6 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 83))  (TEXTBOX  (100.0 200 40 40)  ("Center")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((101.0  213.5 38 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 84))  (TEXTBOX  (140.0 200 40 40)  ("Bold")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((148.0  213.5 24 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 85))  (TEXTBOX  (180.0 200 80 40)  ("Italic")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((207.0  213.5 26 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 86))  (TEXTBOX  (260.0 200 80 40)  ("Case")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((287.0  213.5 26 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 87))  (TEXTBOX  (340.0 200 80 40)  ("Strikeout")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((353.5  213.5 53 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 88))  (TEXTBOX  (420.0 200 80 40)  ("Underline")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((432.5  213.5 55 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 89))  (TEXTBOX  (500.0 200 80 40)  ("Super
-"  "Sub")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((523.5  220.0 33 13)  (529.5  207.0 21 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 90))  (TEXTBOX  (580.0 200 40 40)  ("Larger
-"  "Smaller")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((581.5  220.0 37 13)  (578.5  207.0 43 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 91))  (TEXTBOX  (620.0 200 40 40)  ("Margin")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((620.0  213.5 40 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 92))  (TEXTBOX  (660.0 200 40 40)  ("Back
-"  "Word")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((667.0  220.0 26 13)  (664.5  207.0 31 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL))))
-(99.58507 -1.2448133 600.0 241.49379)
-1.2448133
-8
-
-Figure 4-3. Sun Type 3 Center Key Pad Interpretation
-Sun Type 4 Keyboard
-1
-
-Figures 4-3 through 4-5 show the keyboard and the left and right key pads for the Sun Type 4 keyboard.
-((SKETCH a% figure% from% a% document VERSION 3 PRIRANGE  (108 . 0) SKETCHCONTEXT  ((ROUND 1 BLACK)  (GACHA 10  (MEDIUM REGULAR REGULAR))  (CENTER BASELINE)  (CURVE  18.0 8) NIL NIL  (CENTER CENTER)  (NIL NIL NIL) T NIL NIL 1 NIL))  ((0.03  30.0  (PRI 1))  (TEXTBOX  (0 0 60 30)  ("Help")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((21.5  10.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 12))  (TEXTBOX  (0 30 30 30)  ("Find")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((7.0  40.0 16 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 13))  (TEXTBOX  (30 30 30 30)  ("Delete")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((33.5  40.0 23 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 30))  (TEXTBOX  (0 60 30 30)  ("Open")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((5.0  70.0 20 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 31))  (TEXTBOX  (30 60 30 30)  ("Move")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((34.5  70.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 50))  (TEXTBOX  (0 90 30 30)  ("Same")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((5.5  100.0 19 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 51))  (TEXTBOX  (30 90 30 30)  ("Copy")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((35.5  100.0 19 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 69))  (TEXTBOX  (0 120 30 30)  ("Props")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((4.5  130.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 70))  (TEXTBOX  (30 120 30 30)  ("Undo")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((34.5  130.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 89))  (TEXTBOX  (0 150 30 30)  ("Stop")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((6.5  160.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 90))  (TEXTBOX  (30 150 30 30)  ("Again")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((34.0  160.0 22 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL))))
-(-2.0 -2.0 64.0 184.0)
-1.0
-8
-	((SKETCH a% figure% from% a% document VERSION 3 PRIRANGE  (112 . 0) SKETCHCONTEXT  ((ROUND 1 BLACK)  (GACHA 10  (MEDIUM REGULAR REGULAR))  (CENTER BASELINE)  (CURVE  18.0 8) NIL NIL  (CENTER CENTER)  (NIL NIL NIL) T NIL NIL 1 NIL))  ((0.03  30.0  (PRI 9))  (TEXTBOX  (540.0 0 60 30)  ("Ins")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((564.5  10.0 11 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 10))  (TEXTBOX  (600.0 0 30 30)  ("Del")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((609.0  10.0 12 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  30.0  (PRI 11))  (TEXTBOX  (630.0 0 30 60)  ("DOIT")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((636.0  25.0 18 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 27))  (TEXTBOX  (540.0 30 30 30)  ("1
-"  "End")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((553.0  45.0 4 10)  (548.0  35.0 14 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 28))  (TEXTBOX  (570.0 30 30 30)  ("2
-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((583.0  40.0 4 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 29))  (TEXTBOX  (600.0 30 30 30)  ("3
-"  "PgDN")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((613.0  45.0 4 10)  (604.5  35.0 21 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 46))  (TEXTBOX  (540.0 60 30 30)  ("4
-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((553.0  70.0 4 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 47))  (TEXTBOX  (570.0 60 30 30)  ("5
-"  "")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((583.0  75.0 4 10)  (585.0  65.0 0 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 48))  (TEXTBOX  (600.0 60 30 30)  ("6
-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((613.0  70.0 4 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  30.0  (PRI 49))  (TEXTBOX  (630.0 60 30 60)  ("+ 
-"  "")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((640.0  90.0 10 10)  (645.0  80.0 0 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 66))  (TEXTBOX  (540.0 90 30 30)  ("7
-"  "Home")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((553.0  105.0 4 10)  (544.0  95.0 22 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 67))  (TEXTBOX  (570.0 90 30 30)  ("8
-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((583.0  100.0 4 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 68))  (TEXTBOX  (600.0 90 30 30)  ("9
-"  "PgUP")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((613.0  105.0 4 10)  (605.5  95.0 19 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 85))  (TEXTBOX  (540.0 120 30 30)  ("=")  1.0  (CENTER CENTER)  (MODERN 10  (BOLD REGULAR REGULAR))  ((550.0  129.0 10 12)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 86))  (TEXTBOX  (570.0 120 30 30)  ("/")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((584.0  130.0 2 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 87))  (TEXTBOX  (600.0 120 30 30)  ("*")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((613.0  130.0 4 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 88))  (TEXTBOX  (630.0 120 30 30)  ("-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((643.5  130.0 3 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 105))  (TEXTBOX  (540.0 150 30 30)  ("Break")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((545.0  160.0 20 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 106))  (TEXTBOX  (570.0 150 30 30)  ("PrSc")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((577.5  160.0 15 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 107))  (TEXTBOX  (600.0 150 30 30)  ("scroll
-"  "lock")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((605.0  165.0 20 10)  (607.5  155.0 15 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 108))  (TEXTBOX  (630.0 150 30 30)  ("num
-"  "lock")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((636.5  165.0 17 10)  (637.5  155.0 15 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.0  5.935486  (PRI 109))  (WIRE  ((608.4516 .  71.93548)  (620.3226 .  71.93548))  (ROUND  0.7419355 BLACK)  (NIL  (SOLID  23.0  5.935484) NIL) NIL 1  (607.70966  71.19354  13.354843  1.483871)  (NIL  ((620.3226 .  71.93548)  (614.85895 .  69.6163)  (614.85895 .  74.254654)))))  ((0.0  5.935486  (PRI 110))  (WIRE  ((560.9677 .  71.93548)  (549.09674 .  71.93548))  (ROUND  0.7419355 BLACK)  (NIL  (SOLID  23.0  5.935484) NIL) NIL 1  (548.3548  71.19354  13.354843  1.483871)  (NIL  ((549.09674 .  71.93548)  (554.56036 .  74.254654)  (554.56036 .  69.6163)))))  ((0.0  4.4516144  (PRI 111))  (WIRE  ((584.70966 .  94.64516)  (584.70966 .  103.548386))  (ROUND  0.7419355 BLACK)  (NIL  (SOLID  23.0  5.935484) NIL) NIL 1  (583.9677  93.90322  1.483871  10.3871)  (NIL  ((584.70966 .  103.548386)  (587.0288 .  98.08475)  (582.3905 .  98.08475)))))  ((0.0  4.4516144  (PRI 112))  (WIRE  ((582.70966 .  41.225807)  (582.70966 .  32.32258))  (ROUND  0.7419355 BLACK)  (NIL  (SOLID  23.0  5.935484) NIL) NIL 1  (581.9677  31.580643  1.483871  10.3871)  (NIL  ((582.70966 .  32.32258)  (580.3905 .  37.78622)  (585.0288 .  37.78622))))))
-(538.0 -2.0 124.0 184.0)
-1.0
-8
-
-Figure 4-3. Sun Type 4 	Figure 4-4. Sun Type 4
-	 Left Key Pad		Right Key Pad
-((SKETCH a% figure% from% a% document VERSION 3 PRIRANGE  (108 . 0) SKETCHCONTEXT  ((ROUND 1 BLACK)  (GACHA 10  (MEDIUM REGULAR REGULAR))  (CENTER BASELINE)  (CURVE  18.0 8) NIL NIL  (CENTER CENTER)  (NIL NIL NIL) T NIL NIL 1 NIL))  ((0.03  22.5  (PRI 2))  (TEXTBOX  (75.0 0  45.0 30)  ("Caps")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((88.5  10.0 18 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 3))  (TEXTBOX  (120.0 0 30 30)  ("Meta")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((125.5  10.0 19 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 4))  (TEXTBOX  (150.0 0 30 30)  ("Left
-"  "Spc")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((158.0  15.0 14 10)  (158.5  5.0 13 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  127.5  (PRI 5))  (TEXTBOX  (180.0 0  255.0 30)  ("Space")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((297.0  10.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 6))  (TEXTBOX  (435.0 0 30 30)  ("Right
-"  "Spc")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((440.0  15.0 20 10)  (443.5  5.0 13 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 7))  (TEXTBOX  (465.0 0 30 30)  ("Expand")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((466.5  10.0 27 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 8))  (TEXTBOX  (495.0 0 30 30)  ("Next")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((501.5  10.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  37.5  (PRI 14))  (TEXTBOX  (75.0 30  75.0 30)  ("Shift")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((104.0  40.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 15))  (TEXTBOX  (150.0 30 30 30)  ("Z
-"  "z")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((163.0  45.0 4 10)  (163.0  35.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 16))  (TEXTBOX  (180.0 30 30 30)  ("X
-"  "x")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((192.5  45.0 5 10)  (193.0  35.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 17))  (TEXTBOX  (210.0 30 30 30)  ("C
-"  "c")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((222.5  45.0 5 10)  (223.0  35.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 18))  (TEXTBOX  (240.0 30 30 30)  ("V
-"  "v")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((252.5  45.0 5 10)  (253.0  35.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 19))  (TEXTBOX  (270.0 30 30 30)  ("B
-"  "b")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((282.5  45.0 5 10)  (282.5  35.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 20))  (TEXTBOX  (300.0 30 30 30)  ("N
-"  "n")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((312.0  45.0 6 10)  (312.5  35.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 21))  (TEXTBOX  (330.0 30 30 30)  ("M
-"  "m")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((341.0  45.0 8 10)  (341.5  35.0 7 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 22))  (TEXTBOX  (360.0 30 30 30)  ("<
-"  ",")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((371.0  45.0 8 10)  (374.0  35.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 23))  (TEXTBOX  (390.0 30 30 30)  (">
-"  ".")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((401.0  45.0 8 10)  (404.0  35.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 24))  (TEXTBOX  (420.0 30 30 30)  ("?
-"  "/")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((433.0  45.0 4 10)  (434.0  35.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  22.5  (PRI 25))  (TEXTBOX  (450.0 30  45.0 30)  ("Shift")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((464.0  40.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 26))  (TEXTBOX  (495.0 30 30 30)  ("LF")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((506.0  40.0 8 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  30.0  (PRI 32))  (TEXTBOX  (75.0 60 60 30)  ("Ctrl")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((98.5  70.0 13 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 33))  (TEXTBOX  (135.0 60 30 30)  ("A
-"  "a")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((147.0  75.0 6 10)  (148.0  65.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 34))  (TEXTBOX  (165.0 60 30 30)  ("S
-"  "s")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((178.0  75.0 4 10)  (178.0  65.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 35))  (TEXTBOX  (195.0 60 30 30)  ("D
-"  "d")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((207.0  75.0 6 10)  (207.5  65.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 36))  (TEXTBOX  (225.0 60 30 30)  ("F
-"  "f")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((238.0  75.0 4 10)  (238.5  65.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 37))  (TEXTBOX  (255.0 60 30 30)  ("G
-"  "g")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((267.0  75.0 6 10)  (267.5  65.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 38))  (TEXTBOX  (285.0 60 30 30)  ("H
-"  "h")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((297.0  75.0 6 10)  (297.5  65.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 39))  (TEXTBOX  (315.0 60 30 30)  ("J
-"  "j")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((328.5  75.0 3 10)  (329.0  65.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 40))  (TEXTBOX  (345.0 60 30 30)  ("K
-"  "k")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((357.5  75.0 5 10)  (358.0  65.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 41))  (TEXTBOX  (375.0 60 30 30)  ("L
-"  "l")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((388.0  75.0 4 10)  (389.0  65.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 42))  (TEXTBOX  (405.0 60 30 30)  (":
-"  ";")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((418.5  75.0 3 10)  (418.5  65.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 43))  (TEXTBOX  (435.0 60 30 30)  ("%"
-"  "'")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((448.0  75.0 4 10)  (449.0  65.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 44))  (TEXTBOX  (465.0 60 30 30)  ("~
-"  "`")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((478.0  75.0 4 10)  (478.0  65.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  30.0  (PRI 45))  (TEXTBOX  (495.0 60 30 60)  ("Return")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((497.5  85.0 25 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  22.5  (PRI 52))  (TEXTBOX  (75.0 90  45.0 30)  ("Tab")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((91.0  100.0 13 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 53))  (TEXTBOX  (120.0 90 30 30)  ("Q
-"  "q")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((132.0  105.0 6 10)  (132.5  95.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 54))  (TEXTBOX  (150.0 90 30 30)  ("W
-"  "w")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((161.0  105.0 8 10)  (161.5  95.0 7 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 55))  (TEXTBOX  (180.0 90 30 30)  ("E
-"  "e")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((193.0  105.0 4 10)  (193.0  95.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 56))  (TEXTBOX  (210.0 90 30 30)  ("R
-"  "r")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((222.5  105.0 5 10)  (223.5  95.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 57))  (TEXTBOX  (240.0 90 30 30)  ("T
-"  "t")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((253.0  105.0 4 10)  (253.5  95.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 58))  (TEXTBOX  (270.0 90 30 30)  ("Y
-"  "y")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((282.5  105.0 5 10)  (283.0  95.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 59))  (TEXTBOX  (300.0 90 30 30)  ("U
-"  "u")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((312.0  105.0 6 10)  (312.5  95.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 60))  (TEXTBOX  (330.0 90 30 30)  ("I
-"  "i")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((344.0  105.0 2 10)  (344.0  95.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 61))  (TEXTBOX  (360.0 90 30 30)  ("O
-"  "o")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((372.0  105.0 6 10)  (372.5  95.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 62))  (TEXTBOX  (390.0 90 30 30)  ("P
-"  "p")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((403.0  105.0 4 10)  (402.5  95.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 63))  (TEXTBOX  (420.0 90 30 30)  ("{
-"  "[")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((433.0  105.0 4 10)  (433.5  95.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 64))  (TEXTBOX  (450.0 90 30 30)  ("}
-"  "]")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((463.0  105.0 4 10)  (463.5  95.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.015  15.0  (PRI 65))  (TEXTBOX  (480.0 90  15.0 30)  ("")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((487.5  100.0 0 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 71))  (TEXTBOX  (75.0 120 30 30)  ("Esc")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((84.0  130.0 12 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 72))  (TEXTBOX  (105.0 120 30 30)  ("!
-"  "1")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((118.5  135.0 3 10)  (118.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 73))  (TEXTBOX  (135.0 120 30 30)  ("@
-"  "2")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((146.0  135.0 8 10)  (148.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 74))  (TEXTBOX  (165.0 120 30 30)  ("#
-"  "3")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((177.0  135.0 6 10)  (178.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 75))  (TEXTBOX  (195.0 120 30 30)  ("$
-"  "4")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((208.0  135.0 4 10)  (208.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 76))  (TEXTBOX  (225.0 120 30 30)  ("%%
-"  "5")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((236.0  135.0 8 10)  (238.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 77))  (TEXTBOX  (255.0 120 30 30)  ("^
-"  "6")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((268.0  135.0 4 10)  (268.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 78))  (TEXTBOX  (285.0 120 30 30)  ("&
-"  "7")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((297.0  135.0 6 10)  (298.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 79))  (TEXTBOX  (315.0 120 30 30)  ("*
-"  "8")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((328.0  135.0 4 10)  (328.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 80))  (TEXTBOX  (345.0 120 30 30)  ("(
-"  "9")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((358.5  135.0 3 10)  (358.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 81))  (TEXTBOX  (375.0 120 30 30)  (")
-"  "0")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((388.5  135.0 3 10)  (388.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 82))  (TEXTBOX  (405.0 120 30 30)  ("_
-"  "-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((416.0  135.0 8 10)  (418.5  125.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 83))  (TEXTBOX  (435.0 120 30 30)  ("+
-"  "=")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((446.0  135.0 8 10)  (446.0  125.0 8 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  30.0  (PRI 84))  (TEXTBOX  (465.0 120 60 30)  ("Back
-"  "Space")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((486.5  135.0 17 10)  (484.5  125.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 91))  (TEXTBOX  (75.0 150 30 30)  ("F1
-"  "Center")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((86.0  165.0 8 10)  (78.0  155.0 24 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 92))  (TEXTBOX  (105.0 150 30 30)  ("F2
-"  "Bold")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((116.0  165.0 8 10)  (111.5  155.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 93))  (TEXTBOX  (135.0 150 30 30)  ("F3
-"  "Italic")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((146.0  165.0 8 10)  (141.5  155.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 94))  (TEXTBOX  (165.0 150 30 30)  ("F4
-"  "Case")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((176.0  165.0 8 10)  (171.5  155.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 95))  (TEXTBOX  (195.0 150 30 30)  ("F5
-"  "Strike")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((206.0  165.0 8 10)  (200.0  155.0 20 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 96))  (TEXTBOX  (225.0 150 30 30)  ("F6
-"  "Under")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((236.0  165.0 8 10)  (228.5  155.0 23 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 97))  (TEXTBOX  (255.0 150 30 30)  ("F7
-"  "Super")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((266.0  165.0 8 10)  (259.5  155.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 98))  (TEXTBOX  (285.0 150 30 30)  ("F8
-"  "Large")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((296.0  165.0 8 10)  (290.0  155.0 20 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 99))  (TEXTBOX  (315.0 150 30 30)  ("F9
-"  "Margin")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((326.0  165.0 8 10)  (316.5  155.0 27 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 100))  (TEXTBOX  (345.0 150 30 30)  ("F10
-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((354.0  160.0 12 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 101))  (TEXTBOX  (375.0 150 30 30)  ("F11
-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((384.0  160.0 12 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 102))  (TEXTBOX  (405.0 150 30 30)  ("F12
-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((414.0  160.0 12 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 103))  (TEXTBOX  (435.0 150 30 30)  ("|
-"  "\")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((449.0  165.0 2 10)  (449.0  155.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  30.0  (PRI 104))  (TEXTBOX  (465.0 150 60 30)  ("Delete
-"  "Word")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((483.5  165.0 23 10)  (484.5  155.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL))))
-(74.0 -1.0 452.0 182.0)
-1.0
-8
-
-Figure 4-5. Sun Type 4 Center Key Pad Interpretation
-Note:	In SunOS 4.0, the NEXT (ALT/GRAPH) key on the Type 4 keyboard is inaccessible.  Later versions of SunOS are believed to fix this.
-
-2
-
-Console Messages
-1
-
-Under SunOS, various system processes and operations attempt to log information on the console. Since NoteCards takes over the screen, console messages are redirected; a background process in NoteCards causes them to  appear in the prompt window.
-When NoteCards is run remotely (i.e., not from the console), most console, or operating system, messages are printed in the prompt window.  Some messages may also appear in the middle of the NoteCards display screen or on the remote tty. This occurs because UNIX is often confused about where to send messages.  NoteCards is normally run remotely only for debugging purposes.   
-(1)
-
-CAUTION
-Critical UNIX system processes can hang if the buffer holding console messages fills.  There are two points to watch for:
-NoteCards uses a temporary file, /tmp/XXXX-lisp.log, where XXXX is the user's login name, to buffer console messages before printing them.  Do not delete this log file while NoteCards  is running.  If the log file is deleted, console messages can no longer be printed in the NoteCards  prompt window.
-The process \10MBWATCHER, used to watch for Ethernet packets, reads console messages. Thus, you should never kill the \10MBWATCHER process, even if you don't use the Ethernet capabilities of NoteCards. If you do kill the  \10MBWATCHER process, console messages cannot be printed and the operating system can hang.
-(1)
-
-2
-
-File Compatibility
-1
-
-Sysout Compatibility between Sun and Xerox Workstations
-1
-
-Sysout files created on Xerox Workstations can be moved to Sun workstations.  However, sysout files created on Sun Workstations cannot be moved to Xerox workstations.
-File Compatibility between Sun and Xerox Workstations
-1
-
-Some care must be taken in moving files to and from Xerox workstations and services, since the default end-of-line convention in UNIX is to terminate lines with the line feed (LF) character, while traditionally Xerox systems have terminated lines with the carriage return (CR) character. In particular, if you use some other file transfer mechanism, such as FTP or Kermit, be careful to transfer .TEDIT and .NOTEFILE files in binary mode.  
-In NoteCards on the Sun Workstation, the default end-of-line convention for all text files is line feed (LF). The default end-of-line convention for all binary files is carriage return (CR); this is because CR is used internally in the system.
-When working with the Xerox protocols XNS and PUP as well as Sun NFS, it is important that you use the suffix .TEDIT on all TEdit files, the suffix .SKETCH on all Sketch files, and the suffix .NOTEFILE on all notefiles for NoteCards to treat the files properly when moving them from one device to another.
-TEdit files not transfered in binary mode frequently get "Font not found." error messages when you try to open then.  The carriage returns, which are represented by the number 13, are reinterpreted as font information and the system breaks trying to look for a font of size 13.  These files are irrecoverably lost.
-Notefile Compatibility with Prerelease Versions of NoteCards
-1
-
-NoteCards 1.1 uses an internal format for notefiles different from that used in prerelease versions of NoteCards.  Prerelease notefiles must be converted to the new format before they can be used in NoteCards 1.1.
-Conversion is one-way.  Once a notefile is converted to the new format and used in Envos NoteCards, it cannot be converted back to the old format.  Conversion is non-destructive.  The converted notefile is a copy of the original notefile, so the original notefile is still available for use with prerelease versions of NoteCards.
-Conversion is carried out automatically the first time you open a prerelease notefile using NoteCards 1.1.  The conversion process copies and reformats the notefile, then opens the copy.  The new notefile has the same name but higher version number than the old prerelease notefile.
-Conversion takes from 10 minutes for a small notefile to an hour or more for a very large notefile.  Conversion  requires disk space equal to 120% of the space required by a compacted version of the prerelease notefile.  The converter does not check beforehand to see if it has enough disk space to complete the conversion.  It will simply crash if it runs out of space.   Therefore, make sure there is plenty of disk space available before starting any conversions.
-Note that in order to convert a prerelease notefile, all of the card types contained in that notefile must be available in NoteCards 1.1.  An attempt to convert a notefile containing a card type not available in NoteCards 1.1 will cause the conversion to fall into a break window.  Typing ^ into the break window will exit the break and abort the conversion.
-2
-
-Using SunOS Files from NoteCards
-1
-
-You can access any mounted SunOS file system directly from NoteCards. The mounted file system is available as an I/O device of the NoteCards environment. This file system appears as the local disk of NoteCards, even though it may be a remotely mounted file system of networked Sun file servers.
-Many of the file devices to which the NoteCards environment can talk, including PUP, XNS file servers, the {CORE} device, and others, have facilities that are not directly supported by SunOS.  For example, many file systems have file version numbers and case insensitive file search conventions.  
-NoteCards on the Sun Workstation has two distinct "host" names that can be used to access the SunOS file system.  These host names are provided for compatibility with existing applications and tools.  They also simultaneously allow natural interaction with the SunOS file system.  The names are:
-	{DSK}	On the Sun Workstation, the {DSK} device allows you to access the file system using similar conventions to those used for Xerox services. In particular, {DSK} files have version numbers; {DSK} file name recognition also ignores the case of letters.
-	{UNIX}	The {UNIX} device lets you use the mounted file systems with the normal naming conventions of the SunOS file system. {UNIX} files do not have version numbers, and the file name recognition treats lower case letters as distinct from their upper case equivalents.
-File streams can be opened or closed on both devices. The reason for having both devices is to more easily support the running of applications that were originally developed using Xerox services, while still allowing new applications to interact more naturally with UNIX.
-File Naming Conventions
-1
-
-In NoteCards, a file name (pathname) consists of a collection of fields: the host, directory, name, extension and version. These fields are optional. The standard NoteCards syntax for these fields is:
-{host}<directory>name.extension;version
-The directory field can be a directory path consisting of a sequence of directory and subdirectory components.   Slashes (/) and right angle brackets (>) can be used to delimit a directory name; there is no distinction made between them.  However, you should use one delimiter or the other consistently.  What the directory returns is unpredictable if you mix delimiters.  Note that square brackets ([]) are not acceptable as  directory delimiters.
-Common {DSK} and {UNIX} Naming Conventions
-1
-
-*ˇˇ  	ˇ The following special characters cannot be used: backslash (\), slash (/), right angle bracket (>), semicolon (;) and tilde (~).  Thus, from {DSK} you cannot name files containing these characters.  The following UNIX file names are illegal in NoteCards:  
-	foo/fee
-	foo>fee
-	foo;3
-	foo;
-*ˇˇ  	ˇ {DSK} cannot distinguish between a file name with a period (e.g., foo.) and a simple file name (e.g., foo).  For {DSK}, each is version 1 of the file (e.g., {DSK}foo.;1).
-*ˇˇ  	ˇ On {DSK}, the C-Shell and SunOS directory notations (~, ., and ..) are only allowed in the NoteCards directory specifications at the very beginning of the directory specification of a pathname.  The tilde character (~) corresponds to the user's home directory at login.  The period (.) corresponds to the current working directory, while two periods (..) indicates the parent of the current working directory.
-{DSK} Naming Conventions
-1
-
-File access to the {DSK} device goes through the following file name transformation when actually accessing the SunOS file system:
-*ˇˇ  	ˇ Mixed case letters are read as such.  
-*ˇˇ   ˇ 	File name searches are done case sensitive first; if a match is not found, the system then does a case insensitive search.  
-*ˇˇ  	ˇ A left angle bracket (<) is translated to a slash (/), the delimiter for the root directory.
-*ˇˇ  	 { D S K }   d o e s   n o t   a c cˇ eˇˇ  p tˇ  file names ending in tilde (~).
-*ˇˇ  	 { D S K }   s u p p o r t sˇ  ˇˇ  r e l a t i v e   p a t h n a m eˇ sˇˇ  .ˇ   You can specify relative pathnames by omitting a slash (/) or left angle bracket (<) as the first character in the directory field.  For example, {DSK}foo.fee and  {DSK}~/foo.fee are relative to your UNIX home directory ( ~/foo.fee).
-	{DSK}./foo.fee is relative to your current working directory (SunOS ./foo.fee).
-	{DSK}../foo.fee is relative to the parent directory of your current UNIX working directory (../foo.fee).
-	However, a combination of relative path specifiers (~, ., ..) is not supported.  For instance, {DSK} cannot interpret {DSK}~/../anotherone/foo.c.  In addition, {DSK} does not support the tilde-name (~name) convention (e.g., {DSK} cannot interpret {DSK}~tom/foo.c).  ˇˇ  { D S K }  ˇ also ˇˇ  d o e s   n o t   a c cˇ eˇˇ  p tˇ  file names ending in tilde; a {DSK} file name ending in tilde causes an error message to appear in the prompt window. 
-Version Numbering
-1
-
-The UNIX file system does not support version numbers in file names; {DSK} emulates versions with a naming convention.  This section explains how {DSK} version numbers are represented in the SunOS file system.
-*ˇˇ  	ˇ When you create a completely new file, it appears in the SunOS file system without a version number.
-{DSK} Name From NoteCards	 File Name From SunOS
-bar.baz;1		bar.baz
-*ˇˇ  	ˇ When you create (from NoteCards) a file with a version other than 1,  NoteCards adds version numbers to that file name, as a trailing number between tildes, e.g., "myfile.~12~" for the 12th version of myfile.
-The following shows some examples of equivalent file names in NoteCards and SunOS.
-{DSK} Name From NoteCards	 File Name From SunOS
-bar.baz;1		bar.baz.~1~
-bar.baz;2		bar.baz.~2~
-bar.;23		bar.~23~
-*	NoteCards always maintains a versionless file which is hard-linked to the highest extant version of the file (i.e., they are two names for the very same file).  This file name does not appear in the {DSK} directory listing.
-From {DSK}		From SunOS
-foo.c;15	foo.c (hard linked with foo.c.~23~)	
-foo.c;23	foo.c.~15~	
-	foo.c.~23~		
-ˇˇ  	ˇ Similarly, a file created in UNIX with no version number is treated by {DSK} as the highest version.
-*	When you create a new version of a file, the versionless-file link is broken, and the versionless file is hard-linked to the new highest version.	
-From {DSK}		From SunOS	
-foo.c;15	foo.c (hard linked with foo.c.~24~)	
-foo.c;22	foo.c.~15~	
-foo.c;24 (new file)	foo.c.~23~ (no link with foo.c)	
-	foo.c.~24~ (new file, link from 
-	foo.c)	
-*ˇˇ  	ˇ When you delete the highest version of a file, the versionless file is also deleted.  If any older versions of the file remain, a new link is created from the versionless name to the highest version extant.  For example, if you have the files
-From {DSK}		From SunOS
-foo.c;1	foo.c (linked to foo.c.~2~)	
-foo.c;2	foo.c.~1~	
-	foo.c.~2~
-	and you delete foo.c;2 from {DSK}, the resulting files are:
-From {DSK}	From SunOS
-foo.c;1	foo.c (linked to foo.c.~1~)
-	foo.c.~1~
-*ˇˇ  	ˇ When you rename a file it works the same as deleting the file under the old name then creating it under the new name.  For example, if you have the following {DSK} files,
-	From {DSK}	From SunOS
-foo.c;1	foo.c (linked to foo.c.~2~)
-foo.c;2	foo.c.~1~
-fee.c;1	foo.c.~2~
-fee.c;2	fee.c	(linked to fee.c.~2~)
-	fee.c.~1~
-	fee.c.~2~ 
-	and you rename "foo.c" to "fee.c", your renamed {DSK} files and the linked SunOS files would appear as
-	From {DSK}	From SunOS
-foo.c;1	foo.c (linked to foo.c.~1~)
-fee.c;1	foo.c.~1~ 
-fee.c;2	fee.c	(linked to fee.c.~3~)
-fee.c;3	fee.c.~1~
-	fee.c.~2~
-	fee.c.~3~ (renamed file)
-*ˇˇ  	ˇ Whenˇˇ   ˇ a file has a ˇˇ  n a m e   s u f f i xˇ  thatˇˇ    i s   n o tˇ  a valid version number (e.g.,ˇˇ   ˇ myfile.~12x~), that file is inaccessible using {DSK}.		
-	From {DSK}	From SunOS
-ˇˇ Ô%ˇ 	myfile.~12x~
-Pathnames
-1
-
-A pathname on {DSK} is always case insensitive. When you specify a file, the {DSK} device handler first searches for the file with the specified name. If no such file is found, it then searches for a file with the same spelling but different case.  
-If a pathname on {DSK} has no directory specification, a tilde-slash combination (~/) is used, i.e.,  the NoteCards directory specification {DSK}foo is the equivalent of UNIX ~/foo. 
-{UNIX} Naming Conventions
-1
-
-For the {UNIX} device, file name translation takes place only on the directory.  An initial left angle bracket (<) is treated as if it were an initial slash (/); both signify a path relative to the SunOS file system root directory; if there is no initial left angle bracket or slash, the directory is relative to the current working directory.  Initially this is the working directory where NoteCards was started; you can change it using the CHDIR function, described below.  Tilde (~) translates to your home directory. 
-For example, 
-{UNIX}myfile/abc
- means the file abc on the ./myfile/  directory.
-The {UNIX} device does not recognize version numbers, does not return them, and ignores them for recognition.
-No case translation or recognition is done; upper and lower case letters are treated as distinct.
-Examples:
-{UNIX} Name From NoteCards	File Name From SunOS	 
-<foo>fee>bar.baz;1	/foo/fee/bar.baz;1
-<foo>fee/bar.;1	/foo/fee/bar.;1
-<foo/fee>	/foo/fee/
-</foo/fee/>	/foo/fee/
-/foo/fee/bar.~1~	/foo/fee/bar.~1~
-/foo/fee/	/foo/fee/
-In the first two examples the ;1 is treated as part of the file name, not the version number.  Note  in the last two examples that translation is not done.
-Directories
-1
-
-In places where NoteCards expects a directory name, {UNIX} paths must end with a slash (/).
-Directory Enumeration
-1
-
-You cannot use the wildcard character, asterisk (*), in subdirectories for either {DSK} or {UNIX} devices.  For example, typing 
-{DSK}/users/x*/foo
-into the FileBrowser prompt window will return
-No files in group {DSK}<users>x*>foo.*;*
-Enumeration of files in directories differs between {DSK} and {UNIX} devices.  On the {DSK} device, a versionless file which has a link to the highest version file is not enumerated in a directory.   
-On the {UNIX} device, all files are enumerated in a directory.  For instance, if the following SunOS files, linked with foo.c.~2~ exist
-foo.c
-foo.c.~1~
-foo.c.~2~
-the {DSK} directory enumeration,  would look like this:
-{DSK}/users/envos/foo.c;1 {DSK}/users/envos/foo.c;2
-The {UNIX}  directory enumeration, on the other hand, would look like this:
-{UNIX}/users/envos/foo.c {UNIX}/users/envos/foo.c.~1~ {UNIX}/users/envos/foo.c.~2~
-Directory Creation
-1
-
-	{DSK}	When you write a new file on {DSK}, if the directory named in a pathname does not exist, the {DSK} device handler creates the directory automatically. This feature is provided for compatibility with Xerox services.
-If you try to connect to a nonexistent directory (using the Directory Connector tool), NoteCards beeps and prints the following message in the system prompt window
-Not a valid directory name.
-	{UNIX}	The {UNIX} device does not support such directory creation. An attempt to create a file on a nonexistent directory results in an error.  NoteCards beeps and prints the following message in the system prompt window.
-System call error: stat errno = 2
-No such file or directory.
-Neither {UNIX} nor {DSK} support automatic directory deletion.  To delete a directory you must use the SunOS C-Shell command rmdir.
-Open File Limit	
-1
-
-The number of simultaneously open {DSK} and {UNIX} files must fall within the SunOS limits for a process.  For OS 3.4, this number of open files may be configured, with 30 as the maximum permissible number of open files per process. This means that it is not possible to have more than 30 files open for a process, minus whatever files NoteCards has open for its own use, at any one time in the NoteCards system. If you try to open too many files, the system call error number 24,
-Too many open files 
-appears in the prompt window.
-For OS 4.0, the maximum number of files/processes that can be open at one time is 64, unless your kernel is configured otherwise.
-Default Pathname	
-1
-
-If no path is given, the {DSK} device defaults to the user's home directory, tilde-slash (~/).  The {UNIX} device defaults to the current working directory. This current working directory can be changed with the Directory Connector tool.  Note that the current working directory is also used to resolve the interpretation of the period (.) and double period (..) specifications at the beginning of a {DSK} pathname.  The current working directory is the directory you were in when you started NoteCards, not your connected directory in NoteCards.
-2
-
-File Attributes
-1
-
-This section describes how the various file attributes are treated by NoteCards on the Sun Workstation and what they translate to in SunOS.  For more discussion of file attributes, see Chapter 14, Other Tools, for a description of the FileBrowser.
-WRITEDATE and CREATIONDATE	[File Attributes]
-The date is reset to the current time whenever the contents of a file are modified.  Since UNIX does not naturally support more than one date for file modification, the WRITEDATE and CREATIONDATE are treated identically by NoteCards, and by the {DSK} and {UNIX} devices.   
-TYPE	[File Attribute]
-Returns the TYPE property of files; normally either TEXT or BINARY.  However, UNIX does not distinguish between TEXT and BINARY files. Normally, programs will infer the type by the file extension.  If no file extension is given, the default file type TEXT is used. 
-SIZE 	[File Attribute]
-Returns the file size.  For compatibility with other NoteCards environments running on Xerox workstations and servers, the SIZE attribute is computed as the length of the file (in bytes) divided by 512 (rounded up).  
-2
-
-File System Errors
-1
-
-Several types of errors may occur in the NoteCards file system.
-When a remotely mounted file system or the NFS service is down, any attempt to access a file on the file system eventually results in a timeout error.  The following error message is printed in the prompt window:
-File access timed out 
-If the mounted device is mounted with the "hard" option, NoteCards continues to wait until the mounted device responds.  During that time, user interrupts are not available.  We recommend mounting remote file systems with the "soft" option.  You can use the UNIX command /etc/mount to check the current mount options.
-The following  error messages may appear when there are NoteCards file errors:
-Not owner
-Device error:
-Protection-violation
-File-won't-open
-Too-Many-Files-Open
-File too large
-File-System-Resources-Exceeded
-Connectiom timed out
-No-Such-Directory
-Bad Host Name
-Another type of error occurs occasionally when the file system prints an incorrect message such as 
-File not found
-A more accurate console message appears, at the same time, in the prompt window.  This message appears in the SunOS message form 
-System call error:  open errno=13  Permission denied
-See the UNIX Interface Reference Manual, Intro (2), for descriptions of all OS system call messages.
-
-[This page intentionally left blank]
-
-     (LIST ((PAGE NIL (PAPERSIZE Letter FOLIOINFO (ARABIC "4-" "") STARTINGPAGE# 1) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD RIGHT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (ARABIC "4-" "")) (270 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGR) (54 27 558 36) NIL) (TEXT NIL NIL (54 54 504 723) NIL))) (PAGE NIL (PAPERSIZE Letter FOLIOINFO (ARABIC "4-" "")) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD LEFT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (ARABIC "4-" "")) (54 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGV) (54 27 558 36) NIL) (HEADING NIL (HEADINGTYPE VERSOHEAD) (54 762 558 36) NIL) (TEXT NIL NIL (54 54 504 684) NIL))) (PAGE NIL (PAPERSIZE Letter FOLIOINFO (ARABIC "4-" "")) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD RIGHT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (ARABIC "4-" "")) (270 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGR) (54 27 558 36) NIL) (HEADING NIL (HEADINGTYPE RECTOHEAD) (54 762 558 36) NIL) (TEXT NIL NIL (54 54 504 684) NIL)))))      I 5 Ã ÿ¯        ¯                             3 Ã Ã¯      ¯                   T         2 Ã ÿ¯       ÿ                              2 x ê¯      ¯                             , ® ®¯                                 3 H H¯      ¯                   T         8   Ã¯       ® Ã ¯                             8 Ã Ã¯      8 Ü ¯                             8 Ã Ã¯       8 Ü ¯                             8 Ã Ã¯      8 Ü ¯                             8 Ã Ã¯       8 Ü ¯                             8 Ã Ã¯       8 Ü ¯                             9    ¯       8 Ü ¯                   T         9    ¯        8 Ü ¯                   T         9    ¯       8 Ü ¯                   T         8 Ã Ã¯      8 Ü ¯                             8 Ã Ã¯      h ò ¯                             8 Ã Ã¯      h Ü ¯                             8 Ã Ã¯      P Ü ¯                             3    ¯       ¯                   T         > Ã ÿ¯       Ã ÿ h ¯¯                              8 ÿ ÿ¯      8 h ¯                             > Ã ÿ¯       Ã ÿ h ¯¯                              ; ÿ ÿ¯       Ã ÿ ¯¯                              8 ÿ ÿ¯      8 z ¯                             8 ÿ ÿ¯      8 h ¯                             6    ¯         ÿ ¯                   T         6    ¯        ÿ ¯                   T         5 Ã ÿ¯       ÿ ¯                             8   Ã¯       ® Ã ¯                             , Ã Ã¯                                 ,    ¯                                  3    ¯ 2      ¯                   T         3    ¯       ¯                   T         9    ¯ 2          ¯                   T         9    ¯            ¯                   T         9    ¯           ¯                   T         8 Ã Ã¯          ¯                             - Ã Ã¯                       T         - Ã Ã¯                       T         2 Ã Ã¯      ¯                             8 Ã ¯          ¯                             6 Ã Ã¯      h ¯                   T         3 < <¯      ¯                   T         < Ã Ã¯       ¸ P ò ¯                   T         < Ã Ã¯       h § ¯                   T         6 Ã Ã¯      h ¯                   T         6    ¯        h ¯                   T         6    ¯       h ¯                   T         8 Ã ¸¯       ÿ  ¸ ¯                             < Ã Ã¯       ¸ P û ¯                   T         < Ã Ã¯       h § ¯                   T         3    ¯        ¯                   T         3    ¯       ¯                   T         5 Ã ÿ¯       ÿ ¯                             , Ã Ã¯ "                                6 Ã Ã¯      »¯                   T         2    ¯      ¯                             2 Ã Ã¯      ¯                             2 Ã Ã¯      ¯                             5 Ã ÿ¯       ÿ ¯                             -    ¯                        T         2 Ã Ã¯      ¯                             -    ¯     ‰Ï           T             -    ¯ 2                       T         -    ¯                         T         ,    ¯ 2                                 ,    ¯                                   2 Ã Ã¯        ¯                             F    ¯        ¯       PAGEHEADING 	VERSOHEAD                   F    ¯        ¯       PAGEHEADING 	RECTOHEAD                   E    ¯      ¯       PAGEHEADING FOOTINGV                   E    ¯      ¯       PAGEHEADING FOOTINGR                        
-  TITAN          TITAN           MODERN       Ä  MODERN          MODERN          MODERN         ? 1(DEFAULTFONT 1 (GACHA 10) (GACHA 8) (TERMINAL 8))           MODERN          TITAN          TITAN          MODERN          TITAN           MODERN               I     HRULE.GETFN  MODERN                
-      I   3    
-      H     HRULE.GETFN  MODERN                
-      H   3    
-      G       
-      G     HRULE.GETFN  MODERN                
-      F       
-      F     HRULE.GETFN  MODERN                
-             E             E     HRULE.GETFN  MODERN                     8   •    
-      C     HRULE.GETFN  MODERN                     D             D     HRULE.GETFN  MODERN               
-      ?   K    
-         n    
-      A     HRULE.GETFN  MODERN                     B             B     HRULE.GETFN  MODERN                     ?   /    
-             
-          \    
-      =       
-          v    
-      =   ã    
-      2   ª    
-      =   g    
-                           
-        	              	       
-      7       
-              
-             	             	             	      7   t    
-      =   <    
-                           	              	   
-           	             7   Q    
-                    
-       	              	              	   
-           	       
-      7       
-          û    
-      <   F    
-         
-           
-         ^    
-         	    
-              	          
-                  
-             
-         î    
-             
-         b    
-      <  Á    
-      #     HRULE.GETFN  MODERN                     %   #          $     HRULE.GETFN  MODERN                     ?   W    
-      <       
-         Ì    
-      <  Ô    
-      <   )    
-              
-              
-          e    
-   
-       M    
-   
-       ;    
-              
-             
-          3    	       
-      <   §    
-             
-          3    	       
-      <   \    
-      <   Ç    
-   
-           
-                     	       
-      <   H    
-         *             Ä             Ä          <   ⁄    
-      <       
-         ‹    
-                    
-         ?    
-      <   u    
-      <              
-             )              
-      )              
-      &      
-      &       
-              
-              
-      #     HRULE.GETFN  MODERN                     %             $     HRULE.GETFN  MODERN                     ?  Ω    
-      6             5     HRULE.GETFN  MODERN                     ?   f    
-      =       
-      
-       
-   #   
-       
-   	   
-       
-      =       
-   -   
-   *    
-      
-      =   '    
-      =       
-   
-   
-       
-      
-   
-    
-      
-      =       
-   3   
-       
-      
-       
-      6             5     HRULE.GETFN  MODERN                        V    
-      9  2  SKIO.GETFN.2  MODERN                
-  f  SKIO.GETFN.2        
-      4   /          3             :  8R  SKIO.GETFN.2  MODERN                      <   5          1             0     HRULE.GETFN  MODERN                     /   g    
-      /  ≥  SKIO.GETFN.2 ? 1(DEFAULTFONT 1 (GACHA 10) (GACHA 8) (TERMINAL 8))                  Y  SKIO.GETFN.2              .   /          -             ,  <¯  SKIO.GETFN.2 ? 1(DEFAULTFONT 1 (GACHA 10) (GACHA 8) (TERMINAL 8))                      +   5          *   á    
-             &             !     HRULE.GETFN  MODERN                     "             5     HRULE.GETFN  MODERN                     ?   ˜    
-      <  {    
-      (     HRULE.GETFN  MODERN                
-      '              
-      (   z    
-      (   !    
-              
-          Ó    
-      (   
-    
-          _    
-          ]    
-          P    
-      (     HRULE.GETFN  MODERN                
-      C     HRULE.GETFN  MODERN                                   D     HRULE.GETFN  MODERN                     6   8          5     HRULE.GETFN  MODERN                     <   ß    
-      6   6          D     HRULE.GETFN  MODERN                     ?  π    
-      <   Ù    
-      <  2    
-      <   :    
-          Û    
-      6   =          5     HRULE.GETFN  MODERN                     <   ÷    
-        J    
-            
-        ”    
-        !    
-          E    
-      A     HRULE.GETFN  MODERN                     >   !          B     HRULE.GETFN  MODERN                     ?  '    
-      <   k    
-          π    
-      <  (    
-             
-              
-          x    
-              
-          9    
-             
-              
-          k    
-          ã    
-      <      
-      6             B     HRULE.GETFN  MODERN               
-      ?   M    
-              
-              
-          P    
-      <                        	                                             <       
-   	      ¥    
-      6   +          5     HRULE.GETFN  MODERN                     7       
-      
-       
-              
-          o    
-         	             	                                     
-      7       
-      
-          l    
-          !    
-              
-      7       
-      
-       
-          ,    
-              
-              
-          ó    
-          B    
-          A    
-          8    
-      6             B     HRULE.GETFN  MODERN               
-      ?       
-          k    
-      7       
-      
-   )    
-      7       
-      
-   Ä    
-      7       
-      
-   _    
-      7       
-   )   
-       
-      
-   #    
-      7       
-      
-            
-       
-   %   
-       
-      
-   ñ    
-              
-          ,    
-   	           
-             
-          6    
-   	           
-             
-          M    
-              
-         `    
-              
-              
-          ;    
-              
-          
-    
-   
-         
-       
-      
-       
-      
-   !    
-          T    
-                        HRULE.GETFN  MODERN                     ?   E    
-          H    
-          ;    
-      7       
-      
-   g    
-         /                              7       
-      
-   ¶    
-          "    
-         S    
-         /                    @          7   …    
-              
-                                  
-              
-   %          7      
-   I    
-              
-         ì    
-                                                
-              
-              
-              
-              
-              
-                           
-             
-      
-   ı    
-                           
-   	           
-                     
-                     
-                                         
-   	           
-              
-      7       
-      
-   †    
-              
-             
-              
-              
-              
-              
-   	           
-              
-   	           
-               
-   	           
-              
-         1    
-          2    
-             
-              
-              
-              
-              
-   	           
-              
-   	           
-              
-              
-              
-   (       
-    
-              
-      7       
-      
-       
-      
-       
-      
-       
-      
-        
-      
-          #    
-              
-                    
-              
-              
-      
-       
-              
-                   5     HRULE.GETFN  MODERN                     ?       
-          :    
-          ®    
-      ?       
-          <    
-          9    
-              
-              
-      6             B     HRULE.GETFN  MODERN               
-      ?       
-         ¨    
-          $    
-          &    
-      <   
-    
-                           
-             
-              
-              
-             <       
-              	   c    
-      <   b    
-      <   	    
-                2             &                               
-                             "                          ú    
-                        HRULE.GETFN  MODERN                        4    
-          "    
-      
-                  HRULE.GETFN  MODERN                        R    
-              
-               
-                      /    
-         )             4    
-              
-              
-          n    
-             
-          k    
-   	           
-      	              
-      	   	           
-      	   	           
-             
-          /    
-         3           
-             
-          B    
-         R           
-                   5     HRULE.GETFN  MODERN               
-             
-              
-          ;    
-          u    
-      <   §    
-      )                           
-              
-          Õ    
-      )   "          )              
-      <       
-              
-          e    
-              
-      6             B     HRULE.GETFN  MODERN               
-      ?   "    
-              
-         Æ    
-             )              
-      )       
-      <   Ç    
-      6             B     HRULE.GETFN  MODERN               
-      <  #    
-      C     HRULE.GETFN  MODERN                                   D     HRULE.GETFN  MODERN                     <   ¯    
-         ,           
-      <   ©    
-   	           
-          2    
-              
-          
-    
-                   <       
-          $    
-              
-          .    
-              
-          |    
-              
-                   <   {    
-          [    
-      !     HRULE.GETFN  MODERN                     5             5     HRULE.GETFN  MODERN                     ?   @    
-      <   ’    
-      )             <      
-          %    
-      <   O    
-      )             )             )             )             )             )             )             )             )             )   
-           
-      <   d    
-      )              
-      <   Ç    
-      )   5          <       
-          >    
-             
-      @   %    
-      ;             ;       ;z∫
+1ENVOS NOTECARDS 1.1, BETA RELEASE OF DOCUMNTATION1ENVOS NOTECARDS 1.1, BETA RELEASE OF DOCUMENTATION4.  SYSTEM USE ISSUES14.  SYSTEM USE ISSUES14.	SYSTEM USE ISSUES6This chapter provides basic system information to get you started in NoteCards on your Sun Workstatio after your system administrator has installed NoteCards  1.1.2Site Initialization File1When NoteCards starts, it reads in the NoteCards site initialization file, init.NoteCards. This file sets the pointer to fonts, site le>)1These functions retrieve the three predefined FileBoxes for the currently open NoteFile.  These boxes can be modified (but not deleted) by the user in the same way as any other filebox. 5.    Creating and Accessing Links1Links consist of source card, destination card, link type, display mode and anchoring mode.  The new function NCP.CreateLink can be used to create any sort of link.  We still provide the four functions NCP.GlobalGlobalLink, NCP.LocalGlobalLink, etc. for those who have grown used to that style.(NCP.GetLinks <cards> <destinationCards> <labels> <NoteFile>)1See documentation in the previous section.(NCP.CreateLink <source> <destination> <linkType> <displayMode)1<source> can be either a card or a list of two elements (<sourceCard> <sourceLoc>).  <sourceCard> should be a card to use as the source of the link while <sourceLoc> should be either the atom GLOBAL (in which case a global-to-global link is created) or a Loc directive as described in NCP.CardAddText above, that is, an integer or one of the atoms START, END or NIL.  This creates and returns a new link with type <linkType>, connecting <sourceCard> to <destinationCard>.  For text cards, Loc, if present, designates where to insert the link.  If the link is local-to-global, then <displayMode> should be a valid displaymode or NIL.  (See description of NCP.LinkDisplayMode for the valid values for <displayMode>.)  (In the future, Locs for non-text cards will be specifiable.  In the far future, we hope to allow local anchoring at the destination end of the link as well as the source.)  (NCP.GlobalGlobalLink <label> <sourceCard> <destinationCard>)1Creates and returns a new link with label <label>, connecting <sourceCard> to <destinationCard>.(NCP.LocalGlobalLink <label> <sourceCard> <destinationCard> <fromloc> <displaymode>)1Creates and returns a new link with label <label>, connecting from <fromloc> of <sourceCard> card to <destinationCard>.  If <displaymode> is non-nil, then the new link is displayed in the given mode.  Otherwise the default displaymode for the source card's type is used.  See the description of NCP.LinkDisplayMode for the valid entries for the <displaymode> arg.(NCP.GlobalLocalLink <label> <sourceCard> <destinationCard> <toloc>)1Not implemented at this time.(NCP.LocalLocalLink <label> <sourceCard> <destinationCard> <fromloc> <toloc>)1Not implemented at this time.(NCP.LinkDesc <link> <followCrossFileLinkFlg)1Returns list of three items (<label> <sourceDesc> <destinationDesc>) where <label> is the link type and <sourceDesc> and <destinationDesc> have the form (<anchor mode> <card> <loc>).  <anchor mode> is either LOCAL or GLOBAL, <card> is the card at this end of the link, and <loc> gives a position in the text of <card> if <anchor type> is LOCAL and <card>'s substance's type is TEXT.  If the link is a cross-file link and if <followCrossFileLinkFlg> is non-nil, then the link will be traversed, opening the remote notefile if necessary to determine information about the source or destination card of the link.(NCP.LinkDisplayMode <link> [<newdisplaymode>])1Returns old display mode of <link>.  If <newdisplaymode> is present, then set <link>'s displaymode accordingly.  If non-nil, it can be an instance of the LINKDISPLAYMODE record.  Or it can be one of the litatoms Icon, Title, Label, or Both.  Finally, it can be a list of three elements (<ShowTitleFlg> <ShowLinkTypeFlg> <AttachBitmapFlg>).  Each element can have one of the three values T, NIL, or FLOAT.  If a field, say <ShowTitleFlg>, has value FLOAT then the corresponding global parameter (DefaultLinkIconShowTitle, in this case) will be consulted to decide whether or not to display the destination card's title in this icon.  (See Section 7 for a description of the global parameters.)(NCP.CoerceToLinkDisplayMode <thing>)1Returns a LINKDISPLAYMODE record.  Thing can be a LINKDISPLAYMODE record, cardtype, card, link, atom, or list.  If thing is a LINKDISPLAYMODE record, that record is returned.  If thing is a cardtype, the default LinkDisplayMode for that cardtype is returned.  If thing is a card, the LinkDisplayMode of that card is returned.  If thing is a link, the LinkDisplayMode of that link is returned.  If thing is an atom or a list, then the corresponding LinkDisplayMode, as specified under  NCP.LinkDisplayMode (see above),  is returned.(NCP.LinkType<link> [<newLinkType>])1Returns old linktype of <link>.  If <newLinkType> is present, set <link>'s type to <newLinkType>.(NCP.LinkSource <link>)1Returns the card at the source end of <link>.(NCP.LinkDestination <link>)1Returns the card at the destination end of <link>.(NCP.DeleteLinks <links>)1Removes all links in <links> (or just one if <links> is a single link object).(NCP.ValidLinkP <link>)1Returns non-nil if <link> is a link in the current notefile.(NCP.SameLinkP <link1> <link2>)1Returns non-nil if <link1> is the same link as <link2>.  Error if either arg is not a valid link.(NCP.AllLinks <NoteFile>)1Returns a list of all existing links in <NoteFile>.  (This is equivalent to but faster than (NCP.GetLinks NIL NIL NIL <NoteFile>).)(NCP.MapLinks <NoteFile> <fn> <collectResultsPredicate>)1Maps down the set of all links in the given notefile, applying <fn> to each.  If <collectResultsPredicate> is non-nil, then for those links satisfying the predicate, the values of <fn> applied to them are collected.(NCP.MapLinksOfType <types> <NoteFile> <fn> <collectResultsPredicate>)1This is similar to NCP.MapLinks, but only looks at links whose type appears on <types>.  <types> can be a single type or a list of types.6.   Creating and Accessing Link Labels1The following functions allow the user to manipulate link labels.(NCP.CreateLinkType <linkType> <NoteFile> <QuietFlg>)1Creates a new link type with name <LinkType> in <NoteFile> unless there is already one defined by that name.  A non-NIL <QuietFlg > suppresses the error message that is normally printed if the link type has already been defined for this notefile.(NCP.DeleteLinkType <linkType> <NoteFile>)1Deletes the link type <linkType> from <NoteFile>.  The link type must exist and must not be the type of any existing link, and it must not be a system-defined link type (e.g. SubBox or BrowserContents).(NCP.RenameLinkType <linkType> <newLinkType> <NoteFile>)1Changes any links in <NoteFile> having link type <linkType> to have type <newLinkType>.  <linkType> must exist and neither <linkType> nor <newLinkType> should be a system-defined type.(NCP.LinkTypes <NoteFile>)1Returns a list of all existing link types in <NoteFile> including system-defined ones.(NCP.ReverseLinkTypes <NoteFile>)1Returns a list of the reverse link types for every link type in <NoteFile>.  Thus, whereas SubBox would appear in the list returned by NCP.LinkTypes, _SubBox (<backarrow>SubBox) would appear in the list returned by NCP.ReverseLinkTypes.(NCP.UserLinkTypes <NoteFile>)1Returns a list of all existing user-defined link labels in <NoteFile>.(NCP.SystemLinkTypeP  <LinkType>)1Returns non-nil if <LinkType> is a system link type..(NCP.ValidLinkTypeP <LinkType> <NoteFile>)1Returns non-nil if <LinkType> is a defined link type for <NoteFile>.7.   Customizing the NoteCards Interface1There are currently several areas where the user may tailor the NoteCards user interface:  the NoteCards Session Icon menus, the left button menu on the title bar of a notefile's menu icon, the middle button menu of a notefile's menu icon,  the ShowCards middle button menu on a notefile's menu icon, and the title bar menus of displayed cards and card types key.ˇˇ  ˇ  	The BACK SPACE key is DELETE WORD. ˇˇ  	 T h e  ˇ DELETEˇˇ    k e y   i s  ˇ BACK SPACE.ˇˇ  ˇ  ˇˇ  	 T h e   R I G H T   k e y   i s   E X P A N Dˇ .	ˇˇ  	ˇ Sun Type 3 Keyboard1Figures 4-1 through 4-3 show NoteCards's key assignments for the Sun Type 3 keypads. ((SKETCH  "figure from {ERIS}<DOC>MAIKO>BETA2>KEYBOARDS.TEDIT;4" VERSION 3 PRIRANGE  (95 . 0) SKETCHCONTEXT  ((ROUND 1 BLACK)  (GACHA 10  (MEDIUM REGULAR REGULAR))  (CENTER BASELINE)  (CURVE  18.0 8) NIL NIL  (CENTER CENTER)  (NIL NIL NIL) T NIL NIL 1 NIL))  ((0.04  20.0  (PRI 6))  (TEXTBOX  (0 40 40 40)  ("Find")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((8.5  53.5 23 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 7))  (TEXTBOX  (40 40 40 40)  ("Delete")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((41.0  53.5 38 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 24))  (TEXTBOX  (0 80 40 40)  ("Open")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((5.0  93.5 30 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 25))  (TEXTBOX  (40 80 40 40)  ("Copy")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((46.  93.5 28 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 42))  (TEXTBOX  (0 120 40 40)  ("Same")  1.0  (£tÔtoıØtÔt/µ∫∫¶¢Ï7toÔıè˚∫∫¶´Ï„wı+4<@£uoı+4<@£u/µ∑∫∫¶¶ä±˙∫∫èˇˇ±Ç∫ˇ˚∫èˇ∑∑∫π˝„ı∫¶+¨@Ôwı˚∫π˝£µ∫π˝„ı∫¶˙∫π˝„ıπ˝£µ∑∑∫∫¶¶˙±˙ä∫∫˚˙±˙∫∫¶j/˝ıäˇ∑∑∫∫¶
+t}CØÏ}ı∫¶ä˙∫è˚˙∫ä˙∫ä˙∑∫∫¶ª¢èÙø∑∫∫è±˙∫∫¶ØtÔtoıØtÔt/µ∫∫¶¢Ï7toÔıè˚∫∫¶´Ï„wı+ts the session icon window.(NCP.BringUpSessionIcon <IconPosition>)1Brings up the NoteCards icon at IconPosition.  If no IconPosition is given and the icon is already on the screen, it will be flashed.  If it is not on the screen, the user will be prompted to place it.The left button menu on the title bar of a notefile's menu icons:  The user may modify this menu using the following functions.(NCP.AddNoteFileIconMenuItem <Item> <OpenOrClosedOrBoth> )1Adds the menu item <Item> to the NoteFile icon menu.  <Item> should be a complete menu item and may contain subitems..  The second part of the menu item (and of any subitems) should be a function of two arguments: NoteFile and Window.  Window will be the icon window for the notefile.  This function will be applied to these arguments when this menu item is selected.  <OpenOrClosedOrBoth> specifies for which type of notefile the new operation will be valid.  If <OpenOrClosedOrBoth> is 'Open, the item will appear as an operation for open notefiles.  If <OpenOrClosedOrBoth> is 'Closed, the item will appear as an operation for closed notefiles.  If <OpenOrClosedOrBoth> is 'Both, the item will be available for both open and closed notefiles.Returns the full item added if successful, NIL otherwise.Example:  (NCP.AddNoteFileIconMenuItem '(Foo% Function NC.DoFoo "Performs the function Foo on this notefile") 'Open)(NCP.RemoveNoteFileIconMenuItem  <ItemName> )1Removes the menu item named <ItemName> from the NoteFile icon menu.Returns the full item removed if successful, NIL otherwise.Example:  (NCP.RemoveNoteFileIconMenuItem 'Foo% Function )(NCP.RestoreNoteFileIconMenu )1Restores the NoteFile Icon menu to its initial state.The middle button menu of a notefile's menu icon: It is now possible for users to add menu items to this menu using the following functions.(NCP.AddNoteFileIconMiddleButtonItems  <Notefile><MenuItems>)1Adds list of menu items <MenuItems> to the middle button menu of the main menu icon corresponding to <Notefile>.  These menu items will remain on the menu until the next time the notefile is closed.  The second item of each menu item should be an atom that is the name of a function to be called when selected.(NCP.AddDefaulltNoteFileIconMiddleButtonItems  <MenuItems>)1Adds list of menu items <MenuItems> to the middle button menu of the main menu icons for all notefiles.  These menu items will remain on the menus for the life of the session.  The second item of each menu item should be an atom that is the name of a function to be called when selected.The ShowCards middle button menu on the notefile icon:  Users can indicate that certain cards should be added to or deleted from this menu using the following functions.(NCP.AddSpecialCard   <Card>)1Adds <Card> to the list of special cards appearing in the middle button menu on the ShowCards option of the notefile icon (for the notefile containing <Card>).(NCP.RemoveSpecialCard    <Card>)1Removes <Card> from the list of special cards appearing in the middle button menu on the ShowCards option of the notefile icon (for the notefile containing <Card>).The title bar menus of cards and card types:  Users can add menu items to either a  specific window containing a card, or to the default menu of a card type.(NCP.AddTitleBarMenuItemsToWindow <Win> <Button> <NewMenuItems><TopOrBottom>)1Adds the menu items <NewMenuItems> to the title bar menu of <Win>.  <Button> should be one of 'Left or 'Middle, corresponding to either the LeftButtonTitleBarMenu or the MiddleButtonTitleBarMenu. <Win> should be the window of a visible notecard. <TopOrBottom> should be one of 'Top or 'Bottom, indicating where in the menu the new items should appear.(NCP.AddTitleBarMenuItemsToType <Type> <Button> <NewMenuItems> <TopOrBottom>)1Adds the menu items <NewMenuItems> to the title bar menu of all cards of type <Type>.  <Button> should be one of 'Left or 'Middle, corresponding to either the LeftButtonTitleBarMenu or the MiddleButtonTitleBarMenu. <TopOrBottom> should be one of 'Top or 'Bottom, indicating where in the menu the new items should appear.Menu of notefiles:  the user may use the list and menu of noticed notefiles maintained by NoteCards.NCP.NoticedNoteFileNames1Global var containing a list of the currently available notefile names noticed by NoteCards.(NCP.NoticedNoteFileNamesMenu <IncludeNewNoteFileFlg> <AllowedOperations> <InterestedWindow> <Operation>))1Provides user with a menu of noticed notefile names.  <IncludeNewNoteFileFlg> should be non-NIL if new notefiles are allowed.  <AllowedOperations> should be one of the atoms: OPEN, CLOSED or NIL for both. <Operation> should be a string or atom containing the name of the operation to be performed on the result and the word NoteFile; e.g. (QUOTE Open% NoteFile).  This is used in the prompt for a new notefile name.  <InterestedWindow> is the window to receive a prompt window for any messages printed.(NCP.ForgetNoteFileName <NoteFileOrFileName> )1The notefile is removed from the menu of noticed notefiles.  It will not be added to the menu again until explicitly remembered using NCP.RememberNoteFileName regardless of other operations performed on the notefile.(NCP.RememberNoteFileName <NoteFileOrFileName> )1The notefile is added to the menu of noticed notefiles. This is only necessary if the NoteFile name has been forgotten.  NCP.GrayShade1Global var containing the shade used for shading various menu items in the interface.  The default value of NCP.GrayShade is GRAYSHADE.  This variable should be changed with the function NCP.SetGrayShade (see below).(NCP.SetGrayShade  <Shade>)1This function should be used to change the value of NCP.GrayShade to <Shade>.  In addition to changing NCP.GrayShade, it also resets all cached menus that use NCP.GrayShade.  If <Shade> is NIL, NCP.GrayShade will not be changed, but the menus will still be reset.  Returns the new value of NCP.GrayShade.8.   Handy Miscellaneous Functions1(NCP.BringUpNoteCardsIcon <IconPosition> )1Brings up the NoteCards session icon at the position <IconPosition>.  If no position is given, will prompt the user th place the icon.  If the icon is already on the screen and no position is given, it will be flashed.  (equivalent to (NoteCards <IconPosition>).(NCP.TitleSearch <NoteFile> <keys> <caseSensitiveFlg> )1Returns a list of all cards in <NoteFile> having all of the <keys> (can be atom, string or list) within their titles.  Normally case insensitive unless <caseSensitiveFlg> is non-nil.(NCP.PropSearch <NoteFile> <propOrPair> <propOrPair>  ...)1Returns a list of all caTEXTBOX  (640.0 0  60.0 40)  ("Next")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((656.0  13.5 28 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  50.0  (PRI 8))  (TEXTBOX  (100.0 40  100.0 40)  ("Shift")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((136.5  53.5 27 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 9))  (TEXTBOX  (200.0 40 40 40)  ("Z"  "z")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((216.5  60.0 7 13)  (217.0  47.0 6 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 10))  (TEXTBOX  (240.0 40 40 40)  ("X"  "x")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((256.0  60.0 8 13)  (256.5  47.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 11))  (TEXTBOX  (280.0 40 40 40)  ("C"  "c")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((296.5  60.0 7 13)  (297.5  47.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 12))  (TEXTBOX  (320.0 40 40 40)  ("V"  "v")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((336.0  60.0 8 13)  (336.5  47.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 13))  (TEXTBOX  (360.0 40 40 40)  ("B"  "b")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((376.5  60.0 7 13)  (376.5  47.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 14))  (TEXTBOX  (400.0 40 40 40)  ("N"  "n")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((415.5  60.0 9 13)  (416.5  47.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 15))  (TEXTBOX  (440.0 40 40 40)  ("M"  "m")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((454.5  60.0 11 13)  (454.5  47.0 11 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 16))  (TEXTBOX  (480.0 40 40 40)  ("<"  ",")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((494.0  60.0 12 13)  (498.5  47.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 17))  (TEXTBOX  (520.0 40 40 40)  (">"  ".")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((534.0  60.0 12 13)  (538.5  47.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 18))  (TEXTBOX  (560.0 40 40 40)  ("?"  "/")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((577.0  60.0 6 13)  (578.5  47.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  30.0  (PRI 19))  (TEXTBOX  (600.0 40  60.0 40)  ("Shift")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((616.5  53.5 27 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 20))  (TEXTBOX  (660.0 40 40 40)  ("LF")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((674.0  53.5 12 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 26))  (TEXTBOX  (100.0 80 80 40)  ("Ctrl")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((130.0  93.5 20 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 27))  (TEXTBOX  (180.0 80 40 40)  ("A"  "a")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((195.5  100.0 9 13)  (196.5  87.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 28))  (TEXTBOX  (220.0 80 40 40)  ("S"  "s")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((236.5  100.0 7 13)  (237.5  87.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 29))  (TEXTBOX  (260.0 80 40 40)  ("D"  "d")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((275.5  100.0 9 13)  (276.5  87.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 30))  (TEXTBOX  (300.0 80 40 40)  ("F"  "f")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((317.0  100.0 6 13)  (317.5  87.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 31))  (TEXTBOX  (340.0 80 40 40)  ("G"  "g")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((355.5  100.0 9 13)  (356.5  87.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 32))  (TEXTBOX  (380.0 80 40 40)  ("H"  "h")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((395.5  100.0 9 13)  (396.5  87.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 33))  (TEXTBOX  (420.0 80 40 40)  ("J"  "j")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((437.5  100.0 5 13)  (438.5  87.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 34))  (TEXTBOX  (460.0 80 40 40)  ("K"  "k")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((476.0  100.0 8 13)  (476.5  87.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 35))  (TEXTBOX  (500.0 80 40 40)  ("L"  "l")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((517.0  100.0 6 13)  (518.5  87.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 36))  (TEXTBOX  (540.0 80 40 40)  (":"  ";")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((557.5  100.0 5 13)  (557.5  87.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 37))  (TEXTBOX  (580.0 80 40 40)  ("%""  "'")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((596.5  100.0 7 13)  (598.5  87.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 38))  (TEXTBOX  (620.0 80 80 40)  ("Return")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((641.0  93.5 38 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  30.0  (PRI 44))  (TEXTBOX  (100.0 120  60.0 40)  ("Tab")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((119.5  133.5 21 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 45))  (TEXTBOX  (160.0 120 40 40)  ("Q"  "q")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((175.5  140.0 9 13)  (176.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 46))  (TEXTBOX  (200.0 120 40 40)  ("W"  "w")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((214.0  140.0 12 13)  (214.5  127.0 11 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 47))  (TEXTBOX  (240.0 120 40 40)  ("E"  "e")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((256.5  140.0 7 13)  (256.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 48))  (TEXTBOX  (280.0 120 40 40)  ("R"  "r")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((296.5  140.0 7 13)  (297.5  127.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 49))  (TEXTBOX  (320.0 120 40 40)  ("T"  "t")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((336.5  140.0 7 13)  (337.5  127.0 5 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 50))  (TEXTBOX  (360.0 120 40 40)  ("Y"  "y")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((376.0  140.0 8 13)  (376.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 51))  (TEXTBOX  (400.0 120 40 40)  ("U"  "u")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((415.5  140.0 9 13)  (416.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 52))  (TEXTBOX  (440.0 120 40 40)  ("I"  "i")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((458.5  140.0 3 13)  (458.5  127.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 53))  (TEXTBOX  (480.0 120 40 40)  ("O"  "o")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((495.5  140.0 9 13)  (496.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 54))  (TEXTBOX  (520.0 120 40 40)  ("P"  "p")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((536.5  140.0 7 13)  (536.5  127.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 55))  (TEXTBOX  (560.0 120 40 40)  ("{"  "[")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((577.0  140.0 6 13)  (578.0  127.0 4 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 56))  (TEXTBOX  (600.0 120 40 40)  ("}"  "]")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((617.0  140.0 6 13)  (618.0  127.0 4 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  30.0  (PRI 57))  (TEXTBOX  (640.0 120  60.0 40)  ("Backspace")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((641.5  133.5 57 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 63))  (TEXTBOX  (100.0 160 40 40)  ("Esc")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((111.5  173.5 17 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 64))  (TEXTBOX  (140.0 160 40 40)  ("!"  "1")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((157.5  180.0 5 13)  (156.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 65))  (TEXTBOX  (180.0 160 40 40)  ("@"  "2")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((194.0  180.0 12 13)  (196.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 66))  (TEXTBOX  (220.0 160 40 40)  ("#"  "3")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((235.5  180.0 9 13)  (236.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 67))  (TEXTBOX  (260.0 160 40 40)  ("$"  "4")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((276.5  180.0 7 13)  (276.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 68))  (TEXTBOX  (300.0 160 40 40)  ("%%"  "5")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((314.0  180.0 12 13)  (316.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 69))  (TEXTBOX  (340.0 160 40 40)  ("^"  "6")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((357.0  180.0 6 13)  (356.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 70))  (TEXTBOX  (380.0 160 40 40)  ("&"  "7")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((395.5  180.0 9 13)  (396.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 71))  (TEXTBOX  (420.0 160 40 40)  ("*"  "8")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((436.5  180.0 7 13)  (436.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 72))  (TEXTBOX  (460.0 160 40 40)  ("("  "9")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((478.0  180.0 4 13)  (476.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 73))  (TEXTBOX  (500.0 160 40 40)  (")"  "0")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((518.0  180.0 4 13)  (516.5  167.0 7 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 74))  (TEXTBOX  (540.0 160 40 40)  ("_"  "-")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((554.0  180.0 12 13)  (558.0  167.0 4 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 75))  (TEXTBOX  (580.0 160 40 40)  ("+"  "=")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((594.0  180.0 12 13)  (594.0  167.0 12 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 76))  (TEXTBOX  (620.0 160 40 40)  ("|"  "\")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((638.5  180.0 3 13)  (638.5  167.0 3 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 77))  (TEXTBOX  (660.0 160 40 40)  ("~"  "`")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((677.0  180.0 6 13)  (677.0  167.0 6 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 83))  (TEXTBOX  (100.0 200 40 40)  ("Center")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((101.0  213.5 38 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 84))  (TEXTBOX  (140.0 200 40 40)  ("Bold")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((148.0  213.5 24 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 85))  (TEXTBOX  (180.0 200 80 40)  ("Italic")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((207.0  213.5 26 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 86))  (TEXTBOX  (260.0 200 80 40)  ("Case")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((287.0  213.5 26 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 87))  (TEXTBOX  (340.0 200 80 40)  ("Strikeout")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((353.5  213.5 53 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 88))  (TEXTBOX  (420.0 200 80 40)  ("Underline")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((432.5  213.5 55 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  40.0  (PRI 89))  (TEXTBOX  (500.0 200 80 40)  ("Super"  "Sub")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((523.5  220.0 33 13)  (529.5  207.0 21 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 90))  (TEXTBOX  (580.0 200 40 40)  ("Larger"  "Smaller")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((581.5  220.0 37 13)  (578.5  207.0 43 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 91))  (TEXTBOX  (620.0 200 40 40)  ("Margin")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((620.0  213.5 40 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.04  20.0  (PRI 92))  (TEXTBOX  (660.0 200 40 40)  ("Back"  "Word")  1.0  (CENTER CENTER)  (MODERN 12  (BOLD REGULAR REGULAR))  ((667.0  220.0 26 13)  (664.5  207.0 31 13)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL))))(99.58507 -1.2448133 600.0 241.49379)1.24481338Figure 4-3. Sun Type 3 Center Key Pad InterpretationSun Type 4 Keyboard1Figures 4-3 through 4-5 show the keyboard and the left and right key pads for the Sun Type 4 keyboard.((SKETCH a% figure% from% a% document VERSION 3 PRIRANGE  (108 . 0) SKETCHCONTEXT  ((ROUND 1 BLACK)  (GACHA 10  (MEDIUM REGULAR REGULAR))  (CENTER BASELINE)  (CURVE  18.0 8) NIL NIL  (CENTER CENTER)  (NIL NIL NIL) T NIL NIL 1 NIL))  ((0.03  30.0  (PRI 1))  (TEXTBOX  (0 0 60 30)  ("Help")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((21.5  10.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 12))  (TEXTBOX  (0 30 30 30)  ("Find")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((7.0  40.0 16 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 13))  (TEXTBOX  (30 30 30 30)  ("Delete")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((33.5  40.0 23 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 30))  (TEXTBOX  (0 60 30 30)  ("Open")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((5.0  70.0 20 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 31))  (TEXTBOX  (30 60 30 30)  ("Move")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((34.5  70.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 50))  (TEXTBOX  (0 90 30 30)  ("Same")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((5.5  100.0 19 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 51))  (TEXTBOX  (30 90 30 30)  ("Copy")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((35.5  100.0 19 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 69))  (TEXTBOX  (0 120 30 30)  ("Props")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((4.5  130.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 70))  (TEXTBOX  (30 120 30 30)  ("Undo")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((34.5  130.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 89))  (TEXTBOX  (0 150 30 30)  ("Stop")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((6.5  160.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 90))  (TEXTBOX  (30 150 30 30)  ("Again")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((34.0  160.0 22 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL))))(-2.0 -2.0 64.0 184.0)1.08	((SKETCH a% figure% from% a% document VERSION 3 PRIRANGE  (112 . 0) SKETCHCONTEXT  ((ROUND 1 BLACK)  (GACHA 10  (MEDIUM REGULAR REGULAR))  (CENTER BASELINE)  (CURVE  18.0 8) NIL NIL  (CENTER CENTER)  (NIL NIL NIL) T NIL NIL 1 NIL))  ((0.03  30.0  (PRI 9))  (TEXTBOX  (540.0 0 60 30)  ("Ins")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((564.5  10.0 11 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 10))  (TEXTBOX  (600.0 0 30 30)  ("Del")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((609.0  10.0 12 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  30.0  (PRI 11))  (TEXTBOX  (630.0 0 30 60)  ("DOIT")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((636.0  25.0 18 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 27))  (TEXTBOX  (540.0 30 30 30)  ("1"  "End")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((553.0  45.0 4 10)  (548.0  35.0 14 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 28))  (TEXTBOX  (570.0 30 30 30)  ("2")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((583.0  40.0 4 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 29))  (TEXTBOX  (600.0 30 30 30)  ("3"  "PgDN")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((613.0  45.0 4 10)  (604.5  35.0 21 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 46))  (TEXTBOX  (540.0 60 30 30)  ("4")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((553.0  70.0 4 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 47))  (TEXTBOX  (570.0 60 30 30)  ("5"  "")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((583.0  75.0 4 10)  (585.0  65.0 0 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 48))  (TEXTBOX  (600.0 60 30 30)  ("6")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((613.0  70.0 4 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  30.0  (PRI 49))  (TEXTBOX  (630.0 60 30 60)  ("+ "  "")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((640.0  90.0 10 10)  (645.0  80.0 0 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 66))  (TEXTBOX  (540.0 90 30 30)  ("7"  "Home")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((553.0  105.0 4 10)  (544.0  95.0 22 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 67))  (TEXTBOX  (570.0 90 30 30)  ("8")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((583.0  100.0 4 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 68))  (TEXTBOX  (600.0 90 30 30)  ("9"  "PgUP")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((613.0  105.0 4 10)  (605.5  95.0 19 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 85))  (TEXTBOX  (540.0 120 30 30)  ("=")  1.0  (CENTER CENTER)  (MODERN 10  (BOLD REGULAR REGULAR))  ((550.0  129.0 10 12)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 86))  (TEXTBOX  (570.0 120 30 30)  ("/")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((584.0  130.0 2 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 87))  (TEXTBOX  (600.0 120 30 30)  ("*")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((613.0  130.0 4 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 88))  (TEXTBOX  (630.0 120 30 30)  ("-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((643.5  130.0 3 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 105))  (TEXTBOX  (540.0 150 30 30)  ("Break")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((545.0  160.0 20 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 106))  (TEXTBOX  (570.0 150 30 30)  ("PrSc")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((577.5  160.0 15 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 107))  (TEXTBOX  (600.0 150 30 30)  ("scroll"  "lock")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((605.0  165.0 20 10)  (607.5  155.0 15 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 108))  (TEXTBOX  (630.0 150 30 30)  ("num"  "lock")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((636.5  165.0 17 10)  (637.5  155.0 15 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.0  5.935486  (PRI 109))  (WIRE  ((608.4516 .  71.93548)  (620.3226 .  71.93548))  (ROUND  0.7419355 BLACK)  (NIL  (SOLID  23.0  5.935484) NIL) NIL 1  (607.70966  71.19354  13.354843  1.483871)  (NIL  ((620.3226 .  71.93548)  (614.85895 .  69.6163)  (614.85895 .  74.254654)))))  ((0.0  5.935486  (PRI 110))  (WIRE  ((560.9677 .  71.93548)  (549.09674 .  71.93548))  (ROUND  0.7419355 BLACK)  (NIL  (SOLID  23.0  5.935484) NIL) NIL 1  (548.3548  71.19354  13.354843  1.483871)  (NIL  ((549.09674 .  71.93548)  (554.56036 .  74.254654)  (554.56036 .  69.6163)))))  ((0.0  4.4516144  (PRI 111))  (WIRE  ((584.70966 .  94.64516)  (584.70966 .  103.548386))  (ROUND  0.7419355 BLACK)  (NIL  (SOLID  23.0  5.935484) NIL) NIL 1  (583.9677  93.90322  1.483871  10.3871)  (NIL  ((584.70966 .  103.548386)  (587.0288 .  98.08475)  (582.3905 .  98.08475)))))  ((0.0  4.4516144  (PRI 112))  (WIRE  ((582.70966 .  41.225807)  (582.70966 .  32.32258))  (ROUND  0.7419355 BLACK)  (NIL  (SOLID  23.0  5.935484) NIL) NIL 1  (581.9677  31.580643  1.483871  10.3871)  (NIL  ((582.70966 .  32.32258)  (580.3905 .  37.78622)  (585.0288 .  37.78622))))))(538.0 -2.0 124.0 184.0)1.08Figure 4-3. Sun Type 4 	Figure 4-4. Sun Type 4	 Left Key Pad		Right Key Pad((SKETCH a% figure% from% a% document VERSION 3 PRIRANGE  (108 . 0) SKETCHCONTEXT  ((ROUND 1 BLACK)  (GACHA 10  (MEDIUM REGULAR REGULAR))  (CENTER BASELINE)  (CURVE  18.0 8) NIL NIL  (CENTER CENTER)  (NIL NIL NIL) T NIL NIL 1 NIL))  ((0.03  22.5  (PRI 2))  (TEXTBOX  (75.0 0  45.0 30)  ("Caps")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((88.5  10.0 18 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 3))  (TEXTBOX  (120.0 0 30 30)  ("Meta")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((125.5  10.0 19 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 4))  (TEXTBOX  (150.0 0 30 30)  ("Left"  "Spc")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((158.0  15.0 14 10)  (158.5  5.0 13 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  127.5  (PRI 5))  (TEXTBOX  (180.0 0  255.0 30)  ("Space")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((297.0  10.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 6))  (TEXTBOX  (435.0 0 30 30)  ("Right"  "Spc")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((440.0  15.0 20 10)  (443.5  5.0 13 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 7))  (TEXTBOX  (465.0 0 30 30)  ("Expand")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((466.5  10.0 27 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 8))  (TEXTBOX  (495.0 0 30 30)  ("Next")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((501.5  10.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  37.5  (PRI 14))  (TEXTBOX  (75.0 30  75.0 30)  ("Shift")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((104.0  40.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 15))  (TEXTBOX  (150.0 30 30 30)  ("Z"  "z")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((163.0  45.0 4 10)  (163.0  35.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 16))  (TEXTBOX  (180.0 30 30 30)  ("X"  "x")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((192.5  45.0 5 10)  (193.0  35.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 17))  (TEXTBOX  (210.0 30 30 30)  ("C"  "c")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((222.5  45.0 5 10)  (223.0  35.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 18))  (TEXTBOX  (240.0 30 30 30)  ("V"  "v")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((252.5  45.0 5 10)  (253.0  35.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 19))  (TEXTBOX  (270.0 30 30 30)  ("B"  "b")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((282.5  45.0 5 10)  (282.5  35.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 20))  (TEXTBOX  (300.0 30 30 30)  ("N"  "n")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((312.0  45.0 6 10)  (312.5  35.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 21))  (TEXTBOX  (330.0 30 30 30)  ("M"  "m")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((341.0  45.0 8 10)  (341.5  35.0 7 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 22))  (TEXTBOX  (360.0 30 30 30)  ("<"  ",")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((371.0  45.0 8 10)  (374.0  35.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 23))  (TEXTBOX  (390.0 30 30 30)  (">"  ".")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((401.0  45.0 8 10)  (404.0  35.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 24))  (TEXTBOX  (420.0 30 30 30)  ("?"  "/")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((433.0  45.0 4 10)  (434.0  35.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  22.5  (PRI 25))  (TEXTBOX  (450.0 30  45.0 30)  ("Shift")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((464.0  40.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 26))  (TEXTBOX  (495.0 30 30 30)  ("LF")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((506.0  40.0 8 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  30.0  (PRI 32))  (TEXTBOX  (75.0 60 60 30)  ("Ctrl")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((98.5  70.0 13 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 33))  (TEXTBOX  (135.0 60 30 30)  ("A"  "a")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((147.0  75.0 6 10)  (148.0  65.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 34))  (TEXTBOX  (165.0 60 30 30)  ("S"  "s")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((178.0  75.0 4 10)  (178.0  65.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 35))  (TEXTBOX  (195.0 60 30 30)  ("D"  "d")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((207.0  75.0 6 10)  (207.5  65.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 36))  (TEXTBOX  (225.0 60 30 30)  ("F"  "f")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((238.0  75.0 4 10)  (238.5  65.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 37))  (TEXTBOX  (255.0 60 30 30)  ("G"  "g")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((267.0  75.0 6 10)  (267.5  65.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 38))  (TEXTBOX  (285.0 60 30 30)  ("H"  "h")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((297.0  75.0 6 10)  (297.5  65.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 39))  (TEXTBOX  (315.0 60 30 30)  ("J"  "j")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((328.5  75.0 3 10)  (329.0  65.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 40))  (TEXTBOX  (345.0 60 30 30)  ("K"  "k")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((357.5  75.0 5 10)  (358.0  65.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 41))  (TEXTBOX  (375.0 60 30 30)  ("L"  "l")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((388.0  75.0 4 10)  (389.0  65.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 42))  (TEXTBOX  (405.0 60 30 30)  (":"  ";")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((418.5  75.0 3 10)  (418.5  65.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 43))  (TEXTBOX  (435.0 60 30 30)  ("%""  "'")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((448.0  75.0 4 10)  (449.0  65.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 44))  (TEXTBOX  (465.0 60 30 30)  ("~"  "`")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((478.0  75.0 4 10)  (478.0  65.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  30.0  (PRI 45))  (TEXTBOX  (495.0 60 30 60)  ("Return")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((497.5  85.0 25 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  22.5  (PRI 52))  (TEXTBOX  (75.0 90  45.0 30)  ("Tab")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((91.0  100.0 13 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 53))  (TEXTBOX  (120.0 90 30 30)  ("Q"  "q")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((132.0  105.0 6 10)  (132.5  95.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 54))  (TEXTBOX  (150.0 90 30 30)  ("W"  "w")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((161.0  105.0 8 10)  (161.5  95.0 7 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 55))  (TEXTBOX  (180.0 90 30 30)  ("E"  "e")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((193.0  105.0 4 10)  (193.0  95.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 56))  (TEXTBOX  (210.0 90 30 30)  ("R"  "r")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((222.5  105.0 5 10)  (223.5  95.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 57))  (TEXTBOX  (240.0 90 30 30)  ("T"  "t")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((253.0  105.0 4 10)  (253.5  95.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 58))  (TEXTBOX  (270.0 90 30 30)  ("Y"  "y")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((282.5  105.0 5 10)  (283.0  95.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 59))  (TEXTBOX  (300.0 90 30 30)  ("U"  "u")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((312.0  105.0 6 10)  (312.5  95.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 60))  (TEXTBOX  (330.0 90 30 30)  ("I"  "i")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((344.0  105.0 2 10)  (344.0  95.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 61))  (TEXTBOX  (360.0 90 30 30)  ("O"  "o")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((372.0  105.0 6 10)  (372.5  95.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 62))  (TEXTBOX  (390.0 90 30 30)  ("P"  "p")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((403.0  105.0 4 10)  (402.5  95.0 5 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 63))  (TEXTBOX  (420.0 90 30 30)  ("{"  "[")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((433.0  105.0 4 10)  (433.5  95.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 64))  (TEXTBOX  (450.0 90 30 30)  ("}"  "]")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((463.0  105.0 4 10)  (463.5  95.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.015  15.0  (PRI 65))  (TEXTBOX  (480.0 90  15.0 30)  ("")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((487.5  100.0 0 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 71))  (TEXTBOX  (75.0 120 30 30)  ("Esc")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((84.0  130.0 12 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 72))  (TEXTBOX  (105.0 120 30 30)  ("!"  "1")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((118.5  135.0 3 10)  (118.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 73))  (TEXTBOX  (135.0 120 30 30)  ("@"  "2")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((146.0  135.0 8 10)  (148.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 74))  (TEXTBOX  (165.0 120 30 30)  ("#"  "3")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((177.0  135.0 6 10)  (178.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 75))  (TEXTBOX  (195.0 120 30 30)  ("$"  "4")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((208.0  135.0 4 10)  (208.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 76))  (TEXTBOX  (225.0 120 30 30)  ("%%"  "5")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((236.0  135.0 8 10)  (238.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 77))  (TEXTBOX  (255.0 120 30 30)  ("^"  "6")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((268.0  135.0 4 10)  (268.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 78))  (TEXTBOX  (285.0 120 30 30)  ("&"  "7")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((297.0  135.0 6 10)  (298.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 79))  (TEXTBOX  (315.0 120 30 30)  ("*"  "8")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((328.0  135.0 4 10)  (328.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 80))  (TEXTBOX  (345.0 120 30 30)  ("("  "9")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((358.5  135.0 3 10)  (358.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 81))  (TEXTBOX  (375.0 120 30 30)  (")"  "0")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((388.5  135.0 3 10)  (388.0  125.0 4 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 82))  (TEXTBOX  (405.0 120 30 30)  ("_"  "-")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((416.0  135.0 8 10)  (418.5  125.0 3 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 83))  (TEXTBOX  (435.0 120 30 30)  ("+"  "=")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((446.0  135.0 8 10)  (446.0  125.0 8 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  30.0  (PRI 84))  (TEXTBOX  (465.0 120 60 30)  ("Back"  "Space")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((486.5  135.0 17 10)  (484.5  125.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 91))  (TEXTBOX  (75.0 150 30 30)  ("F1"  "Center")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((86.0  165.0 8 10)  (78.0  155.0 24 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 92))  (TEXTBOX  (105.0 150 30 30)  ("F2"  "Bold")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((116.0  165.0 8 10)  (111.5  155.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 93))  (TEXTBOX  (135.0 150 30 30)  ("F3"  "Italic")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((146.0  165.0 8 10)  (141.5  155.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 94))  (TEXTBOX  (165.0 150 30 30)  ("F4"  "Case")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((176.0  165.0 8 10)  (171.5  155.0 17 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 95))  (TEXTBOX  (195.0 150 30 30)  ("F5"  "Strike")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((206.0  165.0 8 10)  (200.0  155.0 20 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 96))  (TEXTBOX  (225.0 150 30 30)  ("F6"  "Under")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((236.0  165.0 8 10)  (228.5  155.0 23 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 97))  (TEXTBOX  (255.0 150 30 30)  ("F7"  "Super")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((266.0  165.0 8 10)  (259.5  155.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 98))  (TEXTBOX  (285.0 150 30 30)  ("F8"  "Large")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((296.0  165.0 8 10)  (290.0  155.0 20 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 99))  (TEXTBOX  (315.0 150 30 30)  ("F9"  "Margin")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((326.0  165.0 8 10)  (316.5  155.0 27 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  15.0  (PRI 100))  (TEXTBOX  (345.0 150 30 30)  ("F10")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((354.0  160.0 12 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 101))  (TEXTBOX  (375.0 150 30 30)  ("F11")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((384.0  160.0 12 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 102))  (TEXTBOX  (405.0 150 30 30)  ("F12")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((414.0  160.0 12 10)) NIL  (ROUND 2 NIL) NIL  (NIL NIL NIL)))  ((0.03  15.0  (PRI 103))  (TEXTBOX  (435.0 150 30 30)  ("|"  "\")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((449.0  165.0 2 10)  (449.0  155.0 2 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL)))  ((0.03  30.0  (PRI 104))  (TEXTBOX  (465.0 150 60 30)  ("Delete"  "Word")  1.0  (CENTER CENTER)  (MODERN 8  (BOLD REGULAR REGULAR))  ((483.5  165.0 23 10)  (484.5  155.0 21 10)) NIL  (ROUND 2 NIL) NIL  (0 NIL NIL))))(74.0 -1.0 452.0 182.0)1.08Figure 4-5. Sun Type 4 Center Key Pad InterpretationNote:	In SunOS 4.0, the NEXT (ALT/GRAPH) key on the Type 4 keyboard is inaccessible.  Later versions of SunOS are believed to fix this.2Console Messages1Under SunOS, various system processes and operations attempt to log information on the console. Since NoteCards takes over the screen, console messages are redirected; a background process in NoteCards causes them to  appear in the prompt window.When NoteCards is run remotely (i.e., not from the console), most console, or operating system, messages are printed in the prompt window.  Some messages may also appear in the middle of the NoteCards display screen or on the remote tty. This occurs because UNIX is often confused about where to send messages.  NoteCards is normally run remotely only for debugging purposes.   (1)CAUTIONCritical UNIX system processes can hang if the buffer holding console messages fills.  There are two points to watch for:NoteCards uses a temporary file, /tmp/XXXX-lisp.log, where XXXX is the user's login name, to buffer console messages before printing them.  Do not delete this log file while NoteCards  is running.  If the log file is deleted, console messages can no longer be printed in the NoteCards  prompt window.The process \10MBWATCHER, used to watch for Ethernet packets, reads console messages. Thus, you should never kill the \10MBWATCHER process, even if you don't use the Ethernet capabilities of NoteCards. If you do kill the  \10MBWATCHER process, console messages cannot be printed and the operating system can hang.(1)2File Compatibility1Sysout Compatibility between Sun and Xerox Workstations1Sysout files created on Xerox Workstations can be moved to Sun workstations.  However, sysout files created on Sun Workstations cannot be moved to Xerox workstations.File Compatibility between Sun and Xerox Workstations1Some care must be taken in moving files to and from Xerox workstations and services, since the default end-of-line convention in UNIX is to terminate lines with the line feed (LF) character, while traditionally Xerox systems have terminated lines with the carriage return (CR) character. In particular, if you use some other file transfer mechanism, such as FTP or Kermit, be careful to transfer .TEDIT and .NOTEFILE files in binary mode.  In NoteCards on the Sun Workstation, the default end-of-line convention for all text files is line feed (LF). The default end-of-line convention for all binary files is carriage return (CR); this is because CR is used internally in the system.When working with the Xerox protocols XNS and PUP as well as Sun NFS, it is important that you use the suffix .TEDIT on all TEdit files, the suffix .SKETCH on all Sketch files, and the suffix .NOTEFILE on all notefiles for NoteCards to treat the files properly when moving them from one device to another.TEdit files not transfered in binary mode frequently get "Font not found." error messages when you try to open then.  The carriage returns, which are represented by the number 13, are reinterpreted as font information and the system breaks trying to look for a font of size 13.  These files are irrecoverably lost.Notefile Compatibility with Prerelease Versions of NoteCards1NoteCards 1.1 uses an internal format for notefiles different from that used in prerelease versions of NoteCards.  Prerelease notefiles must be converted to the new format before they can be used in NoteCards 1.1.Conversion is one-way.  Once a notefile is converted to the new format and used in Envos NoteCards, it cannot be converted back to the old format.  Conversion is non-destructive.  The converted notefile is a copy of the original notefile, so the original notefile is still available for use with prerelease versions of NoteCards.Conversion is carried out automatically the first time you open a prerelease notefile using NoteCards 1.1.  The conversion process copies and reformats the notefile, then opens the copy.  The new notefile has the same name but higher version number than the old prerelease notefile.Conversion takes from 10 minutes for a small notefile to an hour or more for a very large notefile.  Conversion  requires disk space equal to 120% of the space required by a compacted version of the prerelease notefile.  The converter does not check beforehand to see if it has enough disk space to complete the conversion.  It will simply crash if it runs out of space.   Therefore, make sure there is plenty of disk space available before starting any conversions.Note that in order to convert a prerelease notefile, all of the card types contained in that notefile must be available in NoteCards 1.1.  An attempt to convert a notefile containing a card type not available in NoteCards 1.1 will cause the conversion to fall into a break window.  Typing ^ into the break window will exit the break and abort the conversion.2Using SunOS Files from NoteCards1You can access any mounted SunOS file system directly from NoteCards. The mounted file system is available as an I/O device of the NoteCards environment. This file system appears as the local disk of NoteCards, even though it may be a remotely mounted file system of networked Sun file servers.Many of the file devices to which the NoteCards environment can talk, including PUP, XNS file servers, the {CORE} device, and others, have facilities that are not directly supported by SunOS.  For example, many file systems have file version numbers and case insensitive file search conventions.  NoteCards on the Sun Workstation has two distinct "host" names that can be used to access the SunOS file system.  These host names are provided for compatibility with existing applications and tools.  They also simultaneously allow natural interaction with the SunOS file system.  The names are:	{DSK}	On the Sun Workstation, the {DSK} device allows you to access the file system using similar conventions to those used for Xerox services. In particular, {DSK} files have version numbers; {DSK} file name recognition also ignores the case of letters.	{UNIX}	The {UNIX} device lets you use the mounted file systems with the normal naming conventions of the SunOS file system. {UNIX} files do not have version numbers, and the file name recognition treats lower case letters as distinct from their upper case equivalents.File streams can be opened or closed on both devices. The reason for having both devices is to more easily support the running of applications that were originally developed using Xerox services, while still allowing new applications to interact more naturally with UNIX.File Naming Conventions1In NoteCards, a file name (pathname) consists of a collection of fields: the host, directory, name, extension and version. These fields are optional. The standard NoteCards syntax for these fields is:{host}<directory>name.extension;versionThe directory field can be a directory path consisting of a sequence of directory and subdirectory components.   Slashes (/) and right angle brackets (>) can be used to delimit a directory name; there is no distinction made between them.  However, you should use one delimiter or the other consistently.  What the directory returns is unpredictable if you mix delimiters.  Note that square brackets ([]) are not acceptable as  directory delimiters.Common {DSK} and {UNIX} Naming Conventions1*ˇˇ  	ˇ The following special characters cannot be used: backslash (\), slash (/), right angle bracket (>), semicolon (;) and tilde (~).  Thus, from {DSK} you cannot name files containing these characters.  The following UNIX file names are illegal in NoteCards:  	foo/fee	foo>fee	foo;3	foo;*ˇˇ  	ˇ {DSK} cannot distinguish between a file name with a period (e.g., foo.) and a simple file name (e.g., foo).  For {DSK}, each is version 1 of the file (e.g., {DSK}foo.;1).*ˇˇ  	ˇ On {DSK}, the C-Shell and SunOS directory notations (~, ., and ..) are only allowed in the NoteCards directory specifications at the very beginning of the directory specification of a pathname.  The tilde character (~) corresponds to the user's home directory at login.  The period (.) corresponds to the current working directory, while two periods (..) indicates the parent of the current working directory.{DSK} Naming Conventions1File access to the {DSK} device goes through the following file name transformation when actually accessing the SunOS file system:*ˇˇ  	ˇ Mixed case letters are read as such.  *ˇˇ   ˇ 	File name searches are done case sensitive first; if a match is not found, the system then does a case insensitive search.  *ˇˇ  	ˇ A left angle bracket (<) is translated to a slash (/), the delimiter for the root directory.*ˇˇ  	 { D S K }   d o e s   n o t   a c cˇ eˇˇ  p tˇ  file names ending in tilde (~).*ˇˇ  	 { D S K }   s u p p o r t sˇ  ˇˇ  r e l a t i v e   p a t h n a m eˇ sˇˇ  .ˇ   You can specify relative pathnames by omitting a slash (/) or left angle bracket (<) as the first character in the directory field.  For example, {DSK}foo.fee and  {DSK}~/foo.fee are relative to your UNIX home directory ( ~/foo.fee).	{DSK}./foo.fee is relative to your current working directory (SunOS ./foo.fee).	{DSK}../foo.fee is relative to the parent directory of your current UNIX working directory (../foo.fee).	However, a combination of relative path specifiers (~, ., ..) is not supported.  For instance, {DSK} cannot interpret {DSK}~/../anotherone/foo.c.  In addition, {DSK} does not support the tilde-name (~name) convention (e.g., {DSK} cannot interpret {DSK}~tom/foo.c).  ˇˇ  { D S K }  ˇ also ˇˇ  d o e s   n o t   a c cˇ eˇˇ  p tˇ  file names ending in tilde; a {DSK} file name ending in tilde causes an error message to appear in the prompt window. Version Numbering1The UNIX file system does not support version numbers in file names; {DSK} emulates versions with a naming convention.  This section explains how {DSK} version numbers are represented in the SunOS file system.*ˇˇ  	ˇ When you create a completely new file, it appears in the SunOS file system without a version number.{DSK} Name From NoteCards	 File Name From SunOSbar.baz;1		bar.baz*ˇˇ  	ˇ When you create (from NoteCards) a file with a version other than 1,  NoteCards adds version numbers to that file name, as a trailing number between tildes, e.g., "myfile.~12~" for the 12th version of myfile.The following shows some examples of equivalent file names in NoteCards and SunOS.{DSK} Name From NoteCards	 File Name From SunOSbar.baz;1		bar.baz.~1~bar.baz;2		bar.baz.~2~bar.;23		bar.~23~*	NoteCards always maintains a versionless file which is hard-linked to the highest extant version of the file (i.e., they are two names for the very same file).  This file name does not appear in the {DSK} directory listing.From {DSK}		From SunOSfoo.c;15	foo.c (hard linked with foo.c.~23~)	foo.c;23	foo.c.~15~		foo.c.~23~		ˇˇ  	ˇ Similarly, a file created in UNIX with no version number is treated by {DSK} as the highest version.*	When you create a new version of a file, the versionless-file link is broken, and the versionless file is hard-linked to the new highest version.	From {DSK}		From SunOS	foo.c;15	foo.c (hard linked with foo.c.~24~)	foo.c;22	foo.c.~15~	foo.c;24 (new file)	foo.c.~23~ (no link with foo.c)		foo.c.~24~ (new file, link from 	foo.c)	*ˇˇ  	ˇ When you delete the highest version of a file, the versionless file is also deleted.  If any older versions of the file remain, a new link is created from the versionless name to the highest version extant.  For example, if you have the filesFrom {DSK}		From SunOSfoo.c;1	foo.c (linked to foo.c.~2~)	foo.c;2	foo.c.~1~		foo.c.~2~	and you delete foo.c;2 from {DSK}, the resulting files are:From {DSK}	From SunOSfoo.c;1	foo.c (linked to foo.c.~1~)	foo.c.~1~*ˇˇ  	ˇ When you rename a file it works the same as deleting the file under the old name then creating it under the new name.  For example, if you have the following {DSK} files,	From {DSK}	From SunOSfoo.c;1	foo.c (linked to foo.c.~2~)foo.c;2	foo.c.~1~fee.c;1	foo.c.~2~fee.c;2	fee.c	(linked to fee.c.~2~)	fee.c.~1~	fee.c.~2~ 	and you rename "foo.c" to "fee.c", your renamed {DSK} files and the linked SunOS files would appear as	From {DSK}	From SunOSfoo.c;1	foo.c (linked to foo.c.~1~)fee.c;1	foo.c.~1~ fee.c;2	fee.c	(linked to fee.c.~3~)fee.c;3	fee.c.~1~	fee.c.~2~	fee.c.~3~ (renamed file)*ˇˇ  	ˇ Whenˇˇ   ˇ a file has a ˇˇ  n a m e   s u f f i xˇ  thatˇˇ    i s   n o tˇ  a valid version number (e.g.,ˇˇ   ˇ myfile.~12x~), that file is inaccessible using {DSK}.			From {DSK}	From SunOSˇˇ Ô%ˇ 	myfile.~12x~Pathnames1A pathname on {DSK} is always case insensitive. When you specify a file, the {DSK} device handler first searches for the file with the specified name. If no such file is found, it then searches for a file with the same spelling but different case.  If a pathname on {DSK} has no directory specification, a tilde-slash combination (~/) is used, i.e.,  the NoteCards directory specification {DSK}foo is the equivalent of UNIX ~/foo. {UNIX} Naming Conventions1For the {UNIX} device, file name translation takes place only on the directory.  An initial left angle bracket (<) is treated as if it were an initial slash (/); both signify a path relative to the SunOS file system root directory; if there is no initial left angle bracket or slash, the directory is relative to the current working directory.  Initially this is the working directory where NoteCards was started; you can change it using the CHDIR function, described below.  Tilde (~) translates to your home directory. For example, {UNIX}myfile/abc means the file abc on the ./myfile/  directory.The {UNIX} device does not recognize version numbers, does not return them, and ignores them for recognition.No case translation or recognition is done; upper and lower case letters are treated as distinct.Examples:{UNIX} Name From NoteCards	File Name From SunOS	 <foo>fee>bar.baz;1	/foo/fee/bar.baz;1<foo>fee/bar.;1	/foo/fee/bar.;1<foo/fee>	/foo/fee/</foo/fee/>	/foo/fee//foo/fee/bar.~1~	/foo/fee/bar.~1~/foo/fee/	/foo/fee/In the first two examples the ;1 is treated as part of the file name, not the version number.  Note  in the last two examples that translation is not done.Directories1In places where NoteCards expects a directory name, {UNIX} paths must end with a slash (/).Directory Enumeration1You cannot use the wildcard character, asterisk (*), in subdirectories for either {DSK} or {UNIX} devices.  For example, typing {DSK}/users/x*/foointo the FileBrowser prompt window will returnNo files in group {DSK}<users>x*>foo.*;*Enumeration of files in directories differs between {DSK} and {UNIX} devices.  On the {DSK} device, a versionless file which has a link to the highest version file is not enumerated in a directory.   On the {UNIX} device, all files are enumerated in a directory.  For instance, if the following SunOS files, linked with foo.c.~2~ existfoo.cfoo.c.~1~foo.c.~2~the {DSK} directory enumeration,  would look like this:{DSK}/users/envos/foo.c;1 {DSK}/users/envos/foo.c;2The {UNIX}  directory enumeration, on the other hand, would look like this:{UNIX}/users/envos/foo.c {UNIX}/users/envos/foo.c.~1~ {UNIX}/users/envos/foo.c.~2~Directory Creation1	{DSK}	When you write a new file on {DSK}, if the directory named in a pathname does not exist, the {DSK} device handler creates the directory automatically. This feature is provided for compatibility with Xerox services.If you try to connect to a nonexistent directory (using the Directory Connector tool), NoteCards beeps and prints the following message in the system prompt windowNot a valid directory name.	{UNIX}	The {UNIX} device does not support such directory creation. An attempt to create a file on a nonexistent directory results in an error.  NoteCards beeps and prints the following message in the system prompt window.System call error: stat errno = 2No such file or directory.Neither {UNIX} nor {DSK} support automatic directory deletion.  To delete a directory you must use the SunOS C-Shell command rmdir.Open File Limit	1The number of simultaneously open {DSK} and {UNIX} files must fall within the SunOS limits for a process.  For OS 3.4, this number of open files may be configured, with 30 as the maximum permissible number of open files per process. This means that it is not possible to have more than 30 files open for a process, minus whatever files NoteCards has open for its own use, at any one time in the NoteCards system. If you try to open too many files, the system call error number 24,Too many open files appears in the prompt window.For OS 4.0, the maximum number of files/processes that can be open at one time is 64, unless your kernel is configured otherwise.Default Pathname	1If no path is given, the {DSK} device defaults to the user's home directory, tilde-slash (~/).  The {UNIX} device defaults to the current working directory. This current working directory can be changed with the Directory Connector tool.  Note that the current working directory is also used to resolve the interpretation of the period (.) and double period (..) specifications at the beginning of a {DSK} pathname.  The current working directory is the directory you were in when you started NoteCards, not your connected directory in NoteCards.2File Attributes1This section describes how the various file attributes are treated by NoteCards on the Sun Workstation and what they translate to in SunOS.  For more discussion of file attributes, see Chapter 14, Other Tools, for a description of the FileBrowser.WRITEDATE and CREATIONDATE	[File Attributes]The date is reset to the current time whenever the contents of a file are modified.  Since UNIX does not naturally support more than one date for file modification, the WRITEDATE and CREATIONDATE are treated identically by NoteCards, and by the {DSK} and {UNIX} devices.   TYPE	[File Attribute]Returns the TYPE property of files; normally either TEXT or BINARY.  However, UNIX does not distinguish between TEXT and BINARY files. Normally, programs will infer the type by the file extension.  If no file extension is given, the default file type TEXT is used. SIZE 	[File Attribute]Returns the file size.  For compatibility with other NoteCards environments running on Xerox workstations and servers, the SIZE attribute is computed as the length of the file (in bytes) divided by 512 (rounded up).  2File System Errors1Several types of errors may occur in the NoteCards file system.When a remotely mounted file system or the NFS service is down, any attempt to access a file on the file system eventually results in a timeout error.  The following error message is printed in the prompt window:File access timed out If the mounted device is mounted with the "hard" option, NoteCards continues to wait until the mounted device responds.  During that time, user interrupts are not available.  We recommend mounting remote file systems with the "soft" option.  You can use the UNIX command /etc/mount to check the current mount options.The following  error messages may appear when there are NoteCards file errors:Not ownerDevice error:Protection-violationFile-won't-openToo-Many-Files-OpenFile too largeFile-System-Resources-ExceededConnectiom timed outNo-Such-DirectoryBad Host NameAnother type of error occurs occasionally when the file system prints an incorrect message such as File not foundA more accurate console message appears, at the same time, in the prompt window.  This message appears in the SunOS message form System call error:  open errno=13  Permission deniedSee the UNIX Interface Reference Manual, Intro (2), for descriptions of all OS system call messages.[This page intentionally left blank]     (LIST ((PAGE NIL (PAPERSIZE Letter FOLIOINFO (ARABIC "4-" "") STARTINGPAGE# 1) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD RIGHT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (ARABIC "4-" "")) (270 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGR) (54 27 558 36) NIL) (TEXT NIL NIL (54 54 504 723) NIL))) (PAGE NIL (PAPERSIZE Letter FOLIOINFO (ARABIC "4-" "")) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD LEFT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (ARABIC "4-" "")) (54 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGV) (54 27 558 36) NIL) (HEADING NIL (HEADINGTYPE VERSOHEAD) (54 762 558 36) NIL) (TEXT NIL NIL (54 54 504 684) NIL))) (PAGE NIL (PAPERSIZE Letter FOLIOINFO (ARABIC "4-" "")) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD RIGHT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (ARABIC "4-" "")) (270 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGR) (54 27 558 36) NIL) (HEADING NIL (HEADINGTYPE RECTOHEAD) (54 762 558 36) NIL) (TEXT NIL NIL (54 54 504 684) NIL)))))      I 5 Ã ÿ¯        ¯                             3 Ã Ã¯      ¯                   T         2 Ã ÿ¯       ÿ                              2 x ê¯      ¯                             , ® ®¯                                 3 H H¯      ¯                   T         8   Ã¯       ® Ã ¯                             8 Ã Ã¯      8 Ü ¯                             8 Ã Ã¯       8 Ü ¯                             8 Ã Ã¯      8 Ü ¯                             8 Ã Ã¯       8 Ü ¯                             8 Ã Ã¯       8 Ü ¯                             9    ¯ 
+      8 Ü ¯                   T         9    ¯        8 Ü ¯                   T         9    ¯       8 Ü ¯                   T         8 Ã Ã¯      8 Ü ¯                             8 Ã Ã¯      h ò ¯                             8 Ã Ã¯      h Ü ¯                             8 Ã Ã¯      P Ü ¯                             3    ¯ 
+      ¯                   T         > Ã ÿ¯       Ã ÿ h ¯¯                              8 ÿ ÿ¯      8 h ¯                             > Ã ÿ¯       Ã ÿ h ¯¯                              ; ÿ ÿ¯       Ã ÿ ¯¯                              8 ÿ ÿ¯      8 z ¯                             8 ÿ ÿ¯      8 h ¯                             6    ¯         ÿ ¯                   T         6    ¯ 
+       ÿ ¯                   T         5 Ã ÿ¯       ÿ ¯                             8   Ã¯       ® Ã ¯                             , Ã Ã¯                                 ,    ¯                                  3    ¯ 2      ¯                   T         3    ¯       ¯                   T         9    ¯ 2          ¯                   T         9    ¯            ¯                   T         9    ¯           ¯                   T         8 Ã Ã¯          ¯                             - Ã Ã¯                       T         - Ã Ã¯                       T         2 Ã Ã¯      ¯                             8 Ã ¯          ¯                             6 Ã Ã¯      h ¯                   T         3 < <¯      ¯                   T         < Ã Ã¯       ¸ P ò ¯                   T         < Ã Ã¯       h § ¯                   T         6 Ã Ã¯      h ¯                   T         6    ¯        h ¯                   T         6    ¯       h ¯                   T         8 Ã ¸¯       ÿ  ¸ ¯                             < Ã Ã¯       ¸ P û ¯                   T         < Ã Ã¯       h § ¯                   T         3    ¯        ¯                   T         3    ¯       ¯                   T         5 Ã ÿ¯       ÿ ¯                             , Ã Ã¯ "                                6 Ã Ã¯      »¯                   T         2    ¯      ¯                             2 Ã Ã¯      ¯                             2 Ã Ã¯      ¯                             5 Ã ÿ¯       ÿ ¯                             -    ¯                        T         2 Ã Ã¯      ¯                             -    ¯     ‰Ï           T             -    ¯ 2                       T         -    ¯                         T         ,    ¯ 2                                 ,    ¯                                   2 Ã Ã¯        ¯                             F    ¯        ¯       PAGEHEADING 	VERSOHEAD                   F    ¯        ¯       PAGEHEADING 	RECTOHEAD                   E    ¯      ¯       PAGEHEADING FOOTINGV                   E    ¯      ¯       PAGEHEADING FOOTINGR                          TITAN 
+         TITAN 
+          MODERN 
+      Ä  MODERN 
+         MODERN          MODERN         ? 1(DEFAULTFONT 1 (GACHA 10) (GACHA 8) (TERMINAL 8)) 
+          MODERN          TITAN 
+         TITAN 
+         MODERN 
+         TITAN 
+          MODERN 
+              I     HRULE.GETFN  MODERN 
+                     I   3          H     HRULE.GETFN  MODERN 
+                     H   3          G             G     HRULE.GETFN  MODERN 
+                     F             F     HRULE.GETFN  MODERN 
+                      
+      E             E     HRULE.GETFN  MODERN                     8   •          C     HRULE.GETFN  MODERN                     D             D     HRULE.GETFN  MODERN                     ?   K             n          A     HRULE.GETFN  MODERN                     B             B     HRULE.GETFN  MODERN                     ?   /                           \          =                 v          =   ã          2   ª          =   g                                       	              	             7                                  	             	             	      7   t          =   <                               	              	              	             7   Q                               	              	              	              	             7                 û          <   F                                 ^             	                  	                                                  î                          b          <  Á          #     HRULE.GETFN  MODERN                     %   #          $     HRULE.GETFN  MODERN                     ?   W          <                Ì          <  Ô          <   )                                          e              M              ;                                         3    	             <   §                           3    	             <   \          <   Ç                                       	             <   H             *             Ä             Ä          <   ⁄          <                ‹                                 ?          <   u          <                           )                    )                    &            &                                         #     HRULE.GETFN  MODERN                     %             $     HRULE.GETFN  MODERN                     ?  Ω          6             5     HRULE.GETFN  MODERN                     ?   f          =                       #             	                =          -      *                =   '          =                                             =          3                             6             5     HRULE.GETFN  MODERN                        V          9  2  SKIO.GETFN.2  MODERN 
+                 f  SKIO.GETFN.2              4   /          3             :  8R  SKIO.GETFN.2  MODERN 
+                     <   5          1             0     HRULE.GETFN  MODERN                     /   g          /  ≥  SKIO.GETFN.2 ? 1(DEFAULTFONT 1 (GACHA 10) (GACHA 8) (TERMINAL 8)) 
+                 Y  SKIO.GETFN.2              .   /          -             ,  <¯  SKIO.GETFN.2 ? 1(DEFAULTFONT 1 (GACHA 10) (GACHA 8) (TERMINAL 8)) 
+                     +   5          *   á                 &             !     HRULE.GETFN  MODERN                     "             5     HRULE.GETFN  MODERN                     ?   ˜          <  {          (     HRULE.GETFN  MODERN 
+                     '                    (   z          (   !                            Ó          (                 _              ]              P          (     HRULE.GETFN  MODERN 
+                     C     HRULE.GETFN  MODERN                                   D     HRULE.GETFN  MODERN                     6   8          5     HRULE.GETFN  MODERN                     <   ß          6   6          D     HRULE.GETFN  MODERN                     ?  π          <   Ù          <  2          <   :              Û          6   =          5     HRULE.GETFN  MODERN                     <   ÷            J                        ”            !              E          A     HRULE.GETFN  MODERN                     >   !          B     HRULE.GETFN  MODERN                     ?  '          <   k              π          <  (                                         x                            9                                         k              ã          <            6             B     HRULE.GETFN  MODERN                     ?   M                                          P          <                        	                                             <          	      ¥          6   +          5     HRULE.GETFN  MODERN                     7                                            o             	             	                                           7                       l              !                        7                              ,                                          ó              B              A              8          6             B     HRULE.GETFN  MODERN                     ?                 k          7                )          7                Ä          7                _          7          )                   #          7                
+                   %                   ñ                            ,       	                                  6       	                                  M       
+                    `                                          ;                                                                         !              T                            HRULE.GETFN  MODERN 
+                    ?   E              H              ;          7                g             /                              7                ¶              "             S             /                    @          7   …                                                       
+              %          7         I                           ì                                                       
+                                                                                                                    ı                                  	                                                                                                 	                               7                †                                  
+              
+                                          	                            	                             	                                  1              2                    
+              
+                                          	                            	                                          
+              (                               7                                                                            #                                         
+              
+                                               
+          5     HRULE.GETFN  MODERN 
+                    ?                 :              ®          ?                 <              9                                      6             B     HRULE.GETFN  MODERN                     ?                ¨              $              &          <                                                                
+       
+                 <                     	   c          <   b          <   	                    2             &                                                            "                          ú                            HRULE.GETFN  MODERN                        4              "                            HRULE.GETFN  MODERN 
+                       R                                                    
+   /             )          
+   4                                          n          
+                 k       	                 	                    	   	                 	   	                 
+                 /             3                 
+                 B             R                              5     HRULE.GETFN  MODERN 
+                                                   ;              u          <   §          )                                                   Õ          )   "          )                    <                               e                        6             B     HRULE.GETFN  MODERN                     ?   "                           Æ                 )                    )             <   Ç          6             B     HRULE.GETFN  MODERN                     <  #          C     HRULE.GETFN  MODERN                                   D     HRULE.GETFN  MODERN                     <   ¯             ,                 <   ©       	                     2                                                   <                 $                            .                            |                                     <   {              [          !     HRULE.GETFN  MODERN                     5             5     HRULE.GETFN  MODERN                     ?   @          <   ’          )             <         
+       %          <   O          )   
+          )             )             )             )             )             )             )             )             )                    <   d          )                    <   Ç          )   5          <                 >                       @   %          ;             ;       ;z∫

@@ -1,0 +1,68 @@
+1
+
+ENVOS NOTECARDS 1.1, BETA RELEASE OF DOCUMENTATION
+1
+
+ENVOS NOTECARDS 1.1, BETA RELEASE OF DOCUMENTATION
+PREFACE
+1
+
+PREFACE
+1
+
+
+PREFACE
+6
+
+Welcome to NoteCards, an idea manipulation tool for the modern intellectual.  NoteCards provides you with a new way to organize and manage your ideas on your computer desk top.
+This guide explains in detail how to install NoteCards on your Sun 3 or Sun 4 workstation, provides a basic tutorial for the NoteCards environment, and contains the reference manual for NoteCards.
+2
+
+Audience
+1
+
+The Envos NoteCards Users's Guide was written for users of NoteCards on Sun workstations.  The Guide assumes that you are already familiar with UNIX and SunOS concepts.  
+Section I of this manual, Introduction and Installation, should be read by the System Administrator or person installing the NoteCards system.  The NoteCards user should also read this section, in particular, Chapters 1 and 4, Introduction and System Use Issues.   The user who wishes to remain safely ignorant of system-level aspects of UNIX and NoteCards can skip over Chapters 2 and 3, System Requirements and Software Installation.  (The system installer should also read Appendices C and D.)
+Section II, NoteCards Tutorial, provides an introduction to NoteCards and the system which underlies it.  Chapter 5, NoteCards Basics, is the place for all new users of NoteCards to start once they have their system up and running.
+Section III, Reference Manual, is a compilation of all the necessary background information on NoteCards new and old users will need to learn to fully exploit the NoteCards system.
+The final section contains the Appendices, Glossary, and Index for the Envos NoteCards User's Guide.
+Included with the NoteCards Guide are the manuals for TEdit and Sketch, A User's Guide to TEdit and A User's Guide to Sketch.
+2
+
+What's in the  Manual
+1
+
+Here is what you will find in this manual, chapter by chapter, accompanied by a brief description of when you will want to read each chapter.
+Chapter 1, Introduction, gives a brief introduction to and some background on NoteCards as well as explaining the stylistic conventions used in the Guide.  Read this chapter before you install NoteCards.
+Chapter 2, System Requirements, goes over the hardware requirements of the system.  Read this chapter before you install NoteCards on a particular machine to verify that it will run acceptably on that machine.
+Chapter 3, Software Installation, gives you step by step directions for installing NoteCards.  Read this chapter before and during system installation.
+Chapter 4, System Use Issues, discusses some of the basic ins and outs of using the system, Initialization, Starting, and Exiting NoteCards, as well as file access.  Read this chapter after you have installed NoteCards.  In particular, read the sections "Starting NoteCards" and "Exiting NoteCards and Saving State" when you are modifying your .cshrc and .login UNIX files for ideas on how to simplify the NoteCards booting process.  In order to allow it to run on two different file systems NoteCards differs slightly from the standard SunOS and UNIX file systems.  Read the section "Using SunOS Files from NoteCards" when you are learning how to access files from NoteCards.
+Chapter 5, NoteCards Basics, takes you by the hand and leads you step by step through the basics of using the NoteCards system.  This is the place for new users to start once you have NoteCards up and running.  Once you get going, this is also a good chapter to review as it brings together ideas scattered through the users's guides whose importance many not be obvious from their context in the user's guides.
+Chapter 6, Building NoteCards Structures, tries to give you some insights on how to use the NoteCards sytems to its best advantage.  NoteCards has been around as a PARC research prototype for several years.  In this chapter we try to present some of what they have learned about using this system.  Read this chapter after you have become somewhat familiar with NoteCards.
+Chapter 7, The User Interface, covers some of the more basic aspects of using the system, the mouse, the keyboard, menus, etc.  Read this chapter to understand more of the lower level capabilities of the system.
+Chapter 8, Links, describes the link icon in all of its manifestations.  Links and their physical representation, link icons, live at the core of NoteCards.  Read and understand this chapter as soon as possible to make the most effective use of the system.
+Chapter 9, Cards and Banners, discusses the user interface to individual notefiles and those aspects that all cards have in common.  This is also an important chapter.  The section "The Card Menu" is particularly important as it explains the functionality all cards have in common.
+Chapter 10, User Cards, discusses cards where you are responsible for creating the contents.  Read the sections "Text Cards" and "FileBox Cards" right away.  The "Text Cards" section points you to the TEdit manual A User's Guide to TEdit.  As TEdit forms the core of the system.  We suggest that you make an effort to gradually learn more about TEdit all the time.  Read the remaining sections as you explore the other card types.  Note that the Bit Map Editor is discussed at the end of this chapter even though there is no bit-map card type
+Chapter 11, System Cards, covers those cards where the system creates the contents for you.  The section "Browser Cards" is the most important one to read for a beginner.  The others can be read as you need them.
+Chapter 12, The MenuBox Icon, discusses the functionality on the three menus available from the  MenuBox.  The important commands for a new users are on the "Notefile Ops" menu.  When just getting used to NoteCards, focus on the commands: Open, Checkpoint, Close, and Abort.
+Chapter 13, System Parameters, explains how to change the global defaults for the system.  New users can safely ingore this chapter.  Most users will find that the default settings will suit all their needs.
+Chapter 14, The FileBrower, explains how to use the FileBrowser.
+Chapter 15, Other Tools, explains how to use the Directory Connector, and the clocks.
+Chapter 16, Printing, covers setting up print capabilities and printing to PostScript and Interpress printers.  Read this chapter when you have the machine on a network and are ready to set up your print capability.
+Chapter 17, Known Problems, Error Conditions and Recovery, covers those problems we know about as of this writing and how to cope with and avoid them.  A quick reading of the sections "Known Problems" and "Break Windows" are all that most users will ever need.
+Appendix A, Notefile Concepts, explains the inner workings and structure of notefiles.  Read this if you want to understand how information is stored in the notefile and why you have to perform operations like compacting occasionally.  This is essential background material if you are about to inspect or fix a damaged notefile.
+Appendix B, Notefile Inspector, explains how to fix notefiles damaged by power failured, broken net connections and other unforeseeable calamities.  Read this before you attempt to fix a damaged notefile.
+Appendix C, Initialization Files, collects a lot of information on how to write a file which will automatically set site specific  values for parameters like printer names and font locations.  Read this appendix when you are first setting up your system.
+Appendix D, Checksum Control, covers what to do if you believe the files loaded from the distribution tape are damaged.  
+2
+
+Acknowledgements
+1
+
+NoteCards has a long history.  Its gestation began in October 1982 when the U.S. Government funded XSIS (Xerox Special Information Systems) and Xerox PARC (Palo Alto Research Center) to prototype a Problem-Structuring-Aids system to allow users to build "semantic networks of textual information."  The first successful prototype was completed by Frank Halasz, at PARC, in November 1983.  The first real user of the NoteCards system was Ken Allen, a history graduate student at Stanford University, in the spring of 1984.  The birth came in June 1984 when NoteCards was released to the government, in fulfillment of the Problem-Structuring-Aids contract.  Since then, XSIS and PARC have released three unsupported versions of NoteCards on Xerox D-machines.  In November 1988, the Envos NoteCards product team started work on a supported, productized version of NoteCards.  Envos NoteCards Release 1.1 for the Sun Workstation was completed in April 1989.
+NoteCards is based on the work of many people.
+From Xerox, Frank Halasz, Tomas Moran, Randall Trigg, Richard Burton, Ronald Kaplan, Peggy Irish, Catherine Marshall, and many others.
+From Envos, Robert Krivacic, Keith Mountford, Craig Sweat, Karin Sye, Daniel Sagalowicz, Larry Harada, John Sybalsky, and others.
+
+[This page intentionally left blank]
+     (LIST ((PAGE NIL (PAPERSIZE Letter FOLIOINFO (LOWERROMAN "" "") STARTINGPAGE# 3) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD RIGHT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (LOWERROMAN "" "")) (270 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGR) (54 27 558 36) NIL) (TEXT NIL NIL (54 54 504 723) NIL))) (PAGE NIL (PAPERSIZE Letter FOLIOINFO (LOWERROMAN "" "")) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD LEFT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (LOWERROMAN "" "")) (54 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGV) (54 27 558 36) NIL) (HEADING NIL (HEADINGTYPE VERSOHEAD) (54 762 558 36) NIL) (TEXT NIL NIL (54 54 504 684) NIL))) (PAGE NIL (PAPERSIZE Letter FOLIOINFO (LOWERROMAN "" "")) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD RIGHT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (LOWERROMAN "" "")) (270 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGR) (54 27 558 36) NIL) (HEADING NIL (HEADINGTYPE RECTOHEAD) (54 762 558 36) NIL) (TEXT NIL NIL (54 54 504 684) NIL)))))       -    ø 2                       T         -    ø                         T         -    ø                        T         -    ø     äì           T             , Ì Ìø                                 - Ì Ìø                         T         - Ì Ìø                         T         F    ø        ø       PAGEHEADING 	VERSOHEAD                   F    ø        ø       PAGEHEADING 	RECTOHEAD                   E    ø      ø       PAGEHEADING FOOTINGV                   E    ø      ø       PAGEHEADING FOOTINGR                   ,                                                MODERN          MODERN          MODERN          MODERN          MODERN                    HRULE.GETFN  MODERN                         3               HRULE.GETFN  MODERN                         3          	             	     HRULE.GETFN  MODERN                                        HRULE.GETFN  MODERN                                        HRULE.GETFN  MODERN                        ±             Å               HRULE.GETFN  MODERN                        	               HRULE.GETFN  MODERN                                      >              G            ñ             è             µ             G                           H                                           HRULE.GETFN  MODERN                                       HRULE.GETFN  MODERN                        Ž             ”              3             Ò             ˜            ¥            œ            u             Ô                                     Ö             2             Õ             ï                                                                     Ð             A             V             Ø                        I             Í             ÿ             z               HRULE.GETFN  MODERN                                       HRULE.GETFN  MODERN                       º             /             ‡             ‚                          %                  "½ ’zº
