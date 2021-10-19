@@ -238,7 +238,12 @@ block content
         .jumbotron.text-center
             form(method="GET" action="javascript:download_notefile();")
                 button(type="submit").main-button Download Notefile
-    
+      
+    .row
+        .jumbotron.text-center
+            form(method="GET" action="/notecards/user-guide" target="_blank")
+                button(type="submit").main-button User Guide
+
     .row
         .jumbotron.text-center
             form(method="POST" action="/logout")

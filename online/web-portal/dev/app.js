@@ -18,7 +18,7 @@ notecardsRouter.base_url = base_url;
 
 const clientRouter = express.Router();
 const novnc_path = path.join(__dirname, 'novnc');
-clientRouter.get('/go', (req, res, next) => { res.sendFile(path.join(novnc_path, 'vnc.html')); /* res.redirect('client/vnc.html'); */});
+clientRouter.get('/go', (req, res, next) => { res.sendFile(path.join(novnc_path, 'vnc.html')); });
 clientRouter.use(express.static(novnc_path));
 
 

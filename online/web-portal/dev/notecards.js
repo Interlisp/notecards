@@ -23,6 +23,12 @@ const port_max = port + 2000;
 
 const docker_image = is_dev ? 'notecards-dev' : 'notecards004';
 
+
+// show user guide
+router.get("/user-guide", (req, res) => {
+   res.sendFile(path.join(__dirname, 'downloads', "notecards_user_guide_v1.2.pdf"));
+});
+
 // start notecards
 router.get("/start", (req, res) => {
     const resume = req.query.resume && ((req.query.resume == "1") || (req.query.resume.toLowerCase() == "true"));
@@ -57,7 +63,7 @@ router.get("/start", (req, res) => {
                 );
 });
 
-// start xterm (for debugging only)
+// start xterm andsftp server
 router.get("/xterm", (req, res) => {
     const devmode = req.query.devmode && ((req.query.devmode == "1") || (req.query.devmode.toLowerCase() == "true"));
     const emailish = req.userprofile.email.replace(badchars, '-').replace("@", ".-.");
@@ -93,8 +99,6 @@ router.get("/loading", (req, res) => {
 	const port = req.query.port;
 	const target = req.query.target || "unknown";
 	res.redirect(`${router.base_url}/client/go?target=${target}&port=${port}&autoconnect=1`);
-	//res.render("loading", {waittime: 10, client_url: `${router.base_url}/client/go?port=${port}&autoconnect=1`});
-	//res.redirect("/");
 });
 
 // Upload notefile
