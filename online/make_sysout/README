@@ -1,0 +1,19 @@
+To make notecards.sysout
+
+1.  From githuib medley releases download full.sysout from target releasse.  Store in this dir and
+ln -s to release date.
+
+2.  docker pull interlisp/medley:XXXXXX where XXXX is the docker tag corresponding to the githunb
+release (XXXXX is a  githuib commit that marks both release and docker image)
+
+3. Edit Dockerfile to use the XXXXX docker release just pulled above.
+
+4. Run ./dbuild.sh to create a notecards-sysout docker image
+
+5.  run ./run to run the notecards-sysout image.  
+
+6.  In Lisp,  load Notecards, then do a makesys to create notecards.sysout
+in il/notecards/notecards.sysout
+
+7.  SFTP notecards.sysout to notecards.online, put in /home/nc/notecards/notecards.sysout
+
