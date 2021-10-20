@@ -5,12 +5,22 @@ var logger = require('morgan');
 var session = require("express-session");
 var okta = require("@okta/okta-sdk-nodejs");
 var ExpressOIDC = require("@okta/oidc-middleware").ExpressOIDC;
-var oktaEnv = require("./okta_env");
 
 
-const publicRouter = require("./routes/public");
-const usersRouter = require("./routes/users");
-const notecardsRouter = require("./routes/notecards");
+const isDev = (process.env.DEV_OR_PROD && (process.env.DEV_OR_PROD == "dev"));
+
+const oktaEnv = isDev ? require("./okta_env_dev") : require("./okta_env");
+const port =  isDev ? 8080 : 80;
+const base_url = `http://notecards.online:${port}`;
+
+const notecardsRouter = require("./notecards");
+notecardsRouter.base_url = base_url;
+
+const clientRouter = express.Router();
+const novnc_path = path.join(__dirname, 'novnc');
+clientRouter.get('/go', (req, res, next) => { res.sendFile(path.join(novnc_path, 'vnc.html')); });
+clientRouter.use(express.static(novnc_path));
+
 
 var app = express();
 var oktaClient = new okta.Client({
@@ -21,8 +31,8 @@ const oidc = new ExpressOIDC({
   issuer: oktaEnv.issuer,
   client_id: oktaEnv.client_id,
   client_secret: oktaEnv.client_secret,
-  redirect_uri: 'http://notecards.online/authorization-code/callback',
-  appBaseUrl:'http://notecards.online',
+  redirect_uri: base_url + "/authorization-code/callback",
+  appBaseUrl: base_url,
   scope: "openid profile",
   routes: {
     login: {
@@ -42,7 +52,7 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use('/stylesheets', express.static(path.join(__dirname, 'stylesheets')));
 app.use(session({
   secret: 'sdfd;grth9999odrgt,4wp5gsadfknjeyr0efd985634ltkmvearpoui6mgae;dlf,er;ymhmrfgfsdfs',
   resave: true,
@@ -60,11 +70,10 @@ app.use((req, res, next) => {
   		next(); });
 });
 
-app.use('/', publicRouter);
-app.use('/users', usersRouter);
+app.get('/', (req, res) => { res.redirect('/users/login'); });
+app.get('/main', oidc.ensureAuthenticated(), (req, res, next) => { res.render('main', {login: req.userprofile.email}); });
 app.use('/notecards', oidc.ensureAuthenticated(), notecardsRouter);
-app.get('/main', oidc.ensureAuthenticated(), (req, res, next) => { res.render("main", {login: req.userprofile.email}); });
-
+app.use('/client', oidc.ensureAuthenticated(), clientRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,3 @@
+#!/bin/bash
+PORT=8080 DEV_OR_PROD=dev node bin/www
+
