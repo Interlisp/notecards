@@ -1,3 +1,4 @@
+var fs = require('fs');
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -49,7 +50,19 @@ const oidc = new ExpressOIDC({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
+// Set up logging
+const logStream = fs.createWriteStream(path.join(__dirname, isDev ? 'dev.log' : 'production.log'), { flags: 'a' });
+logger.token('user', (req, res) => { return (req.userprofile && req.userprofile.email) || "Unknown"; });
+logger.token('user-agent-short', (req, res) => { return (req.get('User-Agent') && req.get('User-Agent').split(' ', 1)[0]) || "Unknown"; });
+app.use(
+  logger(
+    ':date[iso] :user :method :url :user-agent-short :status :response-time ms - :res[content-length]', { 
+        stream: logStream,
+        skip: (req, res) => {
+          return !(/^\/notecards/.test(req.originalUrl) || /^\/client\/go/.test(req.originalUrl) || /^\/main$/.test(req.originalUrl) || /^\/$/.test(req.originalUrl));
+        }      
+    }));
+//
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/stylesheets', express.static(path.join(__dirname, 'stylesheets')));
