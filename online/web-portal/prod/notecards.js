@@ -21,7 +21,7 @@ var port = is_dev ? 4999 : 2999;
 const port_min = port;
 const port_max = port + 2000;
 
-const docker_image = is_dev ? 'notecards-dev' : 'notecards004';
+const docker_image = is_dev ? 'notecards-dev' : 'notecards_211019';
 
 
 // show user guide

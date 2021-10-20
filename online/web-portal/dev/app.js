@@ -11,7 +11,7 @@ const isDev = (process.env.DEV_OR_PROD && (process.env.DEV_OR_PROD == "dev"));
 
 const oktaEnv = isDev ? require("./okta_env_dev") : require("./okta_env");
 const port =  isDev ? 8080 : 80;
-const base_url = `http://notecards.online:${port}`;
+const base_url = `http://notecards.online${isDev ? ":" + port : ""}`;
 
 const notecardsRouter = require("./notecards");
 notecardsRouter.base_url = base_url;
