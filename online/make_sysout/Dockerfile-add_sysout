@@ -1,0 +1,9 @@
+FROM interlisp/medley:e222743f
+SHELL ["/bin/bash", "-c"]
+#
+USER root:root
+COPY full.sysout /app/medley/loadups
+USER medley:medley
+
+
+
