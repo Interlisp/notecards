@@ -30,6 +30,9 @@ if [ $# -gt 2 ]; then
 else
 	height=808
 fi
+#  Legacy notefiles volumes had root as owner of all files.  Change that here to nc as owner.
+chown -R nc:nc /home/nc/notefiles
+#
 su nc <<EOF
 #set -x
 cd /app/medley
@@ -46,7 +49,6 @@ for i in {1..10}
                 sleep 1
         fi
     done
-#xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L" -e "keycode 15 = Meta_R"
-xmodmap -e "keycode 12 =" -e "keycode 13 ="
-PATH="/app/maiko:$PATH" ./run-medley -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
+xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L" -e "keycode 15 = Meta_R"
+PATH="/app/maiko:$PATH" ./run-medley -noscroll -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
 EOF

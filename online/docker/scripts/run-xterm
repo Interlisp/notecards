@@ -11,6 +11,9 @@ if [ $# -gt 1 ]; then
 else
 	height=808
 fi
+#  Legacy notefiles volumes had root as owner of all files.  Change that here to nc as owner.
+chown -R nc:nc /home/nc/notefiles
+#
 export SSHPORT=2${PORT}
 /usr/sbin/sshd -e -p ${SSHPORT}
 su nc <<EOF
@@ -32,7 +35,7 @@ xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L"
 (echo ".         Files are now available by SFTP to notecards.online using port 2${PORT}.  Username is 'nc'.  Password is 'notecards'" | xmessage -file - -geometry ${width}x66+5+0)  &
 twm &
 sleep 1
-export TMOUT=300
+export TMOUT=1800
 /usr/bin/xterm -geometry 168x55+5+60
 EOF
 
