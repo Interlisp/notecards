@@ -1,15 +1,15 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "19-Oct-2021 15:31:43" {DSK}<home>nc>notecards>ONLINE-INIT.;1 4664   
+(FILECREATED "20-Oct-2021 23:39:54" {DSK}<home>nc>notecards>init>ONLINE-INIT.;2 4815   
 
-      changes to%:  (ADVICE IDLE)
-                    (VARS ONLINE-INITCOMS))
+      previous date%: "19-Oct-2021 15:31:43" {DSK}<home>nc>notecards>ONLINE-INIT.;1)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
 
 (RPAQQ ONLINE-INITCOMS
-       [(GLOBALVARS NC.LogoutTimeout IDLE.PROFILE)
+       [(FILES BACKGROUND-YIELD)
+        (GLOBALVARS NC.LogoutTimeout IDLE.PROFILE)
         (INITVARS (NC.LogoutTimeout 30))
         (ADVISE IDLE)
         [P (PROGN (CNDIR '/home/nc)
@@ -39,6 +39,8 @@
                                                                        (IDIFFERENCE SCREENHEIGHT 460]
         (P (PROGN (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
                   (XCL:SET-EXEC-TYPE 'INTERLISP])
+
+(FILESLOAD BACKGROUND-YIELD)
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS NC.LogoutTimeout IDLE.PROFILE)
@@ -47,7 +49,8 @@
 (RPAQ? NC.LogoutTimeout 30)
 
 [XCL:REINSTALL-ADVICE 'IDLE :BEFORE '((:LAST (if (IGREATERP (IQUOTIENT (IDIFFERENCE (CLOCK 0)
-                                                                                  (CLOCK 1)) 1000)
+                                                                                  (CLOCK 1))
+                                                                       1000)
                                                             30)
                                                  then (LOGOUT]
 

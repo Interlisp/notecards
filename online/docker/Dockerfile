@@ -1,5 +1,5 @@
 # Dockerfile to create NoteCards docker image for use on AWS EC2
-FROM interlisp/medley:e222743f
+FROM interlisp/medley:13cfb9b8
 SHELL ["/bin/bash", "-c"]
 USER root:root
 #
