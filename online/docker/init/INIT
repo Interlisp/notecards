@@ -1,24 +1,0 @@
-(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
-
-(FILECREATED "14-Oct-2021 21:46:10" {DSK}<home>nc>notecards>INIT.;4 671    
-
-      changes to%:  (VARS INITCOMS)
-
-      previous date%: "14-Oct-2021 20:25:07" {DSK}<home>nc>notecards>INIT.;3)
-
-
-(* ; "
-Copyright (c) 1992-1999, 2021 by Xerox Corporation.
-")
-
-(PRETTYCOMPRINT INITCOMS)
-
-(RPAQQ INITCOMS ((FILES (SYSLOAD FROM {DSK}/home/nc/notecards/init/)
-                            ONLINE-INIT)))
-
-(FILESLOAD (SYSLOAD FROM {DSK}/home/nc/notecards/init/)
-       ONLINE-INIT)
-(PUTPROPS INIT COPYRIGHT ("Xerox Corporation" 1992 1993 1994 1995 1996 1997 1998 1999 2021))
-(DECLARE%: DONTCOPY
-  (FILEMAP (NIL)))
-STOP

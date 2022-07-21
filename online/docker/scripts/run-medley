@@ -1,5 +1,0 @@
-#!/bin/bash
-pushd /home/il/medley >/dev/null
-/home/il/medley/run-medley "$@"
-popd >/dev/null
-
