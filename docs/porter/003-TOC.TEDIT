@@ -1,0 +1,445 @@
+1NoteCards User's Guide, Release 2.01NoteCards User's Guide, Release 2.0TABLE OF CONTENTS1TABLE OF CONTENTS1TABLE of CONTENTS6Preface	xviiPart I - Introduction and Installation1.  Introduction 	1Operating System Conventions	1System Components	1NoteCards Device-Naming Conventions	2Notation Conventions	2	Font 	2	Prompts	3	Keyboard Conventions	32.  System Requirements 	5Prerequisites	5	Processor Hardware	5	Memory	5	Swap Space	5	Disk Space	5	Input/Output Devices	5		Bitmap Display	5		Printers	6	Tape Access	6	Operating System Requirements	6Constraints	6Release Contents	6	Documentation	6	Software	73.  Software Installation 	9Ensuring Adequate Swap Space	9Installing Software	9Copy Protection	10Configuring the Software	11	Relinking	11	Enabling PUP/XNS Ethernet	11	Using/Installing the Host Access Key	124.  System Use Issues 	13Site Initialization File	13Starting NoteCards	13Where NoteCards Looks for Your Sysout	14Exiting NoteCards and Saving State	14Keyboard Interpretation	15	Sun Type 3 Keyboard	16	Sun Type 4 Keyboard	17Console Messages	18File Compatibility	18	Sysout Compatibility between Sun and Xerox Workstations	18	File Compatibility between Sun and Xerox Workstations	18Using SunOS Files from NoteCards	19	File Naming Conventions	19	Common {DSK} and {UNIX} Naming Conventions	20	{DSK} Naming Conventions	20		Version Numbering	21		Pathnames	22	{UNIX} Naming Conventions	22	Directories	23		Directory Enumeration	23		Directory Creation	24		Directory Delection	24	Open File Limit	24	Default Pathname	24File Attributes	25File System Errors	25Part II - NoteCards Tutorial5.  NoteCards Basics 	27A Few Pointers on Mouse Etiquette	27	Mouse Button Use	27		Left Mouse Button	28		Middle Mouse Button	28		Right Mouse Button	28	Regions Sensitive to Mouse Activity	28		Background	28		Windows and the Window Title Bar	29		Icons	31		Scroll Bars	31Dealing with Simple Error Conditions	32Starting NoteCards	32	Opening a Notefile	32	Creating a New Notefile	34Closing Notefiles and Exiting NoteCards	35	Closing Notefiles	35		Close	35		Abort	35	Existing Notefiles	36Using NoteCards	36	Opening Cards / Traversing Links	37	Shrinking Cards	38	Closing Cards	39	Creating Cards	39Where to Go From Here	396.  Building NoteCards Structures 	41Introduction	41A Standard View of Building NoteCards Structures	41A Non-Standard View of Building NoteCards Structures	41	FileBoxes and Hierarchies	41		Flat System	42		Almost Flat System	42	Link Type	42	Multiple Users	42	Cards and Information Chunk Size	42Types of Structures Built with Notecards	42Specializing NoteCard	43Part III - Reference Manual7.  User Interface 	45Window Menu	45Icon Menu	52Background Menu	538.  Links 	61Links and Link Types	61	System-Reserved Link Types	61	User-Specified Link Types	62	Link Directions and Link Ends	63		Link Categories	63		Other Link Terminology	63	Link Types vs. Card Types	63Link Access and Use	64	Link Icon Functionality	64		Active Regions of Link Icons	64		Mouse-Button Actions in Link Icons	65	Viewing Local and Global Links	67	Unfiled and Lost Cards	68Creating Links	69	Creating Links in Text Cards	69	Creating Links in Other Card Types	72		Text-Based Cards	72		Sketch-Based Cards	72		Graph-Based Cards	73Deleting Links	73	Deleting Links from Card Contents	73		Text-Based Cards	73		Sketch-Based Cards	74		Graph-Based Cards	74	Deleting Links from the Show Links Display	74Tailoring Links	75	Link Ops Menu	75	System Parameters for Links	76Cross-File Links	77	Appearance	77	Missing Notefiles	779.  Cards and Banners 	79Notefile Banner	79Banner Title Bar	79	Notefile Ops Menus	79	Middle-Mouse-Button Title-Bar Menu	81		Full File Name	81		File Capacity	81Special Cards	82	Table of Contents FileBox	83	To Be Filed FileBox	83	Orphans FileBox	83New Cards	83User Cards and System Cards	84Text-, Sketch-, and Graph-Based Cards	85Card Menu	85	Standard Card Menu	85		Edit Property List	85		Show Links	86		Show Info	86		Designate FileBoxes	87		Assign Title	88		Title/FileBoxes	88		Insert Link	88		Close and Save	89	FileBox Card Menu	9010.  User Cards 	91Text Cards  	91		Text-Card Menu	91FileBox Cards	92	Suggested FileBoxes and Note Cards	92	FileBox-Card Menu	93	System Parameters Affecting FileBoxes	93Sketch Cards	93	Sketch-Card Menu	93	System Parameters Affecting Sketch Cards	94Graph Cards	94	Graph-Card Menu	94	Grapher Menu	94	Graph-Card Options (and Grapher Menu Options)	95		Move Node (Move Node)	95		Remove Node (Delete Node)	96		Connect Nodes (Add Link)	96		Disconnect Nodes (Delete Link)	97		Add Label (Add Node)	97		Change Label (Change Label)	97		Smaller Label (Label Smaller)	97		Larger Label (Label Larger)	97		Toggle Shade ( <-> Shade)	97		Toggle Border ( <-> Border)	97		Directed/Undirected ( <-> Directed)	98		Sides/Centers ( <-> Sides)	99		Fix Menu	99		  (Stop)	99Bitmap Editor	99	Inserting Bitmaps into Cards	99		Text-Based Cards	99		Sketch-Based Cards	100	Bitmap Operations	100		Change Scale	101		Hand Edit	101		Trim	101		Reflect Left-to-Right	101		Reflect Top-to-Bottom	101		Reflect Diagonally	101		Rotate Left	101		Rotate Right	101		Expand on Right	102		Expand on Left	102		Expand on Bottom	102		Expand on Top	102		Switch Black & White	102		Add Border	102	Bitmap Editor	103		Paint	104		ShowAsTile	105		Grid On/Off	105		GridSize	105		Reset	105		Clear	105		Cursor	106		OK	106		Abort	10611.  System Cards 	107Search Cards	107LinkIndex Cards	108Document Cards	109	HeadingsFromFileBoxes	110	TitlesFromNoteCards	110	BuildBackLinks	111	CopyEmbeddedLinks	111	ExpandEmbeddedLinks	111Browser Cards	112	Recompute Browser	113	Multiple Roots	114	Dashed Links	114	Arrowheads	114	Browser Specs	114	Middle-Button Title-Bar Menu Options	115	Editing the Browser Manually and Structure Editing	116	Overview Windows on Browser Cards	118		Creating an Overview Window	118		Reshaping the Overview Window	118		Scrolling and the Wire Frame	118		Recomputing the Overview Contents	119		Browser Overview Stylesheet	119		Tidbits	11912.  MenuBox Icon 	121Notefile Options	121	Open	122	Compact	123	Inspect & Repair	 124	Copy	124	Rename	124	Delete	124	Create	125	Checkpoint	125	Close	127	Abort	127	NC FileBrowser	128Card Options	128	Close	129	Delete	130	Copy	130	Move	131Other Options	131	Edit Parameters	131	NF Indicators On	131	TEdit Killer On	132	Load Patches	13313.  System Parameters 	135Accessing System Parameters	135NoteCards System Parameters	136	Extra TEdit Props	136	Include Card Object In ShowInfo	137	Del TEdit Process When Shrinking	137Font Parameters	137	Menu Font	138	Default Font	138	Link Icon Font	138Notefile Parameters	139	Show Notefile On Cards	139	New Notefile Initial Size	140	Menu Lingers After Notefile Close	140Card Parameters	140	Force Filing	140	Force Titles	140	Default Card Type	140	Close Cards Off Screen	140	Bring Up Cards At Previous Pos	141FileBox Card Parameters	141	Markers In FileBoxes	141	Alphabetize FileBox Children	141Browser Card Parameters	141	Special Browser Specs	141	Arrow Heads In Browsers	142	Link Dashing In Browsers	142Sketch Card Parameters	142	Attach Sketch Menu	142Link Parameters	142	Link Icon Border Width	142	Link Icon Multi Line Mode	143	Cross File Link Mode	143	Link Icon Max Width in Pixels	 143	Link Icon Show Title Default	144	Link Icon Attach Bitmap Default	144	Link Icon Show Link Type Default	144	Use Deleted Link Icon Indicators	14414.  FileBrowser 	145User Interface	145	Starting FileBrowser	145	Specifying What Files to Browse	145		Examples	146	Using the FileBrowser Window	146	Selecting Files	148	Commands that Require Input	149	Aborting Commands	149	Quitting the FileBrowser	150	Copy-Selecting Files	151	Getting Hardcopy Directory Listings	151FileBrowser Commands	151	Delete, Undelete	151	Copy	153	Rename	154	Hardcopy	154	See		155	FileBrowse	157	Edit	157	Load	158	Compile	158	Expunge	158	Recompute	158	New Info	160	Set Depth	161	Sort	162Troubleshooting Problems with FileBrowser	16215.  Other Tools 	163Digital Clock	163	Starting and Stopping the Digital Clock	163	Changing the Digital Clock	164		Set Font	164		Set Time	165		Set Alarm	165		Quiet Alarm/Loud Alarm	166		Delete Alarm Setting	166		Shape to Fit	166		12-Hour/24-Hour Clock	166		Set Local Time Zone	166		Add New Regional Time Zone	166		Delete This Window	166		Set Font for Aux Clocks	167		Set Aux Clock Font In Just This Window	167		Set Time-Zone Heading	167		Set Regional Time Zone	167Analog Clock	167	Starting the Analog Clock	168	Stopping the Analog Clock	168	Changing the Analog Clock	168		Numbers	169		Points	169		No Numbers	169		Rings	169		No Rings	169		Hands	169		No Hands	169		Times	169		No Times	169		Show Style	169		Set to Default	170		Change Default	170		Set Time	170	Known Problems	170Directory Connector	170	Starting the Directory Connector	170	Stopping the Directory Connector	170	Changing the Directory Connector Fonts	170	Using the Directory Connector	171		Left Mouse Button	171		Middle Mouse Button	17116.  Printing 	173Setting up Printers	173Adding Default Printers	173	Setting the Default Printer	174	Removing a Default Printer	175Setting Font Directories	175	Adding a New Font Directory	175	Showing the Font Directories	176	Removing a Font Directory	177Troubleshooting Common Printer Problems	178	Can't Determin IMAGETYPE for {LPT}	178	Font not Found	179	Can't Convert a POSTSCRIPT for a NIL Printer	179Customizing Your PostScript Printer	179	Portrait vs. Landscape	179	Maximum Wild Font Size	180	Font Association Menu	180	PostScript Short Edge Shift	181	PostScript Short Edge Points	181	PostScript Long Edge Shift	182	PostScript Long Edge Points	182	Landscape Mode	182	Landscape Text Mode	182	Bitmap Scape	183	Texture Scale	183	Image Size Factor	18317.  Error Recovery and Known Problems	185System Status, Aborting Operations, and Spawning a New Mouse	185	System Status	185	Aborting Operations	185	Spawning a New Mouse	186Break Windows	186Lisp Errors	187	Errors While Running NoteCards	187	Xerox Workstation-Specific Errors	187	Virtual Memory Errors	188URAID		188	Entering URAID	188 	URAID Commands	188Other Fatal Error Conditions	189System Error Conditions	189Known Problems	191	Printing Browsers	191	Notefile Indicator Window	191	Fonts	191	Tedit	191Appendices, Glossary, and IndexAppendix A.  Notefile Concepts	193Background Concepts	193	Unique Identifiers: UIDs	193	Card Parts	193Notefile Structure:  Index and Data Areas	193Notefile Checkpointing	195Storing Links and Repairing Notefiles with Inconsistent Links	196Appendix B.  NoteCards Programmer's Interface	197Notefile Creation and Access	197Creating and Accessing NoteCard Types	199Creating Notecards and Fileboxes	203Accessing Notecards and Fileboxes	206Creating and Accessing Links	211Creating and Accessing Link Labels	213Customizing the NoteCards Interface	214Handy Miscellaneous Functions	217Appendix C.  Notefile Inspector	225Running the Notefile Inspector: Phase 1: Scouring the Data Area	225	Continue Repair	226	End Inspect&Repair	226	Abort	227	Recheck Bad Cards	227	Inspect Cards	227Running the Notefile Inspector: Phase 2: Your Chance to Tinker	227	Card Inspector Menu	228	Card Parts Inspector	229	Cancel	231	Update	231	Delete	231	Undelete	231	Reset	231Running the Notefile Inspector: Phase 3: Rebuilding Your Links	232Tips and Hints for Using Inspect&Repair	233	When in Doubt, Abort!	233	Fixing versus Tinkering	233	Inspect&Repair After a Crash	233	Compacting	233	Inspect&Repair Closes the Notefile Before Starting	233	Fixing Enough Problems to Allow Phase 3 to Run	234Appendix D.  Initialization Files	235Size Initialization File	235	Locating the Initialization File	235	Initialization File Structure	236Site Variables	236Appendix E.  Checksum Control	241Commands	241Output		241Examples	242Glossary	GLOSSARY-1Index	INDEX-1[This page intentionally left blank]     (LIST ((PAGE NIL (PAPERSIZE Letter FOLIOINFO (LOWERROMAN "" "") STARTINGPAGE# 3) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD RIGHT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (LOWERROMAN "" "")) (270 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGR) (54 27 558 36) NIL) (TEXT NIL NIL (54 54 504 723) NIL))) (PAGE NIL (PAPERSIZE Letter FOLIOINFO (LOWERROMAN "" "")) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD LEFT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (LOWERROMAN "" "")) (54 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGV) (54 27 558 36) NIL) (HEADING NIL (HEADINGTYPE VERSOHEAD) (54 762 558 36) NIL) (TEXT NIL NIL (54 54 504 684) NIL))) (PAGE NIL (PAPERSIZE Letter FOLIOINFO (LOWERROMAN "" "")) (0 0 612 792) ((FOLIO NIL (PARALOOKS (QUAD RIGHT) CHARLOOKS (SUPERSCRIPT 0 INVISIBLE OFF SELECTPOINT OFF PROTECTED OFF SIZE 10 FAMILY MODERN OVERLINE OFF STRIKEOUT OFF UNDERLINE OFF EXPANSION REGULAR SLOPE REGULAR WEIGHT MEDIUM INVERTED OFF USERINFO NIL STYLE NIL) FORMATINFO (LOWERROMAN "" "")) (270 15 288 36) NIL) (HEADING NIL (HEADINGTYPE FOOTINGR) (54 27 558 36) NIL) (HEADING NIL (HEADINGTYPE RECTOHEAD) (54 762 558 36) NIL) (TEXT NIL NIL (54 54 504 684) NIL)))))       ,    ø                                  5 0 0à        0 Ú                             8 0 0à        0  H Ú                             ,    ø                                  < 0 0à        0  H  ` Ú               T             3    à       Ú               T             2    à         ¨                              2    à        ¨                              2    à 
+      Ú                             ; 0 0à        0  H  ` Ú                             2    à       Ú                             ,    ø "                                 -    ø      äì           T             F    ø        ø       PAGEHEADING 	VERSOHEAD                   F    ø        ø       PAGEHEADING 	RECTOHEAD                   E    ø      ø       PAGEHEADING FOOTINGV                   E    ø      ø       PAGEHEADING FOOTINGR                          	HELVETICA 
+         	HELVETICA          	HELVETICA          	HELVETICA 
+          MODERN           MODERN          MODERN 
+                   HRULE.GETFN  MODERN 
+                        $               HRULE.GETFN  MODERN 
+                        $                            HRULE.GETFN  MODERN 
+                                              HRULE.GETFN  MODERN 
+                                       HRULE.GETFN  MODERN                                                         '                              
+             
+             
+   &          
+                	          
+             
+                                 
+             
+             
+   
+          
+             
+             
+             
+             
+             
+             
+   !          
+             
+             
+             
+                                 
+             
+             
+             
+             
+             
+             
+   )                              
+             
+             
+   )          
+   &          
+             
+             
+             
+             
+             
+   <          
+   :          
+   $          
+             
+   /          
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+                                              
+   %          
+             
+             
+             
+                (          
+             
+   &          
+             
+             
+   (          
+             
+             
+             
+   +          
+             
+             
+             
+             
+             
+   %          
+             
+             
+             
+             
+                !                 
+             
+   4          
+   8          
+             
+             
+             
+             
+             
+   %          
+   ,          
+                                                     
+                          
+                	                 
+             
+             
+             
+   "          
+             
+             
+             
+             
+             
+   "          
+   (          
+   #          
+             
+             
+   !          
+   '          
+             
+             
+             
+             
+   &          
+             
+             
+             
+   /          
+             
+             
+              
+             
+             
+                                 
+             
+             
+             
+   '          
+             
+             
+             
+             
+             
+             
+             
+             
+   )          
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+                                 
+             
+             
+             
+   '          
+             
+   *          
+             
+             
+   -          
+             
+             
+             
+   2          
+             
+             
+             
+   $          
+             
+   !          
+   #          
+   !          
+             
+   !          
+   )          
+              
+             
+             
+             
+   !          
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+   	          
+             	                    
+             
+                          
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+   *          
+   8          
+   '          
+   "          
+   $          
+   #          
+   (          
+   "          
+                    	                    
+             
+   
+          
+             
+                
+          
+             
+             
+             
+             
+                          
+             
+             
+             
+                
+          
+   
+                       
+             
+             
+             
+             	                    
+              
+              
+             
+   %          
+   &          
+             
+             
+             
+             
+             
+             
+             
+   '          
+             
+             
+             
+             
+             
+   $          
+             
+             
+   "          
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+   $          
+   "          
+   %          
+   &          
+   &          	                    
+             
+             
+   %          
+             
+   "          
+             
+   !          
+             
+             
+             
+   )          
+             
+                
+          
+             
+             
+   
+          
+                
+             
+          
+             
+             
+             
+             
+                
+          
+   .          	                    
+             
+   -          
+              
+             
+             
+             
+             
+             
+             
+             
+             
+   !          
+             
+             
+   -          
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+   &          
+   &          
+   ,          
+   #          
+             
+             	                    
+             
+             
+   !          
+              
+             
+   !          
+   "          
+             
+   ,          
+   (          
+             
+   2          
+   (          
+             
+             
+             
+   !          
+   "          
+              
+   !          
+             
+             
+             
+             
+             	   &                 
+   A          
+             
+             
+             
+             
+             
+   $          
+   '          
+             
+             
+             
+             
+   !          
+                          
+             
+             
+                                              	                                  
+             
+             
+             
+   .          
+             
+   B          	                 $                 
+   !          
+   *          
+   %          
+   &          
+   !          
+   '          
+   (          
+   "          	                                         
+   D          
+             
+                          
+             
+             
+   C          
+             
+             
+             
+             
+             
+             
+             
+   C             ,          
+             
+             
+   "          
+             
+   8          
+   4          	                                         
+             
+   &          
+   #          
+             	                                         
+             
+                          	                    	          	             $      /Yøzº
