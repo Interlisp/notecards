@@ -1,4 +1,180 @@
-(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 3-Nov-2020 16:13:47" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCPROGINT.;5 192751       previous date%: " 9-Jan-94 19:40:14" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCPROGINT.;4)(* ; "Copyright (c) 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1993, 1994, 2020 by Venue & Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCPROGINTCOMS)(RPAQQ NCPROGINTCOMS       [(* ;;; "Notefile creation and access")        (FNS NCP.CreateNoteFile NCP.OpenNoteFile NCP.OpenNoteFileP NCP.ListOfOpenNoteFiles              NCP.CloseNoteFiles NCP.CheckpointNoteFiles NCP.AbortNoteFiles NCP.CompactNoteFile              NCP.CompactNoteFileInPlace NCP.RepairNoteFile NCP.DeleteNoteFile              NCP.NoteFileFromFileName NCP.FileNameFromNoteFile NCP.NoteFileMenu NCP.CheckInNoteFile              NCP.CheckOutNoteFile NCP.LockFileName NCP.NumCardSlotsRemaining NCP.ExpandNoteFileIndex             NCP.NoteFileAddProp NCP.NoteFileClosingP NCP.ForgetNoteFileName NCP.RememberNoteFileName             NCP.ValidNoteFileP)        (* ;;; "Creating and accessing NoteCard types and substances.")        (FNS NCP.CardTypes NCP.CreateCardType NCP.DeleteCardType NCP.CreateCardTypeStub              NCP.ChangeCardTypeFields NCP.CardTypeSuper NCP.CardTypeLinkDisplayMode NCP.CardTypeFn              NCP.CardTypeVar NCP.CardTypeP NCP.CardTypeFnP NCP.CardTypeVarP NCP.CardTypeFns              NCP.CardTypeVars NCP.CardTypeDisplayedInMenu NCP.IsSubTypeOfP NCP.TextBasedP              NCP.SketchBasedP NCP.GraphBasedP NCP.AutoLoadCardType NCP.AddSpecialCard              NCP.RemoveSpecialCard NCP.CardsOfTypes)        (* ;;; "Creating Notecards and fileboxes")        (FNS NCP.CreateCard NCP.CreateTextCard NCP.CreateFileBox NCP.CreateBrowserCard              NCP.CreateSketchCard NCP.CreateGraphCard NCP.MakeDocument NCP.MakeLinkIndex NCP.NewCardP             )        (* ;;; "Opening, closing, activating, display, etc.")        (FNS NCP.OpenCard NCP.CloseCards NCP.DisplayCard NCP.UndisplayCards NCP.CacheCards              NCP.UncacheCards NCP.CardCachedP NCP.CardDisplayedP NCP.CardWindow NCP.WindowFromCard              NCP.CardFromWindow NCP.CardFromTextStream)        (* ;;; "Accessing cards and boxes")        (FNS NCP.CardType NCP.ValidCardP NCP.CardTitle NCP.FileCards NCP.UnfileCards NCP.CardParents             NCP.FileBoxChildren NCP.CardNeighbors NCP.GetLinks NCP.CardPropList NCP.CardProp              NCP.CardAddProp NCP.CardDelProp NCP.CardSubstance NCP.CardRegion NCP.CardAddText              NCP.ChangeLoc NCP.DeleteCards NCP.FileBoxP NCP.AllCards NCP.AllBoxes NCP.ContentsFileBox             NCP.OrphansFileBox NCP.ToBeFiledFileBox NCP.NoteFileFromCard NCP.CardNoteFile              NCP.SameCardP NCP.CoerceToCard NCP.DetermineDisplayRegion NCP.LockListOfCards              NCP.GetCrossFileLinkDestCard NCP.CardBeingDeletedP)        (* ;;; "Collecting, copying, moving, deleting, cards")        (FNS NCP.CollectCards NCP.CopyCards NCP.MoveCards)        (* ;;; "Creating and accessing links")        (FNS NCP.CreateLink NCP.LocalGlobalLink NCP.GlobalGlobalLink NCP.GlobalLocalLink              NCP.LocalLocalLink NCP.LinkDesc NCP.LinkDisplayMode NCP.LinkType NCP.LinkSource              NCP.LinkDestination NCP.DeleteLinks NCP.ValidLinkP NCP.AllLinks NCP.SameLinkP              NCP.LinkFromLinkIcon NCP.MakeLinkIcon NCP.MarkCardDirty NCP.LinkIconAttachedBitMap)        (* ;;; "Creating and accessing link labels.")        (FNS NCP.CreateLinkType NCP.DeleteLinkType NCP.RenameLinkType NCP.LinkTypes              NCP.ReverseLinkTypes NCP.UserLinkTypes NCP.ValidLinkTypeP NCP.SystemLinkTypeP)        (* ;;; "Dealing with card parts dates.")        (FNS NCP.CardDates)        (* ;;; "Open events card")        (FNS NCP.GetOpenEventsCard NCP.GetCloseEventsCard NCP.MarkAsNotNeedingFiling)        (* ;;; "Functions for adding menu items")        (FNS NCP.AddSessionIconMenuItem NCP.RemoveSessionIconMenuItem NCP.RestoreSessionIconMenu              NCP.AddNoteFileIconMenuItem NCP.RemoveNoteFileIconMenuItem NCP.RestoreNoteFileIconMenu              NC.CreateSessionIconNoteFileMenuItem NCP.AddDefaultNoteFileIconMiddleButtonItems              NCP.NoticedNoteFileNamesMenu NCP.AddTitleBarMenuItemsToType              NCP.AddTitleBarMenuItemsToWindow NCP.BringUpSessionIcon NCP.SessionIconWindow)        (* ;;; "Miscellaneous")        (FNS NCP.TitleSearch NCP.PropSearch NCP.WhichCard NCP.WhichNoteFile NCP.SelectCards              NCP.DocumentParameters NCP.NoteCardsParameters NCP.PrintMsg NCP.ClearMsg NCP.AskUser              NCP.AskYesOrNo NCP.RegisterCardByName NCP.ListRegisteredCards NCP.LookupCardByName              NCP.UnregisterName NCP.DisplayedCards NCP.CardUserDataProp NCP.NoteFileProp              NCP.SetUpTitleBar NCP.AddNoteFileIconMiddleButtonItems NCP.NoteFileIconWindow              NCP.CoerceToInterestedWindow NCP.SetGrayShade NCP.MakeTypeIconBitMapSet)        (DECLARE%: DONTEVAL@LOAD (P (MOVD 'NCP.WhichCard 'NCP.WC T)                                    (MOVD 'NCP.WhichNoteFile 'NCP.WNF T)))        (* ;;; "Handy internal functions")        (FNS NCP.ReportError NCP.ReportWarning NCP.LinkAnchorDesc NCP.GetTypeRecord              NCP.AddLeftButtonTitleBarMenuItems NCP.AddMiddleButtonTitleBarMenuItems              NCP.CoerceToLinkDisplayMode)        (* ;;; "Global variables.")        (GLOBALVARS NCP.ErrorBrkWhenFlg NCP.LinkDisplayModes NCP.TypeFnsAssocLst NCP.NoteCardTypeFns               NCP.NoteCardTypeVars NC.MakeDocParameters NC.CardTypes NC.SubstanceTypes                NC.SystemLinkLabels NC.FiledCardLinkLabel NC.SubBoxLinkLabel NC.SelectingCardsMenu                NC.SelectingCardMenu NC.UCASESystemLinkLabels NC.SourceLinkLabel                NC.NoteCardsParameters NCP.NoticedNoteFileNames NCP.GrayShade)        [INITVARS (NCP.GrayShade GRAYSHADE)               (NCP.NoticedNoteFileNames NIL)               (NCP.DefaultLinkIconAttachedBitMapSize 17)               (NCP.ErrorBrkWhenFlg NIL)               (NCP.LinkDisplayModes '(Icon Title Label Both))               (NCP.NoteCardTypeFns '(MakeFn EditFn QuitFn GetFn PutFn CopyFn MarkDirtyFn DirtyPFn                                             CollectLinksFn DeleteLinksFn UpdateLinkIconsFn                                             InsertLinkFn TranslateWindowPositionFn))               (NCP.NoteCardTypeVars '(SuperType StubFlg FullDefinitionFile LinkDisplayMode                                              DefaultWidth DefaultHeight LinkAnchorModesSupported                                              DisplayedInMenuFlg LinkIconAttachedBitMap                                              LeftButtonMenuItems MiddleButtonMenuItems]        (* ;;; "Following is for backward compatibility with 1.2")        (DECLARE%: DONTEVAL@LOAD (P (MOVD 'NCP.OpenCard 'NCP.BringUpCard T)                                    (MOVD 'NCP.CacheCards 'NCP.ActivateCards T)                                    (MOVD 'NCP.CardCachedP 'NCP.ActiveCardP T)                                    (MOVD 'NCP.CardTypeFnP 'NCP.ValidCardTypeFn T)                                    (MOVD 'NCP.CardTypeP 'NCP.ValidCardType T)                                    (MOVD 'NCP.CardTypeVarP 'NCP.ValidCardTypeVar T)                                    (MOVD 'NCP.CloseCards 'NCP.DeactivateCards T)                                    (MOVD 'NCP.ValidCardP 'NCP.ValidCard T)                                    (MOVD 'NCP.ContentsFileBox 'NCP.GetContentsFileBox T)                                    (MOVD 'NCP.OrphansFileBox 'NCP.GetOrphansFileBox T)                                    (MOVD 'NCP.ToBeFiledFileBox 'NCP.GetToBeFiledFileBox T)                                    (MOVD 'NCP.LinkSource 'NCP.GetLinkSource T)                                    (MOVD 'NCP.LinkDestination 'NCP.GetLinkDestination T)                                    (MOVD 'NCP.CreateLinkType 'NCP.CreateLinkLabel T)                                    (MOVD 'NCP.DeleteLinkType 'NCP.DeleteLinkLabel T)                                    (MOVD 'NCP.RenameLinkType 'NCP.RenameLinkLabel T)                                    (MOVD 'NCP.LinkTypes 'NCP.GetLinkLabels T)                                    (MOVD 'NCP.UserLinkTypes 'NCP.GetUserLinkLabels T)                                    (MOVD 'NCP.ReverseLinkTypes 'NCP.GetReverseLinkLabels T)                                    (MOVD 'NCP.ValidLinkTypeP 'NCP.ValidLinkLabel T)                                    (MOVD 'NCP.ValidLinkP 'NCP.ValidLink T)))        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)              NCPROGINT)        (DECLARE%: DONTEVAL@LOAD DOEVAL@COMPILE DONTCOPY COMPILERVARS               (ADDVARS (NLAMA)                      (NLAML)                      (LAMA NCP.NoteFileProp NCP.CardUserDataProp NCP.PrintMsg NCP.PropSearch                             NCP.LinkType NCP.LinkDisplayMode NCP.CardRegion NCP.CardSubstance                             NCP.CardProp NCP.CardTitle NCP.CardTypeDisplayedInMenu])(* ;;; "Notefile creation and access")(DEFINEQ(NCP.CreateNoteFile
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+
+(FILECREATED "18-Oct-2023 22:03:03" {DSK}<home>frank>il>notecards>system>NCPROGINT.;2 192630 
+
+      :CHANGES-TO (FNS NCP.CheckInNoteFile NCP.CheckOutNoteFile)
+
+      :PREVIOUS-DATE " 3-Nov-2020 16:13:47" {DSK}<home>frank>il>notecards>system>NCPROGINT.;1)
+
+
+(PRETTYCOMPRINT NCPROGINTCOMS)
+
+(RPAQQ NCPROGINTCOMS
+       [
+
+(* ;;; "Notefile creation and access")
+
+        (FNS NCP.CreateNoteFile NCP.OpenNoteFile NCP.OpenNoteFileP NCP.ListOfOpenNoteFiles 
+             NCP.CloseNoteFiles NCP.CheckpointNoteFiles NCP.AbortNoteFiles NCP.CompactNoteFile 
+             NCP.CompactNoteFileInPlace NCP.RepairNoteFile NCP.DeleteNoteFile 
+             NCP.NoteFileFromFileName NCP.FileNameFromNoteFile NCP.NoteFileMenu NCP.CheckInNoteFile 
+             NCP.CheckOutNoteFile NCP.LockFileName NCP.NumCardSlotsRemaining NCP.ExpandNoteFileIndex
+             NCP.NoteFileAddProp NCP.NoteFileClosingP NCP.ForgetNoteFileName NCP.RememberNoteFileName
+             NCP.ValidNoteFileP)
+        
+
+(* ;;; "Creating and accessing NoteCard types and substances.")
+
+        (FNS NCP.CardTypes NCP.CreateCardType NCP.DeleteCardType NCP.CreateCardTypeStub 
+             NCP.ChangeCardTypeFields NCP.CardTypeSuper NCP.CardTypeLinkDisplayMode NCP.CardTypeFn 
+             NCP.CardTypeVar NCP.CardTypeP NCP.CardTypeFnP NCP.CardTypeVarP NCP.CardTypeFns 
+             NCP.CardTypeVars NCP.CardTypeDisplayedInMenu NCP.IsSubTypeOfP NCP.TextBasedP 
+             NCP.SketchBasedP NCP.GraphBasedP NCP.AutoLoadCardType NCP.AddSpecialCard 
+             NCP.RemoveSpecialCard NCP.CardsOfTypes)
+        
+
+(* ;;; "Creating Notecards and fileboxes")
+
+        (FNS NCP.CreateCard NCP.CreateTextCard NCP.CreateFileBox NCP.CreateBrowserCard 
+             NCP.CreateSketchCard NCP.CreateGraphCard NCP.MakeDocument NCP.MakeLinkIndex NCP.NewCardP
+             )
+        
+
+(* ;;; "Opening, closing, activating, display, etc.")
+
+        (FNS NCP.OpenCard NCP.CloseCards NCP.DisplayCard NCP.UndisplayCards NCP.CacheCards 
+             NCP.UncacheCards NCP.CardCachedP NCP.CardDisplayedP NCP.CardWindow NCP.WindowFromCard 
+             NCP.CardFromWindow NCP.CardFromTextStream)
+        
+
+(* ;;; "Accessing cards and boxes")
+
+        (FNS NCP.CardType NCP.ValidCardP NCP.CardTitle NCP.FileCards NCP.UnfileCards NCP.CardParents
+             NCP.FileBoxChildren NCP.CardNeighbors NCP.GetLinks NCP.CardPropList NCP.CardProp 
+             NCP.CardAddProp NCP.CardDelProp NCP.CardSubstance NCP.CardRegion NCP.CardAddText 
+             NCP.ChangeLoc NCP.DeleteCards NCP.FileBoxP NCP.AllCards NCP.AllBoxes NCP.ContentsFileBox
+             NCP.OrphansFileBox NCP.ToBeFiledFileBox NCP.NoteFileFromCard NCP.CardNoteFile 
+             NCP.SameCardP NCP.CoerceToCard NCP.DetermineDisplayRegion NCP.LockListOfCards 
+             NCP.GetCrossFileLinkDestCard NCP.CardBeingDeletedP)
+        
+
+(* ;;; "Collecting, copying, moving, deleting, cards")
+
+        (FNS NCP.CollectCards NCP.CopyCards NCP.MoveCards)
+        
+
+(* ;;; "Creating and accessing links")
+
+        (FNS NCP.CreateLink NCP.LocalGlobalLink NCP.GlobalGlobalLink NCP.GlobalLocalLink 
+             NCP.LocalLocalLink NCP.LinkDesc NCP.LinkDisplayMode NCP.LinkType NCP.LinkSource 
+             NCP.LinkDestination NCP.DeleteLinks NCP.ValidLinkP NCP.AllLinks NCP.SameLinkP 
+             NCP.LinkFromLinkIcon NCP.MakeLinkIcon NCP.MarkCardDirty NCP.LinkIconAttachedBitMap)
+        
+
+(* ;;; "Creating and accessing link labels.")
+
+        (FNS NCP.CreateLinkType NCP.DeleteLinkType NCP.RenameLinkType NCP.LinkTypes 
+             NCP.ReverseLinkTypes NCP.UserLinkTypes NCP.ValidLinkTypeP NCP.SystemLinkTypeP)
+        
+
+(* ;;; "Dealing with card parts dates.")
+
+        (FNS NCP.CardDates)
+        
+
+(* ;;; "Open events card")
+
+        (FNS NCP.GetOpenEventsCard NCP.GetCloseEventsCard NCP.MarkAsNotNeedingFiling)
+        
+
+(* ;;; "Functions for adding menu items")
+
+        (FNS NCP.AddSessionIconMenuItem NCP.RemoveSessionIconMenuItem NCP.RestoreSessionIconMenu 
+             NCP.AddNoteFileIconMenuItem NCP.RemoveNoteFileIconMenuItem NCP.RestoreNoteFileIconMenu 
+             NC.CreateSessionIconNoteFileMenuItem NCP.AddDefaultNoteFileIconMiddleButtonItems 
+             NCP.NoticedNoteFileNamesMenu NCP.AddTitleBarMenuItemsToType 
+             NCP.AddTitleBarMenuItemsToWindow NCP.BringUpSessionIcon NCP.SessionIconWindow)
+        
+
+(* ;;; "Miscellaneous")
+
+        (FNS NCP.TitleSearch NCP.PropSearch NCP.WhichCard NCP.WhichNoteFile NCP.SelectCards 
+             NCP.DocumentParameters NCP.NoteCardsParameters NCP.PrintMsg NCP.ClearMsg NCP.AskUser 
+             NCP.AskYesOrNo NCP.RegisterCardByName NCP.ListRegisteredCards NCP.LookupCardByName 
+             NCP.UnregisterName NCP.DisplayedCards NCP.CardUserDataProp NCP.NoteFileProp 
+             NCP.SetUpTitleBar NCP.AddNoteFileIconMiddleButtonItems NCP.NoteFileIconWindow 
+             NCP.CoerceToInterestedWindow NCP.SetGrayShade NCP.MakeTypeIconBitMapSet)
+        (DECLARE%: DONTEVAL@LOAD (P (MOVD 'NCP.WhichCard 'NCP.WC T)
+                                    (MOVD 'NCP.WhichNoteFile 'NCP.WNF T)))
+        
+
+(* ;;; "Handy internal functions")
+
+        (FNS NCP.ReportError NCP.ReportWarning NCP.LinkAnchorDesc NCP.GetTypeRecord 
+             NCP.AddLeftButtonTitleBarMenuItems NCP.AddMiddleButtonTitleBarMenuItems 
+             NCP.CoerceToLinkDisplayMode)
+        
+
+(* ;;; "Global variables.")
+
+        (GLOBALVARS NCP.ErrorBrkWhenFlg NCP.LinkDisplayModes NCP.TypeFnsAssocLst NCP.NoteCardTypeFns
+               NCP.NoteCardTypeVars NC.MakeDocParameters NC.CardTypes NC.SubstanceTypes 
+               NC.SystemLinkLabels NC.FiledCardLinkLabel NC.SubBoxLinkLabel NC.SelectingCardsMenu 
+               NC.SelectingCardMenu NC.UCASESystemLinkLabels NC.SourceLinkLabel 
+               NC.NoteCardsParameters NCP.NoticedNoteFileNames NCP.GrayShade)
+        [INITVARS (NCP.GrayShade GRAYSHADE)
+               (NCP.NoticedNoteFileNames NIL)
+               (NCP.DefaultLinkIconAttachedBitMapSize 17)
+               (NCP.ErrorBrkWhenFlg NIL)
+               (NCP.LinkDisplayModes '(Icon Title Label Both))
+               (NCP.NoteCardTypeFns '(MakeFn EditFn QuitFn GetFn PutFn CopyFn MarkDirtyFn DirtyPFn 
+                                            CollectLinksFn DeleteLinksFn UpdateLinkIconsFn 
+                                            InsertLinkFn TranslateWindowPositionFn))
+               (NCP.NoteCardTypeVars '(SuperType StubFlg FullDefinitionFile LinkDisplayMode 
+                                             DefaultWidth DefaultHeight LinkAnchorModesSupported 
+                                             DisplayedInMenuFlg LinkIconAttachedBitMap 
+                                             LeftButtonMenuItems MiddleButtonMenuItems]
+        
+
+(* ;;; "Following is for backward compatibility with 1.2")
+
+        (DECLARE%: DONTEVAL@LOAD (P (MOVD 'NCP.OpenCard 'NCP.BringUpCard T)
+                                    (MOVD 'NCP.CacheCards 'NCP.ActivateCards T)
+                                    (MOVD 'NCP.CardCachedP 'NCP.ActiveCardP T)
+                                    (MOVD 'NCP.CardTypeFnP 'NCP.ValidCardTypeFn T)
+                                    (MOVD 'NCP.CardTypeP 'NCP.ValidCardType T)
+                                    (MOVD 'NCP.CardTypeVarP 'NCP.ValidCardTypeVar T)
+                                    (MOVD 'NCP.CloseCards 'NCP.DeactivateCards T)
+                                    (MOVD 'NCP.ValidCardP 'NCP.ValidCard T)
+                                    (MOVD 'NCP.ContentsFileBox 'NCP.GetContentsFileBox T)
+                                    (MOVD 'NCP.OrphansFileBox 'NCP.GetOrphansFileBox T)
+                                    (MOVD 'NCP.ToBeFiledFileBox 'NCP.GetToBeFiledFileBox T)
+                                    (MOVD 'NCP.LinkSource 'NCP.GetLinkSource T)
+                                    (MOVD 'NCP.LinkDestination 'NCP.GetLinkDestination T)
+                                    (MOVD 'NCP.CreateLinkType 'NCP.CreateLinkLabel T)
+                                    (MOVD 'NCP.DeleteLinkType 'NCP.DeleteLinkLabel T)
+                                    (MOVD 'NCP.RenameLinkType 'NCP.RenameLinkLabel T)
+                                    (MOVD 'NCP.LinkTypes 'NCP.GetLinkLabels T)
+                                    (MOVD 'NCP.UserLinkTypes 'NCP.GetUserLinkLabels T)
+                                    (MOVD 'NCP.ReverseLinkTypes 'NCP.GetReverseLinkLabels T)
+                                    (MOVD 'NCP.ValidLinkTypeP 'NCP.ValidLinkLabel T)
+                                    (MOVD 'NCP.ValidLinkP 'NCP.ValidLink T)))
+        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)
+              NCPROGINT)
+        (DECLARE%: DONTEVAL@LOAD DOEVAL@COMPILE DONTCOPY COMPILERVARS
+               (ADDVARS (NLAMA)
+                      (NLAML)
+                      (LAMA NCP.NoteFileProp NCP.CardUserDataProp NCP.PrintMsg NCP.PropSearch 
+                            NCP.LinkType NCP.LinkDisplayMode NCP.CardRegion NCP.CardSubstance 
+                            NCP.CardProp NCP.CardTitle NCP.CardTypeDisplayedInMenu])
+
+
+
+(* ;;; "Notefile creation and access")
+
+(DEFINEQ
+
+(NCP.CreateNoteFile
   (LAMBDA (FileName QuietFlg)                                (* rht%: " 2-Mar-87 21:58")
           
           (* * Prog intface function for creating a notefile.)
@@ -11,7 +187,9 @@
                                                               FileNameWithExt " already exists."))
                   NIL
            else (NC.CreateDatabaseFile FileNameWithExt NIL NIL NIL NIL NIL NIL QuietFlg)
-                FileNameWithExt))))(NCP.OpenNoteFile
+                FileNameWithExt))))
+
+(NCP.OpenNoteFile
   [LAMBDA (NoteFileOrFileName Don'tCreateFlg Convertw/oConfirmFlg QuietFlg MenuPosition ReadOnlyFlg 
                  Don'tCreateInterfaceFlg)                    (* pmi%: "24-Nov-87 09:27")
           
@@ -42,7 +220,9 @@
                      (NC.OpenNoteFile FileNameWithExt NIL Don'tCreateFlg Convertw/oConfirmFlg NIL NIL 
                             Don'tCreateInterfaceFlg NIL NIL NIL MenuPosition QuietFlg
                             (AND ReadOnlyFlg 'INPUT)
-                            NIL])(NCP.OpenNoteFileP
+                            NIL])
+
+(NCP.OpenNoteFileP
   (LAMBDA (NoteFile)                                         (* Newman "13-Nov-86 17:28")
           
           (* * Non-nil if NoteFile is an open notefile.)
@@ -51,7 +231,9 @@
           
           (* * dvn |11/13/86| Changed to call NC.NoteFileOpenP)
 
-    (NC.NoteFileOpenP NoteFile)))(NCP.ListOfOpenNoteFiles
+    (NC.NoteFileOpenP NoteFile)))
+
+(NCP.ListOfOpenNoteFiles
   (LAMBDA NIL                                                (* rht%: "19-Sep-86 22:52")
           
           (* * Return list of all currently open notefiles.)
@@ -59,7 +241,9 @@
           (* * rht 9/19/86%: Fixed to return only notefiles currently open, not all that 
           were ever open.)
 
-    (for NoteFile in (NC.ListOfNoteFiles) when (NCP.OpenNoteFileP NoteFile) collect NoteFile)))(NCP.CloseNoteFiles
+    (for NoteFile in (NC.ListOfNoteFiles) when (NCP.OpenNoteFileP NoteFile) collect NoteFile)))
+
+(NCP.CloseNoteFiles
   (LAMBDA (NoteFilesOrT QuietFlg AutoConfirmFlg)             (* Randy.Gobbel " 4-Mar-87 16:16")
           
           (* * Prog's intface function for closing a notefile.)
@@ -82,7 +266,9 @@
               then (NCP.ReportError 'NCP.CloseNoteFiles (CONCAT "Argument " NoteFile 
                                                                " is not a currently open notefile."))
                    NIL
-            else (NC.CloseNoteFile NoteFile NIL QuietFlg)))))(NCP.CheckpointNoteFiles
+            else (NC.CloseNoteFile NoteFile NIL QuietFlg)))))
+
+(NCP.CheckpointNoteFiles
   (LAMBDA (NoteFilesOrT QuietFlg)                            (* rht%: " 2-Mar-87 21:58")
           
           (* * Checkpoint the given notefiles. If T then checkpoint all open notefiles.)
@@ -97,7 +283,9 @@
                                                                  " is not a currently open notefile."
                                                                     ))
                    NIL
-            else (NC.CheckpointDatabase NoteFile QuietFlg)))))(NCP.AbortNoteFiles
+            else (NC.CheckpointDatabase NoteFile QuietFlg)))))
+
+(NCP.AbortNoteFiles
   (LAMBDA (NoteFilesOrT Don'tConfirmFlg QuietFlg)            (* rht%: " 2-Mar-87 21:59")
           
           (* * Abort the given notefiles. If T then abort all open notefiles.)
@@ -111,18 +299,24 @@
               then (NCP.ReportError 'NCP.AbortNotefiles (CONCAT "Argument " NoteFile 
                                                                " is not a currently open notefile."))
                    NIL
-            else (NC.AbortSession NoteFile NIL Don'tConfirmFlg QuietFlg)))))(NCP.CompactNoteFile
+            else (NC.AbortSession NoteFile NIL Don'tConfirmFlg QuietFlg)))))
+
+(NCP.CompactNoteFile
   (LAMBDA (FromNoteFileOrFileName ToFileName InPlaceFlg)     (* rht%: " 7-Jul-86 19:23")
           
           (* * Prog's intface function for compacting a notefile.
           FromNoteFile can be either a NoteFile or a file name.)
 
-    (NC.CompactNoteFile FromNoteFileOrFileName ToFileName InPlaceFlg)))(NCP.CompactNoteFileInPlace
+    (NC.CompactNoteFile FromNoteFileOrFileName ToFileName InPlaceFlg)))
+
+(NCP.CompactNoteFileInPlace
   (LAMBDA (NoteFileOrFileName)                               (* rht%: " 7-Jul-86 15:45")
           
           (* * Prog's intface function for compacting a notefile in place.)
 
-    (NCP.CompactNoteFile NoteFileOrFileName NIL T)))(NCP.RepairNoteFile
+    (NCP.CompactNoteFile NoteFileOrFileName NIL T)))
+
+(NCP.RepairNoteFile
   (LAMBDA (NoteFileOrFileName ReadSubstancesFlg)             (* rht%: " 2-Mar-87 22:08")
           
           (* * Prog's intface function for running inspect&repair on a notefile.)
@@ -135,7 +329,9 @@
     (if (NCP.OpenNoteFileP NoteFileOrFileName)
         then (NCP.ReportError 'NCP.RepairNoteFile (CONCAT "Can't inspect&repair an open notefile: " 
                                                          NoteFileOrFileName))
-      else (NC.InspectAndRepairNoteFile NoteFileOrFileName ReadSubstancesFlg))))(NCP.DeleteNoteFile
+      else (NC.InspectAndRepairNoteFile NoteFileOrFileName ReadSubstancesFlg))))
+
+(NCP.DeleteNoteFile
   (LAMBDA (NoteFileOrFileName Don'tConfirmFlg QuietFlg)      (* pmi%: "31-Mar-87 18:31")
           
           (* * Prog's intface function for deleting a notefile.)
@@ -148,12 +344,16 @@
       else (LET ((FileNameWithExt (NC.DatabaseFileName "Name of NoteFile to delete:" " -- " T NIL 
                                          NoteFileOrFileName)))
                 (AND FileNameWithExt (NC.DeleteDatabaseFile FileNameWithExt NIL Don'tConfirmFlg 
-                                            QuietFlg))))))(NCP.NoteFileFromFileName
+                                            QuietFlg))))))
+
+(NCP.NoteFileFromFileName
   (LAMBDA (FileName)                                         (* rht%: " 7-Jul-86 19:34")
           
           (* * Find notefile object for this filename, if any.)
 
-    (NC.NoteFileFromFileName FileName)))(NCP.FileNameFromNoteFile
+    (NC.NoteFileFromFileName FileName)))
+
+(NCP.FileNameFromNoteFile
   (LAMBDA (NoteFile)                                         (* rht%: " 2-Mar-87 22:08")
           
           (* * Grab filename off of this notefile object.)
@@ -164,33 +364,37 @@
         then (NCP.ReportError 'NCP.FileNameFromNoteFile (CONCAT 
                                                 "Arg to NCP.FileNameFromNoteFile is not a notefile: " 
                                                                NoteFile))
-      else (fetch (NoteFile FullFileName) of NoteFile))))(NCP.NoteFileMenu
+      else (fetch (NoteFile FullFileName) of NoteFile))))
+
+(NCP.NoteFileMenu
   (LAMBDA (NoteFile)                                         (* rht%: "14-Jul-86 10:31")
           
           (* * Fetch the notefile's menu.)
 
     (AND (type? NoteFile NoteFile)
-         (fetch (NoteFile Menu) of NoteFile))))(NCP.CheckInNoteFile
-  (LAMBDA (FromFile ToFile)                                  (* rht%: "19-Dec-84 20:22")
-          
-          (* * Check lock file for ToFile. If none, then just copy FromFile to ToFile.
-          If there is one, then must be owned by us.
-          If date of ToFile is more recent than date of lock file, then ask for user 
-          confirmation.)
+         (fetch (NoteFile Menu) of NoteFile))))
+
+(NCP.CheckInNoteFile
+  [LAMBDA (FromFile ToFile)                                  (* rht%: "19-Dec-84 20:22")
+
+         (* * Check lock file for ToFile. If none, then just copy FromFile to ToFile.
+         If there is one, then must be owned by us.
+         If date of ToFile is more recent than date of lock file, then ask for user 
+         confirmation.)
 
     (PROG (LockFile User)
           (SETQ ToFile (NC.DatabaseFileName "Name of file to check in to: " "--" T T ToFile))
-          (COND
+          [COND
              ((SETQ LockFile (INFILEP (NCP.LockFileName ToFile)))
-                                                             (* lock file exists.)
+                                                             (* lock file exists.)
               (COND
                  ((EQ (GETFILEINFO LockFile 'LENGTH)
-                      0)                                     (* Lock file is empty so delete it.)
+                      0)                                     (* Lock file is empty so delete it.)
                   (DELFILE LockFile))
-                 ((NEQ (USERNAME NIL T)
+                 ([NEQ (USERNAME NIL T)
                        (SETQ User (READ (SETQ LockFile (OR (OPENP LockFile 'INPUT)
-                                                           (OPENFILE LockFile 'INPUT 'OLD))))))
-                                                             (* someone else is playing with it.)
+                                                           (OPENSTREAM LockFile 'INPUT 'OLD]
+                                                             (* someone else is playing with it.)
                   (PRIN1 (CONCAT "Can't check in because file was locked by " User " at "
                                 (GETFILEINFO LockFile 'WRITEDATE)
                                 (CHARACTER 13)
@@ -199,8 +403,8 @@
                   (CLOSEF LockFile)
                   (RETURN NIL))
                  ((ILESSP (GETFILEINFO LockFile 'IWRITEDATE)
-                         (GETFILEINFO ToFile 'IWRITEDATE))   (* Someone wrote the file since we 
-                                                             locked it.)
+                         (GETFILEINFO ToFile 'IWRITEDATE))   (* Someone wrote the file since we 
+                                                             locked it.)
                   (PRIN1 (CONCAT "Can't check in because file was locked by " User " at "
                                 (GETFILEINFO LockFile 'WRITEDATE)
                                 " but written by someone at "
@@ -209,72 +413,73 @@
                                 "To override, delete lock file and try again."
                                 (CHARACTER 13)))
                   (RETURN NIL))
-                 (T 
-          
-          (* It's the lock file we wrote when checking out so just delete it.)
-
+                 (T                                          (* It's the lock file we wrote when 
+                                                             checking out so just delete it.)
                     (CLOSEF LockFile)
-                    (DELFILE LockFile)))))
+                    (DELFILE LockFile]
           (SETQ FromFile (NC.DatabaseFileName "Name of file to check in from: " "--" T T FromFile))
           (PRIN1 (CONCAT "Copying " FromFile " to " ToFile " ... "))
           (COPYFILE FromFile ToFile)
           (PRIN1 (CONCAT "Done." (CHARACTER 13)))
-          (RETURN (FULLNAME ToFile)))))(NCP.CheckOutNoteFile
-  (LAMBDA (FromFile ToFile)                                  (* Randy.Gobbel "18-Nov-86 15:42")
-          
-          (* * Copy FromFile to ToFile unless FromFile is locked.
-          Create a lock file in FromFile's directory.)
-          
-          (* * rg 11/18/86%: Replaced call to obsolete VERSIONNUMBER fn with 
-          FILENAMEFIELD)
+          (RETURN (FULLNAME ToFile])
+
+(NCP.CheckOutNoteFile
+  [LAMBDA (FromFile ToFile)                                  (* Randy.Gobbel "18-Nov-86 15:42")
+
+         (* * Copy FromFile to ToFile unless FromFile is locked.
+         Create a lock file in FromFile's directory.)
+
+         (* * rg 11/18/86%: Replaced call to obsolete VERSIONNUMBER fn with FILENAMEFIELD)
 
     (PROG (LockFile User)
           (SETQ FromFile (NC.DatabaseFileName "Name of file to check out: " "--" T T FromFile))
       LP  (SETQ LockFile (NCP.LockFileName FromFile))
           (COND
-             ((INFILEP LockFile)                             (* lock file already exists.)
+             [(INFILEP LockFile)                             (* lock file already exists.)
               (COND
                  ((EQ (GETFILEINFO LockFile 'LENGTH)
-                      0)                                     (* Lock file is empty.
-                                                             Delete and start over.)
+                      0)                                     (* Lock file is empty.
+                                                             Delete and start over.)
                   (DELFILE LockFile)
                   (GO LP))
-                 (T                                          (* someone else already is playing 
-                                                             with it.)
-                    (SETQ LockFile (OR (OPENP LockFile 'INPUT)
-                                       (OPENFILE LockFile 'INPUT 'OLD)))
+                 (T                                          (* someone else already is playing 
+                                                             with it.)
+                    [SETQ LockFile (OR (OPENP LockFile 'INPUT)
+                                       (OPENSTREAM LockFile 'INPUT 'OLD]
                     (SETQ User (READ LockFile))
                     (PRIN1 (CONCAT "File is locked by: " User (CHARACTER 13)))
                     (CLOSEF LockFile)
-                    (RETURN NIL))))
-             ((SETQ LockFile (OPENFILE LockFile 'OUTPUT))
+                    (RETURN NIL]
+             [(SETQ LockFile (OPENSTREAM LockFile 'OUTPUT))
               (COND
                  ((EQ (FILENAMEFIELD LockFile 'VERSION)
                       1)
                   (PRINT (USERNAME NIL T)
                          LockFile)
                   (CLOSEF LockFile))
-                 (T 
-          
-          (* someone else created one before us. Delete this one and try again.)
-
+                 (T                                          (* someone else created one before us.
+                                                             Delete this one and try again.)
                     (DELFILE (CLOSEF LockFile))
-                    (GO LP))))
-             (T                                              (* something when wrong)
+                    (GO LP]
+             (T                                              (* something when wrong)
                 (PRIN1 (CONCAT "Trouble in NC.CheckOutNoteFile." (CHARACTER 13)))
                 (RETURN NIL)))
           (SETQ ToFile (NC.DatabaseFileName "Name of file to check out to: " "--" T T ToFile))
           (PRIN1 (CONCAT "Copying " FromFile " to " ToFile " ... "))
           (COPYFILE FromFile ToFile)
           (PRIN1 (CONCAT "Done." (CHARACTER 13)))
-          (RETURN (FULLNAME ToFile)))))(NCP.LockFileName
+          (RETURN (FULLNAME ToFile])
+
+(NCP.LockFileName
   (LAMBDA (FileName)                                         (* rht%: "19-Dec-84 12:09")
           
           (* returns the name of the lock file associated with FileName)
 
     (PACKFILENAME (LIST 'EXTENSION (PACK* (FILENAMEFIELD FileName 'EXTENSION)
                                           "LOCKFILE")
-                        'VERSION 1 'BODY FileName))))(NCP.NumCardSlotsRemaining
+                        'VERSION 1 'BODY FileName))))
+
+(NCP.NumCardSlotsRemaining
   (LAMBDA (NoteFile)                                         (* rht%: "24-May-87 00:04")
           
           (* * Return the number of card slots remaining in NoteFile.
@@ -284,7 +489,9 @@
         then (DIFFERENCE (fetch (NoteFile HashArraySize) of NoteFile)
                     (NC.TotalCardsInNoteFile NoteFile))
       else (NCP.ReportError 'NCP.NumCardSlotsRemaining (CONCAT NoteFile " is not an open notefile."))
-        )))(NCP.ExpandNoteFileIndex
+        )))
+
+(NCP.ExpandNoteFileIndex
   (LAMBDA (NoteFile NumNewSlots QuietFlg)                    (* rht%: "24-May-87 00:37")
           
           (* * Expand NoteFile's index in place after first checkpointing.
@@ -297,12 +504,16 @@
          (NC.ExpandIndexInPlace NoteFile (PLUS (fetch (NoteFile HashArraySize) of NoteFile)
                                                NumNewSlots)
                 NIL NIL NIL QuietFlg)
-         (OR WasOpenFlg (NCP.CloseNoteFiles NoteFile QuietFlg)))))(NCP.NoteFileAddProp
+         (OR WasOpenFlg (NCP.CloseNoteFiles NoteFile QuietFlg)))))
+
+(NCP.NoteFileAddProp
   [LAMBDA (NoteFile PROP NEWVALUE)                           (* pmi%: "23-Oct-87 15:02")
           
           (* * Prog. int. way into NC.NoteFileAddProp.)
 
-    (NC.NoteFileAddProp NoteFile PROP NEWVALUE])(NCP.NoteFileClosingP
+    (NC.NoteFileAddProp NoteFile PROP NEWVALUE])
+
+(NCP.NoteFileClosingP
   [LAMBDA (DontCheckForAbortFlg)                             (* DSJ%: " 7-Nov-87 00:28")
           
           (* * dsj |10/12/87.| This fn looks up the stack to see if the notefile's being 
@@ -311,7 +522,9 @@
 
     (OR (RELSTK (STKPOS 'NC.CloseNoteFile))
         (AND (NOT DontCheckForAbortFlg)
-             (RELSTK (STKPOS 'NC.AbortSession])(NCP.ForgetNoteFileName
+             (RELSTK (STKPOS 'NC.AbortSession])
+
+(NCP.ForgetNoteFileName
   [LAMBDA (NoteFileOrFileName)                               (* ; "Edited 20-Oct-88 11:04 by RAR")
 
     (* ;; "Remove this notefile from the NoticedNoteFile list (menu).")
@@ -321,7 +534,9 @@
                          else (NC.NoteFileFromFileName FullFileName]
          (if noteFileObj
              then (NC.RemoveNoteFileName NoteFileOrFileName)
-                   (NCP.NoteFileProp noteFileObj 'UnNoticable T])(NCP.RememberNoteFileName
+                   (NCP.NoteFileProp noteFileObj 'UnNoticable T])
+
+(NCP.RememberNoteFileName
   [LAMBDA (NoteFileOrFileName)                               (* ; "Edited 20-Oct-88 11:04 by RAR")
 
     (* ;; "Add this notefile to the NoticedNoteFile list (menu).")
@@ -331,17 +546,30 @@
                          else (NC.NoteFileFromFileName FullFileName]
          (if noteFileObj
              then (NCP.NoteFileProp noteFileObj 'UnNoticable NIL)
-                   (NC.NoticeNoteFileName NoteFileOrFileName])(NCP.ValidNoteFileP
+                   (NC.NoticeNoteFileName NoteFileOrFileName])
+
+(NCP.ValidNoteFileP
   [LAMBDA (noteFile)                                         (* ; "Edited 24-Oct-88 13:43 by RAR")
 
     (* ;; "Is the notefile on the list of notefiles?")
 
-    (FMEMB noteFile (NC.ListOfNoteFiles]))(* ;;; "Creating and accessing NoteCard types and substances.")(DEFINEQ(NCP.CardTypes
+    (FMEMB noteFile (NC.ListOfNoteFiles])
+)
+
+
+
+(* ;;; "Creating and accessing NoteCard types and substances.")
+
+(DEFINEQ
+
+(NCP.CardTypes
   (LAMBDA NIL                                                (* rht%: "26-Oct-84 17:06")
           
           (* * Return list of all known card type names.)
 
-    (NC.ListOfCardTypes)))(NCP.CreateCardType
+    (NC.ListOfCardTypes)))
+
+(NCP.CreateCardType
   (LAMBDA (TypeName SuperType FnsAssocList VarsAssocList)    (* rht%: "16-Nov-86 22:46")
           
           (* * Make a new card type. If there is already a card type by that name, then 
@@ -354,9 +582,13 @@
     (if (FMEMB TypeName (NCP.CardTypes))
         then (NCP.ReportWarning "NCP.CreateCardType" (CONCAT "Redefining NoteCard type: " TypeName)))
     (NC.AddCardType TypeName SuperType FnsAssocList VarsAssocList)
-    TypeName))(NCP.DeleteCardType
+    TypeName))
+
+(NCP.DeleteCardType
   (LAMBDA (TypeName DeleteSubTypesFlg)                       (* Randy.Gobbel "15-Sep-87 18:50")
-    (NC.DeleteCardType TypeName DeleteSubTypesFlg)))(NCP.CreateCardTypeStub
+    (NC.DeleteCardType TypeName DeleteSubTypesFlg)))
+
+(NCP.CreateCardTypeStub
   (LAMBDA (TypeName SuperType FullDefinitionFileName FnsAssocList VarsAssocList ListOfFILLMEFields)
                                                              (* Randy.Gobbel "17-Dec-86 14:21")
           
@@ -372,7 +604,9 @@
                                                                 TypeName)))
     (NC.AddCardTypeStub TypeName SuperType FullDefinitionFileName FnsAssocList VarsAssocList 
            ListOfFILLMEFields)
-    TypeName))(NCP.ChangeCardTypeFields
+    TypeName))
+
+(NCP.ChangeCardTypeFields
   (LAMBDA (TypeName FnsAssocList VarsAssocList)              (* rht%: " 2-Mar-87 22:08")
           
           (* * Change the given fields of TypeName.)
@@ -381,7 +615,9 @@
 
     (if (NCP.CardTypeP TypeName)
         then (NC.RecomputeCardType TypeName FnsAssocList VarsAssocList)
-      else (NCP.ReportError 'NCP.ChangeCardTypeFields (CONCAT "Undefined card type: " TypeName)))))(NCP.CardTypeSuper
+      else (NCP.ReportError 'NCP.ChangeCardTypeFields (CONCAT "Undefined card type: " TypeName)))))
+
+(NCP.CardTypeSuper
   (LAMBDA (Type)                                             (* rht%: " 2-Mar-87 21:59")
           
           (* * Return the super type for this type.)
@@ -391,7 +627,9 @@
     (if (NCP.CardTypeP Type)
         then (NC.GetCardTypeField SuperType Type)
       else (NCP.ReportError 'NCP.CardTypeSuper (CONCAT Type " is not a loaded NoteCard type."))
-           NIL)))(NCP.CardTypeLinkDisplayMode
+           NIL)))
+
+(NCP.CardTypeLinkDisplayMode
   (LAMBDA (Type)                                             (* rht%: " 2-Mar-87 21:59")
           
           (* * Return the link display mode for this type.)
@@ -402,7 +640,9 @@
         then (NC.GetCardTypeField LinkDisplayMode Type)
       else (NCP.ReportError 'NCP.CardTypeLinkDisplayMode (CONCAT Type 
                                                                 " is not a loaded NoteCard type."))
-           NIL)))(NCP.CardTypeFn
+           NIL)))
+
+(NCP.CardTypeFn
   (LAMBDA (TypeName Fn)                                      (* ; "Edited  3-Dec-87 19:00 by rht:")
           
           (* * Return the function stored as the Fn for TypeName's record.)
@@ -422,7 +662,9 @@
                                                            " is not a kind of Fn for NoteCard types."
                                                             )))
       else (NCP.ReportError 'NCP.CardTypeFn (CONCAT TypeName " is not a loaded NoteCard type."))
-           NIL)))(NCP.CardTypeVar
+           NIL)))
+
+(NCP.CardTypeVar
   (LAMBDA (TypeName Var)                                     (* ; "Edited  3-Dec-87 19:00 by rht:")
           
           (* * Return the variable stored as the Var for TypeName's record.)
@@ -442,37 +684,49 @@
                                                           " is not a kind of Var for NoteCard types."
                                                              )))
       else (NCP.ReportError 'NCP.CardTypeVar (CONCAT TypeName " is not a loaded NoteCard type."))
-           NIL)))(NCP.CardTypeP
+           NIL)))
+
+(NCP.CardTypeP
   [LAMBDA (TypeName)                                  (* ; "Edited 23-Feb-89 10:13 by krivacic")
 
          (* * Returns non-nil if this TypeName is an existing NoteCard type.)
 
     (AND (GETHASH TypeName NC.CardTypes)
-         TypeName])(NCP.CardTypeFnP
+         TypeName])
+
+(NCP.CardTypeFnP
   (LAMBDA (CardTypeFn)                                       (* rht%: " 7-Jul-86 21:26")
           
           (* * Returns non-nil if CardTypeFn is one of the Fn fields of the NoteCardType 
           record.)
 
     (AND (FMEMB CardTypeFn NCP.NoteCardTypeFns)
-         CardTypeFn)))(NCP.CardTypeVarP
+         CardTypeFn)))
+
+(NCP.CardTypeVarP
   (LAMBDA (CardTypeVar)                                      (* rht%: " 7-Jul-86 21:28")
           
           (* * Returns non-nil if CardTypeVar is one of the Var fields of the 
           NoteCardType record.)
 
     (AND (FMEMB CardTypeVar NCP.NoteCardTypeVars)
-         CardTypeVar)))(NCP.CardTypeFns
+         CardTypeVar)))
+
+(NCP.CardTypeFns
   (LAMBDA NIL                                                (* rht%: " 7-Jul-86 20:58")
           
           (* * Returns list of the fns fields of the NoteCardType record.)
 
-    NCP.NoteCardTypeFns))(NCP.CardTypeVars
+    NCP.NoteCardTypeFns))
+
+(NCP.CardTypeVars
   (LAMBDA NIL                                                (* rht%: " 7-Jul-86 20:59")
           
           (* * Returns list of the vars fields of the NoteCardType record.)
 
-    NCP.NoteCardTypeVars))(NCP.CardTypeDisplayedInMenu
+    NCP.NoteCardTypeVars))
+
+(NCP.CardTypeDisplayedInMenu
   (LAMBDA Args                                               (* ; "Edited  3-Dec-87 19:00 by rht:")
           
           (* * Expects one or two args%: CardType and optional new value for 
@@ -498,7 +752,9 @@
                          NIL)
            else (NCP.ReportError 'NCP.CardTypeDisplayedInMenu 
                        "Improper number of args to NCP.CardTypeDisplayedInMenu.")
-                NIL))))(NCP.IsSubTypeOfP
+                NIL))))
+
+(NCP.IsSubTypeOfP
   (LAMBDA (SubTypeName SupposedSuperTypeName)                (* rht%: " 2-Mar-87 21:54")
           
           (* * Return non-nil if SubTypeName inherits somewhere up the hierarchy from 
@@ -511,7 +767,9 @@
           (* * rht 3/2/87%: No longer checks for valid card type, thus allowing 
           autoloading if card type not currently loaded.)
 
-    (NC.IsSubTypeOfP SubTypeName SupposedSuperTypeName)))(NCP.TextBasedP
+    (NC.IsSubTypeOfP SubTypeName SupposedSuperTypeName)))
+
+(NCP.TextBasedP
   (LAMBDA (CardOrCardType)                                   (* rht%: " 2-Mar-87 21:55")
           
           (* * This card or card type is a subtype of Text.)
@@ -524,7 +782,9 @@
     (LET ((CardType (if (NC.CardP CardOrCardType)
                         then (NCP.CardType CardOrCardType)
                       else CardOrCardType)))
-         (NC.IsSubTypeOfP CardType 'Text))))(NCP.SketchBasedP
+         (NC.IsSubTypeOfP CardType 'Text))))
+
+(NCP.SketchBasedP
   (LAMBDA (CardOrCardType)                                   (* rht%: " 2-Mar-87 21:55")
           
           (* * This card type is a subtype of Sketch.)
@@ -539,7 +799,9 @@
     (LET ((CardType (if (NC.CardP CardOrCardType)
                         then (NCP.CardType CardOrCardType)
                       else CardOrCardType)))
-         (NC.IsSubTypeOfP CardType 'Sketch))))(NCP.GraphBasedP
+         (NC.IsSubTypeOfP CardType 'Sketch))))
+
+(NCP.GraphBasedP
   (LAMBDA (CardOrCardType)                                   (* rht%: " 2-Mar-87 21:54")
           
           (* * This card type is a subtype of Graph.)
@@ -554,12 +816,16 @@
     (LET ((CardType (if (NC.CardP CardOrCardType)
                         then (NCP.CardType CardOrCardType)
                       else CardOrCardType)))
-         (NC.IsSubTypeOfP CardType 'Graph))))(NCP.AutoLoadCardType
+         (NC.IsSubTypeOfP CardType 'Graph))))
+
+(NCP.AutoLoadCardType
   (LAMBDA (TypeName)                                         (* rht%: "15-Jul-86 18:45")
           
           (* * Try to load the file containing TypeName looking in NOTECARDSDIRECTORIES.)
 
-    (NC.AutoLoadCardType TypeName 'SuperType)))(NCP.AddSpecialCard
+    (NC.AutoLoadCardType TypeName 'SuperType)))
+
+(NCP.AddSpecialCard
   (LAMBDA (Card)                                             (* rht%: "23-Nov-86 13:33")
           
           (* * Adds this card to list of special cards hung off notefile's "SpecialCards" 
@@ -568,14 +834,18 @@
     (LET ((NoteFile (NCP.CardNoteFile Card)))
          (if (for SpecialCard in (NCP.NoteFileProp NoteFile 'SpecialCards)
                 never (NCP.SameCardP Card SpecialCard))
-             then (NC.NoteFileAddProp NoteFile 'SpecialCards Card)))))(NCP.RemoveSpecialCard
+             then (NC.NoteFileAddProp NoteFile 'SpecialCards Card)))))
+
+(NCP.RemoveSpecialCard
   (LAMBDA (Card)                                             (* rht%: "20-Nov-86 15:07")
           
           (* * Removes this card from list of special cards hung off notefile's "SpecialCards" 
           user data prop.)
 
     (NC.NoteFileDelProp (fetch (Card NoteFile) of Card)
-           'SpecialCards Card (FUNCTION NC.SameCardP))))(NCP.CardsOfTypes
+           'SpecialCards Card (FUNCTION NC.SameCardP))))
+
+(NCP.CardsOfTypes
   (LAMBDA (CardsOrNoteFile Types)                            (* pmi%: "18-Aug-87 11:17")
           
           (* * pmi 7/14/87%: First created to return all cards in CardsOrNoteFile which 
@@ -593,7 +863,16 @@
              then (SETQ Types (MKLIST Types))
                   (for Card in Cards when (FMEMB (NCP.CardType Card)
                                                  Types) collect Card)
-           else Cards)))))(* ;;; "Creating Notecards and fileboxes")(DEFINEQ(NCP.CreateCard
+           else Cards))))
+)
+
+
+
+(* ;;; "Creating Notecards and fileboxes")
+
+(DEFINEQ
+
+(NCP.CreateCard
   [LAMBDA (Type NoteFile Title NoDisplayFlg Props ParentFileBoxes TypeSpecificArgs InterestedWindow 
                 RegionOrPosition)                            (* ; "Edited  5-Aug-88 15:57 by Trigg")
 
@@ -636,7 +915,9 @@
                                                                                 ]
                            Card))
       else (NCP.ReportError 'NCP.CreateCard (CONCAT "Unknown card type: " Type))
-           NIL])(NCP.CreateTextCard
+           NIL])
+
+(NCP.CreateTextCard
   [LAMBDA (NoteFile Title NoDisplayFlg Props ParentFileBoxes InterestedWindow RegionOrPosition)
                                                              (* ; "Edited  5-Aug-88 16:28 by Trigg")
 
@@ -647,7 +928,9 @@
     (* ;; "rht 8/5/88: Added TypeSpecificArgs, InterestedWindow, and RegionOrPosition args and passed to NCP.CreateCard.")
 
     (NCP.CreateCard 'Text NoteFile Title NoDisplayFlg Props ParentFileBoxes NIL InterestedWindow 
-           RegionOrPosition])(NCP.CreateFileBox
+           RegionOrPosition])
+
+(NCP.CreateFileBox
   [LAMBDA (NoteFile Title NoDisplayFlg Props ChildCardsBoxes ParentFileBoxes InterestedWindow 
                  RegionOrPosition)                           (* ; "Edited  5-Aug-88 16:27 by Trigg")
 
@@ -660,7 +943,9 @@
     (LET ((Card (NCP.CreateCard 'FileBox NoteFile Title NoDisplayFlg Props ParentFileBoxes NIL 
                        InterestedWindow RegionOrPosition)))
          (NCP.FileCards ChildCardsBoxes Card)
-         Card])(NCP.CreateBrowserCard
+         Card])
+
+(NCP.CreateBrowserCard
   [LAMBDA (NoteFile Title ParamList NoDisplayFlg Props ParentFileBoxes InterestedWindow 
                  RegionOrPosition)                           (* ; "Edited  5-Aug-88 16:02 by Trigg")
 
@@ -706,7 +991,9 @@
                          (LISTPUT NewParamList 'LINKTYPES ValidLinkTypes)
                   else (SETQ NewParamList NIL))
                 (NCP.CreateCard 'Browser NoteFile Title NoDisplayFlg Props ParentFileBoxes 
-                       NewParamList InterestedWindow RegionOrPosition])(NCP.CreateSketchCard
+                       NewParamList InterestedWindow RegionOrPosition])
+
+(NCP.CreateSketchCard
   [LAMBDA (NoteFile Title NoDisplayFlg Props ParentFileBoxes InterestedWindow RegionOrPosition)
                                                              (* ; "Edited  5-Aug-88 16:27 by Trigg")
 
@@ -718,7 +1005,9 @@
     "rht 8/5/88: Added InterestedWindow and RegionOrPosition args and passed to NCP.CreateCard.")
 
     (NCP.CreateCard 'Sketch NoteFile Title NoDisplayFlg Props ParentFileBoxes NIL InterestedWindow 
-           RegionOrPosition])(NCP.CreateGraphCard
+           RegionOrPosition])
+
+(NCP.CreateGraphCard
   [LAMBDA (NoteFile Title NoDisplayFlg Props ParentFileBoxes InterestedWindow RegionOrPosition)
                                                              (* ; "Edited  5-Aug-88 16:05 by Trigg")
 
@@ -730,7 +1019,9 @@
     "rht 8/5/88: Added InterestedWindow and RegionOrPosition args and passed to NCP.CreateCard.")
 
     (NCP.CreateCard 'Graph NoteFile Title NoDisplayFlg Props ParentFileBoxes NIL InterestedWindow 
-           RegionOrPosition])(NCP.MakeDocument
+           RegionOrPosition])
+
+(NCP.MakeDocument
   [LAMBDA (NoteFile RootCard ParamProps NoDisplayFlg Props ParentFileBoxes InterestedWindow 
                  RegionOrPosition)                           (* ; "Edited  5-Aug-88 16:30 by Trigg")
 
@@ -763,7 +1054,9 @@
                        (NCP.UncacheCards RootCard T))
                   DocCard
            else (NCP.ReportError 'NCP.MakeDocument (CONCAT RootCard " not a valid card or filebox."))
-                NIL])(NCP.MakeLinkIndex
+                NIL])
+
+(NCP.MakeLinkIndex
   [LAMBDA (NoteFile LinkTypes BackPointersP NoDisplayFlg Props ParentFileBoxes InterestedWindow 
                  RegionOrPosition)                           (* ; "Edited  5-Aug-88 16:49 by Trigg")
 
@@ -793,13 +1086,24 @@
              then NIL
            else (NCP.CreateCard 'LinkIndex NoteFile NIL NoDisplayFlg Props ParentFileBoxes
                        (LIST ValidLinkTypes BackPointersP)
-                       InterestedWindow RegionOrPosition])(NCP.NewCardP
+                       InterestedWindow RegionOrPosition])
+
+(NCP.NewCardP
   [LAMBDA (Card)                                             (* pmi%: "21-Oct-87 15:54")
           
           (* * pmi 10/21/87%: First created. Allows prog int users to tell if a card has 
           been saved yet.)
 
-    (NC.FetchNewCardFlg Card]))(* ;;; "Opening, closing, activating, display, etc.")(DEFINEQ(NCP.OpenCard
+    (NC.FetchNewCardFlg Card])
+)
+
+
+
+(* ;;; "Opening, closing, activating, display, etc.")
+
+(DEFINEQ
+
+(NCP.OpenCard
   [LAMBDA (Card Region/Position TypeSpecificArgs ReadOnly)
                                                            (* ; "Edited 22-Aug-88 14:44 by Burwell")
 
@@ -820,7 +1124,9 @@
                           (AND (PROCESSP OldProc)
                                (OPENWP (PROCESSPROP OldProc 'WINDOW))
                                (TTY.PROCESS OldProc)))]
-      else (NCP.ReportError 'NCP.OpenCard (CONCAT Card " not an existing card or box."])(NCP.CloseCards
+      else (NCP.ReportError 'NCP.OpenCard (CONCAT Card " not an existing card or box."])
+
+(NCP.CloseCards
   [LAMBDA (Cards QuietFlg)                             (* ; "Edited 22-Aug-88 14:43 by Burwell")
 
     (* ;; "Uncache and undisplay any active cards in Cards")
@@ -857,7 +1163,9 @@
                finally (AND (PROCESSP OldProc)
                                 (OPENWP (PROCESSPROP OldProc 'WINDOW))
                                 (TTY.PROCESS OldProc))
-                     (RETURN Card])(NCP.DisplayCard
+                     (RETURN Card])
+
+(NCP.DisplayCard
   [LAMBDA (Card Region/Position TypeSpecificArgs ReadOnly)
                                                            (* ; "Edited 22-Aug-88 14:44 by Burwell")
 
@@ -887,7 +1195,9 @@
                    else (NCP.ReportError 'NCP.DisplayCard (CONCAT Card 
                                                  " must be cached before displayed: NCP.DisplayCard."
                                                                          )))
-      else (NCP.ReportError 'NCP.DisplayCard (CONCAT Card " not an existing card or box."])(NCP.UndisplayCards
+      else (NCP.ReportError 'NCP.DisplayCard (CONCAT Card " not an existing card or box."])
+
+(NCP.UndisplayCards
   [LAMBDA (Cards QuietFlg WriteChangesFlg)             (* ; "Edited 22-Aug-88 14:44 by Burwell")
 
 (* ;;; "If card is valid and displayed, then undisplay it but leave it cached.  If WriteChangesFlg is non-nil, then save changes to the file, otherwise saving will wait until card is uncached.")
@@ -911,7 +1221,9 @@
                                        NIL NIL NIL QuietFlg T)
                              (AND (PROCESSP OldProc)
                                   (OPENWP (PROCESSPROP OldProc 'WINDOW))
-                                  (TTY.PROCESS OldProc)))] finally (RETURN Card])(NCP.CacheCards
+                                  (TTY.PROCESS OldProc)))] finally (RETURN Card])
+
+(NCP.CacheCards
   (LAMBDA (Cards)                                            (* rht%: " 2-Mar-87 22:01")
           
           (* * Cache all the info for any inactive cards in Cards)
@@ -925,7 +1237,9 @@
                                                                                )))
                                       ((NCP.CardCachedP Card)
                                        (NCP.PrintMsg NIL T Card " already cached: NCP.CacheCards."))
-                                      (T (NC.GetNoteCard Card))) finally (RETURN Card))))(NCP.UncacheCards
+                                      (T (NC.GetNoteCard Card))) finally (RETURN Card))))
+
+(NCP.UncacheCards
   (LAMBDA (Cards QuietFlg)                                   (* Randy.Gobbel " 4-Mar-87 14:43")
           
           (* * Uncache and undisplay any active cards in Cards)
@@ -945,18 +1259,24 @@
                                        (NCP.ReportError 'NCP.UncacheCards (CONCAT Card 
                                                            " must be undisplayed before can uncache."
                                                                                  )))
-                                      (T (NC.QuitCard Card NIL NIL NIL NIL NIL QuietFlg))))))(NCP.CardCachedP
+                                      (T (NC.QuitCard Card NIL NIL NIL NIL NIL QuietFlg))))))
+
+(NCP.CardCachedP
   (LAMBDA (Card)                                             (* rht%: "10-Jul-86 21:57")
           
           (* * Return non-nil if card is cached.)
 
-    (NC.ActiveCardP Card)))(NCP.CardDisplayedP
+    (NC.ActiveCardP Card)))
+
+(NCP.CardDisplayedP
   (LAMBDA (Card)                                             (* rht%: "10-Jul-86 22:08")
           
           (* * Return non-nil if card is currently displayed on screen.)
 
     (AND (NCP.CardCachedP Card)
-         (NCP.WindowFromCard Card))))(NCP.CardWindow
+         (NCP.WindowFromCard Card))))
+
+(NCP.CardWindow
   (LAMBDA (Card)                                             (* rht%: "18-Nov-85 17:43")
           
           (* * Returns T if card corresponding to Card is currently on the screen, i.e.
@@ -965,24 +1285,39 @@
           (* * rht 11/18/85%: Updated to handle new notefile and card object formats.)
 
     (AND (NC.ValidCardP Card)
-         (NC.FetchWindow Card))))(NCP.WindowFromCard
+         (NC.FetchWindow Card))))
+
+(NCP.WindowFromCard
   (LAMBDA (Card)                                             (* rht%: "11-Jul-86 10:21")
           
           (* * Returns T if card corresponding to Card is currently on the screen, i.e.
           has an active window.)
 
-    (NCP.CardWindow Card)))(NCP.CardFromWindow
+    (NCP.CardWindow Card)))
+
+(NCP.CardFromWindow
   (LAMBDA (Win)                                              (* rht%: "10-Jul-86 22:10")
           
           (* * Return the card corresponding to Win, if Win is a notecard window.)
 
-    (NC.CoerceToCard Win)))(NCP.CardFromTextStream
+    (NC.CoerceToCard Win)))
+
+(NCP.CardFromTextStream
   (LAMBDA (TextStream)                                       (* rht%: "12-Jul-86 14:55")
           
           (* * Return the card corresponding to TextStream, if TextStream is a text 
           card's textstream.)
 
-    (NC.CoerceToCard TextStream))))(* ;;; "Accessing cards and boxes")(DEFINEQ(NCP.CardType
+    (NC.CoerceToCard TextStream)))
+)
+
+
+
+(* ;;; "Accessing cards and boxes")
+
+(DEFINEQ
+
+(NCP.CardType
   (LAMBDA (Card)                                             (* rht%: "18-Nov-85 01:23")
           
           (* * Return the type of ID or NIL if no such ID.)
@@ -990,7 +1325,9 @@
           (* * rht 11/17/85%: Updated to handle new card and notefile objects.)
 
     (AND (NC.ValidCardP Card)
-         (NC.RetrieveType Card))))(NCP.ValidCardP
+         (NC.RetrieveType Card))))
+
+(NCP.ValidCardP
   [LAMBDA (Card)                                             (* pmi%: "10-Dec-87 11:34")
           
           (* * Non-nil if ID corresponds to extant card in current notefile.
@@ -1000,7 +1337,9 @@
           (how odd!) as a check for validity. Also now returns the card if successful.)
 
     (if (NC.ValidCardP Card)
-        then Card])(NCP.CardTitle
+        then Card])
+
+(NCP.CardTitle
   (LAMBDA Args                                               (* rht%: " 2-Mar-87 22:01")
           
           (* * Expects one or two args, the Card and an optional new title.
@@ -1022,7 +1361,9 @@
                     (if (EQ Args 2)
                         then (NC.AssignTitle Card NIL (ARG Args 2)))))
             (T (NCP.ReportError 'NCP.CardTitle (CONCAT Card " not an existing card or box."))
-               NIL)))))(NCP.FileCards
+               NIL)))))
+
+(NCP.FileCards
   (LAMBDA (CardBoxList BoxList)                              (* rht%: " 2-Mar-87 22:01")
           
           (* * File every card or box in CardBoxList in every box in BoxList.
@@ -1047,7 +1388,9 @@
     (if (AND BoxList CardBoxList)
         then (for Box in BoxList when (NC.FileBoxCollectChildren NIL Box CardBoxList T) collect
                                                                                         Box)
-      else NIL)))(NCP.UnfileCards
+      else NIL)))
+
+(NCP.UnfileCards
   (LAMBDA (CardBoxList BoxList)                              (* rht%: " 2-Mar-87 22:01")
           
           (* * Unfile every card or box in CardBoxList from every box in BoxList.
@@ -1097,7 +1440,9 @@
            (for Box in BoxList do (NCP.DeleteLinks (NCP.GetLinks Box NIL (LIST NC.FiledCardLinkLabel 
                                                                                NC.SubBoxLinkLabel))))
         )
-    (AND CardBoxList BoxList)))(NCP.CardParents
+    (AND CardBoxList BoxList)))
+
+(NCP.CardParents
   (LAMBDA (Card)                                             (* rht%: " 2-Mar-87 22:10")
           
           (* * Return the list of fileboxes in which Card has been filed.)
@@ -1109,7 +1454,9 @@
     (if (NC.ValidCardP Card)
         then (for Link in (NCP.GetLinks NIL Card (LIST NC.FiledCardLinkLabel NC.SubBoxLinkLabel))
                 collect (fetch (Link SourceCard) of Link))
-      else (NCP.ReportError 'NCP.CardParents (CONCAT Card " is not an existing card or filebox.")))))(NCP.FileBoxChildren
+      else (NCP.ReportError 'NCP.CardParents (CONCAT Card " is not an existing card or filebox.")))))
+
+(NCP.FileBoxChildren
   (LAMBDA (Box)                                              (* rht%: " 2-Mar-87 22:10")
           
           (* * Return the list of children of Box in proper order.)
@@ -1120,7 +1467,9 @@
        ((NCP.FileBoxP Box)
         (for Link in (NCP.GetLinks Box NIL (LIST NC.FiledCardLinkLabel NC.SubBoxLinkLabel))
            collect (fetch (Link DestinationCard) of Link)))
-       (T (NCP.ReportError 'NCP.FileBoxChildren (CONCAT Box " is not an existing filebox."))))))(NCP.CardNeighbors
+       (T (NCP.ReportError 'NCP.FileBoxChildren (CONCAT Box " is not an existing filebox."))))))
+
+(NCP.CardNeighbors
   (LAMBDA (Cards LinkTypes FollowCrossFileLinksFlg)          (* rht%: " 6-Jun-87 17:41")
           
           (* * Return a list of cards one link from Card in the forward direction having 
@@ -1167,7 +1516,9 @@
                                                               then (NC.GetCrossFileLinkDestCard
                                                                     SrcCard)
                                                             else NIL)
-                                                   else SrcCard))))))))))(NCP.GetLinks
+                                                   else SrcCard))))))))))
+
+(NCP.GetLinks
   (LAMBDA (Cards DestinationCards Labels NoteFile)           (* rht%: "29-May-87 16:48")
           
           (* * Returns a list of all links from Cards to DestinationCards whose link 
@@ -1227,14 +1578,18 @@
                                   (if Labels
                                       then (FMEMB (fetch (Link Label) of Link)
                                                   Labels)
-                                    else T)))))))))(NCP.CardPropList
+                                    else T)))))))))
+
+(NCP.CardPropList
   (LAMBDA (Card)                                             (* rht%: "18-Nov-85 01:45")
           
           (* * Return the ID's property list)
           
           (* * rht 11/17/85%: Updated to handle new card and notefile objects.)
 
-    (NC.RetrievePropList Card)))(NCP.CardProp
+    (NC.RetrievePropList Card)))
+
+(NCP.CardProp
   (LAMBDA Args                                               (* rht%: " 2-Mar-87 22:02")
           
           (* * Expects two or three arguments%: ID, Property, and optional new value.
@@ -1264,7 +1619,9 @@
                                  then (NC.PutPropList Card)
                                else (NC.SetPropListDirtyFlg Card T)))))
             (T (NCP.ReportError 'NCP.CardProp (CONCAT Card " not an existing card or box."))
-               NIL)))))(NCP.CardAddProp
+               NIL)))))
+
+(NCP.CardAddProp
   (LAMBDA (Card Property ItemToAdd)                          (* ; "Edited  3-Dec-87 19:00 by rht:")
           
           (* * Adds ItemToAdd to the value of ID's Property property.
@@ -1290,7 +1647,9 @@
                               else (NC.SetPropListDirtyFlg Card T)))
                    OldPropValue)
       else (NCP.ReportError 'NCP.CardAddProp (CONCAT Card " not an existing card or box."))
-           NIL)))(NCP.CardDelProp
+           NIL)))
+
+(NCP.CardDelProp
   (LAMBDA (Card Property ItemToDelete)                       (* rht%: " 2-Mar-87 22:02")
           
           (* * Deletes ItemToDelete from the Property prop of Card if it is there, 
@@ -1316,7 +1675,9 @@
                        OldPropValue)
                       (T NIL)))
       else (NCP.ReportError 'NCP.CardDelProp (CONCAT Card " not an existing card or box."))
-           NIL)))(NCP.CardSubstance
+           NIL)))
+
+(NCP.CardSubstance
   (LAMBDA Args                                               (* rht%: " 2-Mar-87 22:03")
           
           (* * Return the substance for this card.)
@@ -1347,7 +1708,9 @@
                                   (NCP.MarkCardDirty Card))
                          (OR WasActive (NCP.CloseCards Card T)))))
             (T (NCP.ReportError 'NCP.CardSubstance (CONCAT Card " not an existing card."))
-               NIL)))))(NCP.CardRegion
+               NIL)))))
+
+(NCP.CardRegion
   (LAMBDA Args                                               (* rht%: "23-May-87 22:42")
           
           (* * Return the substance for this card.)
@@ -1384,7 +1747,9 @@
                                                                                  ))))
                          (OR WasActive (NCP.CloseCards Card T)))))
             (T (NCP.ReportError 'NCP.CardRegion (CONCAT Card " not an existing card."))
-               NIL)))))(NCP.CardAddText
+               NIL)))))
+
+(NCP.CardAddText
   (LAMBDA (Card Text Loc)                                    (* rht%: " 2-Mar-87 22:03")
           
           (* * Adds the Text to ID's window at the given Loc.
@@ -1412,7 +1777,9 @@
           (NC.MarkCardDirty Card)
           (if (NOT WasActiveP)
               then (NCP.UncacheCards Card T))
-          (RETURN Card))))(NCP.ChangeLoc
+          (RETURN Card))))
+
+(NCP.ChangeLoc
   (LAMBDA (Card Loc)                                         (* rht%: " 2-Mar-87 22:03")
           
           (* * Changes the location within ID's textstream to the new loc Loc.
@@ -1441,7 +1808,9 @@
                            (TEDIT.SETSEL Stream Loc 0 'RIGHT)))
                   Card)
       else (NCP.ReportError 'NCP.ChangeLoc (CONCAT Card " not an existing card or not TEdit based."))
-           NIL)))(NCP.DeleteCards
+           NIL)))
+
+(NCP.DeleteCards
   (LAMBDA (Cards)                                            (* rht%: " 2-Mar-87 22:04")
           
           (* * Delete the given cards and boxes. Or just one, if Cards is atomic.)
@@ -1459,7 +1828,9 @@
                                                                    " is not an existing card or box."
                                                                           ))
                                                             T) collect Card))
-    (AND Cards (NC.DeleteNoteCards Cards T NIL NIL T T))))(NCP.FileBoxP
+    (AND Cards (NC.DeleteNoteCards Cards T NIL NIL T T))))
+
+(NCP.FileBoxP
   (LAMBDA (Card)                                             (* rht%: "18-Nov-85 01:58")
           
           (* * Return T if Card is a Filebox.)
@@ -1467,7 +1838,9 @@
           (* * rht 11/17/85%: Updated to handle new card and notefile objects.)
 
     (EQ (NCP.CardType Card)
-        'FileBox)))(NCP.AllCards
+        'FileBox)))
+
+(NCP.AllCards
   (LAMBDA (NoteFile)                                         (* rht%: "18-Nov-85 18:19")
           
           (* * Return a list of IDs of all cards and boxes.)
@@ -1475,7 +1848,9 @@
           (* * rht 11/17/85%: Updated to handle new card and notefile objects.)
 
     (NC.MapCards NoteFile (FUNCTION PROG1)
-           (FUNCTION TRUE))))(NCP.AllBoxes
+           (FUNCTION TRUE))))
+
+(NCP.AllBoxes
   (LAMBDA (NoteFile)                                         (* rht%: "18-Nov-85 18:19")
           
           (* * Return a list of all existing fileboxes.)
@@ -1483,40 +1858,52 @@
           (* * rht 11/18/85%: Updated to handle new notefile and card object formats.)
 
     (NC.MapCards NoteFile (FUNCTION PROG1)
-           (FUNCTION NCP.FileBoxP))))(NCP.ContentsFileBox
+           (FUNCTION NCP.FileBoxP))))
+
+(NCP.ContentsFileBox
   (LAMBDA (NoteFile)                                         (* rht%: "18-Nov-85 02:13")
           
           (* * Return the top level contents file box.)
           
           (* * rht 11/17/85%: Updated to handle new card and notefile objects.)
 
-    (fetch (NoteFile TableOfContentsCard) of NoteFile)))(NCP.OrphansFileBox
+    (fetch (NoteFile TableOfContentsCard) of NoteFile)))
+
+(NCP.OrphansFileBox
   (LAMBDA (NoteFile)                                         (* rht%: "18-Nov-85 02:14")
           
           (* * Return the orphans contents file box.)
           
           (* * rht 11/17/85%: Updated to handle new card and notefile objects.)
 
-    (fetch (NoteFile OrphansCard) of NoteFile)))(NCP.ToBeFiledFileBox
+    (fetch (NoteFile OrphansCard) of NoteFile)))
+
+(NCP.ToBeFiledFileBox
   (LAMBDA (NoteFile)                                         (* rht%: "18-Nov-85 02:15")
           
           (* * Return the To be filed file box.)
           
           (* * rht 11/17/85%: Updated to handle new card and notefile objects.)
 
-    (fetch (NoteFile ToBeFiledCard) of NoteFile)))(NCP.NoteFileFromCard
+    (fetch (NoteFile ToBeFiledCard) of NoteFile)))
+
+(NCP.NoteFileFromCard
   (LAMBDA (Card)                                             (* rht%: "12-Jul-86 16:22")
           
           (* * Get the card's notefile.)
 
     (AND (NC.ValidCardP Card)
-         (fetch (Card NoteFile) of Card))))(NCP.CardNoteFile
+         (fetch (Card NoteFile) of Card))))
+
+(NCP.CardNoteFile
   (LAMBDA (Card)                                             (* rht%: "12-Jul-86 16:22")
           
           (* * Get the card's notefile.)
 
     (AND (NC.ValidCardP Card)
-         (fetch (Card NoteFile) of Card))))(NCP.SameCardP
+         (fetch (Card NoteFile) of Card))))
+
+(NCP.SameCardP
   (LAMBDA (Card1 Card2)                                      (* rht%: " 2-Mar-87 22:10")
           
           (* * Returns non-nil if two cards are the same.)
@@ -1526,20 +1913,26 @@
     (if (AND (NCP.ValidCardP Card1)
              (NCP.ValidCardP Card2))
         then (NC.SameCardP Card1 Card2)
-      else (NCP.ReportError 'NCP.SameCardP (CONCAT "Args not valid cards: " Card1 Card2)))))(NCP.CoerceToCard
+      else (NCP.ReportError 'NCP.SameCardP (CONCAT "Args not valid cards: " Card1 Card2)))))
+
+(NCP.CoerceToCard
   (LAMBDA (CardIdentifier)                                   (* rht%: " 8-Aug-86 13:50")
           
           (* * Return the card object associated with CardIdentifier which can currently 
           be any of a card object, window or text stream.)
 
-    (NC.CoerceToCard CardIdentifier)))(NCP.DetermineDisplayRegion
+    (NC.CoerceToCard CardIdentifier)))
+
+(NCP.DetermineDisplayRegion
   (LAMBDA (Card Region/Position)                             (* rht%: " 8-Aug-86 12:09")
           
           (* * Returns the region that Card would occupy if displayed.
           If Region/Position not passed in, then checks previous size or default heights 
           and widths for the card type. Also knows about BringUpCardAtPreviousPos.)
 
-    (NC.DetermineDisplayRegion Card Region/Position)))(NCP.LockListOfCards
+    (NC.DetermineDisplayRegion Card Region/Position)))
+
+(NCP.LockListOfCards
   (LAMBDA (CardIdentifiers Operation)                        (* Randy.Gobbel "23-Apr-87 14:57")
           
           (* * rg |4/23/87| created)
@@ -1547,7 +1940,9 @@
     (if (NOT (BOUNDP 'CardListResetVar))
         then (NC.ReportError 'NCP.LockListOfCards 
                     "NCP.LockListOfCards called without RESETLST wrapper"))
-    (NC.LockListOfCards CardIdentifiers Operation)))(NCP.GetCrossFileLinkDestCard
+    (NC.LockListOfCards CardIdentifiers Operation)))
+
+(NCP.GetCrossFileLinkDestCard
   (LAMBDA (CrossFileLinkCard InterestedWindow Don'tOpenDestNoteFileFlg)
                                                              (* rht%: " 8-Jun-87 23:24")
           
@@ -1557,13 +1952,24 @@
     (AND (NCP.ValidCardP CrossFileLinkCard)
          (EQ (NCP.CardType CrossFileLinkCard)
              'CrossFileLink)
-         (NC.GetCrossFileLinkDestCard CrossFileLinkCard InterestedWindow Don'tOpenDestNoteFileFlg))))(NCP.CardBeingDeletedP
+         (NC.GetCrossFileLinkDestCard CrossFileLinkCard InterestedWindow Don'tOpenDestNoteFileFlg))))
+
+(NCP.CardBeingDeletedP
   [LAMBDA (Card)                                             (* pmi%: "10-Dec-87 11:40")
           
           (* * pmi 12/10/87%: Created to provide NC.FetchBeingDeletedFlg for the 
           programmer's interface.)
 
-    (NC.FetchBeingDeletedFlg Card]))(* ;;; "Collecting, copying, moving, deleting, cards")(DEFINEQ(NCP.CollectCards
+    (NC.FetchBeingDeletedFlg Card])
+)
+
+
+
+(* ;;; "Collecting, copying, moving, deleting, cards")
+
+(DEFINEQ
+
+(NCP.CollectCards
   [LAMBDA (RootCards LinkTypes MaxDepth FollowCrossFileLinksFlg)
                                                              (* ; "Edited 11-Feb-88 11:31 by pmi")
 
@@ -1603,7 +2009,9 @@
                                                                       'SeenBefore))
                                                      collect (NC.SetUserDataProp Card 'SeenBefore T)
                                                            (SETQ Collection (CONS Card Collection))
-                                                           Card))) finally (RETURN Collection)))])(NCP.CopyCards
+                                                           Card))) finally (RETURN Collection)))])
+
+(NCP.CopyCards
   [LAMBDA (Cards DestNoteFileOrFileBox RootCards QuietFlg CopyExternalToLinksMode InterestedWindow)
                                                              (* ; "Edited 12-Aug-88 11:01 by pmi")
 
@@ -1616,7 +2024,9 @@
     (* ;; "pmi 8/12/88: Added InterestedWindow argument.")
 
     (NC.CopyCards Cards DestNoteFileOrFileBox RootCards QuietFlg InterestedWindow 
-           CopyExternalToLinksMode])(NCP.MoveCards
+           CopyExternalToLinksMode])
+
+(NCP.MoveCards
   [LAMBDA (Cards DestNoteFileOrFileBox RootCards QuietFlg CopyExternalToLinksMode InterestedWindow)
                                                              (* ; "Edited 12-Aug-88 11:01 by pmi")
 
@@ -1625,7 +2035,16 @@
     (* ;; "pmi 8/12/88: Added InterestedWindow argument.")
 
     (NC.MoveCards Cards DestNoteFileOrFileBox RootCards QuietFlg InterestedWindow 
-           CopyExternalToLinksMode]))(* ;;; "Creating and accessing links")(DEFINEQ(NCP.CreateLink
+           CopyExternalToLinksMode])
+)
+
+
+
+(* ;;; "Creating and accessing links")
+
+(DEFINEQ
+
+(NCP.CreateLink
   (LAMBDA (Source Destination LinkType DisplayMode)          (* rht%: " 2-Mar-87 22:11")
           
           (* * Create a link from Source to Destination.
@@ -1653,7 +2072,9 @@
              (NCP.LocalGlobalLink LinkType SourceCard Destination SourceLoc DisplayMode))
             (T (NCP.ReportError 'NCP.CreateLink (CONCAT 
                               "'Source' arg is not either a card or a list of card and atom or num: " 
-                                                       Source)))))))(NCP.LocalGlobalLink
+                                                       Source)))))))
+
+(NCP.LocalGlobalLink
   [LAMBDA (LinkType SourceCard DestinationCard FromLoc DisplayMode)
                                                              (* ; "Edited 11-May-88 22:58 by Trigg")
 
@@ -1761,7 +2182,9 @@
                    (AND FromLoc (NCP.ChangeLoc SourceCard FromLoc))
                    (RETURN (PROG1 (NC.InsertLinkInText (NC.FetchSubstance SourceCard)
                                          LinkType DestinationCard SourceCard CoercedDisplayMode)
-                               (OR WasActive (NCP.UncacheCards SourceCard T)))])(NCP.GlobalGlobalLink
+                               (OR WasActive (NCP.UncacheCards SourceCard T)))])
+
+(NCP.GlobalGlobalLink
   (LAMBDA (LinkType FromCard ToCard)                         (* rht%: " 2-Mar-87 22:04")
           
           (* * This builds a global link of type LinkType between FromCard and ToID.
@@ -1802,7 +2225,9 @@
           (* * LinkType type is okay so create the link.)
 
              (NC.MakeGlobalLink NIL LinkType ToCard FromCard))
-            (T NIL)))))(NCP.GlobalLocalLink
+            (T NIL)))))
+
+(NCP.GlobalLocalLink
   (LAMBDA (LinkType FromCard ToCard ToLoc)                   (* rht%: " 2-Mar-87 22:11")
           
           (* * Builds a link from the FromID card as a whole to within the text of the 
@@ -1810,7 +2235,9 @@
           
           (* * rht 11/16/86%: Changed call to NCP.ReportError)
 
-    (NCP.ReportError 'NCP.GlobalLocalLink "Sorry, can't make global to local links yet.")))(NCP.LocalLocalLink
+    (NCP.ReportError 'NCP.GlobalLocalLink "Sorry, can't make global to local links yet.")))
+
+(NCP.LocalLocalLink
   (LAMBDA (LinkType FromCard ToCard FromLoc ToLoc)           (* rht%: " 2-Mar-87 22:11")
           
           (* * Builds a link from within the text of the FromID card to within the text 
@@ -1818,7 +2245,9 @@
           
           (* * rht 11/16/86%: Changed call to NCP.ReportError)
 
-    (NCP.ReportError 'NCP.LocalLocalLink "Sorry, can't make local to local links yet.")))(NCP.LinkDesc
+    (NCP.ReportError 'NCP.LocalLocalLink "Sorry, can't make local to local links yet.")))
+
+(NCP.LinkDesc
   (LAMBDA (Link FollowCrossFileLinkFlg)                      (* rht%: "29-Oct-87 18:59")
           
           (* * Return a list structure which describes Link.
@@ -1835,7 +2264,9 @@
         (LIST (fetch (Link Label) of Link)
               (NCP.LinkAnchorDesc Link NIL FollowCrossFileLinkFlg)
               (NCP.LinkAnchorDesc Link T FollowCrossFileLinkFlg)))
-       (T (NCP.ReportError 'NCP.LinkDesc (CONCAT "No such link: " Link))))))(NCP.LinkDisplayMode
+       (T (NCP.ReportError 'NCP.LinkDesc (CONCAT "No such link: " Link))))))
+
+(NCP.LinkDisplayMode
   (LAMBDA Args                                               (* rht%: " 2-Mar-87 22:05")
           
           (* * Takes either 1 or 2 args. The first is a link, the second an optional new 
@@ -1871,7 +2302,9 @@
                                                                      " is invalid link display mode."
                                                                                  ))))))
             (T (NCP.ReportError 'NCP.LinkDisplayMode (CONCAT Link " is not a valid link."))
-               NIL)))))(NCP.LinkType
+               NIL)))))
+
+(NCP.LinkType
   (LAMBDA Args                                               (* rht%: " 2-Mar-87 22:05")
           
           (* * Takes either 1 or 2 args. The first is a link, the second an optional new 
@@ -1918,7 +2351,9 @@
                                         (NC.RelabelLink Link NIL NewLinkType T)
                                         (NCP.UncacheCards SourceCard T)))))))
             (T (NCP.ReportError 'NCP.LinkType (CONCAT Link " is not a valid link."))
-               NIL)))))(NCP.LinkSource
+               NIL)))))
+
+(NCP.LinkSource
   (LAMBDA (Link)                                             (* rht%: " 2-Mar-87 22:11")
           
           (* * Return the SOURCEID of Link.)
@@ -1927,7 +2362,9 @@
 
     (if (NCP.ValidLink Link)
         then (fetch (Link SourceCard) of Link)
-      else (NCP.ReportError 'NCP.LinkSource (CONCAT Link " not an existing link.")))))(NCP.LinkDestination
+      else (NCP.ReportError 'NCP.LinkSource (CONCAT Link " not an existing link.")))))
+
+(NCP.LinkDestination
   (LAMBDA (Link)                                             (* rht%: " 2-Mar-87 22:11")
           
           (* * Return the DESTINATIONID of Link.)
@@ -1937,7 +2374,9 @@
     (COND
        ((NCP.ValidLink Link)
         (fetch (Link DestinationCard) of Link))
-       (T (NCP.ReportError 'NCP.LinkDestination (CONCAT Link " not an existing link."))))))(NCP.DeleteLinks
+       (T (NCP.ReportError 'NCP.LinkDestination (CONCAT Link " not an existing link."))))))
+
+(NCP.DeleteLinks
   (LAMBDA (Links)                                            (* rht%: " 2-Mar-87 22:11")
           
           (* * Delete each link in Links. If Links is one link, then just delete that 
@@ -1953,12 +2392,16 @@
                     (T Links)) do (if (NCP.ValidLink Link)
                                       then (NC.DeleteLink Link)
                                     else (NCP.ReportError 'NCP.DeleteLinks (CONCAT "No such link: " 
-                                                                                  Link))))))(NCP.ValidLinkP
+                                                                                  Link))))))
+
+(NCP.ValidLinkP
   (LAMBDA (Link)                                             (* rht%: "18-Jul-86 16:49")
           
           (* * True if Link is an extant link in current database.)
 
-    (NC.ValidLinkP Link)))(NCP.AllLinks
+    (NC.ValidLinkP Link)))
+
+(NCP.AllLinks
   (LAMBDA (NoteFile)                                         (* rht%: "18-Feb-87 12:00")
           
           (* * Return a list of all links in the current database.)
@@ -1973,7 +2416,9 @@
     (MAPCONC (NC.MapCards NoteFile (FUNCTION NC.RetrieveToLinks)
                     (FUNCTION TRUE))
            (FUNCTION (LAMBDA (X)
-                       (APPEND X))))))(NCP.SameLinkP
+                       (APPEND X))))))
+
+(NCP.SameLinkP
   (LAMBDA (Link1 Link2)                                      (* rht%: " 2-Mar-87 22:12")
           
           (* * Returns non-nil if two links are the same.)
@@ -1983,19 +2428,25 @@
     (if (AND (NCP.ValidLinkP Link1)
              (NCP.ValidLinkP Link2))
         then (NC.SameCardP Link1 Link2)
-      else (NCP.ReportError 'NCP.SameLinkP (CONCAT "Args not valid links: " Link1 Link2)))))(NCP.LinkFromLinkIcon
+      else (NCP.ReportError 'NCP.SameLinkP (CONCAT "Args not valid links: " Link1 Link2)))))
+
+(NCP.LinkFromLinkIcon
   (LAMBDA (LinkIcon)                                         (* rht%: " 8-Aug-86 12:14")
           
           (* * If LinkIcon is an image object for a link icon, return the associated 
           link.)
 
     (if (NC.LinkIconImageObjP LinkIcon)
-        then (IMAGEOBJPROP LinkIcon 'OBJECTDATUM))))(NCP.MakeLinkIcon
+        then (IMAGEOBJPROP LinkIcon 'OBJECTDATUM))))
+
+(NCP.MakeLinkIcon
   (LAMBDA (Link)                                             (* rht%: " 8-Aug-86 12:18")
           
           (* * Return a link icon image object for Link.)
 
-    (NC.MakeLinkIcon Link)))(NCP.MarkCardDirty
+    (NC.MakeLinkIcon Link)))
+
+(NCP.MarkCardDirty
   (LAMBDA (Card ResetFlg)                                    (* rht%: "10-Sep-86 15:39")
           
           (* * Mark Card's substance as dirty thus forcing it to be written down at the 
@@ -2003,7 +2454,9 @@
           
           (* * rht 9/10/86%: Fixed typo. Card wasn't being passed to NC.MarkCardDirty.)
 
-    (NC.MarkCardDirty Card ResetFlg)))(NCP.LinkIconAttachedBitMap
+    (NC.MarkCardDirty Card ResetFlg)))
+
+(NCP.LinkIconAttachedBitMap
   [LAMBDA (TypeName Size)                                    (* pmi%: "31-Dec-87 13:32")
           
           (* * dsj. This returns the link iconattached bitmap of size Size for card type 
@@ -2016,7 +2469,16 @@
     (DECLARE (GLOBALVARS NCP.DefaultLinkIconAttachedBitMapSize))
     (LET [(BitMap (NCP.CardTypeVar TypeName 'LinkIconAttachedBitMap]
          (AND BitMap (OR (BITMAPP BitMap)
-                         (LISTGET BitMap (OR Size (NUMBERP NCP.DefaultLinkIconAttachedBitMapSize]))(* ;;; "Creating and accessing link labels.")(DEFINEQ(NCP.CreateLinkType
+                         (LISTGET BitMap (OR Size (NUMBERP NCP.DefaultLinkIconAttachedBitMapSize])
+)
+
+
+
+(* ;;; "Creating and accessing link labels.")
+
+(DEFINEQ
+
+(NCP.CreateLinkType
   [LAMBDA (LinkType NoteFile QuietFlg)                       (* pmi%: "13-Jan-88 15:07")
           
           (* * Create a new link label unless already defined.)
@@ -2032,7 +2494,9 @@
                                                                       LinkType ".")))
              NIL
       else (NC.StoreLinkLabels NoteFile (CONS LinkType (NCP.UserLinkTypes NoteFile)))
-           LinkType])(NCP.DeleteLinkType
+           LinkType])
+
+(NCP.DeleteLinkType
   (LAMBDA (LinkType NoteFile)                                (* rht%: " 2-Mar-87 22:06")
           
           (* * Checks for any instance of LinkType in the current database.
@@ -2057,7 +2521,9 @@
                                                     ". Can't delete."))
         NIL)
        (T (NC.StoreLinkLabels NoteFile (REMOVE LinkType (NCP.UserLinkTypes NoteFile)))
-          LinkType))))(NCP.RenameLinkType
+          LinkType))))
+
+(NCP.RenameLinkType
   (LAMBDA (OldLinkType NewLinkType NoteFile)                 (* rht%: " 2-Mar-87 22:07")
           
           (* * Renames all instances of links with OldLinkType to be NewLabel.
@@ -2094,21 +2560,27 @@
                                                                          of Link))
                                                       (NCP.LinkType Link NewLinkType))))))
                (NC.StoreLinkLabels NoteFile (REMOVE OldLinkType (NCP.UserLinkTypes NoteFile)))
-               NewLinkType)))))(NCP.LinkTypes
+               NewLinkType)))))
+
+(NCP.LinkTypes
   (LAMBDA (NoteFile)                                         (* rht%: " 9-Dec-85 15:37")
           
           (* * Return all link labels including system ones.)
           
           (* * rht 11/17/85%: Updated to handle new card and notefile objects.)
 
-    (NC.RetrieveLinkLabels NoteFile T)))(NCP.ReverseLinkTypes
+    (NC.RetrieveLinkLabels NoteFile T)))
+
+(NCP.ReverseLinkTypes
   (LAMBDA (NoteFile)                                         (* rht%: "18-Nov-85 17:33")
           
           (* * Return all reverse link labels including system ones.)
           
           (* * rht 11/18/85%: Updated to handle new notefile and card object formats.)
 
-    (for Lab in (NC.RetrieveLinkLabels NoteFile T) collect (PACK* '_ Lab))))(NCP.UserLinkTypes
+    (for Lab in (NC.RetrieveLinkLabels NoteFile T) collect (PACK* '_ Lab))))
+
+(NCP.UserLinkTypes
   (LAMBDA (NoteFile)                                         (* rht%: "18-Nov-85 17:34")
           
           (* * Return list of only the user defined link labels appearing in the current 
@@ -2116,14 +2588,18 @@
           
           (* * rht 11/18/85%: Updated to handle new notefile and card object formats.)
 
-    (NC.RetrieveLinkLabels NoteFile NIL)))(NCP.ValidLinkTypeP
+    (NC.RetrieveLinkLabels NoteFile NIL)))
+
+(NCP.ValidLinkTypeP
   (LAMBDA (LinkType NoteFile)                                (* rht%: "12-Jul-86 12:32")
           
           (* * True if LinkType is a currently defined user or system link label.)
           
           (* * rht 11/18/85%: Updated to handle new notefile and card object formats.)
 
-    (FMEMB LinkType (NCP.LinkTypes NoteFile))))(NCP.SystemLinkTypeP
+    (FMEMB LinkType (NCP.LinkTypes NoteFile))))
+
+(NCP.SystemLinkTypeP
   [LAMBDA (LinkType)                                         (* pmi%: " 8-Dec-87 15:36")
           
           (* * dsj 10/24/87%: Is LinkType a system link label?)
@@ -2131,7 +2607,16 @@
           (* * pmi 12/8/87%: Added dsj's function;
           see comment above.)
 
-    (NC.SystemLinkLabelP LinkType]))(* ;;; "Dealing with card parts dates.")(DEFINEQ(NCP.CardDates
+    (NC.SystemLinkLabelP LinkType])
+)
+
+
+
+(* ;;; "Dealing with card parts dates.")
+
+(DEFINEQ
+
+(NCP.CardDates
   (LAMBDA (Card)                                             (* rht%: " 2-Mar-87 22:07")
           
           (* * Returns an instance of the NOTECARDDATES record filled in with the current 
@@ -2151,7 +2636,16 @@
                                 PROPLISTDATE _ (NC.FetchPropListDate Card))
                          (OR WasActive (NCP.UncacheCards Card T))))
       else (NCP.ReportError 'NCP.CardDates (CONCAT Card " not an existing card."))
-           NIL))))(* ;;; "Open events card")(DEFINEQ(NCP.GetOpenEventsCard
+           NIL)))
+)
+
+
+
+(* ;;; "Open events card")
+
+(DEFINEQ
+
+(NCP.GetOpenEventsCard
   (LAMBDA (NoteFile)                                         (* rht%: " 8-Dec-86 21:31")
           
           (* * Find the open events card for the given notefile, creating a new one if 
@@ -2162,7 +2656,9 @@
              then (SETQ OpenEventsCard (NCP.CreateCard 'List NoteFile "Open Events" T))
                   (NCP.MarkAsNotNeedingFiling OpenEventsCard)
                   (NCP.RegisterCardByName 'OpenEventsCard OpenEventsCard))
-         OpenEventsCard)))(NCP.GetCloseEventsCard
+         OpenEventsCard)))
+
+(NCP.GetCloseEventsCard
   (LAMBDA (NoteFile)                                         (* rht%: " 8-Dec-86 21:31")
           
           (* * Find the close events card for the given notefile, creating a new one if 
@@ -2173,12 +2669,23 @@
              then (SETQ CloseEventsCard (NCP.CreateCard 'List NoteFile "Close Events" T))
                   (NCP.MarkAsNotNeedingFiling CloseEventsCard)
                   (NCP.RegisterCardByName 'CloseEventsCard CloseEventsCard))
-         CloseEventsCard)))(NCP.MarkAsNotNeedingFiling
+         CloseEventsCard)))
+
+(NCP.MarkAsNotNeedingFiling
   (LAMBDA (Card)                                             (* rht%: " 8-Dec-86 21:34")
           
           (* * Indicate on the card's prop list that it doesn't have to be filed.)
 
-    (NCP.CardProp Card 'Don'tRequireFilingFlg T))))(* ;;; "Functions for adding menu items")(DEFINEQ(NCP.AddSessionIconMenuItem
+    (NCP.CardProp Card 'Don'tRequireFilingFlg T)))
+)
+
+
+
+(* ;;; "Functions for adding menu items")
+
+(DEFINEQ
+
+(NCP.AddSessionIconMenuItem
   (LAMBDA (MenuName Item)                                    (* pmi%: "13-Jul-87 17:51")
           
           (* * pmi 7/13/87%: New function which allows users to add items to the Session 
@@ -2223,7 +2730,9 @@
                           then (SETQ NC.OtherOpsItems (APPEND NC.OtherOpsItems (LIST Item)))
                                (SETQ NC.OtherOpsMenu NIL)))
                NIL)
-           Item)))(NCP.RemoveSessionIconMenuItem
+           Item)))
+
+(NCP.RemoveSessionIconMenuItem
   (LAMBDA (MenuName ItemName)                                (* pmi%: "13-Jul-87 18:11")
           
           (* * pmi 7/13/87%: New function which allows users to remove an item from the 
@@ -2267,7 +2776,9 @@
                          do (SETQ NC.OtherOpsItems (REMOVE MenuItem NC.OtherOpsItems))
                             (SETQ NC.OtherOpsMenu NIL)
                             (RETURN MenuItem)))
-               NIL))))(NCP.RestoreSessionIconMenu
+               NIL))))
+
+(NCP.RestoreSessionIconMenu
   (LAMBDA (MenuName)                                         (* pmi%: "13-Jul-87 18:12")
           
           (* * pmi 7/13/87%: New function which allows users to restore the original 
@@ -2290,7 +2801,9 @@
              (SETQ NC.NoteFileOpsMenu NIL)
              (SETQ NC.OtherOpsItems NC.InitialOtherOpsItems)
              (SETQ NC.OtherOpsMenu NIL))
-        NIL)))(NCP.AddNoteFileIconMenuItem
+        NIL)))
+
+(NCP.AddNoteFileIconMenuItem
   (LAMBDA (Item OpenOrClosedOrBoth)                          (* ; "Edited  3-Dec-87 19:01 by rht:")
           
           (* * pmi 7/14/87%: New function which allows users to add items to the NoteFile 
@@ -2368,7 +2881,9 @@
           (* * Recompute the menus.)
 
           (NC.MakeNoteFileIconOperationsMenus)
-          (RETURN Item))))(NCP.RemoveNoteFileIconMenuItem
+          (RETURN Item))))
+
+(NCP.RemoveNoteFileIconMenuItem
   (LAMBDA (ItemName)                                         (* pmi%: "14-Jul-87 11:23")
           
           (* * pmi 7/14/87%: New function which allows users to remove an item from the 
@@ -2401,7 +2916,9 @@
                                                                        NC.NoteFileIconCloseOperations
                                                                                       ))
                                           (NC.MakeNoteFileIconOperationsMenus)
-                                          (RETURN MenuItem)))))(NCP.RestoreNoteFileIconMenu
+                                          (RETURN MenuItem)))))
+
+(NCP.RestoreNoteFileIconMenu
   (LAMBDA NIL                                                (* pmi%: "13-Jul-87 20:59")
           
           (* * pmi 7/13/87%: New function which allows users to restore the NoteFile Icon 
@@ -2413,7 +2930,9 @@
     (SETQ NC.NoteFileIconOperationsMenuItems NC.InitialNoteFileIconOperationsMenuItems)
     (SETQ NC.NoteFileIconOpenOperations NC.InitialNoteFileIconOpenOperations)
     (SETQ NC.NoteFileIconCloseOperations NC.InitialNoteFileIconCloseOperations)
-    (NC.MakeNoteFileIconOperationsMenus)))(NC.CreateSessionIconNoteFileMenuItem
+    (NC.MakeNoteFileIconOperationsMenus)))
+
+(NC.CreateSessionIconNoteFileMenuItem
   (LAMBDA (Item)                                             (* ; "Edited  3-Dec-87 19:01 by rht:")
           
           (* * pmi 7/10/87%: Created to format the menu item for the NoteFile menu of the 
@@ -2430,7 +2949,9 @@
                                                               collect (
                                                                  NC.CreateSessionIconNoteFileMenuItem
                                                                        SubItem)))))
-           else MenuItem))))(NCP.AddDefaultNoteFileIconMiddleButtonItems
+           else MenuItem))))
+
+(NCP.AddDefaultNoteFileIconMiddleButtonItems
   [LAMBDA (NewItems)                                         (* pmi%: " 5-Jan-88 15:11")
           
           (* * |10/23/87.| dsj. Uniquely add NewItems to 
@@ -2445,7 +2966,9 @@
                                                                     collect NewItem
                                                                     when (NOT (MEMBER NewItem 
                                                               NC.DefaultNoteFileIconMiddleButtonItems
-                                                                                     ])(NCP.NoticedNoteFileNamesMenu
+                                                                                     ])
+
+(NCP.NoticedNoteFileNamesMenu
   [LAMBDA (IncludeNewNoteFileFlg AllowedOperations InterestedWindow Operation)
                                                              (* pmi%: " 9-Dec-87 12:33")
           
@@ -2459,7 +2982,9 @@
           (* * pmi 12/9/87%: Added this function, which was created by dsj
           (see above comment.))
 
-    (NC.NoticedNoteFileNamesMenu IncludeNewNoteFileFlg AllowedOperations InterestedWindow Operation])(NCP.AddTitleBarMenuItemsToType
+    (NC.NoticedNoteFileNamesMenu IncludeNewNoteFileFlg AllowedOperations InterestedWindow Operation])
+
+(NCP.AddTitleBarMenuItemsToType
   [LAMBDA (Type Button NewMenuItems TopOrBottom)      (* ; "Edited 19-Jan-88 15:51 by Randy.Gobbel")
           
           (* * DSJ%: |10/6/87| Add NewMenuItems to the menu items for the card type if 
@@ -2494,7 +3019,9 @@
                              (BOTTOM [APPEND Items (for NewItem in NewMenuItems collect NewItem
                                                       when (NOT (MEMBER NewItem Items])
                              (NCP.ReportError 'NCP.AddTitleBarMenuItemsToType 
-                                    "Location of new items in the menu incorrectly specified."])(NCP.AddTitleBarMenuItemsToWindow
+                                    "Location of new items in the menu incorrectly specified."])
+
+(NCP.AddTitleBarMenuItemsToWindow
   [LAMBDA (Window Button NewMenuItems TopOrBottom)           (* pmi%: "31-Dec-87 13:39")
           
           (* * pmi 12/31/87%: Add the given menu items to the appropriate button menu of 
@@ -2523,20 +3050,33 @@
                                                        when (NOT (MEMBER NewItem Items])
                               (NCP.ReportError 'NCP.AddTitleBarMenuItemsToWindow 
                                      "Location of new items in the menu incorrectly specified.")))
-                  (replace (MENU IMAGE) of Menu with NIL])(NCP.BringUpSessionIcon
+                  (replace (MENU IMAGE) of Menu with NIL])
+
+(NCP.BringUpSessionIcon
   [LAMBDA (IconPosition)                                     (* pmi%: " 9-Dec-87 12:07")
           
           (* * Start up NoteCards by bringing up the NoteCards icon at IconPosition)
 
     (NC.BringUpNoteCardsIcon (if (POSITIONP IconPosition)
-                                 then IconPosition])(NCP.SessionIconWindow
+                                 then IconPosition])
+
+(NCP.SessionIconWindow
   [LAMBDA NIL                                                (* pmi%: " 8-Dec-87 15:32")
           
           (* * pmi 12/8/87%: Created to provide programmer's interface access to 
           NC.NoteCardsIconWindow.)
 
     (DECLARE (GLOBALVARS NC.NoteCardsIconWindow))
-    NC.NoteCardsIconWindow]))(* ;;; "Miscellaneous")(DEFINEQ(NCP.TitleSearch
+    NC.NoteCardsIconWindow])
+)
+
+
+
+(* ;;; "Miscellaneous")
+
+(DEFINEQ
+
+(NCP.TitleSearch
   (LAMBDA (NoteFile Keys CaseSensitiveFlg)                   (* rht%: "11-Nov-86 12:38")
           
           (* * Return a list of all cards which contain each string of Args within their 
@@ -2566,7 +3106,9 @@
                                    (LET ((Title (NCP.CardTitle Card)))
                                         (for Key in (MKLIST Keys) always (STRPOS (U-CASE Key)
                                                                                 (U-CASE Title))))))))
-         )))(NCP.PropSearch
+         )))
+
+(NCP.PropSearch
   (LAMBDA Args                                               (* rht%: "12-Jul-86 12:45")
           
           (* * Return a list of all IDs which contain each property or property pair 
@@ -2594,7 +3136,9 @@
                                                               (EQ (LENGTH Prop)
                                                                   2))
                                                     then (EQ (LISTGET PropList (CAR Prop))
-                                                             (CADR Prop))))))))))))(NCP.WhichCard
+                                                             (CADR Prop))))))))))))
+
+(NCP.WhichCard
   (LAMBDA (WindowOrx y)                                      (* ; "Edited  3-Dec-87 19:01 by rht:")
           
           (* * Return the ID of the card at a position determined as follows%: If 
@@ -2602,7 +3146,9 @@
           (WindowOrx,y) (\, else) use cursor position.)
 
     (NC.CoerceToCard (OR (WINDOWP WindowOrx)
-                         (WHICHW WindowOrx y)))))(NCP.WhichNoteFile
+                         (WHICHW WindowOrx y)))))
+
+(NCP.WhichNoteFile
   (LAMBDA (WindowOrx y)                                      (* ; "Edited  3-Dec-87 19:01 by rht:")
           
           (* * Return the notefile corresponding to the window at a position determined 
@@ -2615,7 +3161,9 @@
          (OR (WINDOWPROP Window 'NoteFile)
              (LET ((Card (WINDOWPROP Window 'NoteCardObject)))
                   (AND (NCP.ValidCardP Card)
-                       (NCP.NoteFileFromCard Card)))))))(NCP.SelectCards
+                       (NCP.NoteFileFromCard Card)))))))
+
+(NCP.SelectCards
   [LAMBDA (InstigatingCardOrWindow SingleCardFlg SelectionPredicate Msg CheckForCancelFlg NewCardFlg)
                                                              (* ; "Edited 31-Mar-88 15:18 by pmi")
 
@@ -2639,7 +3187,9 @@
                                              then NC.SelectingSingleCardMenu
                                            else NC.SelectingCardMenu)
                                   else NC.SelectingCardsMenu)
-                                InstigatingCardOrWindow Msg CheckForCancelFlg])(NCP.DocumentParameters
+                                InstigatingCardOrWindow Msg CheckForCancelFlg])
+
+(NCP.DocumentParameters
   (LAMBDA (NewProps)                                         (* rht%: " 2-Mar-87 22:07")
           
           (* * Returns the old value of the MakeDocument default parameters.
@@ -2675,7 +3225,9 @@
                            (T (NCP.ReportError 'NCP.DocumentParameters (CONCAT NewValue 
                                                                    " is not a permissible value for " 
                                                                               Param "."))))))
-         OldParams)))(NCP.NoteCardsParameters
+         OldParams)))
+
+(NCP.NoteCardsParameters
   (LAMBDA (NewParams)                                        (* rht%: " 2-Mar-87 22:07")
           
           (* * Returns the old value of the Notecards parameters.
@@ -2728,21 +3280,27 @@
                           else (NCP.ReportError 'NCP.NoteCardsParameters (CONCAT Param 
                                                                    " not a Notecards parameter name."
                                                                                 )))))
-         OldParams)))(NCP.PrintMsg
+         OldParams)))
+
+(NCP.PrintMsg
   (LAMBDA Args                                               (* rht%: "10-Jul-86 23:43")
           
           (* * Expects args of form (<window> <clearFirstFlg> <arg1> <arg2> |...|) and 
           prints the <arg>s to <window>'s prompt window or to the lisp prompt window if 
           <window> is nil. Will clear first if second arg is non-nil.)
 
-    (APPLY 'NC.PrintMsg (for i from 1 to Args collect (ARG Args i)))))(NCP.ClearMsg
+    (APPLY 'NC.PrintMsg (for i from 1 to Args collect (ARG Args i)))))
+
+(NCP.ClearMsg
   [LAMBDA (Window ClosePromptWinFlg WaitMsecs)        (* ; "Edited 14-Jun-88 14:45 by Randy.Gobbel")
 
 (* ;;; "Clears the prompt window for Window.  Will close if ClosePromptWinFlg is non-nil.")
 
     (* ;; "rg 6/14/88: Added WaitMsecs arg.")
 
-    (NC.ClearMsg Window ClosePromptWinFlg WaitMsecs])(NCP.AskUser
+    (NC.ClearMsg Window ClosePromptWinFlg WaitMsecs])
+
+(NCP.AskUser
   (LAMBDA (Msg Prompt FirstTry ClearFirstFlg MainWindow DontCloseAtEndFlg DontClearAtEndFlg 
                PROMPTFORWORDFlg)                             (* rht%: "30-May-85 21:49")
           
@@ -2750,14 +3308,18 @@
           Just calls the NC.AskUser function.)
 
     (NC.AskUser Msg Prompt FirstTry ClearFirstFlg MainWindow DontCloseAtEndFlg DontClearAtEndFlg 
-           PROMPTFORWORDFlg)))(NCP.AskYesOrNo
+           PROMPTFORWORDFlg)))
+
+(NCP.AskYesOrNo
   (LAMBDA (Msg Prompt FirstTry ClearFirstFlg MainWindow DontCloseAtEndFlg DontClearAtEndFlg)
                                                              (* rht%: "12-Jul-86 13:15")
           
           (* * Asks a yes/no question in the prompt window.
           Just calls the NC.AskYesOrNo function.)
 
-    (NC.AskYesOrNo Msg Prompt FirstTry ClearFirstFlg MainWindow DontCloseAtEndFlg DontClearAtEndFlg)))(NCP.RegisterCardByName
+    (NC.AskYesOrNo Msg Prompt FirstTry ClearFirstFlg MainWindow DontCloseAtEndFlg DontClearAtEndFlg)))
+
+(NCP.RegisterCardByName
   (LAMBDA (Name Card RegistryCard)                           (* rht%: "23-May-87 23:21")
           
           (* * Hash Card under Name in Card's notefile's system registry card.)
@@ -2777,7 +3339,9 @@
                       'Registry)))
         (NCP.ReportError 'NCP.RegisterCardByName (CONCAT RegistryCard 
                                                         " is not a valid registry card.")))
-       (T (NC.RegisterCardByName RegistryCard Name Card)))))(NCP.ListRegisteredCards
+       (T (NC.RegisterCardByName RegistryCard Name Card)))))
+
+(NCP.ListRegisteredCards
   [LAMBDA (NoteFileOrRegistryCard IncludeKeysFlg)            (* pmi%: "10-Dec-87 17:19")
           
           (* * Return the list of cards registered in the RegistryCard or notefile.
@@ -2805,7 +3369,9 @@
            else (MAPHASH (NCP.CardSubstance RegistryCard)
                        (FUNCTION (LAMBDA (Val Key)
                                    (push Result (NC.CardFromUID Val NoteFile]
-         Result])(NCP.LookupCardByName
+         Result])
+
+(NCP.LookupCardByName
   [LAMBDA (Name NoteFileOrRegistryCard)                  (* ; "Edited 21-Dec-88 15:33 by pmi")
 
     (* ;; "Lookup Name in notefile's system registry card.")
@@ -2830,7 +3396,9 @@
          (* ;; "Don't try to call NC.LookupCardByName if RegistryCard is NIL.")
 
          (if RegistryCard
-             then (NC.LookupCardByName RegistryCard Name])(NCP.UnregisterName
+             then (NC.LookupCardByName RegistryCard Name])
+
+(NCP.UnregisterName
   (LAMBDA (Name NoteFileOrRegistryCard)                      (* rht%: "23-May-87 23:37")
           
           (* * Lookup Name in notefile's system registry card.)
@@ -2850,7 +3418,9 @@
              (SETQ RegistryCard NoteFileOrRegistryCard))
             (T (NCP.ReportError 'NCP.UnregisterName (CONCAT "Improper arg: " NoteFileOrRegistryCard))
                ))
-         (NC.UnregisterName RegistryCard Name))))(NCP.DisplayedCards
+         (NC.UnregisterName RegistryCard Name))))
+
+(NCP.DisplayedCards
   [LAMBDA (NoteFiles CardTypes)                              (* pmi%: " 7-Dec-87 16:21")
           
           (* * Return a list of all cards that are currently displayed in a window.)
@@ -2872,7 +3442,9 @@
                  (if CardTypes
                      then (for Type in CardTypes bind (CardType _ (NCP.CardType Card))
                              thereis (EQ Type CardType))
-                   else T)) collect Card])(NCP.CardUserDataProp
+                   else T)) collect Card])
+
+(NCP.CardUserDataProp
   (LAMBDA Args                                               (* rht%: " 2-Mar-87 22:08")
           
           (* * Expects two or three arguments%: Card, Property, and optional new value.
@@ -2893,7 +3465,9 @@
                         then (NC.SetUserDataProp Card (ARG Args 2)
                                     (ARG Args 3)))))
             (T (NCP.ReportError 'NCP.CardUserDataProp (CONCAT Card " not an existing card or box."))
-               NIL)))))(NCP.NoteFileProp
+               NIL)))))
+
+(NCP.NoteFileProp
   (LAMBDA Args                                               (* rht%: " 2-Mar-87 22:08")
           
           (* * Expects two or three arguments%: Notefile, Property, and optional new 
@@ -2919,7 +3493,9 @@
                                        with (LIST (ARG Args 2)
                                                   (ARG Args 3)))))))
             (T (NCP.ReportError 'NCP.NoteFileProp (CONCAT NoteFile " not a valid notefile."))
-               NIL)))))(NCP.SetUpTitleBar
+               NIL)))))
+
+(NCP.SetUpTitleBar
   (LAMBDA (CardWindow CardType)                              (* rht%: " 8-Dec-86 18:00")
           
           (* * Set up the left and middle button menus for this card.
@@ -2927,7 +3503,9 @@
 
     (NC.InstallTitleBarLeftMenu CardWindow CardType)
     (NC.InstallTitleBarMiddleMenu CardWindow CardType)
-    (NC.InstallTitleBarButtonEventFn CardWindow (FUNCTION NC.TitleBarButtonEventFn))))(NCP.AddNoteFileIconMiddleButtonItems
+    (NC.InstallTitleBarButtonEventFn CardWindow (FUNCTION NC.TitleBarButtonEventFn))))
+
+(NCP.AddNoteFileIconMiddleButtonItems
   [LAMBDA (NoteFile MenuItems)                               (* pmi%: " 5-Jan-88 15:44")
           
           (* * Add the given MenuItems to the given NoteFile.)
@@ -2947,18 +3525,24 @@
                                                              (* (if (OPENWP NoteFileIconWindow) 
                                                              then (WINDOWPROP NoteFileIconWindow
                                                              (QUOTE NoteFileMiddleButtonMenu) NIL)))
-                  ExistingMenuItems])(NCP.NoteFileIconWindow
+                  ExistingMenuItems])
+
+(NCP.NoteFileIconWindow
   (LAMBDA (NoteFile)                                         (* rht%: "23-Nov-86 15:48")
           
           (* * Return the icon window for given notefile.)
 
-    (WFROMMENU (fetch (NoteFile Menu) of NoteFile))))(NCP.CoerceToInterestedWindow
+    (WFROMMENU (fetch (NoteFile Menu) of NoteFile))))
+
+(NCP.CoerceToInterestedWindow
   [LAMBDA (WinOrCardOrNoteFile)                              (* pmi%: "21-Oct-87 15:56")
           
           (* * pmi 10/21/87%: Created to give prog int users the ability to get a 
           reasonable window from various inputs.)
 
-    (NC.CoerceToInterestedWindow WinOrCardOrNoteFile])(NCP.SetGrayShade
+    (NC.CoerceToInterestedWindow WinOrCardOrNoteFile])
+
+(NCP.SetGrayShade
   [LAMBDA (NewShade)                                         (* ; "Edited 15-Sep-88 15:34 by pmi")
 
     (* ;; "Sets NCP.GrayShade to NewShade.  Also resets the menu of noticed notefiles,  the notefile icon operations menu, and all notefile icon menus.  If NewShade is not a texture, then just resets the menus. Returns the new value of NCP.GrayShade.")
@@ -2976,7 +3560,9 @@
           (NC.CreateNoteFileMenuItems NoteFileName)
           (if (SETQ NoteFile (NCP.NoteFileFromFileName NoteFileName))
               then (NC.ResetNoteFileInterface NoteFile)))
-    NCP.GrayShade])(NCP.MakeTypeIconBitMapSet
+    NCP.GrayShade])
+
+(NCP.MakeTypeIconBitMapSet
   [LAMBDA (Bitmap Heights)                                   (* ; "Edited 27-Sep-88 11:53 by pmi")
 
     (* ;; "Programmer's interface function for NC.MakeTypeIconBitMapSet.")
@@ -2984,7 +3570,22 @@
     (* ;; "Create a prop list of pairs of Height and scaled copies of Bitmap having that height.  If Heights is NIL, NC.DefaultLinkIconAttachedBitMapHeights is used.")
 
     (DECLARE (GLOBALVARS NC.DefaultLinkIconAttachedBitMapHeights))
-    (NC.MakeTypeIconBitMapSet Bitmap (OR Heights NC.DefaultLinkIconAttachedBitMapHeights]))(DECLARE%: DONTEVAL@LOAD (MOVD 'NCP.WhichCard 'NCP.WC T)(MOVD 'NCP.WhichNoteFile 'NCP.WNF T))(* ;;; "Handy internal functions")(DEFINEQ(NCP.ReportError
+    (NC.MakeTypeIconBitMapSet Bitmap (OR Heights NC.DefaultLinkIconAttachedBitMapHeights])
+)
+(DECLARE%: DONTEVAL@LOAD 
+
+(MOVD 'NCP.WhichCard 'NCP.WC T)
+
+(MOVD 'NCP.WhichNoteFile 'NCP.WNF T)
+)
+
+
+
+(* ;;; "Handy internal functions")
+
+(DEFINEQ
+
+(NCP.ReportError
   (LAMBDA (FunctionName Msg)                                 (* rht%: " 2-Mar-87 23:31")
           
           (* * Print out the various elements of Args to the terminal.)
@@ -3001,7 +3602,9 @@
              (PRIN1 Msg T)
              (TERPRI T)
       else (APPLY* 'BREAK1 T T (MKATOM FunctionName)
-                  NIL NIL (LIST Msg)))))(NCP.ReportWarning
+                  NIL NIL (LIST Msg)))))
+
+(NCP.ReportWarning
   (LAMBDA (FunctionName Msg)                                 (* rht%: "21-Nov-86 00:34")
           
           (* * Print out the various elements of Args to the terminal.)
@@ -3014,7 +3617,9 @@
         then (PRIN1 "*** NC-PI warning: " T)
              (PRIN1 Msg T)
              (TERPRI T)
-      else (APPLY* 'BREAK1 T T FunctionName NIL NIL (LIST Msg)))))(NCP.LinkAnchorDesc
+      else (APPLY* 'BREAK1 T T FunctionName NIL NIL (LIST Msg)))))
+
+(NCP.LinkAnchorDesc
   (LAMBDA (Link ToFlg FollowCrossFileLinkFlg)                (* rht%: "29-Oct-87 18:58")
           
           (* * Return a description of the anchoring of Link at one of its endpoints.
@@ -3051,14 +3656,18 @@
                    when (NC.SameLinkP Link (CAR Obj)) do (COND
                                                             ((NOT WasActiveP)
                                                              (NCP.UncacheCards Card T)))
-                                                         (RETURN (LIST 'LOCAL Card (CDR Obj))))))))(NCP.GetTypeRecord
+                                                         (RETURN (LIST 'LOCAL Card (CDR Obj))))))))
+
+(NCP.GetTypeRecord
   (LAMBDA (TypeName)                                         (* rht%: "18-Nov-85 00:40")
           
           (* * Return the record corresponding to this type name.)
           
           (* * rht 11/17/85%: Now calls new NC function.)
 
-    (NC.CardTypeRecord TypeName)))(NCP.AddLeftButtonTitleBarMenuItems
+    (NC.CardTypeRecord TypeName)))
+
+(NCP.AddLeftButtonTitleBarMenuItems
   (LAMBDA (Window NewMenuItems)                              (* rht%: "12-Jul-86 14:11")
           
           (* * Add the given menu items to the left button menu of Window.)
@@ -3067,7 +3676,9 @@
          (if Menu
              then (PROG1 (replace (MENU ITEMS) of Menu with (APPEND (fetch (MENU ITEMS) of Menu)
                                                                    NewMenuItems))
-                         (replace (MENU IMAGE) of Menu with NIL))))))(NCP.AddMiddleButtonTitleBarMenuItems
+                         (replace (MENU IMAGE) of Menu with NIL))))))
+
+(NCP.AddMiddleButtonTitleBarMenuItems
   (LAMBDA (Window NewMenuItems)                              (* rht%: "17-Nov-86 00:15")
           
           (* * Add the given menu items to the middle button menu of Window.)
@@ -3076,7 +3687,9 @@
          (if Menu
              then (PROG1 (replace (MENU ITEMS) of Menu with (APPEND (fetch (MENU ITEMS) of Menu)
                                                                    NewMenuItems))
-                         (replace (MENU IMAGE) of Menu with NIL))))))(NCP.CoerceToLinkDisplayMode
+                         (replace (MENU IMAGE) of Menu with NIL))))))
+
+(NCP.CoerceToLinkDisplayMode
   (LAMBDA (Thing)                                            (* rht%: "27-May-87 11:28")
           
           (* * Thing can be a cardtype, link, atom, list or LINKDISPLAYMODE record.)
@@ -3109,4 +3722,171 @@
                                (T DisplayMode)))
           (RETURN (if (type? LINKDISPLAYMODE DisplayMode)
                       then DisplayMode
-                    else NIL))))))(* ;;; "Global variables.")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NCP.ErrorBrkWhenFlg NCP.LinkDisplayModes NCP.TypeFnsAssocLst NCP.NoteCardTypeFns        NCP.NoteCardTypeVars NC.MakeDocParameters NC.CardTypes NC.SubstanceTypes NC.SystemLinkLabels        NC.FiledCardLinkLabel NC.SubBoxLinkLabel NC.SelectingCardsMenu NC.SelectingCardMenu        NC.UCASESystemLinkLabels NC.SourceLinkLabel NC.NoteCardsParameters NCP.NoticedNoteFileNames        NCP.GrayShade))(RPAQ? NCP.GrayShade GRAYSHADE)(RPAQ? NCP.NoticedNoteFileNames NIL)(RPAQ? NCP.DefaultLinkIconAttachedBitMapSize 17)(RPAQ? NCP.ErrorBrkWhenFlg NIL)(RPAQ? NCP.LinkDisplayModes '(Icon Title Label Both))(RPAQ? NCP.NoteCardTypeFns '(MakeFn EditFn QuitFn GetFn PutFn CopyFn MarkDirtyFn DirtyPFn                                        CollectLinksFn DeleteLinksFn UpdateLinkIconsFn InsertLinkFn                                        TranslateWindowPositionFn))(RPAQ? NCP.NoteCardTypeVars '(SuperType StubFlg FullDefinitionFile LinkDisplayMode DefaultWidth                                         DefaultHeight LinkAnchorModesSupported DisplayedInMenuFlg                                         LinkIconAttachedBitMap LeftButtonMenuItems                                         MiddleButtonMenuItems))(* ;;; "Following is for backward compatibility with 1.2")(DECLARE%: DONTEVAL@LOAD (MOVD 'NCP.OpenCard 'NCP.BringUpCard T)(MOVD 'NCP.CacheCards 'NCP.ActivateCards T)(MOVD 'NCP.CardCachedP 'NCP.ActiveCardP T)(MOVD 'NCP.CardTypeFnP 'NCP.ValidCardTypeFn T)(MOVD 'NCP.CardTypeP 'NCP.ValidCardType T)(MOVD 'NCP.CardTypeVarP 'NCP.ValidCardTypeVar T)(MOVD 'NCP.CloseCards 'NCP.DeactivateCards T)(MOVD 'NCP.ValidCardP 'NCP.ValidCard T)(MOVD 'NCP.ContentsFileBox 'NCP.GetContentsFileBox T)(MOVD 'NCP.OrphansFileBox 'NCP.GetOrphansFileBox T)(MOVD 'NCP.ToBeFiledFileBox 'NCP.GetToBeFiledFileBox T)(MOVD 'NCP.LinkSource 'NCP.GetLinkSource T)(MOVD 'NCP.LinkDestination 'NCP.GetLinkDestination T)(MOVD 'NCP.CreateLinkType 'NCP.CreateLinkLabel T)(MOVD 'NCP.DeleteLinkType 'NCP.DeleteLinkLabel T)(MOVD 'NCP.RenameLinkType 'NCP.RenameLinkLabel T)(MOVD 'NCP.LinkTypes 'NCP.GetLinkLabels T)(MOVD 'NCP.UserLinkTypes 'NCP.GetUserLinkLabels T)(MOVD 'NCP.ReverseLinkTypes 'NCP.GetReverseLinkLabels T)(MOVD 'NCP.ValidLinkTypeP 'NCP.ValidLinkLabel T)(MOVD 'NCP.ValidLinkP 'NCP.ValidLink T))(PUTPROPS NCPROGINT FILETYPE :FAKE-COMPILE-FILE)(PUTPROPS NCPROGINT MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))(DECLARE%: DONTEVAL@LOAD DOEVAL@COMPILE DONTCOPY COMPILERVARS (ADDTOVAR NLAMA )(ADDTOVAR NLAML )(ADDTOVAR LAMA NCP.NoteFileProp NCP.CardUserDataProp NCP.PrintMsg NCP.PropSearch NCP.LinkType                          NCP.LinkDisplayMode NCP.CardRegion NCP.CardSubstance NCP.CardProp                          NCP.CardTitle NCP.CardTypeDisplayedInMenu))(PUTPROPS NCPROGINT COPYRIGHT ("Venue & Xerox Corporation" 1984 1985 1986 1987 1988 1989 1990 1993 1994 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (9321 27809 (NCP.CreateNoteFile 9331 . 10066) (NCP.OpenNoteFile 10068 . 11764) (NCP.OpenNoteFileP 11766 . 12144) (NCP.ListOfOpenNoteFiles 12146 . 12580) (NCP.CloseNoteFiles 12582 . 13783) (NCP.CheckpointNoteFiles 13785 . 14676) (NCP.AbortNoteFiles 14678 . 15492) (NCP.CompactNoteFile 15494 . 15822) (NCP.CompactNoteFileInPlace 15824 . 16089) (NCP.RepairNoteFile 16091 . 16858) (NCP.DeleteNoteFile 16860 . 17645) (NCP.NoteFileFromFileName 17647 . 17882) (NCP.FileNameFromNoteFile 17884 . 18515) (NCP.NoteFileMenu 18517 . 18777) (NCP.CheckInNoteFile 18779 . 21578) (NCP.CheckOutNoteFile 21580 . 24002) (NCP.LockFileName 24004 . 24385) (NCP.NumCardSlotsRemaining 24387 . 24965) (NCP.ExpandNoteFileIndex 24967 . 25725) (NCP.NoteFileAddProp 25727 . 25957) (NCP.NoteFileClosingP 25959 . 26455) (NCP.ForgetNoteFileName 26457 . 27020) (NCP.RememberNoteFileName 27022 . 27584) (NCP.ValidNoteFileP 27586 . 27807)) (27882 41152 (NCP.CardTypes 27892 . 28096) (NCP.CreateCardType 28098 . 28759) (NCP.DeleteCardType 28761 . 28933) (NCP.CreateCardTypeStub 28935 . 29828) (NCP.ChangeCardTypeFields 29830 . 30312) (NCP.CardTypeSuper 30314 . 30777) (NCP.CardTypeLinkDisplayMode 30779 . 31340) (NCP.CardTypeFn 31342 . 32440) (NCP.CardTypeVar 32442 . 33549) (NCP.CardTypeP 33551 . 33819) (NCP.CardTypeFnP 33821 . 34122) (NCP.CardTypeVarP 34124 . 34431) (NCP.CardTypeFns 34433 . 34655) (NCP.CardTypeVars 34657 . 34882) (NCP.CardTypeDisplayedInMenu 34884 . 36445) (NCP.IsSubTypeOfP 36447 . 37028) (NCP.TextBasedP 37030 . 37650) (NCP.SketchBasedP 37652 . 38324) (NCP.GraphBasedP 38326 . 38995) (NCP.AutoLoadCardType 38997 . 39261) (NCP.AddSpecialCard 39263 . 39811) (NCP.RemoveSpecialCard 39813 . 40184) (NCP.CardsOfTypes 40186 . 41150)) (41204 54005 (NCP.CreateCard 41214 . 44139) (NCP.CreateTextCard 44141 . 44838) (NCP.CreateFileBox 44840 . 45653) (NCP.CreateBrowserCard 45655 . 48657) (NCP.CreateSketchCard 48659 . 49309) (NCP.CreateGraphCard 49311 . 49954) (NCP.MakeDocument 49956 . 51934) (NCP.MakeLinkIndex 51936 . 53735) (NCP.NewCardP 53737 . 54003)) (54068 64737 (NCP.OpenCard 54078 . 55271) (NCP.CloseCards 55273 . 57358) (NCP.DisplayCard 57360 . 59228) (NCP.UndisplayCards 59230 . 60674) (NCP.CacheCards 60676 . 61596) (NCP.UncacheCards 61598 . 63056) (NCP.CardCachedP 63058 . 63257) (NCP.CardDisplayedP 63259 . 63534) (NCP.CardWindow 63536 . 63939) (NCP.WindowFromCard 63941 . 64218) (NCP.CardFromWindow 64220 . 64455) (NCP.CardFromTextStream 64457 . 64735)) (64782 97845 (NCP.CardType 64792 . 65126) (NCP.ValidCardP 65128 . 65605) (NCP.CardTitle 65607 . 66626) (NCP.FileCards 66628 . 68364) (NCP.UnfileCards 68366 . 71782) (NCP.CardParents 71784 . 72473) (NCP.FileBoxChildren 72475 . 73060) (NCP.CardNeighbors 73062 . 76696) (NCP.GetLinks 76698 . 80742) (NCP.CardPropList 80744 . 81036) (NCP.CardProp 81038 . 82610) (NCP.CardAddProp 82612 . 84094) (NCP.CardDelProp 84096 . 85465) (NCP.CardSubstance 85467 . 86904) (NCP.CardRegion 86906 . 88908) (NCP.CardAddText 88910 . 90270) (NCP.ChangeLoc 90272 . 91785) (NCP.DeleteCards 91787 . 92888) (NCP.FileBoxP 92890 . 93198) (NCP.AllCards 93200 . 93543) (NCP.AllBoxes 93545 . 93899) (NCP.ContentsFileBox 93901 . 94238) (NCP.OrphansFileBox 94240 . 94566) (NCP.ToBeFiledFileBox 94568 . 94893) (NCP.NoteFileFromCard 94895 . 95144) (NCP.CardNoteFile 95146 . 95391) (NCP.SameCardP 95393 . 95875) (NCP.CoerceToCard 95877 . 96187) (NCP.DetermineDisplayRegion 96189 . 96621) (NCP.LockListOfCards 96623 . 97021) (NCP.GetCrossFileLinkDestCard 97023 . 97561) (NCP.CardBeingDeletedP 97563 . 97843)) (97909 101969 (NCP.CollectCards 97919 . 100572) (NCP.CopyCards 100574 . 101496) (NCP.MoveCards 101498 . 101967)) (102017 125952 (NCP.CreateLink 102027 . 103578) (NCP.LocalGlobalLink 103580 . 111795) (NCP.GlobalGlobalLink 111797 . 113836) (NCP.GlobalLocalLink 113838 . 114243) (NCP.LocalLocalLink 114245 . 114655) (NCP.LinkDesc 114657 . 115508) (NCP.LinkDisplayMode 115510 . 117886) (NCP.LinkType 117888 . 121032) (NCP.LinkSource 121034 . 121460) (NCP.LinkDestination 121462 . 121902) (NCP.DeleteLinks 121904 . 122735) (NCP.ValidLinkP 122737 . 122952) (NCP.AllLinks 122954 . 123739) (NCP.SameLinkP 123741 . 124223) (NCP.LinkFromLinkIcon 124225 . 124555) (NCP.MakeLinkIcon 124557 . 124766) (NCP.MarkCardDirty 124768 . 125189) (NCP.LinkIconAttachedBitMap 125191 . 125950)) (126007 132146 (NCP.CreateLinkType 126017 . 126866) (NCP.DeleteLinkType 126868 . 128218) (NCP.RenameLinkType 128220 . 130389) (NCP.LinkTypes 130391 . 130704) (NCP.ReverseLinkTypes 130706 . 131089) (NCP.UserLinkTypes 131091 . 131466) (NCP.ValidLinkTypeP 131468 . 131825) (NCP.SystemLinkTypeP 131827 . 132144)) (132196 133299 (NCP.CardDates 132206 . 133297)) (133335 135004 (NCP.GetOpenEventsCard 133345 . 134031) (NCP.GetCloseEventsCard 134033 . 134730) (NCP.MarkAsNotNeedingFiling 134732 . 135002)) (135055 155830 (NCP.AddSessionIconMenuItem 135065 . 137397) (NCP.RemoveSessionIconMenuItem 137399 . 139859) (NCP.RestoreSessionIconMenu 139861 . 141171) (NCP.AddNoteFileIconMenuItem 141173 . 145347) (NCP.RemoveNoteFileIconMenuItem 145349 . 147408) (NCP.RestoreNoteFileIconMenu 147410 . 148248) (NC.CreateSessionIconNoteFileMenuItem 148250 . 149273) (NCP.AddDefaultNoteFileIconMiddleButtonItems 149275 . 150324) (NCP.NoticedNoteFileNamesMenu 150326 . 151177) (NCP.AddTitleBarMenuItemsToType 151179 . 153155) (NCP.AddTitleBarMenuItemsToWindow 153157 . 155165) (NCP.BringUpSessionIcon 155167 . 155499) (NCP.SessionIconWindow 155501 . 155828)) (155863 182408 (NCP.TitleSearch 155873 . 157417) (NCP.PropSearch 157419 . 159119) (NCP.WhichCard 159121 . 159575) (NCP.WhichNoteFile 159577 . 160342) (NCP.SelectCards 160344 . 162001) (NCP.DocumentParameters 162003 . 164443) (NCP.NoteCardsParameters 164445 . 168007) (NCP.PrintMsg 168009 . 168462) (NCP.ClearMsg 168464 . 168793) (NCP.AskUser 168795 . 169234) (NCP.AskYesOrNo 169236 . 169662) (NCP.RegisterCardByName 169664 . 170765) (NCP.ListRegisteredCards 170767 . 172359) (NCP.LookupCardByName 172361 . 173721) (NCP.UnregisterName 173723 . 174719) (NCP.DisplayedCards 174721 . 175952) (NCP.CardUserDataProp 175954 . 176982) (NCP.NoteFileProp 176984 . 178373) (NCP.SetUpTitleBar 178375 . 178819) (NCP.AddNoteFileIconMiddleButtonItems 178821 . 180189) (NCP.NoteFileIconWindow 180191 . 180440) (NCP.CoerceToInterestedWindow 180442 . 180764) (NCP.SetGrayShade 180766 . 181867) (NCP.MakeTypeIconBitMapSet 181869 . 182406)) (182551 189646 (NCP.ReportError 182561 . 183291) (NCP.ReportWarning 183293 . 183888) (NCP.LinkAnchorDesc 183890 . 186331) (NCP.GetTypeRecord 186333 . 186627) (NCP.AddLeftButtonTitleBarMenuItems 186629 . 187214) (NCP.AddMiddleButtonTitleBarMenuItems 187216 . 187807) (NCP.CoerceToLinkDisplayMode 187809 . 189644)))))STOP
+                    else NIL)))))
+)
+
+
+
+(* ;;; "Global variables.")
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NCP.ErrorBrkWhenFlg NCP.LinkDisplayModes NCP.TypeFnsAssocLst NCP.NoteCardTypeFns 
+       NCP.NoteCardTypeVars NC.MakeDocParameters NC.CardTypes NC.SubstanceTypes NC.SystemLinkLabels 
+       NC.FiledCardLinkLabel NC.SubBoxLinkLabel NC.SelectingCardsMenu NC.SelectingCardMenu 
+       NC.UCASESystemLinkLabels NC.SourceLinkLabel NC.NoteCardsParameters NCP.NoticedNoteFileNames 
+       NCP.GrayShade)
+)
+
+(RPAQ? NCP.GrayShade GRAYSHADE)
+
+(RPAQ? NCP.NoticedNoteFileNames NIL)
+
+(RPAQ? NCP.DefaultLinkIconAttachedBitMapSize 17)
+
+(RPAQ? NCP.ErrorBrkWhenFlg NIL)
+
+(RPAQ? NCP.LinkDisplayModes '(Icon Title Label Both))
+
+(RPAQ? NCP.NoteCardTypeFns '(MakeFn EditFn QuitFn GetFn PutFn CopyFn MarkDirtyFn DirtyPFn 
+                                   CollectLinksFn DeleteLinksFn UpdateLinkIconsFn InsertLinkFn 
+                                   TranslateWindowPositionFn))
+
+(RPAQ? NCP.NoteCardTypeVars '(SuperType StubFlg FullDefinitionFile LinkDisplayMode DefaultWidth 
+                                    DefaultHeight LinkAnchorModesSupported DisplayedInMenuFlg 
+                                    LinkIconAttachedBitMap LeftButtonMenuItems MiddleButtonMenuItems))
+
+
+
+(* ;;; "Following is for backward compatibility with 1.2")
+
+(DECLARE%: DONTEVAL@LOAD 
+
+(MOVD 'NCP.OpenCard 'NCP.BringUpCard T)
+
+(MOVD 'NCP.CacheCards 'NCP.ActivateCards T)
+
+(MOVD 'NCP.CardCachedP 'NCP.ActiveCardP T)
+
+(MOVD 'NCP.CardTypeFnP 'NCP.ValidCardTypeFn T)
+
+(MOVD 'NCP.CardTypeP 'NCP.ValidCardType T)
+
+(MOVD 'NCP.CardTypeVarP 'NCP.ValidCardTypeVar T)
+
+(MOVD 'NCP.CloseCards 'NCP.DeactivateCards T)
+
+(MOVD 'NCP.ValidCardP 'NCP.ValidCard T)
+
+(MOVD 'NCP.ContentsFileBox 'NCP.GetContentsFileBox T)
+
+(MOVD 'NCP.OrphansFileBox 'NCP.GetOrphansFileBox T)
+
+(MOVD 'NCP.ToBeFiledFileBox 'NCP.GetToBeFiledFileBox T)
+
+(MOVD 'NCP.LinkSource 'NCP.GetLinkSource T)
+
+(MOVD 'NCP.LinkDestination 'NCP.GetLinkDestination T)
+
+(MOVD 'NCP.CreateLinkType 'NCP.CreateLinkLabel T)
+
+(MOVD 'NCP.DeleteLinkType 'NCP.DeleteLinkLabel T)
+
+(MOVD 'NCP.RenameLinkType 'NCP.RenameLinkLabel T)
+
+(MOVD 'NCP.LinkTypes 'NCP.GetLinkLabels T)
+
+(MOVD 'NCP.UserLinkTypes 'NCP.GetUserLinkLabels T)
+
+(MOVD 'NCP.ReverseLinkTypes 'NCP.GetReverseLinkLabels T)
+
+(MOVD 'NCP.ValidLinkTypeP 'NCP.ValidLinkLabel T)
+
+(MOVD 'NCP.ValidLinkP 'NCP.ValidLink T)
+)
+
+(PUTPROPS NCPROGINT FILETYPE :FAKE-COMPILE-FILE)
+
+(PUTPROPS NCPROGINT MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+(DECLARE%: DONTEVAL@LOAD DOEVAL@COMPILE DONTCOPY COMPILERVARS 
+
+(ADDTOVAR NLAMA )
+
+(ADDTOVAR NLAML )
+
+(ADDTOVAR LAMA NCP.NoteFileProp NCP.CardUserDataProp NCP.PrintMsg NCP.PropSearch NCP.LinkType 
+                     NCP.LinkDisplayMode NCP.CardRegion NCP.CardSubstance NCP.CardProp NCP.CardTitle
+                     NCP.CardTypeDisplayedInMenu)
+)
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (9188 27866 (NCP.CreateNoteFile 9198 . 9933) (NCP.OpenNoteFile 9935 . 11631) (
+NCP.OpenNoteFileP 11633 . 12011) (NCP.ListOfOpenNoteFiles 12013 . 12447) (NCP.CloseNoteFiles 12449 . 
+13650) (NCP.CheckpointNoteFiles 13652 . 14543) (NCP.AbortNoteFiles 14545 . 15359) (NCP.CompactNoteFile
+ 15361 . 15689) (NCP.CompactNoteFileInPlace 15691 . 15956) (NCP.RepairNoteFile 15958 . 16725) (
+NCP.DeleteNoteFile 16727 . 17512) (NCP.NoteFileFromFileName 17514 . 17749) (NCP.FileNameFromNoteFile 
+17751 . 18382) (NCP.NoteFileMenu 18384 . 18644) (NCP.CheckInNoteFile 18646 . 21549) (
+NCP.CheckOutNoteFile 21551 . 24059) (NCP.LockFileName 24061 . 24442) (NCP.NumCardSlotsRemaining 24444
+ . 25022) (NCP.ExpandNoteFileIndex 25024 . 25782) (NCP.NoteFileAddProp 25784 . 26014) (
+NCP.NoteFileClosingP 26016 . 26512) (NCP.ForgetNoteFileName 26514 . 27077) (NCP.RememberNoteFileName 
+27079 . 27641) (NCP.ValidNoteFileP 27643 . 27864)) (27939 41209 (NCP.CardTypes 27949 . 28153) (
+NCP.CreateCardType 28155 . 28816) (NCP.DeleteCardType 28818 . 28990) (NCP.CreateCardTypeStub 28992 . 
+29885) (NCP.ChangeCardTypeFields 29887 . 30369) (NCP.CardTypeSuper 30371 . 30834) (
+NCP.CardTypeLinkDisplayMode 30836 . 31397) (NCP.CardTypeFn 31399 . 32497) (NCP.CardTypeVar 32499 . 
+33606) (NCP.CardTypeP 33608 . 33876) (NCP.CardTypeFnP 33878 . 34179) (NCP.CardTypeVarP 34181 . 34488) 
+(NCP.CardTypeFns 34490 . 34712) (NCP.CardTypeVars 34714 . 34939) (NCP.CardTypeDisplayedInMenu 34941 . 
+36502) (NCP.IsSubTypeOfP 36504 . 37085) (NCP.TextBasedP 37087 . 37707) (NCP.SketchBasedP 37709 . 38381
+) (NCP.GraphBasedP 38383 . 39052) (NCP.AutoLoadCardType 39054 . 39318) (NCP.AddSpecialCard 39320 . 
+39868) (NCP.RemoveSpecialCard 39870 . 40241) (NCP.CardsOfTypes 40243 . 41207)) (41261 54062 (
+NCP.CreateCard 41271 . 44196) (NCP.CreateTextCard 44198 . 44895) (NCP.CreateFileBox 44897 . 45710) (
+NCP.CreateBrowserCard 45712 . 48714) (NCP.CreateSketchCard 48716 . 49366) (NCP.CreateGraphCard 49368
+ . 50011) (NCP.MakeDocument 50013 . 51991) (NCP.MakeLinkIndex 51993 . 53792) (NCP.NewCardP 53794 . 
+54060)) (54125 64794 (NCP.OpenCard 54135 . 55328) (NCP.CloseCards 55330 . 57415) (NCP.DisplayCard 
+57417 . 59285) (NCP.UndisplayCards 59287 . 60731) (NCP.CacheCards 60733 . 61653) (NCP.UncacheCards 
+61655 . 63113) (NCP.CardCachedP 63115 . 63314) (NCP.CardDisplayedP 63316 . 63591) (NCP.CardWindow 
+63593 . 63996) (NCP.WindowFromCard 63998 . 64275) (NCP.CardFromWindow 64277 . 64512) (
+NCP.CardFromTextStream 64514 . 64792)) (64839 97902 (NCP.CardType 64849 . 65183) (NCP.ValidCardP 65185
+ . 65662) (NCP.CardTitle 65664 . 66683) (NCP.FileCards 66685 . 68421) (NCP.UnfileCards 68423 . 71839) 
+(NCP.CardParents 71841 . 72530) (NCP.FileBoxChildren 72532 . 73117) (NCP.CardNeighbors 73119 . 76753) 
+(NCP.GetLinks 76755 . 80799) (NCP.CardPropList 80801 . 81093) (NCP.CardProp 81095 . 82667) (
+NCP.CardAddProp 82669 . 84151) (NCP.CardDelProp 84153 . 85522) (NCP.CardSubstance 85524 . 86961) (
+NCP.CardRegion 86963 . 88965) (NCP.CardAddText 88967 . 90327) (NCP.ChangeLoc 90329 . 91842) (
+NCP.DeleteCards 91844 . 92945) (NCP.FileBoxP 92947 . 93255) (NCP.AllCards 93257 . 93600) (NCP.AllBoxes
+ 93602 . 93956) (NCP.ContentsFileBox 93958 . 94295) (NCP.OrphansFileBox 94297 . 94623) (
+NCP.ToBeFiledFileBox 94625 . 94950) (NCP.NoteFileFromCard 94952 . 95201) (NCP.CardNoteFile 95203 . 
+95448) (NCP.SameCardP 95450 . 95932) (NCP.CoerceToCard 95934 . 96244) (NCP.DetermineDisplayRegion 
+96246 . 96678) (NCP.LockListOfCards 96680 . 97078) (NCP.GetCrossFileLinkDestCard 97080 . 97618) (
+NCP.CardBeingDeletedP 97620 . 97900)) (97966 102026 (NCP.CollectCards 97976 . 100629) (NCP.CopyCards 
+100631 . 101553) (NCP.MoveCards 101555 . 102024)) (102074 126009 (NCP.CreateLink 102084 . 103635) (
+NCP.LocalGlobalLink 103637 . 111852) (NCP.GlobalGlobalLink 111854 . 113893) (NCP.GlobalLocalLink 
+113895 . 114300) (NCP.LocalLocalLink 114302 . 114712) (NCP.LinkDesc 114714 . 115565) (
+NCP.LinkDisplayMode 115567 . 117943) (NCP.LinkType 117945 . 121089) (NCP.LinkSource 121091 . 121517) (
+NCP.LinkDestination 121519 . 121959) (NCP.DeleteLinks 121961 . 122792) (NCP.ValidLinkP 122794 . 123009
+) (NCP.AllLinks 123011 . 123796) (NCP.SameLinkP 123798 . 124280) (NCP.LinkFromLinkIcon 124282 . 124612
+) (NCP.MakeLinkIcon 124614 . 124823) (NCP.MarkCardDirty 124825 . 125246) (NCP.LinkIconAttachedBitMap 
+125248 . 126007)) (126064 132203 (NCP.CreateLinkType 126074 . 126923) (NCP.DeleteLinkType 126925 . 
+128275) (NCP.RenameLinkType 128277 . 130446) (NCP.LinkTypes 130448 . 130761) (NCP.ReverseLinkTypes 
+130763 . 131146) (NCP.UserLinkTypes 131148 . 131523) (NCP.ValidLinkTypeP 131525 . 131882) (
+NCP.SystemLinkTypeP 131884 . 132201)) (132253 133356 (NCP.CardDates 132263 . 133354)) (133392 135061 (
+NCP.GetOpenEventsCard 133402 . 134088) (NCP.GetCloseEventsCard 134090 . 134787) (
+NCP.MarkAsNotNeedingFiling 134789 . 135059)) (135112 155887 (NCP.AddSessionIconMenuItem 135122 . 
+137454) (NCP.RemoveSessionIconMenuItem 137456 . 139916) (NCP.RestoreSessionIconMenu 139918 . 141228) (
+NCP.AddNoteFileIconMenuItem 141230 . 145404) (NCP.RemoveNoteFileIconMenuItem 145406 . 147465) (
+NCP.RestoreNoteFileIconMenu 147467 . 148305) (NC.CreateSessionIconNoteFileMenuItem 148307 . 149330) (
+NCP.AddDefaultNoteFileIconMiddleButtonItems 149332 . 150381) (NCP.NoticedNoteFileNamesMenu 150383 . 
+151234) (NCP.AddTitleBarMenuItemsToType 151236 . 153212) (NCP.AddTitleBarMenuItemsToWindow 153214 . 
+155222) (NCP.BringUpSessionIcon 155224 . 155556) (NCP.SessionIconWindow 155558 . 155885)) (155920 
+182465 (NCP.TitleSearch 155930 . 157474) (NCP.PropSearch 157476 . 159176) (NCP.WhichCard 159178 . 
+159632) (NCP.WhichNoteFile 159634 . 160399) (NCP.SelectCards 160401 . 162058) (NCP.DocumentParameters 
+162060 . 164500) (NCP.NoteCardsParameters 164502 . 168064) (NCP.PrintMsg 168066 . 168519) (
+NCP.ClearMsg 168521 . 168850) (NCP.AskUser 168852 . 169291) (NCP.AskYesOrNo 169293 . 169719) (
+NCP.RegisterCardByName 169721 . 170822) (NCP.ListRegisteredCards 170824 . 172416) (
+NCP.LookupCardByName 172418 . 173778) (NCP.UnregisterName 173780 . 174776) (NCP.DisplayedCards 174778
+ . 176009) (NCP.CardUserDataProp 176011 . 177039) (NCP.NoteFileProp 177041 . 178430) (
+NCP.SetUpTitleBar 178432 . 178876) (NCP.AddNoteFileIconMiddleButtonItems 178878 . 180246) (
+NCP.NoteFileIconWindow 180248 . 180497) (NCP.CoerceToInterestedWindow 180499 . 180821) (
+NCP.SetGrayShade 180823 . 181924) (NCP.MakeTypeIconBitMapSet 181926 . 182463)) (182608 189703 (
+NCP.ReportError 182618 . 183348) (NCP.ReportWarning 183350 . 183945) (NCP.LinkAnchorDesc 183947 . 
+186388) (NCP.GetTypeRecord 186390 . 186684) (NCP.AddLeftButtonTitleBarMenuItems 186686 . 187271) (
+NCP.AddMiddleButtonTitleBarMenuItems 187273 . 187864) (NCP.CoerceToLinkDisplayMode 187866 . 189701))))
+)
+STOP
