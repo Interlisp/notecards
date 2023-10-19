@@ -1,17 +1,16 @@
-(DEFINE-FILE-INFO READTABLE "INTERLISP" PACKAGE "INTERLISP")
-(FILECREATED "16-Nov-88 09:35:10" {DSK}<LISPFILES>BITMAPEDITOR.;1 289913 
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-      previous date%: "11-Nov-88 14:55:30" 
-|{DESCANSOFILES-2:XSIS:XEROX}<GASKA>NOTECARDS>LYRIC>BITMAPCARD>BITMAPEDITOR.;1|)
+(FILECREATED "18-Oct-2023 21:50:02" {DSK}<home>frank>il>notecards>library>bitmapeditor.;2 284116 
 
+      :CHANGES-TO (FNS EditBitmapBitmapFromFile EditBitmapFileRestore EditBitmapFileSave 
+                       EditBitmapAutoSave EditBitmapFetchPatterns EditBitmapStorePatterns)
 
-(* "
-Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
-")
+      :PREVIOUS-DATE "16-Nov-88 09:35:10" {DSK}<home>frank>il>notecards>library>bitmapeditor.;1)
+
 
 (PRETTYCOMPRINT BITMAPEDITORCOMS)
 
-(RPAQQ BITMAPEDITORCOMS 
+(RPAQQ BITMAPEDITORCOMS
        [(* * Basic window and editor functions)
         (FNS EditBitmap EditBitmapBySections EditBitmapChooseSubitem EditBitmapClose 
              EditBitmapConfirmDiscard EditBitmapDisplayBitmap EditBitmapDoEditItem 
@@ -20,7 +19,7 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
              EditBitmapSetQuit EditBitmapSetStop EditBitmapSetWindowProps EditBitmapStop 
              EditBitmapWaitForFinished)
         (* * Editing functions)
-        (FNS EditBitmapAddBitmap EditBitmapAddBorder EditBitmapAddTexture EditBitmapBitmapEditRegion 
+        (FNS EditBitmapAddBitmap EditBitmapAddBorder EditBitmapAddTexture EditBitmapBitmapEditRegion
              EditBitmapBitmapFromFile EditBitmapBlock? EditBitmapChangeBitmapSize 
              EditBitmapChangeBitmapSizeMaybe EditBitmapCheckpointRestore EditBitmapCheckpointSave 
              EditBitmapClearAllButRegion EditBitmapClearBitmap EditBitmapClearRegion 
@@ -28,7 +27,7 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
              EditBitmapDoRotation EditBitmapDrawArrowhead EditBitmapDrawArrowheadFilled 
              EditBitmapDrawArrowheadOpen EditBitmapDrawBox EditBitmapDrawCircle EditBitmapDrawCurve 
              EditBitmapDrawCurveClosed EditBitmapDrawCurveOpen EditBitmapDrawEllipse 
-             EditBitmapDrawGrid EditBitmapDrawGridRegion EditBitmapDrawGridWindow EditBitmapDrawLines 
+             EditBitmapDrawGrid EditBitmapDrawGridRegion EditBitmapDrawGridWindow EditBitmapDrawLines
              EditBitmapDrawPolygon EditBitmapDrawText EditBitmapExpandBitmap EditBitmapFileRestore 
              EditBitmapFileSave EditBitmapFillBox EditBitmapFillBoxSpecified EditBitmapFillRegion 
              EditBitmapFillRegionDefault EditBitmapFillRegionSpecified EditBitmapGetShade 
@@ -39,7 +38,7 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
              EditBitmapPixelEditWindow EditBitmapPlacePattern EditBitmapResetBitmap 
              EditBitmapRotateBitmap EditBitmapSaveBitmap EditBitmapSetPatternAttribute 
              EditBitmapSetPatternDone EditBitmapSetPatternMenu EditBitmapSetSide 
-             EditBitmapSetSideDone EditBitmapSetSideMenu EditBitmapShiftBitmap EditBitmapShrinkBitmap 
+             EditBitmapSetSideDone EditBitmapSetSideMenu EditBitmapShiftBitmap EditBitmapShrinkBitmap
              EditBitmapTesselate EditBitmapTesselateBitmap EditBitmapTesselateRegion 
              EditBitmapTrimBitmap EditBitmapTrimSides EditBitmapUndo)
         (* * Averaging functions)
@@ -49,7 +48,7 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
         (FNS EditBitmapAutoSave EditBitmapSetAutoSave EditBitmapSetAutoSaveFile 
              EditBitmapSetAutoSaveInterval EditBitmapShowAutoSave)
         (* * Magnification functions)
-        (FNS EditBitmapMagnify EditBitmapMagnifyBitmap EditBitmapMagnifyChange EditBitmapMagnifyClose 
+        (FNS EditBitmapMagnify EditBitmapMagnifyBitmap EditBitmapMagnifyChange EditBitmapMagnifyClose
              EditBitmapMagnifyEdit EditBitmapMagnifyEditButtonEventFn EditBitmapMagnifyMoved 
              EditBitmapMagnifySelectButtonEventFn)
         (* * Pixel follow funtions)
@@ -82,7 +81,7 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
         (FNS EditBitmapAirbrushOutline EditBitmapAirbrushPaint EditBitmapArrowhead 
              EditBitmapBitmapInvertDiagonal EditBitmapBitmapInvertHorizontal 
              EditBitmapBitmapInvertVertical EditBitmapBitmapRotate EditBitmapBitmapRotateArbitrary 
-             EditBitmapBitmapShift EditBitmapBorder EditBitmapBoxInput EditBitmapCircleGetRadiusPoint 
+             EditBitmapBitmapShift EditBitmapBorder EditBitmapBoxInput EditBitmapCircleGetRadiusPoint
              EditBitmapCircleInput EditBitmapCircleShow EditBitmapConstrainRegion 
              EditBitmapCopyBitmap EditBitmapCreatePixelSelectionCursor EditBitmapCursorFields 
              EditBitmapCurveInput EditBitmapDistance EditBitmapDrawOverConnectedPixels 
@@ -108,7 +107,7 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
               EditBitmapDefaultArrowHeight EditBitmapDefaultArrowWidth 
               EditBitmapDefaultAutoSaveDeltaTime EditBitmapDefaultAveraging 
               EditBitmapDefaultBrushSize EditBitmapDefaultFont EditBitmapDefaultListOfDashings 
-              EditBitmapDefaultListOfTextures EditBitmapDefaultPaintBrushSize EditBitmapMaxArrowSize 
+              EditBitmapDefaultListOfTextures EditBitmapDefaultPaintBrushSize EditBitmapMaxArrowSize
               EditBitmapMaxBrushSize EditBitmapMaxGridSize EditBitmapMaxPatternSize 
               EditBitmapMenuFont EditBitmapMenuItems EditBitmapMenuPointer EditBitmapMessageFont 
               EditBitmapMinArrowSize EditBitmapMinPatternSize EditBitmapMinRegionSize 
@@ -121,7 +120,7 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
                EditBitmapDefaultPaintBrushSize EditBitmapEllipseCenter EditBitmapEllipseMajor 
                EditBitmapEllipseMinor EditBitmapListOfDashings EditBitmapListOfTextures 
                EditBitmapMagnifyCursor EditBitmapMaxArrowSize EditBitmapMaxBrushSize 
-               EditBitmapMaxGridSize EditBitmapMaxPatternSize EditBitmapMenuFont EditBitmapMenuItems 
+               EditBitmapMaxGridSize EditBitmapMaxPatternSize EditBitmapMenuFont EditBitmapMenuItems
                EditBitmapMenuPointer EditBitmapMessageFont EditBitmapMinArrowSize 
                EditBitmapMinPatternSize EditBitmapMinRegionSize EditBitmapMinSize 
                EditBitmapPixelSelectBoxSize EditBitmapSpotMarker)
@@ -515,16 +514,16 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
         then (EditBitmapDisplayBitmap Window])
 
 (EditBitmapBitmapFromFile
-  [LAMBDA (File)                                             (* Gaska " 6-Oct-88 10:34")
-          
-          (* * Retrieve a bitmap from a file)
+  [LAMBDA (File)                                             (* Gaska " 6-Oct-88 10:34")
+
+         (* * Retrieve a bitmap from a file)
 
     (if (AND File (FINDFILE File))
-        then (LET [(Stream (GETSTREAM (OPENFILE File 'INPUT)
-                                  'INPUT]
-                  (RESETLST (RESETSAVE (CURSOR WAITINGCURSOR))
-                         (RESETSAVE NIL (LIST 'CLOSEF Stream))
-                         (EditBitmapReadBitmap Stream)))
+        then (LET [(Stream (OPENSTREAM File 'INPUT]
+                  (RESETLST
+                      (RESETSAVE (CURSOR WAITINGCURSOR))
+                      (RESETSAVE NIL (LIST 'CLOSEF Stream))
+                      (EditBitmapReadBitmap Stream)))
       else (PRIN1 (CONCAT "Can't find file: " File (CHARACTER 13)))
            (ERROR!])
 
@@ -1008,38 +1007,38 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
                                                                     (CDR Factors])
 
 (EditBitmapFileRestore
-  [LAMBDA (Window)                                           (* Gaska "23-Sep-88 09:41")
-          
-          (* * Fetch bitmap from a file)
+  [LAMBDA (Window)                                           (* Gaska "23-Sep-88 09:41")
+
+         (* * Fetch bitmap from a file)
 
     (if (EditBitmapConfirmDiscard Window)
         then (LET* [(File (EditBitmapGetFileName Window NIL T))
-                    (Bitmap (AND File (LET [(Stream (GETSTREAM (OPENFILE File 'INPUT)
-                                                           'INPUT]
-                                           (RESETLST (RESETSAVE (CURSOR WAITINGCURSOR))
-                                                  (RESETSAVE NIL (LIST 'CLOSEF Stream))
-                                                  (EditBitmapReadBitmap Stream]
+                    (Bitmap (AND File (LET [(Stream (OPENSTREAM File 'INPUT]
+                                           (RESETLST
+                                               (RESETSAVE (CURSOR WAITINGCURSOR))
+                                               (RESETSAVE NIL (LIST 'CLOSEF Stream))
+                                               (EditBitmapReadBitmap Stream))]
                    (if Bitmap
                        then (EditBitmapChangeBitmapSizeMaybe Window Bitmap)
                             (EditBitmapMakeUndirty Window)
                             NIL])
 
 (EditBitmapFileSave
-  [LAMBDA (Window)                                           (* Gaska "28-Oct-88 13:00")
-          
-          (* * Store bitmap on a file)
+  [LAMBDA (Window)                                           (* Gaska "28-Oct-88 13:00")
+
+         (* * Store bitmap on a file)
 
     (LET* [(File (EditBitmapGetFileName Window NIL NIL (WINDOWPROP Window 'SaveFileName]
           (if File
-              then (LET [(Stream (GETSTREAM (OPENFILE File 'OUTPUT)
-                                        'OUTPUT]
-                        (RESETLST (RESETSAVE (CURSOR WAITINGCURSOR))
-                               (RESETSAVE NIL (LIST 'CLOSEF Stream))
-                               (EditBitmapWriteBitmap Stream (WINDOWPROP Window 'Bitmap))
-                               (EditBitmapMessage Window (CONCAT "Bitmap has been saved on file: "
-                                                                (FULLNAME File)))
-                               (WINDOWPROP Window 'SaveFileName File)
-                               (EditBitmapMakeUndirty Window])
+              then (LET [(Stream (OPENSTREAM File 'OUTPUT]
+                        (RESETLST
+                            (RESETSAVE (CURSOR WAITINGCURSOR))
+                            (RESETSAVE NIL (LIST 'CLOSEF Stream))
+                            (EditBitmapWriteBitmap Stream (WINDOWPROP Window 'Bitmap))
+                            (EditBitmapMessage Window (CONCAT "Bitmap has been saved on file: "
+                                                             (FULLNAME File)))
+                            (WINDOWPROP Window 'SaveFileName File)
+                            (EditBitmapMakeUndirty Window))])
 
 (EditBitmapFillBox
   [LAMBDA (Window Shade)                                     (* Gaska "23-Sep-88 11:09")
@@ -1890,9 +1889,9 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
 (DEFINEQ
 
 (EditBitmapAutoSave
-  [LAMBDA (Window)                                           (* Gaska "18-Sep-88 12:44")
-          
-          (* * Automatically save the bitmap if conditions are correct)
+  [LAMBDA (Window)                                           (* Gaska "18-Sep-88 12:44")
+
+         (* * Automatically save the bitmap if conditions are correct)
 
     (if [AND (WINDOWPROP Window 'AutoSave)
              (IGEQ (IDIFFERENCE (IDATE)
@@ -1901,14 +1900,14 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
         then (OBTAIN.MONITORLOCK (WINDOWPROP Window 'Monitor))
              [LET* [(File (WINDOWPROP Window 'AutoSaveFileName]
                    (EditBitmapMessage Window "Saving bitmap")
-                   (RESETLST (RESETSAVE (CURSOR WAITINGCURSOR))
-                          (RESETSAVE NIL (LIST 'CLOSEF (MKATOM File)))
-                          [LET [(Stream (GETSTREAM (OPENFILE File 'OUTPUT)
-                                               'OUTPUT]
-                               (EditBitmapWriteBitmap Stream (WINDOWPROP Window 'Bitmap]
-                          (WINDOWPROP Window 'AutoSaveLastSave (IDATE))
-                          (EditBitmapMessage Window (CONCAT "Bitmap has been saved on file: "
-                                                           (FULLNAME File]
+                   (RESETLST
+                       (RESETSAVE (CURSOR WAITINGCURSOR))
+                       (RESETSAVE NIL (LIST 'CLOSEF (MKATOM File)))
+                       [LET [(Stream (OPENSTREAM File 'OUTPUT]
+                            (EditBitmapWriteBitmap Stream (WINDOWPROP Window 'Bitmap]
+                       (WINDOWPROP Window 'AutoSaveLastSave (IDATE))
+                       (EditBitmapMessage Window (CONCAT "Bitmap has been saved on file: "
+                                                        (FULLNAME File))))]
              (RELEASE.MONITORLOCK (WINDOWPROP Window 'Monitor])
 
 (EditBitmapSetAutoSave
@@ -2501,22 +2500,22 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
       else (EditBitmapMessage Window "No patterns available for editing"])
 
 (EditBitmapFetchPatterns
-  [LAMBDA (Window)                                           (* Gaska "23-Sep-88 09:43")
-          
-          (* * Fetch patterns from a file)
+  [LAMBDA (Window)                                           (* Gaska "23-Sep-88 09:43")
+
+         (* * Fetch patterns from a file)
 
     (LET* [(File (EditBitmapGetFileName Window NIL T))
-           (Patterns (AND File (LET [(Stream (GETSTREAM (OPENFILE File 'INPUT)
-                                                    'INPUT]
+           (Patterns (AND File (LET [(Stream (OPENSTREAM File 'INPUT]
                                     (if File
-                                        then (RESETLST (RESETSAVE (CURSOR WAITINGCURSOR))
-                                                    (RESETSAVE NIL (LIST 'CLOSEF Stream))
-                                                    (until (EOFP Stream) collect (
-                                                                                 EditBitmapReadBitmap
-                                                                                  Stream]
+                                        then (RESETLST
+                                                 (RESETSAVE (CURSOR WAITINGCURSOR))
+                                                 (RESETSAVE NIL (LIST 'CLOSEF Stream))
+                                                 (until (EOFP Stream) collect (EditBitmapReadBitmap
+                                                                               Stream)))]
           (if Patterns
               then (if (OR (NULL (WINDOWPROP Window 'Patterns))
-                           (EQ (EditBitmapPopUpMenu '(REPLACE ADD) "Options")
+                           (EQ (EditBitmapPopUpMenu '(REPLACE ADD)
+                                      "Options")
                                'REPLACE))
                        then (WINDOWPROP Window 'Patterns Patterns)
                      else (if (WINDOWPROP Window 'Patterns)
@@ -2662,21 +2661,21 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
           Window])
 
 (EditBitmapStorePatterns
-  [LAMBDA (Window)                                           (* Gaska "23-Sep-88 09:44")
-          
-          (* * Store patterns on a file)
+  [LAMBDA (Window)                                           (* Gaska "23-Sep-88 09:44")
+
+         (* * Store patterns on a file)
 
     (if (WINDOWPROP Window 'Patterns)
         then [LET* ((File (EditBitmapGetFileName Window)))
                    (if File
-                       then (LET [(Stream (GETSTREAM (OPENFILE File 'OUTPUT)
-                                                 'OUTPUT]
-                                 (RESETLST (RESETSAVE (CURSOR WAITINGCURSOR))
-                                        (RESETSAVE NIL (LIST 'CLOSEF Stream))
-                                        (for Pattern in (WINDOWPROP Window 'Patterns)
-                                           do (EditBitmapWriteBitmap Stream Pattern))
-                                        (EditBitmapMessage Window (CONCAT "Patterns stored on file: "
-                                                                         (FULLNAME File]
+                       then (LET [(Stream (OPENSTREAM File 'OUTPUT]
+                                 (RESETLST
+                                     (RESETSAVE (CURSOR WAITINGCURSOR))
+                                     (RESETSAVE NIL (LIST 'CLOSEF Stream))
+                                     (for Pattern in (WINDOWPROP Window 'Patterns)
+                                        do (EditBitmapWriteBitmap Stream Pattern))
+                                     (EditBitmapMessage Window (CONCAT "Patterns stored on file: "
+                                                                      (FULLNAME File))))]
       else (EditBitmapMessage Window "No patterns available"])
 
 (EditBitmapTrimPattern
@@ -5012,235 +5011,192 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
 
 (RPAQQ EditBitmapMenuFont (HELVETICA 12 BRR))
 
-(RPAQQ EditBitmapMenuItems [("Paint" (EditBitmapChooseSubitem)
-                                   "Invoke a paint editor"
-                                   (SUBITEMS ("Bitmap Editor Paint with Brush" 
-                                                    EditBitmapPaintWithBrush 
-                                                  "Use the Bitmap Editor paint facility with a brush"
-                                                    )
-                                          ("Bitmap Editor Paint with Airbrush" 
-                                                 EditBitmapPaintWithAirbrush 
-                                               "Use the Bitmap Editor paint facility with a airbrush"
-                                                 )
-                                          ("Bitmap Editor Paint with Pattern" 
-                                                 EditBitmapPaintWithBitmap 
-                                                 "Use the Bitmap Editor paint facility with a bitmap"
-                                                 )))
-                            ("Edit" (EditBitmapChooseSubitem)
-                                   "Invoke an editor"
-                                   (SUBITEMS ("Magnifier Pixel Editor" EditBitmapMagnifyEdit 
-                                                    "Invoke a 16 X 16 bit magnifier pixel editor")
-                                          ("Pixel Edit Bitmap" EditBitmapPixelEditWindow 
-                                             "Invoke the bitmap editor to precisely edit the bitmap."
-                                                 )
-                                          ("Pixel Edit Region" EditBitmapPixelEditRegion 
-                              "Invoke the bitmap editor to precisely edit a region within the bitmap"
-                                                 )
-                                          ("Edit Region" EditBitmapBitmapEditRegion 
-                                                 "Start another bitmap editor on a region")))
-                            ("Copy Operations" (EditBitmapChooseSubitem)
-                                   "Bitmap copy operations"
-                                   (SUBITEMS ("Create New Copy of Bitmap" EditBitmapCopyCreate 
-                                                    "Create a copy of the main bitmap")
-                                          ("Edit Copy of Bitmap" EditBitmapCopyEdit 
-                                                 "Edit the previously saved copy of the bitmap")
-                                          ("Apply Operation to Copy and Original" 
-                                                 EditBitmapCopyOperate 
-                              "Apply the currently selected operation upon the copy and the original"
-                                                 )))
-                            ("Draw Lines" EditBitmapDrawLines "Draw one or more line segments")
-                            ("Draw Arrow" EditBitmapDrawArrowheadOpen 
-                                   "Draw an open arrowhead at the end of one or more line segments"
-                                   (SUBITEMS ("Draw Filled Arrow" EditBitmapDrawArrowheadFilled 
-                                    "Draw a filled arrowhead at the end of one or more line segments"
-                                                    )))
-                            ("Draw Rectangle" EditBitmapDrawBox "Draw a rectangle")
-                            ("Draw Polygon" EditBitmapDrawPolygon "Draw a polygon")
-                            ("Draw Circle" EditBitmapDrawCircle "Draw a circle")
-                            ("Draw Ellipse" EditBitmapDrawEllipse "Draw an ellipse")
-                            ("Draw Open Curve" EditBitmapDrawCurveOpen "Draw an open curve")
-                            ("Draw Closed Curve" EditBitmapDrawCurveClosed "Draw a closed curve")
-                            ("Draw Text" EditBitmapDrawText "Draw text")
-                            ("Draw Grid" EditBitmapDrawGridWindow "Cover the bitmap with a grid"
-                                   (SUBITEMS ("Draw Grid in Region" EditBitmapDrawGridRegion 
-                                                    "Draw a grid in a region of the bitmap")))
-                            ["Place Pattern" EditBitmapPlacePattern "Place copies of a pattern"
-                                   (SUBITEMS ("Pattern Array" EditBitmapPatternArray 
-                                                    "Place an array of patterns")
-                                          ("Tesselate" EditBitmapTesselateBitmap 
-                                                 "Cover the bitmap with a repeated pattern"
-                                                 (SUBITEMS ("Tesselate Region" 
-                                                                  EditBitmapTesselateRegion 
+(RPAQQ EditBitmapMenuItems
+       [("Paint" (EditBitmapChooseSubitem)
+               "Invoke a paint editor"
+               (SUBITEMS ("Bitmap Editor Paint with Brush" EditBitmapPaintWithBrush 
+                                "Use the Bitmap Editor paint facility with a brush")
+                      ("Bitmap Editor Paint with Airbrush" EditBitmapPaintWithAirbrush 
+                             "Use the Bitmap Editor paint facility with a airbrush")
+                      ("Bitmap Editor Paint with Pattern" EditBitmapPaintWithBitmap 
+                             "Use the Bitmap Editor paint facility with a bitmap")))
+        ("Edit" (EditBitmapChooseSubitem)
+               "Invoke an editor"
+               (SUBITEMS ("Magnifier Pixel Editor" EditBitmapMagnifyEdit 
+                                "Invoke a 16 X 16 bit magnifier pixel editor")
+                      ("Pixel Edit Bitmap" EditBitmapPixelEditWindow 
+                             "Invoke the bitmap editor to precisely edit the bitmap.")
+                      ("Pixel Edit Region" EditBitmapPixelEditRegion 
+                             "Invoke the bitmap editor to precisely edit a region within the bitmap")
+                      ("Edit Region" EditBitmapBitmapEditRegion 
+                             "Start another bitmap editor on a region")))
+        ("Copy Operations" (EditBitmapChooseSubitem)
+               "Bitmap copy operations"
+               (SUBITEMS ("Create New Copy of Bitmap" EditBitmapCopyCreate 
+                                "Create a copy of the main bitmap")
+                      ("Edit Copy of Bitmap" EditBitmapCopyEdit 
+                             "Edit the previously saved copy of the bitmap")
+                      ("Apply Operation to Copy and Original" EditBitmapCopyOperate 
+                             "Apply the currently selected operation upon the copy and the original")
+                      ))
+        ("Draw Lines" EditBitmapDrawLines "Draw one or more line segments")
+        ("Draw Arrow" EditBitmapDrawArrowheadOpen 
+               "Draw an open arrowhead at the end of one or more line segments"
+               (SUBITEMS ("Draw Filled Arrow" EditBitmapDrawArrowheadFilled 
+                                "Draw a filled arrowhead at the end of one or more line segments")))
+        ("Draw Rectangle" EditBitmapDrawBox "Draw a rectangle")
+        ("Draw Polygon" EditBitmapDrawPolygon "Draw a polygon")
+        ("Draw Circle" EditBitmapDrawCircle "Draw a circle")
+        ("Draw Ellipse" EditBitmapDrawEllipse "Draw an ellipse")
+        ("Draw Open Curve" EditBitmapDrawCurveOpen "Draw an open curve")
+        ("Draw Closed Curve" EditBitmapDrawCurveClosed "Draw a closed curve")
+        ("Draw Text" EditBitmapDrawText "Draw text")
+        ("Draw Grid" EditBitmapDrawGridWindow "Cover the bitmap with a grid" (SUBITEMS (
+                                                                                "Draw Grid in Region"
+                                                                                        
+                                                                             EditBitmapDrawGridRegion
+                                                                                        
+                                                              "Draw a grid in a region of the bitmap"
+                                                                                        )))
+        ["Place Pattern" EditBitmapPlacePattern "Place copies of a pattern"
+               (SUBITEMS ("Pattern Array" EditBitmapPatternArray "Place an array of patterns")
+                      ("Tesselate" EditBitmapTesselateBitmap 
+                             "Cover the bitmap with a repeated pattern" (SUBITEMS ("Tesselate Region"
+                                                                                   
+                                                                            EditBitmapTesselateRegion
+                                                                                   
                                                              "Cover a region with a repeated pattern"
-                                                                  ]
-                            ("Follow Pixels" (EditBitmapChooseSubitem)
-                                   
-                 "Erase or draw over all connected 'on' pixels from a given starting region or point"
-                                   (SUBITEMS ("Erase Connected Pixels from Region" 
-                                                    EditBitmapErasePixelsRegion 
-                                       "Erase all connected 'on' pixels from a given starting region"
-                                                    )
-                                          ("Erase Connected Pixels from Selected Pixel" 
-                                                 EditBitmapErasePixelsSingle 
-                                        "Erase all connected 'on' pixels from a given starting pixel"
-                                                 )
-                                          ("Draw Over Connected Pixels from Region" 
-                                                 EditBitmapDrawOverPixelsRegion 
-                                   "Draw over all connected 'on' pixels from a given starting region"
-                                                 )
-                                          ("Draw Over Connected Pixels from Selected Pixel" 
-                                                 EditBitmapDrawOverPixelsSingle 
-                                    "Draw over all connected 'on' pixels from a given starting pixel"
-                                                 )))
-                            ("Input From Screen" EditBitmapAddBitmap "Add a bitmap from the screen")
-                            ("Move a Region" EditBitmapMoveRectangularRegion 
-                                   "Move a rectangular region in the bitmap")
-                            ("Transform" (EditBitmapChooseSubitem)
-                                   "Subitems transform the bitmap in various ways."
-                                   (SUBITEMS ("Distort Region" EditBitmapDistort 
-                                                    "Distort a rectangular region")
-                                          ("Invert" EditBitmapInvertBitmap "Invert the bitmap")
-                                          ("Shift" EditBitmapShiftBitmap "Shift the bitmap")
-                                          ("Rotate" EditBitmapRotateBitmap "Rotate the bitmap")
-                                          ("Shrink" EditBitmapShrinkBitmap "Shrink the bitmap")
-                                          ("Expand" EditBitmapExpandBitmap "Expand the Bitmap")
-                                          ("Smaller" EditBitmapMakeSmaller 
-                                                 "Make the bitmap smaller by sweeping out a region")
-                                          ("Exact Size" EditBitmapMakeExact 
-                                                 "Make the bitmap smaller to an exact size")))
-                            ["Coloring" (EditBitmapChooseSubitem)
-                                   "Subitems manipulate the coloring of the bitmap in various ways"
-                                   (SUBITEMS ("Add Texture" EditBitmapAddTexture 
-                                                    "Add texture to the bitmap")
-                                          ("Fill Region(s)" EditBitmapFillRegionDefault 
-                                         "Fill white region(s) of the bitmap with the default color."
-                                                 (SUBITEMS ("Fill Region(s) with Specified Color"
-                                                            EditBitmapFillRegionSpecified 
+                                                                                   ]
+        ("Follow Pixels" (EditBitmapChooseSubitem)
+               "Erase or draw over all connected 'on' pixels from a given starting region or point"
+               (SUBITEMS ("Erase Connected Pixels from Region" EditBitmapErasePixelsRegion 
+                                "Erase all connected 'on' pixels from a given starting region")
+                      ("Erase Connected Pixels from Selected Pixel" EditBitmapErasePixelsSingle 
+                             "Erase all connected 'on' pixels from a given starting pixel")
+                      ("Draw Over Connected Pixels from Region" EditBitmapDrawOverPixelsRegion 
+                             "Draw over all connected 'on' pixels from a given starting region")
+                      ("Draw Over Connected Pixels from Selected Pixel" 
+                             EditBitmapDrawOverPixelsSingle 
+                             "Draw over all connected 'on' pixels from a given starting pixel")))
+        ("Input From Screen" EditBitmapAddBitmap "Add a bitmap from the screen")
+        ("Move a Region" EditBitmapMoveRectangularRegion "Move a rectangular region in the bitmap")
+        ("Transform" (EditBitmapChooseSubitem)
+               "Subitems transform the bitmap in various ways."
+               (SUBITEMS ("Distort Region" EditBitmapDistort "Distort a rectangular region")
+                      ("Invert" EditBitmapInvertBitmap "Invert the bitmap")
+                      ("Shift" EditBitmapShiftBitmap "Shift the bitmap")
+                      ("Rotate" EditBitmapRotateBitmap "Rotate the bitmap")
+                      ("Shrink" EditBitmapShrinkBitmap "Shrink the bitmap")
+                      ("Expand" EditBitmapExpandBitmap "Expand the Bitmap")
+                      ("Smaller" EditBitmapMakeSmaller 
+                             "Make the bitmap smaller by sweeping out a region")
+                      ("Exact Size" EditBitmapMakeExact "Make the bitmap smaller to an exact size")))
+        ["Coloring" (EditBitmapChooseSubitem)
+               "Subitems manipulate the coloring of the bitmap in various ways"
+               (SUBITEMS ("Add Texture" EditBitmapAddTexture "Add texture to the bitmap")
+                      ("Fill Region(s)" EditBitmapFillRegionDefault 
+                             "Fill white region(s) of the bitmap with the default color."
+                             (SUBITEMS ("Fill Region(s) with Specified Color" 
+                                              EditBitmapFillRegionSpecified 
                                          "Fill white region(s) of the bitmap with a specified color."
-                                                            )))
-                                          ("Fill Box" EditBitmapFillBox 
-                                                 "Fills a box with the default color"
-                                                 (SUBITEMS ("Fill Box with Specified Color" 
-                                                                  EditBitmapFillBoxSpecified 
-                                                                 "Fills a box with a specified color"
-                                                                  )))
-                                          ("Switch Colors" EditBitmapInvertColor 
-                                          "Switch black for white and white for black in the bitmap."
-                                                 (SUBITEMS ("Switch Colors in Region" 
-                                                                  EditBitmapInvertColorRegion 
+                                              )))
+                      ("Fill Box" EditBitmapFillBox "Fills a box with the default color"
+                             (SUBITEMS ("Fill Box with Specified Color" EditBitmapFillBoxSpecified 
+                                              "Fills a box with a specified color")))
+                      ("Switch Colors" EditBitmapInvertColor 
+                             "Switch black for white and white for black in the bitmap."
+                             (SUBITEMS ("Switch Colors in Region" EditBitmapInvertColorRegion 
                                              "Switch black for white and white for black in a region"
-                                                                  )))
-                                          ("Averaging" EditBitmapAveraging 
-                                                 "Apply an averaging array to the bitmap"
-                                                 (SUBITEMS ("Show Specification Format" (
-                                                                        EditBitmapShowAveragingFormat
-                                                                                         )
-                                                                  
-                                                    "Show the format of the averaging specification."
-                                                                  )))
-                                          ("Mask" EditBitmapMask "Create a mask as used in ICONW")
-                                          ("Clear" EditBitmapClearBitmap 
-                                                 "Set the bitmap to be all white."
-                                                 (SUBITEMS ("Clear Region" EditBitmapClearRegion 
-                                                                  "Clear a region to all white.")
-                                                        ("Clear All But Region" 
-                                                               EditBitmapClearAllButRegion 
+                                              )))
+                      ("Averaging" EditBitmapAveraging "Apply an averaging array to the bitmap"
+                             (SUBITEMS ("Show Specification Format" (EditBitmapShowAveragingFormat)
+                                              "Show the format of the averaging specification.")))
+                      ("Mask" EditBitmapMask "Create a mask as used in ICONW")
+                      ("Clear" EditBitmapClearBitmap "Set the bitmap to be all white."
+                             (SUBITEMS ("Clear Region" EditBitmapClearRegion 
+                                              "Clear a region to all white.")
+                                    ("Clear All But Region" EditBitmapClearAllButRegion 
                                        "Clear the entire bitmap except for the given region to white"
-                                                               ]
-                            ("Edges" (EditBitmapChooseSubitem)
-                                   "Remove white space or add a border to the bitmap"
-                                   (SUBITEMS ("Trim White Space" EditBitmapTrimBitmap 
-                                                "Remove the white space from the edges of the bitmap"
-                                                    )
-                                          ("Trim Sides Precisely" EditBitmapTrimSides 
-                                                 "Trim bits from one or more sides of the bitmap")
-                                          ("Add Border" EditBitmapAddBorder 
-                                                 "Add a border to the bitmap")))
-                            ("Pattern Management" (EditBitmapChooseSubitem)
-                                   "Subitems add/delete/edit patterns"
-                                   (SUBITEMS ("Add pattern" (EditBitmapAddPattern)
-                                                    "Add a pattern")
-                                          ("Delete Pattern" (EditBitmapDeletePattern)
-                                                 "Delete a pattern")
-                                          ("Store Patterns" (EditBitmapStorePatterns)
-                                                 "Store the patterns on a file")
-                                          ("Retrieve Patterns" (EditBitmapFetchPatterns)
-                                                 "Read patterns from a file")
-                                          ("Trim Pattern" (EditBitmapTrimPattern)
-                                                 
-                                               "Remove the white space from the edges of the pattern"
-                                                 )
-                                          ("Copy/Edit Pattern" (EditBitmapCopyEditPattern)
-                                                 "Make a copy of a pattern and edit the copy")
-                                          ("Edit Pattern" (EditBitmapEditPattern)
-                                                 "Edit a pattern")))
-                            ("Undo" (EditBitmapUndo)
-                                   "Undo the last editing operation")
-                            ("Save/Restore" (EditBitmapChooseSubitem)
-                                   "Save/restore bitmap"
-                                   (SUBITEMS ("Auto-Save Status" (EditBitmapShowAutoSave)
-                                                    "Display auto-save parameters"
-                                                    (SUBITEMS ("Set Auto-Save" (EditBitmapSetAutoSave
-                                                                                )
-                                                                     "Turn auto-save on or off")
-                                                           ("Auto-Save File Name" (
-                                                                            EditBitmapSetAutoSaveFile
-                                                                                   )
-                                                                  "Specify the auto-save file name")
-                                                           ("Auto-Save Interval" (
-                                                                        EditBitmapSetAutoSaveInterval
-                                                                                  )
-                                                                  
-                                                                "Specify the auto-save time interval"
-                                                                  )))
-                                          ("Checkpoint Save" (EditBitmapCheckpointSave)
-                                                 "Save the current state of the bitmap")
-                                          ("Checkpoint Restore" EditBitmapCheckpointRestore 
-                                                 "Restore bitmap to last checkpoint")
-                                          ("Reset" EditBitmapResetBitmap 
-                                             "Reset the bitmap to the beginning of the edit session."
-                                                 )
-                                          ("Put to File" (EditBitmapFileSave)
-                                                 "Write the bitmap to a file")
-                                          ("Get From File" EditBitmapFileRestore 
-                                                 "Read a bitmap from a file")))
-                            ("Insert Bitmap" (EditBitmapChooseSubitem)
-                                   "Insert the bitmap into TEdit or SKETCH"
-                                   (SUBITEMS ("Insert Bitmap Into TEdit" 
-                                                    EditBitmapInsertBitmapIntoTedit 
+                                           ]
+        ("Edges" (EditBitmapChooseSubitem)
+               "Remove white space or add a border to the bitmap"
+               (SUBITEMS ("Trim White Space" EditBitmapTrimBitmap 
+                                "Remove the white space from the edges of the bitmap")
+                      ("Trim Sides Precisely" EditBitmapTrimSides 
+                             "Trim bits from one or more sides of the bitmap")
+                      ("Add Border" EditBitmapAddBorder "Add a border to the bitmap")))
+        ("Pattern Management" (EditBitmapChooseSubitem)
+               "Subitems add/delete/edit patterns"
+               (SUBITEMS ("Add pattern" (EditBitmapAddPattern)
+                                "Add a pattern")
+                      ("Delete Pattern" (EditBitmapDeletePattern)
+                             "Delete a pattern")
+                      ("Store Patterns" (EditBitmapStorePatterns)
+                             "Store the patterns on a file")
+                      ("Retrieve Patterns" (EditBitmapFetchPatterns)
+                             "Read patterns from a file")
+                      ("Trim Pattern" (EditBitmapTrimPattern)
+                             "Remove the white space from the edges of the pattern")
+                      ("Copy/Edit Pattern" (EditBitmapCopyEditPattern)
+                             "Make a copy of a pattern and edit the copy")
+                      ("Edit Pattern" (EditBitmapEditPattern)
+                             "Edit a pattern")))
+        ("Undo" (EditBitmapUndo)
+               "Undo the last editing operation")
+        ("Save/Restore" (EditBitmapChooseSubitem)
+               "Save/restore bitmap"
+               (SUBITEMS ("Auto-Save Status" (EditBitmapShowAutoSave)
+                                "Display auto-save parameters"
+                                (SUBITEMS ("Set Auto-Save" (EditBitmapSetAutoSave)
+                                                 "Turn auto-save on or off")
+                                       ("Auto-Save File Name" (EditBitmapSetAutoSaveFile)
+                                              "Specify the auto-save file name")
+                                       ("Auto-Save Interval" (EditBitmapSetAutoSaveInterval)
+                                              "Specify the auto-save time interval")))
+                      ("Checkpoint Save" (EditBitmapCheckpointSave)
+                             "Save the current state of the bitmap")
+                      ("Checkpoint Restore" EditBitmapCheckpointRestore 
+                             "Restore bitmap to last checkpoint")
+                      ("Reset" EditBitmapResetBitmap 
+                             "Reset the bitmap to the beginning of the edit session.")
+                      ("Put to File" (EditBitmapFileSave)
+                             "Write the bitmap to a file")
+                      ("Get From File" EditBitmapFileRestore "Read a bitmap from a file")))
+        ("Insert Bitmap" (EditBitmapChooseSubitem)
+               "Insert the bitmap into TEdit or SKETCH"
+               (SUBITEMS ("Insert Bitmap Into TEdit" EditBitmapInsertBitmapIntoTedit 
                               "Insert the bitmap into a TEdit window at the current insertion point."
-                                                    )
-                                          ("Insert Bitmap Into SKETCH" 
-                                                 EditBitmapInsertBitmapIntoSketch 
-                                                 "Insert the bitmap into a SKETCH window.")))
-                            ("Parameters" (EditBitmapShowParameters)
-                                   "Display the editing parameters"
-                                   (SUBITEMS ("Drawing Brush Size" (EditBitmapSetDrawBrushSize)
-                                                    "Set the drawing brush size")
-                                          ("Paint Brush Size" (EditBitmapSetPaintBrushSize)
-                                                 "Set the paint brush size")
-                                          ("Air Brush Size" (EditBitmapSetAirBrushSize)
-                                                 "Set the airbrush size")
-                                          ("Air Brush Speed" (EditBitmapSetAirBrushSpeed)
-                                                 "Set the airbrush speed")
-                                          ("Brush Shape" (EditBitmapSetBrushShape)
-                                                 "Set the brush shape")
-                                          ("Dashing" (EditBitmapSetDashing)
-                                                 "Set the dashing")
-                                          ("Operation" (EditBitmapSetOperation)
-                                                 "Set the drawing operation")
-                                          ("Texture" (EditBitmapSetShade)
-                                                 "Set the texture" "Set the shade (texture)")
-                                          ("Font" (EditBitmapSetFont)
-                                                 "Set the font")
-                                          ("Arrowhead" (EditBitmapSetArrowhead)
-                                                 "Set the arrowhead width and height")
-                                          ("Region Selection Grid" (EditBitmapSetRegionGrid)
-                                                 "Set gridding for region selection")
-                                          ("Grid" (EditBitmapSetGrid)
-                                                 "Set gridding")
-                                          ("Orthogonal Lines" (EditBitmapSetOrthogonal)
-                                                 "Turn orthogonal line drawing on or off"])
+                                )
+                      ("Insert Bitmap Into SKETCH" EditBitmapInsertBitmapIntoSketch 
+                             "Insert the bitmap into a SKETCH window.")))
+        ("Parameters" (EditBitmapShowParameters)
+               "Display the editing parameters"
+               (SUBITEMS ("Drawing Brush Size" (EditBitmapSetDrawBrushSize)
+                                "Set the drawing brush size")
+                      ("Paint Brush Size" (EditBitmapSetPaintBrushSize)
+                             "Set the paint brush size")
+                      ("Air Brush Size" (EditBitmapSetAirBrushSize)
+                             "Set the airbrush size")
+                      ("Air Brush Speed" (EditBitmapSetAirBrushSpeed)
+                             "Set the airbrush speed")
+                      ("Brush Shape" (EditBitmapSetBrushShape)
+                             "Set the brush shape")
+                      ("Dashing" (EditBitmapSetDashing)
+                             "Set the dashing")
+                      ("Operation" (EditBitmapSetOperation)
+                             "Set the drawing operation")
+                      ("Texture" (EditBitmapSetShade)
+                             "Set the texture" "Set the shade (texture)")
+                      ("Font" (EditBitmapSetFont)
+                             "Set the font")
+                      ("Arrowhead" (EditBitmapSetArrowhead)
+                             "Set the arrowhead width and height")
+                      ("Region Selection Grid" (EditBitmapSetRegionGrid)
+                             "Set gridding for region selection")
+                      ("Grid" (EditBitmapSetGrid)
+                             "Set gridding")
+                      ("Orthogonal Lines" (EditBitmapSetOrthogonal)
+                             "Turn orthogonal line drawing on or off"])
 
 (RPAQQ EditBitmapMenuPointer #*(20 16)@@@@@@@@@@@@@@@@@@@@@@@@@H@@@@@@AH@@@@@@CH@@@@@@GOOOO@@@OOOOO@@@OOOOO@@@GOOOO@@@CH@@@@@@AH@@@@@@@H@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 )
@@ -5266,125 +5222,127 @@ Copyright (c) 1983, 1984, 1988 by Xerox Corporation.  All rights reserved.
        EditBitmapDefaultBrushSize EditBitmapDefaultFont EditBitmapDefaultListOfDashings 
        EditBitmapDefaultListOfTextures EditBitmapDefaultPaintBrushSize EditBitmapEllipseCenter 
        EditBitmapEllipseMajor EditBitmapEllipseMinor EditBitmapListOfDashings 
-       EditBitmapListOfTextures EditBitmapMagnifyCursor EditBitmapMaxArrowSize EditBitmapMaxBrushSize 
+       EditBitmapListOfTextures EditBitmapMagnifyCursor EditBitmapMaxArrowSize EditBitmapMaxBrushSize
        EditBitmapMaxGridSize EditBitmapMaxPatternSize EditBitmapMenuFont EditBitmapMenuItems 
        EditBitmapMenuPointer EditBitmapMessageFont EditBitmapMinArrowSize EditBitmapMinPatternSize 
        EditBitmapMinRegionSize EditBitmapMinSize EditBitmapPixelSelectBoxSize EditBitmapSpotMarker)
 )
 (* * Auxiliary files)
 
+
 (FILESLOAD READNUM (SYSLOAD FROM LISPUSERS)
        FILLREGION)
 (* * Initialization)
 
+
 (SETQ EditBitmapListOfTextures (COPYALL EditBitmapDefaultListOfTextures))
+
 (SETQ EditBitmapListOfDashings (COPYALL EditBitmapDefaultListOfDashings))
-(PUTPROPS BITMAPEDITOR COPYRIGHT ("Xerox Corporation" 1983 1984 1988))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (9948 25380 (EditBitmap 9958 . 12641) (EditBitmapBySections 12643 . 14759) (
-EditBitmapChooseSubitem 14761 . 15069) (EditBitmapClose 15071 . 15818) (EditBitmapConfirmDiscard 15820
- . 16558) (EditBitmapDisplayBitmap 16560 . 16776) (EditBitmapDoEditItem 16778 . 17260) (
-EditBitmapMakeDirty 17262 . 17476) (EditBitmapMakeMenu 17478 . 19655) (EditBitmapMakeUndirty 19657 . 
-19877) (EditBitmapMenuSelectionFn 19879 . 20674) (EditBitmapPopUpMenu 20676 . 21079) (EditBitmapQuit 
-21081 . 21543) (EditBitmapRepaintFn 21545 . 21878) (EditBitmapSetError 21880 . 22186) (
-EditBitmapSetQuit 22188 . 22419) (EditBitmapSetStop 22421 . 22724) (EditBitmapSetWindowProps 22726 . 
-24808) (EditBitmapStop 24810 . 25049) (EditBitmapWaitForFinished 25051 . 25378)) (25411 95490 (
-EditBitmapAddBitmap 25421 . 26156) (EditBitmapAddBorder 26158 . 26874) (EditBitmapAddTexture 26876 . 
-27323) (EditBitmapBitmapEditRegion 27325 . 27806) (EditBitmapBitmapFromFile 27808 . 28422) (
-EditBitmapBlock? 28424 . 28810) (EditBitmapChangeBitmapSize 28812 . 30824) (
-EditBitmapChangeBitmapSizeMaybe 30826 . 31429) (EditBitmapCheckpointRestore 31431 . 31784) (
-EditBitmapCheckpointSave 31786 . 32131) (EditBitmapClearAllButRegion 32133 . 33645) (
-EditBitmapClearBitmap 33647 . 34060) (EditBitmapClearRegion 34062 . 35036) (EditBitmapCopyCreate 35038
- . 35381) (EditBitmapCopyEdit 35383 . 35896) (EditBitmapCopyOperate 35898 . 36461) (
-EditBitmapDoInversion 36463 . 37295) (EditBitmapDoRotation 37297 . 38131) (EditBitmapDrawArrowhead 
-38133 . 40889) (EditBitmapDrawArrowheadFilled 40891 . 41152) (EditBitmapDrawArrowheadOpen 41154 . 
-41413) (EditBitmapDrawBox 41415 . 42596) (EditBitmapDrawCircle 42598 . 43783) (EditBitmapDrawCurve 
-43785 . 44809) (EditBitmapDrawCurveClosed 44811 . 45045) (EditBitmapDrawCurveOpen 45047 . 45275) (
-EditBitmapDrawEllipse 45277 . 46649) (EditBitmapDrawGrid 46651 . 47544) (EditBitmapDrawGridRegion 
-47546 . 48176) (EditBitmapDrawGridWindow 48178 . 48516) (EditBitmapDrawLines 48518 . 49699) (
-EditBitmapDrawPolygon 49701 . 50819) (EditBitmapDrawText 50821 . 52948) (EditBitmapExpandBitmap 52950
- . 53633) (EditBitmapFileRestore 53635 . 54565) (EditBitmapFileSave 54567 . 55533) (EditBitmapFillBox 
-55535 . 56623) (EditBitmapFillBoxSpecified 56625 . 56951) (EditBitmapFillRegion 56953 . 58057) (
-EditBitmapFillRegionDefault 58059 . 58352) (EditBitmapFillRegionSpecified 58354 . 58722) (
-EditBitmapGetShade 58724 . 60622) (EditBitmapGetSizeFactor 60624 . 61152) (EditBitmapInvertBitmap 
-61154 . 61752) (EditBitmapInvertColor 61754 . 62105) (EditBitmapInvertColorRegion 62107 . 63100) (
-EditBitmapMakeExact 63102 . 64885) (EditBitmapMakeSmaller 64887 . 65370) (EditBitmapMask 65372 . 65840
-) (EditBitmapMoveRectangularRegion 65842 . 66301) (EditBitmapPaintWithAirbrush 66303 . 66936) (
-EditBitmapPaintWithBitmap 66938 . 67511) (EditBitmapPaintWithBrush 67513 . 68042) (
-EditBitmapPatternArray 68044 . 72993) (EditBitmapPixelEditRegion 72995 . 73471) (
-EditBitmapPixelEditWindow 73473 . 73768) (EditBitmapPlacePattern 73770 . 75770) (EditBitmapResetBitmap
- 75772 . 76220) (EditBitmapRotateBitmap 76222 . 77129) (EditBitmapSaveBitmap 77131 . 77623) (
-EditBitmapSetPatternAttribute 77625 . 78735) (EditBitmapSetPatternDone 78737 . 80599) (
-EditBitmapSetPatternMenu 80601 . 81136) (EditBitmapSetSide 81138 . 82569) (EditBitmapSetSideDone 82571
- . 83989) (EditBitmapSetSideMenu 83991 . 84493) (EditBitmapShiftBitmap 84495 . 86299) (
-EditBitmapShrinkBitmap 86301 . 86984) (EditBitmapTesselate 86986 . 89120) (EditBitmapTesselateBitmap 
-89122 . 89764) (EditBitmapTesselateRegion 89766 . 90697) (EditBitmapTrimBitmap 90699 . 91087) (
-EditBitmapTrimSides 91089 . 94448) (EditBitmapUndo 94450 . 95488)) (95523 101516 (
-EditBitmapAverageBitInBitmap 95533 . 96279) (EditBitmapAveraging 96281 . 97687) (
-EditBitmapBitmapAverage 97689 . 98781) (EditBitmapGetAveragingInfo 98783 . 100628) (
-EditBitmapShowAveragingFormat 100630 . 101514)) (101549 106257 (EditBitmapAutoSave 101559 . 102842) (
-EditBitmapSetAutoSave 102844 . 103912) (EditBitmapSetAutoSaveFile 103914 . 104237) (
-EditBitmapSetAutoSaveInterval 104239 . 105125) (EditBitmapShowAutoSave 105127 . 106255)) (106294 
-115937 (EditBitmapMagnify 106304 . 108502) (EditBitmapMagnifyBitmap 108504 . 109640) (
-EditBitmapMagnifyChange 109642 . 110530) (EditBitmapMagnifyClose 110532 . 111291) (
-EditBitmapMagnifyEdit 111293 . 113358) (EditBitmapMagnifyEditButtonEventFn 113360 . 114116) (
-EditBitmapMagnifyMoved 114118 . 115406) (EditBitmapMagnifySelectButtonEventFn 115408 . 115935)) (
-115972 128502 (EditBitmapDrawOverPixels 115982 . 117126) (EditBitmapDrawOverPixelsRegion 117128 . 
-117406) (EditBitmapDrawOverPixelsSingle 117408 . 117686) (EditBitmapErasePixelsRegion 117688 . 117960)
- (EditBitmapErasePixelsSingle 117962 . 118234) (EditBitmapFollowPixelsMatrix 118236 . 121294) (
-EditBitmapFollowPixelsMatrixClose 121296 . 121869) (EditBitmapFollowPixelsMatrixDone 121871 . 122199) 
-(EditBitmapFollowPixelsMatrixSelect 122201 . 122998) (EditBitmapFollowPixelsRegion 123000 . 124371) (
-EditBitmapFollowPixelsSingle 124373 . 127103) (EditBitmapRemovePixels 127105 . 127646) (
-EditBitmapSelectBrushOffset 127648 . 128500)) (128533 145265 (EditBitmapAddPattern 128543 . 129194) (
-EditBitmapCopyEditPattern 129196 . 130603) (EditBitmapDeletePattern 130605 . 132119) (
-EditBitmapEditPattern 132121 . 133530) (EditBitmapFetchPatterns 133532 . 135204) (
-EditBitmapFontStylesheet 135206 . 136044) (EditBitmapGetPattern 136046 . 136386) (
-EditBitmapMakePattern 136388 . 140920) (EditBitmapPatternMenu 140922 . 141984) (EditBitmapShowPattern 
-141986 . 143473) (EditBitmapStorePatterns 143475 . 144547) (EditBitmapTrimPattern 144549 . 145263)) (
-145296 161193 (EditBitmapBitmapDistort 145306 . 146908) (EditBitmapDistort 146910 . 151619) (
-EditBitmapDistortBitmap 151621 . 152521) (EditBitmapDrawQuadrilateral 152523 . 153766) (
-EditBitmapExpandQuadrilateral 153768 . 154909) (EditBitmapGetDeltas 154911 . 156356) (
-EditBitmapGetExtents 156358 . 156920) (EditBitmapGetNewVertices 156922 . 159296) (
-EditBitmapGetQuadrilateral 159298 . 161191)) (161246 180732 (EditBitmapConfirmDashing 161256 . 162407)
- (EditBitmapGetNewDashing 162409 . 163993) (EditBitmapOperationMenu 163995 . 166036) (
-EditBitmapSetAirBrushSize 166038 . 166627) (EditBitmapSetAirBrushSpeed 166629 . 167118) (
-EditBitmapSetArrowhead 167120 . 168223) (EditBitmapSetBrushShape 168225 . 168654) (
-EditBitmapSetDashing 168656 . 171336) (EditBitmapSetDrawBrushSize 171338 . 172005) (EditBitmapSetFont 
-172007 . 172874) (EditBitmapSetGrid 172876 . 173373) (EditBitmapSetOperation 173375 . 174397) (
-EditBitmapSetOrthogonal 174399 . 174925) (EditBitmapSetPaintBrushSize 174927 . 175546) (
-EditBitmapSetRegionGrid 175548 . 176133) (EditBitmapSetShade 176135 . 178404) (
-EditBitmapShowParameters 178406 . 180730)) (180775 185764 (EditBitmapImageObjButtonEventInFn 180785 . 
-181587) (EditBitmapImageObjectCreate 181589 . 182175) (EditBitmapInsertBitmapIntoSketch 182177 . 
-183654) (EditBitmapInsertBitmapIntoTedit 183656 . 184422) (EditBitmapSelectTargetWindow 184424 . 
-185762)) (185811 267162 (EditBitmapAirbrushOutline 185821 . 187213) (EditBitmapAirbrushPaint 187215 . 
-194026) (EditBitmapArrowhead 194028 . 196068) (EditBitmapBitmapInvertDiagonal 196070 . 196760) (
-EditBitmapBitmapInvertHorizontal 196762 . 197595) (EditBitmapBitmapInvertVertical 197597 . 198426) (
-EditBitmapBitmapRotate 198428 . 199744) (EditBitmapBitmapRotateArbitrary 199746 . 202499) (
-EditBitmapBitmapShift 202501 . 203015) (EditBitmapBorder 203017 . 203583) (EditBitmapBoxInput 203585
- . 204108) (EditBitmapCircleGetRadiusPoint 204110 . 204465) (EditBitmapCircleInput 204467 . 205519) (
-EditBitmapCircleShow 205521 . 206029) (EditBitmapConstrainRegion 206031 . 207298) (
-EditBitmapCopyBitmap 207300 . 207810) (EditBitmapCreatePixelSelectionCursor 207812 . 208756) (
-EditBitmapCursorFields 208758 . 209697) (EditBitmapCurveInput 209699 . 210416) (EditBitmapDistance 
-210418 . 211091) (EditBitmapDrawOverConnectedPixels 211093 . 213156) (EditBitmapEditRegion 213158 . 
-214721) (EditBitmapEllipseGetMajorPoint 214723 . 215118) (EditBitmapEllipseGetMinorPoint 215120 . 
-215665) (EditBitmapEllipseInput 215667 . 217033) (EditBitmapEllipseOrientation 217035 . 217595) (
-EditBitmapEllipseShowMajor 217597 . 218133) (EditBitmapEllipseShowMinor 218135 . 218673) (
-EditBitmapFromScreen 218675 . 219001) (EditBitmapGetFileName 219003 . 219573) (
-EditBitmapGetGriddedValue 219575 . 220112) (EditBitmapGetPoint 220114 . 222523) (
-EditBitmapGetPointAnywhere 222525 . 224768) (EditBitmapGetPointList 224770 . 227667) (
-EditBitmapGetPosition 227669 . 228332) (EditBitmapGetScreenBitmap 228334 . 228999) (
-EditBitmapGetScreenRegion 229001 . 229283) (EditBitmapGetStringFromUser 229285 . 230017) (
-EditBitmapGetWindowRegion 230019 . 231667) (EditBitmapInsideWindow 231669 . 232060) (
-EditBitmapInsureGriddedRegion 232062 . 233627) (EditBitmapLocatePixelOn 233629 . 234405) (
-EditBitmapMakeGrid 234407 . 236598) (EditBitmapMakeMask 236600 . 237427) (EditBitmapMarkSpot 237429 . 
-238122) (EditBitmapMessage 238124 . 241138) (EditBitmapMessageClose 241140 . 241373) (
-EditBitmapMoveRegion 241375 . 243457) (EditBitmapPaintWindow 243459 . 247593) (
-EditBitmapPaintWindowWithBitmap 247595 . 253642) (EditBitmapPlaceBitmap 253644 . 253953) (
-EditBitmapRandomBitWithinBrush 253955 . 254557) (EditBitmapReadBitmap 254559 . 255052) (
-EditBitmapRemoveConnectedPixels 255054 . 256426) (EditBitmapReshapeWindow 256428 . 256899) (
-EditBitmapRound 256901 . 257206) (EditBitmapScreenInput 257208 . 258175) (EditBitmapShowPoint 258177
- . 258771) (EditBitmapSmaller 258773 . 259701) (EditBitmapTrackBitmap 259703 . 261825) (EditBitmapTrim
- 261827 . 263729) (EditBitmapVerticesFromRegion 263731 . 264412) (EditBitmapWireInput 264414 . 265609)
- (EditBitmapWireShowClosed 265611 . 266187) (EditBitmapWireShowOpen 266189 . 266633) (
-EditBitmapWriteBitmap 266635 . 267160)))))
+  (FILEMAP (NIL (10044 25476 (EditBitmap 10054 . 12737) (EditBitmapBySections 12739 . 14855) (
+EditBitmapChooseSubitem 14857 . 15165) (EditBitmapClose 15167 . 15914) (EditBitmapConfirmDiscard 15916
+ . 16654) (EditBitmapDisplayBitmap 16656 . 16872) (EditBitmapDoEditItem 16874 . 17356) (
+EditBitmapMakeDirty 17358 . 17572) (EditBitmapMakeMenu 17574 . 19751) (EditBitmapMakeUndirty 19753 . 
+19973) (EditBitmapMenuSelectionFn 19975 . 20770) (EditBitmapPopUpMenu 20772 . 21175) (EditBitmapQuit 
+21177 . 21639) (EditBitmapRepaintFn 21641 . 21974) (EditBitmapSetError 21976 . 22282) (
+EditBitmapSetQuit 22284 . 22515) (EditBitmapSetStop 22517 . 22820) (EditBitmapSetWindowProps 22822 . 
+24904) (EditBitmapStop 24906 . 25145) (EditBitmapWaitForFinished 25147 . 25474)) (25507 95427 (
+EditBitmapAddBitmap 25517 . 26252) (EditBitmapAddBorder 26254 . 26970) (EditBitmapAddTexture 26972 . 
+27419) (EditBitmapBitmapEditRegion 27421 . 27902) (EditBitmapBitmapFromFile 27904 . 28468) (
+EditBitmapBlock? 28470 . 28856) (EditBitmapChangeBitmapSize 28858 . 30870) (
+EditBitmapChangeBitmapSizeMaybe 30872 . 31475) (EditBitmapCheckpointRestore 31477 . 31830) (
+EditBitmapCheckpointSave 31832 . 32177) (EditBitmapClearAllButRegion 32179 . 33691) (
+EditBitmapClearBitmap 33693 . 34106) (EditBitmapClearRegion 34108 . 35082) (EditBitmapCopyCreate 35084
+ . 35427) (EditBitmapCopyEdit 35429 . 35942) (EditBitmapCopyOperate 35944 . 36507) (
+EditBitmapDoInversion 36509 . 37341) (EditBitmapDoRotation 37343 . 38177) (EditBitmapDrawArrowhead 
+38179 . 40935) (EditBitmapDrawArrowheadFilled 40937 . 41198) (EditBitmapDrawArrowheadOpen 41200 . 
+41459) (EditBitmapDrawBox 41461 . 42642) (EditBitmapDrawCircle 42644 . 43829) (EditBitmapDrawCurve 
+43831 . 44855) (EditBitmapDrawCurveClosed 44857 . 45091) (EditBitmapDrawCurveOpen 45093 . 45321) (
+EditBitmapDrawEllipse 45323 . 46695) (EditBitmapDrawGrid 46697 . 47590) (EditBitmapDrawGridRegion 
+47592 . 48222) (EditBitmapDrawGridWindow 48224 . 48562) (EditBitmapDrawLines 48564 . 49745) (
+EditBitmapDrawPolygon 49747 . 50865) (EditBitmapDrawText 50867 . 52994) (EditBitmapExpandBitmap 52996
+ . 53679) (EditBitmapFileRestore 53681 . 54563) (EditBitmapFileSave 54565 . 55470) (EditBitmapFillBox 
+55472 . 56560) (EditBitmapFillBoxSpecified 56562 . 56888) (EditBitmapFillRegion 56890 . 57994) (
+EditBitmapFillRegionDefault 57996 . 58289) (EditBitmapFillRegionSpecified 58291 . 58659) (
+EditBitmapGetShade 58661 . 60559) (EditBitmapGetSizeFactor 60561 . 61089) (EditBitmapInvertBitmap 
+61091 . 61689) (EditBitmapInvertColor 61691 . 62042) (EditBitmapInvertColorRegion 62044 . 63037) (
+EditBitmapMakeExact 63039 . 64822) (EditBitmapMakeSmaller 64824 . 65307) (EditBitmapMask 65309 . 65777
+) (EditBitmapMoveRectangularRegion 65779 . 66238) (EditBitmapPaintWithAirbrush 66240 . 66873) (
+EditBitmapPaintWithBitmap 66875 . 67448) (EditBitmapPaintWithBrush 67450 . 67979) (
+EditBitmapPatternArray 67981 . 72930) (EditBitmapPixelEditRegion 72932 . 73408) (
+EditBitmapPixelEditWindow 73410 . 73705) (EditBitmapPlacePattern 73707 . 75707) (EditBitmapResetBitmap
+ 75709 . 76157) (EditBitmapRotateBitmap 76159 . 77066) (EditBitmapSaveBitmap 77068 . 77560) (
+EditBitmapSetPatternAttribute 77562 . 78672) (EditBitmapSetPatternDone 78674 . 80536) (
+EditBitmapSetPatternMenu 80538 . 81073) (EditBitmapSetSide 81075 . 82506) (EditBitmapSetSideDone 82508
+ . 83926) (EditBitmapSetSideMenu 83928 . 84430) (EditBitmapShiftBitmap 84432 . 86236) (
+EditBitmapShrinkBitmap 86238 . 86921) (EditBitmapTesselate 86923 . 89057) (EditBitmapTesselateBitmap 
+89059 . 89701) (EditBitmapTesselateRegion 89703 . 90634) (EditBitmapTrimBitmap 90636 . 91024) (
+EditBitmapTrimSides 91026 . 94385) (EditBitmapUndo 94387 . 95425)) (95460 101453 (
+EditBitmapAverageBitInBitmap 95470 . 96216) (EditBitmapAveraging 96218 . 97624) (
+EditBitmapBitmapAverage 97626 . 98718) (EditBitmapGetAveragingInfo 98720 . 100565) (
+EditBitmapShowAveragingFormat 100567 . 101451)) (101486 106123 (EditBitmapAutoSave 101496 . 102708) (
+EditBitmapSetAutoSave 102710 . 103778) (EditBitmapSetAutoSaveFile 103780 . 104103) (
+EditBitmapSetAutoSaveInterval 104105 . 104991) (EditBitmapShowAutoSave 104993 . 106121)) (106160 
+115803 (EditBitmapMagnify 106170 . 108368) (EditBitmapMagnifyBitmap 108370 . 109506) (
+EditBitmapMagnifyChange 109508 . 110396) (EditBitmapMagnifyClose 110398 . 111157) (
+EditBitmapMagnifyEdit 111159 . 113224) (EditBitmapMagnifyEditButtonEventFn 113226 . 113982) (
+EditBitmapMagnifyMoved 113984 . 115272) (EditBitmapMagnifySelectButtonEventFn 115274 . 115801)) (
+115838 128368 (EditBitmapDrawOverPixels 115848 . 116992) (EditBitmapDrawOverPixelsRegion 116994 . 
+117272) (EditBitmapDrawOverPixelsSingle 117274 . 117552) (EditBitmapErasePixelsRegion 117554 . 117826)
+ (EditBitmapErasePixelsSingle 117828 . 118100) (EditBitmapFollowPixelsMatrix 118102 . 121160) (
+EditBitmapFollowPixelsMatrixClose 121162 . 121735) (EditBitmapFollowPixelsMatrixDone 121737 . 122065) 
+(EditBitmapFollowPixelsMatrixSelect 122067 . 122864) (EditBitmapFollowPixelsRegion 122866 . 124237) (
+EditBitmapFollowPixelsSingle 124239 . 126969) (EditBitmapRemovePixels 126971 . 127512) (
+EditBitmapSelectBrushOffset 127514 . 128366)) (128399 144986 (EditBitmapAddPattern 128409 . 129060) (
+EditBitmapCopyEditPattern 129062 . 130469) (EditBitmapDeletePattern 130471 . 131985) (
+EditBitmapEditPattern 131987 . 133396) (EditBitmapFetchPatterns 133398 . 134981) (
+EditBitmapFontStylesheet 134983 . 135821) (EditBitmapGetPattern 135823 . 136163) (
+EditBitmapMakePattern 136165 . 140697) (EditBitmapPatternMenu 140699 . 141761) (EditBitmapShowPattern 
+141763 . 143250) (EditBitmapStorePatterns 143252 . 144268) (EditBitmapTrimPattern 144270 . 144984)) (
+145017 160914 (EditBitmapBitmapDistort 145027 . 146629) (EditBitmapDistort 146631 . 151340) (
+EditBitmapDistortBitmap 151342 . 152242) (EditBitmapDrawQuadrilateral 152244 . 153487) (
+EditBitmapExpandQuadrilateral 153489 . 154630) (EditBitmapGetDeltas 154632 . 156077) (
+EditBitmapGetExtents 156079 . 156641) (EditBitmapGetNewVertices 156643 . 159017) (
+EditBitmapGetQuadrilateral 159019 . 160912)) (160967 180453 (EditBitmapConfirmDashing 160977 . 162128)
+ (EditBitmapGetNewDashing 162130 . 163714) (EditBitmapOperationMenu 163716 . 165757) (
+EditBitmapSetAirBrushSize 165759 . 166348) (EditBitmapSetAirBrushSpeed 166350 . 166839) (
+EditBitmapSetArrowhead 166841 . 167944) (EditBitmapSetBrushShape 167946 . 168375) (
+EditBitmapSetDashing 168377 . 171057) (EditBitmapSetDrawBrushSize 171059 . 171726) (EditBitmapSetFont 
+171728 . 172595) (EditBitmapSetGrid 172597 . 173094) (EditBitmapSetOperation 173096 . 174118) (
+EditBitmapSetOrthogonal 174120 . 174646) (EditBitmapSetPaintBrushSize 174648 . 175267) (
+EditBitmapSetRegionGrid 175269 . 175854) (EditBitmapSetShade 175856 . 178125) (
+EditBitmapShowParameters 178127 . 180451)) (180496 185485 (EditBitmapImageObjButtonEventInFn 180506 . 
+181308) (EditBitmapImageObjectCreate 181310 . 181896) (EditBitmapInsertBitmapIntoSketch 181898 . 
+183375) (EditBitmapInsertBitmapIntoTedit 183377 . 184143) (EditBitmapSelectTargetWindow 184145 . 
+185483)) (185532 266883 (EditBitmapAirbrushOutline 185542 . 186934) (EditBitmapAirbrushPaint 186936 . 
+193747) (EditBitmapArrowhead 193749 . 195789) (EditBitmapBitmapInvertDiagonal 195791 . 196481) (
+EditBitmapBitmapInvertHorizontal 196483 . 197316) (EditBitmapBitmapInvertVertical 197318 . 198147) (
+EditBitmapBitmapRotate 198149 . 199465) (EditBitmapBitmapRotateArbitrary 199467 . 202220) (
+EditBitmapBitmapShift 202222 . 202736) (EditBitmapBorder 202738 . 203304) (EditBitmapBoxInput 203306
+ . 203829) (EditBitmapCircleGetRadiusPoint 203831 . 204186) (EditBitmapCircleInput 204188 . 205240) (
+EditBitmapCircleShow 205242 . 205750) (EditBitmapConstrainRegion 205752 . 207019) (
+EditBitmapCopyBitmap 207021 . 207531) (EditBitmapCreatePixelSelectionCursor 207533 . 208477) (
+EditBitmapCursorFields 208479 . 209418) (EditBitmapCurveInput 209420 . 210137) (EditBitmapDistance 
+210139 . 210812) (EditBitmapDrawOverConnectedPixels 210814 . 212877) (EditBitmapEditRegion 212879 . 
+214442) (EditBitmapEllipseGetMajorPoint 214444 . 214839) (EditBitmapEllipseGetMinorPoint 214841 . 
+215386) (EditBitmapEllipseInput 215388 . 216754) (EditBitmapEllipseOrientation 216756 . 217316) (
+EditBitmapEllipseShowMajor 217318 . 217854) (EditBitmapEllipseShowMinor 217856 . 218394) (
+EditBitmapFromScreen 218396 . 218722) (EditBitmapGetFileName 218724 . 219294) (
+EditBitmapGetGriddedValue 219296 . 219833) (EditBitmapGetPoint 219835 . 222244) (
+EditBitmapGetPointAnywhere 222246 . 224489) (EditBitmapGetPointList 224491 . 227388) (
+EditBitmapGetPosition 227390 . 228053) (EditBitmapGetScreenBitmap 228055 . 228720) (
+EditBitmapGetScreenRegion 228722 . 229004) (EditBitmapGetStringFromUser 229006 . 229738) (
+EditBitmapGetWindowRegion 229740 . 231388) (EditBitmapInsideWindow 231390 . 231781) (
+EditBitmapInsureGriddedRegion 231783 . 233348) (EditBitmapLocatePixelOn 233350 . 234126) (
+EditBitmapMakeGrid 234128 . 236319) (EditBitmapMakeMask 236321 . 237148) (EditBitmapMarkSpot 237150 . 
+237843) (EditBitmapMessage 237845 . 240859) (EditBitmapMessageClose 240861 . 241094) (
+EditBitmapMoveRegion 241096 . 243178) (EditBitmapPaintWindow 243180 . 247314) (
+EditBitmapPaintWindowWithBitmap 247316 . 253363) (EditBitmapPlaceBitmap 253365 . 253674) (
+EditBitmapRandomBitWithinBrush 253676 . 254278) (EditBitmapReadBitmap 254280 . 254773) (
+EditBitmapRemoveConnectedPixels 254775 . 256147) (EditBitmapReshapeWindow 256149 . 256620) (
+EditBitmapRound 256622 . 256927) (EditBitmapScreenInput 256929 . 257896) (EditBitmapShowPoint 257898
+ . 258492) (EditBitmapSmaller 258494 . 259422) (EditBitmapTrackBitmap 259424 . 261546) (EditBitmapTrim
+ 261548 . 263450) (EditBitmapVerticesFromRegion 263452 . 264133) (EditBitmapWireInput 264135 . 265330)
+ (EditBitmapWireShowClosed 265332 . 265908) (EditBitmapWireShowOpen 265910 . 266354) (
+EditBitmapWriteBitmap 266356 . 266881)))))
 STOP
