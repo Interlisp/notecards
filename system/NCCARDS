@@ -1,10 +1,30 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "27-Oct-2023 21:56:00" {DSK}<home>frank>il>notecards>system>NCCARDS.;8 208614 
+(FILECREATED "26-Jan-2024 13:19:11" {DSK}<home>frank>il>notecards>system>NCCARDS.;9 210411 
 
-      :CHANGES-TO (FNS NC.CloseW)
+      :CHANGES-TO (VARS NCCARDSCOMS)
+                  (FNS NC.AddCardIconToIconProps NC.CardOrCardHolderFromUID NC.CardP 
+                       NC.DeleteNoteCard NC.DeleteNoteCardInternal NC.SameCardP NC.FetchStatus 
+                       NC.SetNewCardFlg NC.FetchNewCardFlg NC.FetchNewCardPos NC.ActivateCard 
+                       NC.ActiveCardP NC.DeactivateCard NC.FetchFromLinks NC.FetchGlobalLinks 
+                       NC.FetchLinksDirtyFlg NC.FetchPropList NC.FetchRegion NC.FetchSavedRegion 
+                       NC.FetchRegionViewed NC.FetchScale NC.FetchSlotNum NC.FetchSubstance 
+                       NC.FetchTitle NC.FetchToLinks NC.FetchType NC.FetchWindow NC.IDP 
+                       NC.MarkCardDirty NC.CardDirtyP NC.SetFromLinks NC.SetGlobalLinks 
+                       NC.SetLinksDirtyFlg NC.SetPropList NC.SetRegion NC.SetSavedRegion 
+                       NC.SetRegionViewed NC.SetScale NC.SetSubstance NC.SetTitle NC.SetToLinks 
+                       NC.SetType NC.FetchTitleDirtyFlg NC.SetTitleDirtyFlg NC.FetchPropListDirtyFlg
+                       NC.SetPropListDirtyFlg NC.SetSubstanceDirtyFlg NC.FetchSubstanceDirtyFlg 
+                       NC.TurnOffDirtyFlgs NC.FetchUserDataProp NC.SetUserDataProp 
+                       NC.SetUserDataPropList NC.MakeTypeIconBitMapSet NC.MakeNewCardWindow 
+                       NC.FlashHiddenWindow NC.OpenWindows NC.ObtainEditPermission NC.CardPartBusy 
+                       NC.ReadOnlyCardP NC.CardSomehowDirtyP NC.CardReadOnlyOpenP 
+                       NC.RetrieveFromLinks NC.RetrieveLinkLabels NC.StoreLinkLabels 
+                       NC.RetrievePropList NC.RetrieveTitle NC.NameOfCardorNodeorImageObj 
+                       NC.RetrieveToLinks NC.RetrieveGlobalLinks NC.RetrieveType 
+                       NC.RetrieveTypeAndTitle NC.LinksCachedP NC.ShowInfo NC.CloseW)
 
-      :PREVIOUS-DATE "24-Oct-2023 11:24:55" {DSK}<home>frank>il>notecards>system>NCCARDS.;6)
+      :PREVIOUS-DATE "27-Oct-2023 21:56:00" {DSK}<home>frank>il>notecards>system>NCCARDS.;8)
 
 
 (PRETTYCOMPRINT NCCARDSCOMS)
@@ -2133,10 +2153,7 @@
     (AND (WINDOWP WINDOW)
          (OPENWP WINDOW)
 
-         (* * if (AND (BOUNDP (QUOTE ROOMS:*ROOMS-SYSTEM-DATE*))
-         (ROOMS:ROOM-P ROOMS:*CURRENT-ROOM*)) then
-         (* ROOMS:INTERACTIVE-CLOSE-WINDOW WINDOW ROOMS:*CURRENT-ROOM*)
-         (CLOSEW WINDOW) else (CLOSEW WINDOW))
+         (* ;; "(* * if (AND (BOUNDP 'ROOMS:*ROOMS-SYSTEM-DATE*) (ROOMS:ROOM-P ROOMS:*CURRENT-ROOM*)) then (* ROOMS:INTERACTIVE-CLOSE-WINDOW WINDOW ROOMS:*CURRENT-ROOM*) (CLOSEW WINDOW) else (CLOSEW WINDOW))")
 
          (CLOSEW WINDOW])
 
@@ -3985,58 +4002,58 @@
 
 (PUTPROPS NCCARDS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (9232 10006 (NC.AddCardIconToIconProps 9242 . 10004)) (10042 22170 (
-NC.CardOrCardHolderFromUID 10052 . 10853) (NC.CardP 10855 . 11053) (NC.DeleteNoteCard 11055 . 14510) (
-NC.DeleteNoteCardInternal 14512 . 21978) (NC.SameCardP 21980 . 22168)) (22226 45769 (NC.FetchStatus 
-22236 . 22460) (NC.SetNewCardFlg 22462 . 22931) (NC.FetchNewCardFlg 22933 . 23459) (NC.FetchNewCardPos
- 23461 . 23920) (NC.ActivateCard 23922 . 24211) (NC.ActiveCardP 24213 . 24728) (NC.DeactivateCard 
-24730 . 26424) (NC.FetchFromLinks 26426 . 26826) (NC.FetchGlobalLinks 26828 . 27119) (
-NC.FetchLinksDirtyFlg 27121 . 27537) (NC.FetchPropList 27539 . 27940) (NC.FetchRegion 27942 . 28335) (
-NC.FetchSavedRegion 28337 . 28746) (NC.FetchRegionViewed 28748 . 29129) (NC.FetchScale 29131 . 29468) 
-(NC.FetchSlotNum 29470 . 30267) (NC.FetchSubstance 30269 . 30667) (NC.FetchTitle 30669 . 31059) (
-NC.FetchToLinks 31061 . 31459) (NC.FetchType 31461 . 31858) (NC.FetchWindow 31860 . 33583) (NC.IDP 
-33585 . 33877) (NC.MarkCardDirty 33879 . 34428) (NC.CardDirtyP 34430 . 34873) (NC.SetFromLinks 34875
- . 35285) (NC.SetGlobalLinks 35287 . 35708) (NC.SetLinksDirtyFlg 35710 . 36149) (NC.SetPropList 36151
- . 36560) (NC.SetRegion 36562 . 36962) (NC.SetSavedRegion 36964 . 37503) (NC.SetRegionViewed 37505 . 
-37949) (NC.SetScale 37951 . 38350) (NC.SetSubstance 38352 . 38790) (NC.SetTitle 38792 . 39194) (
-NC.SetToLinks 39196 . 39605) (NC.SetType 39607 . 39888) (NC.FetchTitleDirtyFlg 39890 . 40299) (
-NC.SetTitleDirtyFlg 40301 . 40725) (NC.FetchPropListDirtyFlg 40727 . 41151) (NC.SetPropListDirtyFlg 
-41153 . 41583) (NC.SetSubstanceDirtyFlg 41585 . 42017) (NC.FetchSubstanceDirtyFlg 42019 . 42439) (
-NC.TurnOffDirtyFlgs 42441 . 42871) (NC.FetchUserDataProp 42873 . 43188) (NC.SetUserDataProp 43190 . 
-43622) (NC.SetUserDataPropList 43624 . 43871) (NC.MakeTypeIconBitMapSet 43873 . 44390) (
-NC.MakeNewCardWindow 44392 . 44907) (NC.FlashHiddenWindow 44909 . 45624) (NC.OpenWindows 45626 . 45767
-)) (45837 48411 (NC.ObtainEditPermission 45847 . 48136) (NC.CardPartBusy 48138 . 48409)) (48467 49396 
-(NC.ReadOnlyCardP 48477 . 48778) (NC.CardSomehowDirtyP 48780 . 49187) (NC.CardReadOnlyOpenP 49189 . 
-49394)) (49439 62545 (NC.RetrieveFromLinks 49449 . 50528) (NC.RetrieveLinkLabels 50530 . 51634) (
-NC.StoreLinkLabels 51636 . 52417) (NC.RetrievePropList 52419 . 52952) (NC.RetrieveTitle 52954 . 53526)
- (NC.NameOfCardorNodeorImageObj 53528 . 54250) (NC.RetrieveToLinks 54252 . 55255) (
-NC.RetrieveGlobalLinks 55257 . 56145) (NC.RetrieveType 56147 . 56646) (NC.RetrieveTypeAndTitle 56648
- . 57822) (NC.LinksCachedP 57824 . 58212) (NC.ShowInfo 58214 . 62543)) (62596 149677 (NC.AddParents 
-62606 . 65591) (NC.SeverExternalLinks 65593 . 76506) (NC.AssignTitle 76508 . 82872) (
-NC.DeleteNoteCards 82874 . 92051) (NC.CardsToDelete 92053 . 92812) (NC.EditNoteCard 92814 . 96955) (
-NC.MakeNoteCard 96957 . 101450) (NC.QuitCard 101452 . 109199) (NC.CloseW 109201 . 109652) (
-NC.CheckFiling 109654 . 113315) (NC.CheckTitle 113317 . 114974) (NC.ForceFilingForCardTypeP 114976 . 
-115311) (NC.InsureProperFiling 115313 . 116335) (NC.QuitWithoutSaving 116337 . 124076) (
-NC.UnfileNoteCard 124078 . 127202) (NC.UpdateUpdateList 127204 . 128046) (NC.CollectReferences 128048
- . 129487) (NC.CardSaveFn 129489 . 138286) (NC.DetermineDisplayRegion 138288 . 144267) (NC.AbortCard 
-144269 . 144801) (NC.CardNeedsFilingP 144803 . 146271) (NC.TopLevelCardP 146273 . 146603) (
-NC.MakeDummyRegion 146605 . 147096) (NC.ValidCardP 147098 . 147569) (NC.TitleBarButtonEventFn 147571
- . 148624) (NC.InstallTitleBarMiddleMenu 148626 . 149675)) (149713 193130 (NC.AddPropToPropList 149723
- . 154038) (NC.CloseAllPropListEditors 154040 . 154904) (NC.ClosePropListEditor 154906 . 158708) (
-NC.DelPropFromList 158710 . 160803) (NC.EditPropButtonFN 160805 . 161110) (NC.EditProperties 161112 . 
-163434) (NC.EditPropList 163436 . 171069) (NC.ExtractPropList 171071 . 174898) (NC.OpenPropListEditor 
-174900 . 180705) (NC.ProcessEditedPropList 180707 . 182451) (NC.PropListEditorOpenP 182453 . 183545) (
-NC.SelectProperty 183547 . 184583) (NC.ShowLinks 184585 . 190703) (NC.StringIsListP 190705 . 191817) (
-NC.PutProp 191819 . 192490) (NC.GetProp 192492 . 192847) (NC.RemProp 192849 . 193128)) (193167 195790 
-(NC.FetchBeingDeletedFlg 193177 . 193600) (NC.SetBeingDeletedFlg 193602 . 194036) (
-NC.RemoveDELETEMEImageObjsFromCard 194038 . 195354) (NC.InsureIntegerDate 195356 . 195788)) (195835 
-198633 (NC.PlaceMarkerCopyFn 195845 . 196029) (NC.PlaceMarkerDisplayFn 196031 . 196626) (
-NC.PlaceMarkerGetFn 196628 . 196792) (NC.PlaceMarkerImageBoxFn 196794 . 197690) (NC.PlaceMarkerPutFn 
-197692 . 197928) (NC.MakePlaceMarker 197930 . 198631)) (198682 206574 (NC.FetchTitleDate 198692 . 
-199290) (NC.FetchItemDate 199292 . 199887) (NC.FetchPropListDate 199889 . 200497) (NC.FetchLinksDate 
-200499 . 201097) (NC.FetchLinkIconAttachedBitMap 201099 . 205443) (NC.FetchLinkDisplayMode 205445 . 
-205745) (NC.FetchDefaultWidth 205747 . 206029) (NC.FetchDefaultHeight 206031 . 206312) (
-NC.FetchLinkAnchorModesSupported 206314 . 206572)) (206575 208438 (NC.SetTitleDate 206585 . 207047) (
-NC.SetItemDate 207049 . 207503) (NC.SetPropListDate 207505 . 207972) (NC.SetLinksDate 207974 . 208436)
+  (FILEMAP (NIL (11066 11840 (NC.AddCardIconToIconProps 11076 . 11838)) (11876 24004 (
+NC.CardOrCardHolderFromUID 11886 . 12687) (NC.CardP 12689 . 12887) (NC.DeleteNoteCard 12889 . 16344) (
+NC.DeleteNoteCardInternal 16346 . 23812) (NC.SameCardP 23814 . 24002)) (24060 47603 (NC.FetchStatus 
+24070 . 24294) (NC.SetNewCardFlg 24296 . 24765) (NC.FetchNewCardFlg 24767 . 25293) (NC.FetchNewCardPos
+ 25295 . 25754) (NC.ActivateCard 25756 . 26045) (NC.ActiveCardP 26047 . 26562) (NC.DeactivateCard 
+26564 . 28258) (NC.FetchFromLinks 28260 . 28660) (NC.FetchGlobalLinks 28662 . 28953) (
+NC.FetchLinksDirtyFlg 28955 . 29371) (NC.FetchPropList 29373 . 29774) (NC.FetchRegion 29776 . 30169) (
+NC.FetchSavedRegion 30171 . 30580) (NC.FetchRegionViewed 30582 . 30963) (NC.FetchScale 30965 . 31302) 
+(NC.FetchSlotNum 31304 . 32101) (NC.FetchSubstance 32103 . 32501) (NC.FetchTitle 32503 . 32893) (
+NC.FetchToLinks 32895 . 33293) (NC.FetchType 33295 . 33692) (NC.FetchWindow 33694 . 35417) (NC.IDP 
+35419 . 35711) (NC.MarkCardDirty 35713 . 36262) (NC.CardDirtyP 36264 . 36707) (NC.SetFromLinks 36709
+ . 37119) (NC.SetGlobalLinks 37121 . 37542) (NC.SetLinksDirtyFlg 37544 . 37983) (NC.SetPropList 37985
+ . 38394) (NC.SetRegion 38396 . 38796) (NC.SetSavedRegion 38798 . 39337) (NC.SetRegionViewed 39339 . 
+39783) (NC.SetScale 39785 . 40184) (NC.SetSubstance 40186 . 40624) (NC.SetTitle 40626 . 41028) (
+NC.SetToLinks 41030 . 41439) (NC.SetType 41441 . 41722) (NC.FetchTitleDirtyFlg 41724 . 42133) (
+NC.SetTitleDirtyFlg 42135 . 42559) (NC.FetchPropListDirtyFlg 42561 . 42985) (NC.SetPropListDirtyFlg 
+42987 . 43417) (NC.SetSubstanceDirtyFlg 43419 . 43851) (NC.FetchSubstanceDirtyFlg 43853 . 44273) (
+NC.TurnOffDirtyFlgs 44275 . 44705) (NC.FetchUserDataProp 44707 . 45022) (NC.SetUserDataProp 45024 . 
+45456) (NC.SetUserDataPropList 45458 . 45705) (NC.MakeTypeIconBitMapSet 45707 . 46224) (
+NC.MakeNewCardWindow 46226 . 46741) (NC.FlashHiddenWindow 46743 . 47458) (NC.OpenWindows 47460 . 47601
+)) (47671 50245 (NC.ObtainEditPermission 47681 . 49970) (NC.CardPartBusy 49972 . 50243)) (50301 51230 
+(NC.ReadOnlyCardP 50311 . 50612) (NC.CardSomehowDirtyP 50614 . 51021) (NC.CardReadOnlyOpenP 51023 . 
+51228)) (51273 64379 (NC.RetrieveFromLinks 51283 . 52362) (NC.RetrieveLinkLabels 52364 . 53468) (
+NC.StoreLinkLabels 53470 . 54251) (NC.RetrievePropList 54253 . 54786) (NC.RetrieveTitle 54788 . 55360)
+ (NC.NameOfCardorNodeorImageObj 55362 . 56084) (NC.RetrieveToLinks 56086 . 57089) (
+NC.RetrieveGlobalLinks 57091 . 57979) (NC.RetrieveType 57981 . 58480) (NC.RetrieveTypeAndTitle 58482
+ . 59656) (NC.LinksCachedP 59658 . 60046) (NC.ShowInfo 60048 . 64377)) (64430 151474 (NC.AddParents 
+64440 . 67425) (NC.SeverExternalLinks 67427 . 78340) (NC.AssignTitle 78342 . 84706) (
+NC.DeleteNoteCards 84708 . 93885) (NC.CardsToDelete 93887 . 94646) (NC.EditNoteCard 94648 . 98789) (
+NC.MakeNoteCard 98791 . 103284) (NC.QuitCard 103286 . 111033) (NC.CloseW 111035 . 111449) (
+NC.CheckFiling 111451 . 115112) (NC.CheckTitle 115114 . 116771) (NC.ForceFilingForCardTypeP 116773 . 
+117108) (NC.InsureProperFiling 117110 . 118132) (NC.QuitWithoutSaving 118134 . 125873) (
+NC.UnfileNoteCard 125875 . 128999) (NC.UpdateUpdateList 129001 . 129843) (NC.CollectReferences 129845
+ . 131284) (NC.CardSaveFn 131286 . 140083) (NC.DetermineDisplayRegion 140085 . 146064) (NC.AbortCard 
+146066 . 146598) (NC.CardNeedsFilingP 146600 . 148068) (NC.TopLevelCardP 148070 . 148400) (
+NC.MakeDummyRegion 148402 . 148893) (NC.ValidCardP 148895 . 149366) (NC.TitleBarButtonEventFn 149368
+ . 150421) (NC.InstallTitleBarMiddleMenu 150423 . 151472)) (151510 194927 (NC.AddPropToPropList 151520
+ . 155835) (NC.CloseAllPropListEditors 155837 . 156701) (NC.ClosePropListEditor 156703 . 160505) (
+NC.DelPropFromList 160507 . 162600) (NC.EditPropButtonFN 162602 . 162907) (NC.EditProperties 162909 . 
+165231) (NC.EditPropList 165233 . 172866) (NC.ExtractPropList 172868 . 176695) (NC.OpenPropListEditor 
+176697 . 182502) (NC.ProcessEditedPropList 182504 . 184248) (NC.PropListEditorOpenP 184250 . 185342) (
+NC.SelectProperty 185344 . 186380) (NC.ShowLinks 186382 . 192500) (NC.StringIsListP 192502 . 193614) (
+NC.PutProp 193616 . 194287) (NC.GetProp 194289 . 194644) (NC.RemProp 194646 . 194925)) (194964 197587 
+(NC.FetchBeingDeletedFlg 194974 . 195397) (NC.SetBeingDeletedFlg 195399 . 195833) (
+NC.RemoveDELETEMEImageObjsFromCard 195835 . 197151) (NC.InsureIntegerDate 197153 . 197585)) (197632 
+200430 (NC.PlaceMarkerCopyFn 197642 . 197826) (NC.PlaceMarkerDisplayFn 197828 . 198423) (
+NC.PlaceMarkerGetFn 198425 . 198589) (NC.PlaceMarkerImageBoxFn 198591 . 199487) (NC.PlaceMarkerPutFn 
+199489 . 199725) (NC.MakePlaceMarker 199727 . 200428)) (200479 208371 (NC.FetchTitleDate 200489 . 
+201087) (NC.FetchItemDate 201089 . 201684) (NC.FetchPropListDate 201686 . 202294) (NC.FetchLinksDate 
+202296 . 202894) (NC.FetchLinkIconAttachedBitMap 202896 . 207240) (NC.FetchLinkDisplayMode 207242 . 
+207542) (NC.FetchDefaultWidth 207544 . 207826) (NC.FetchDefaultHeight 207828 . 208109) (
+NC.FetchLinkAnchorModesSupported 208111 . 208369)) (208372 210235 (NC.SetTitleDate 208382 . 208844) (
+NC.SetItemDate 208846 . 209300) (NC.SetPropListDate 209302 . 209769) (NC.SetLinksDate 209771 . 210233)
 ))))
 STOP

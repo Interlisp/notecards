@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "22-Oct-2023 21:58:11" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;2 69649  
+(FILECREATED " 4-Mar-2024 16:04:59" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;4 64606  
 
-      :CHANGES-TO (FNS NC.ScrollToCH#)
+      :CHANGES-TO (FNS NC.ScrollToCH# TEDIT.LIST.OF.OBJECTS)
 
-      :PREVIOUS-DATE " 3-Nov-2020 16:10:57" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;1)
+      :PREVIOUS-DATE "22-Oct-2023 21:58:11" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;2)
 
 
 (PRETTYCOMPRINT NCUTILITIESCOMS)
@@ -157,26 +157,18 @@
                          (fetch HEIGHT of REG))))))
 
 (TEDIT.LIST.OF.OBJECTS
-  (LAMBDA (TEXTOBJ TESTFN)                                   (* rrb " 8-Jun-84 11:12")
-          
-          (* Map thru all the pieces in a text stream, and select the image objects 
-          paired with their character positions)
+  [LAMBDA (TEXTSTREAM TESTFN)                                (* rrb " 8-Jun-84 11:12")
+                                                             (* fgh " 3-Mar-24" 
+                                "Modified to use public Tedit API - no need to know about pieces etc")
 
-    (PROG ((OBJLIST (TCONC NIL)))
-          (TEDIT.MAPPIECES TEXTOBJ (FUNCTION (LAMBDA (CH# PC PC# OBL)
-                                               (COND
-                                                  ((AND PC (NEQ PC 'LASTPIECE)
-                                                        (fetch POBJ of PC)
-                                                        (OR (NULL TESTFN)
-                                                            (APPLY* TESTFN (fetch POBJ of PC))))
-          
-          (* If there is an imageobj in this piece, and it passes the caller's test --
-          if he gave us one -- then add it to the list.)
+         (* Map thru all the pieces in a text stream, and select the image objects paired 
+         with their character positions)
 
-                                                   (TCONC OBL (LIST (fetch POBJ of PC)
-                                                                    CH#))))))
-                 OBJLIST)
-          (RETURN (CDAR OBJLIST)))))
+    (for FoundObj in (TEDIT.MAP.OBJECTS TEXTSTREAM [FUNCTION (LAMBDA (CH# OBJ FNARG)
+                                                               (OR (NULL TESTFN)
+                                                                   (APPLY* TESTFN OBJ]
+                            NIL T) collect (LIST (CADR FoundObj)
+                                                 (CAR FoundObj])
 
 (WINDOW.FROM.TEDIT.THING
 (LAMBDA (W) (* ; "Edited  9-Jul-91 21:44 by jds") (COND ((WINDOWP W)) ((STREAMP W) (* We got passed a stream; find the window for it) (WINDOW.OF.TEXTSTREAM W)) ((type? TEXTOBJ W) (* We got a textobj; use its window) (CAR (MKLIST (fetch (TEXTOBJ \WINDOW) of W)))) ((NULL W) (* Create the window, if none is given.) (CREATEW NIL "Editing Window")) (T (ERROR W "not a window."))))
@@ -961,76 +953,23 @@
 (NC.ScrollToCH#
   [LAMBDA (TEditWindow CH#)                                  (* ; "Edited  9-Jul-91 21:44 by jds")
 
-    (* ;; "This code almost totally ripped off from TEDIT.NORMALIZECARET.  Only difference is that this scrolls to make CH# be on top line of window even if it would be visible without scrolling.")
+    (* ;; "")
 
-    (PROG* ((SEL (TEDIT.SETSEL (TEXTSTREAM TEditWindow)
-                        CH# 0 'LEFT))
-            (TEXTOBJ (TEXTOBJ TEditWindow))
-            [WINDOW (OR (fetch (TEXTOBJ SELWINDOW) of TEXTOBJ)
-                        (CAR (fetch (TEXTOBJ \WINDOW) of TEXTOBJ]
-            (WREG (AND WINDOW (DSPCLIPPINGREGION NIL WINDOW)))
-            (WHEIGHT (AND WREG (fetch PTOP of WREG)))
-            (WBOTTOM (AND WREG (fetch BOTTOM of WREG)))
-            (SELWASON (fetch ONFLG of SEL))
-            CH# Y LINE)
-           (OR WINDOW (RETURN))
-           (OR (fetch SET of SEL)
-               (RETURN))                                     (* ; 
-                                                        "If there is no selection set, don't bother.")
-           (COND
-              (SELWASON                                      (* ; 
-                                                          "The selection is hilited, so turn it off.")
-                     (\SHOWSEL SEL NIL NIL)))
-           (for WW inside (fetch (TEXTOBJ \WINDOW) of TEXTOBJ) as L1
-              inside (fetch L1 of SEL) as LN inside (fetch LN of SEL) when (EQ WW WINDOW)
-              do 
-                 (* ;; "Get to the line info for the SELWINDOW.  (failing that, the main/only edit window) Use that info to decide where the caret is.")
+    (* ;; "Scroll TEdit Window so that CH# is on the top line.")
 
-                 (SELECTQ (fetch POINT of SEL)
-                     (LEFT                                   (* ; 
-              "The caret is at the left end of the selection;  hunt for the first selected character")
-                           (SETQ CH# (fetch CH# of SEL))
-                           [SETQ Y (OR (AND L1 (fetch (LINEDESCRIPTOR YBOT) of L1])
-                     (RIGHT                                  (* ; 
-              "The caret is at the right end of the selection;  hunt for the last selected character")
-                            (SETQ CH# (SUB1 (fetch CHLIM of SEL)))
-                            [SETQ Y (OR (AND LN (fetch (LINEDESCRIPTOR YBOT) of LN])
-                     NIL))
-           (COND
-              ((NOT (fetch (TEXTOBJ TXTNEEDSUPDATE) of TEXTOBJ))
-                                                             (* ; 
-                                                      "The caret is off-screen.  Scroll to get it on")
-               (for LINE inside (fetch L1 of SEL) when LINE do (replace (LINEDESCRIPTOR YBOT)
-                                                                  of LINE with (SUB1 WBOTTOM)))
-                                                             (* ; 
-                                        "Make sure it thinks the old selection is off-screen for now")
-               (for LINE inside (fetch LN of SEL) when LINE do (replace (LINEDESCRIPTOR YBOT)
-                                                                  of LINE with (SUB1 WBOTTOM)))
-               (SETQ LINE (\TEDIT.FIND.FIRST.LINE TEXTOBJ WHEIGHT (IMAX 1 (IMIN CH#
-                                                                                (fetch (TEXTOBJ
-                                                                                        TEXTLEN)
-                                                                                   of TEXTOBJ)))
-                                 WINDOW))                    (* ; 
-                                                            "Find the first line to go in the window")
-               (replace (LINEDESCRIPTOR YBOT) of LINE with (IDIFFERENCE WHEIGHT (fetch (
-                                                                                       LINEDESCRIPTOR
-                                                                                        LHEIGHT)
-                                                                                   of LINE)))
-                                                             (* ; "Set it up as the top line.")
-               (replace (LINEDESCRIPTOR YBASE) of LINE with (IPLUS (fetch (LINEDESCRIPTOR YBOT)
-                                                                      of LINE)
-                                                                   (fetch (LINEDESCRIPTOR DESCENT)
-                                                                      of LINE)))
-               (\DISPLAYLINE TEXTOBJ LINE WINDOW)
-               (\FILLWINDOW (fetch (LINEDESCRIPTOR YBOT) of LINE)
-                      LINE TEXTOBJ NIL WINDOW)               (* ; 
-                                                             "And fill out the window from there.")
-               (\FIXSEL SEL TEXTOBJ)
-               (\TEDIT.SET.WINDOW.EXTENT TEXTOBJ WINDOW)
-               (COND
-                  (SELWASON                                  (* ; 
-                                                      "The selection is hilited, so turn it back on.")
-                         (\SHOWSEL SEL NIL T])
+    (* ;; "")
+
+    (* ;; "2024-03-04 FGH  Revamped to use only TEdit public APIs.  Previous versions used all kinds of TEdit internals and was almost totally ripped off from TEDIT.NORMALIZECARET.")
+
+    (* ;; "")
+
+    (LET* [(TEXTSTREAM (TEXTSTREAM TEditWindow))
+           (SEL (OR TEXTSTREAM (TEDIT.SETSEL (TEXTSTREAM TEditWindow)
+                                      CH# 0 'LEFT]
+          (if SEL
+              then (TEDIT.NORMALIZECARET TEXTSTREAM NIL T)
+                   T
+            else NIL])
 )
 (DEFINEQ
 
@@ -1117,21 +1056,21 @@
 (ADDTOVAR LAMA NC.PrintMsg)
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (2991 4700 (NC.CoerceToCard 3001 . 4469) (NC.CardFromWindow 4471 . 4698)) (4900 5269 (WW
- 4910 . 5025) (FLASHW 5027 . 5267)) (5423 65284 (GETWREGION 5433 . 6075) (TEDIT.LIST.OF.OBJECTS 6077
- . 7226) (WINDOW.FROM.TEDIT.THING 7228 . 7636) (WINDOW.OF.TEXTSTREAM 7638 . 7916) (NC.AskUserWithMenu 
-7918 . 10924) (NC.AskYesOrNo 10926 . 14104) (NC.YesP 14106 . 14347) (FILDIR-EARLIEST 14349 . 14436) (
-FILDIR-VERSION 14438 . 16165) (GETMOUSEX 16167 . 16307) (GETMOUSEY 16309 . 16449) (LOWERLEFT 16451 . 
-16686) (MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ 16688 . 17987) (NC.AskUser 17989 . 22432) (
-NC.ZapAskUserProcess 22434 . 22806) (NC.AskUserResetWindow 22808 . 23769) (NC.ClearMsg 23771 . 25901) 
-(NC.ClearMsgNow 25903 . 28794) (NC.ClearMsgWaiter 28796 . 29696) (NC.ZapPromptWindowWaiter 29698 . 
-30146) (NC.GreyCard 30148 . 30748) (NC.IDFromNumber 30750 . 30944) (NC.MoveWindowOntoScreen 30946 . 
-34358) (NC.NotDaughterP 34360 . 35623) (NC.MarkerMatchesCardP 35625 . 36064) (NC.PlaceMarkerP 36066 . 
-36294) (NC.ReportError 36296 . 37211) (NC.PrintMsg 37213 . 47062) (DFIRSTREMOVE 47064 . 47889) (
-NC.HoldTTYProcess 47891 . 48248) (NC.GetShrunkenWin 48250 . 48936) (NC.CoerceToNoteFileStream 48938 . 
-49445) (NC.DrawInnerBox 49447 . 54230) (NC.UnionListsOfLinks 54232 . 55033) (NC.ParseString 55035 . 
-56660) (NC.AppendStringToStream 56662 . 57347) (NC.CoerceToInterestedWindow 57349 . 58860) (
-NC.UpperLeftCH# 58862 . 59773) (NC.ScrollToCH# 59775 . 65282)) (65285 69302 (NC.UpdateConfig 65295 . 
-66959) (NC.UpdateSingleFile 66961 . 67479) (NC.SetStandardConfigProps 67481 . 68682) (
-MAKECONFIGPROPSCOMS 68684 . 69300)))))
+  (FILEMAP (NIL (3013 4722 (NC.CoerceToCard 3023 . 4491) (NC.CardFromWindow 4493 . 4720)) (4922 5291 (WW
+ 4932 . 5047) (FLASHW 5049 . 5289)) (5445 60241 (GETWREGION 5455 . 6097) (TEDIT.LIST.OF.OBJECTS 6099
+ . 6945) (WINDOW.FROM.TEDIT.THING 6947 . 7355) (WINDOW.OF.TEXTSTREAM 7357 . 7635) (NC.AskUserWithMenu 
+7637 . 10643) (NC.AskYesOrNo 10645 . 13823) (NC.YesP 13825 . 14066) (FILDIR-EARLIEST 14068 . 14155) (
+FILDIR-VERSION 14157 . 15884) (GETMOUSEX 15886 . 16026) (GETMOUSEY 16028 . 16168) (LOWERLEFT 16170 . 
+16405) (MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ 16407 . 17706) (NC.AskUser 17708 . 22151) (
+NC.ZapAskUserProcess 22153 . 22525) (NC.AskUserResetWindow 22527 . 23488) (NC.ClearMsg 23490 . 25620) 
+(NC.ClearMsgNow 25622 . 28513) (NC.ClearMsgWaiter 28515 . 29415) (NC.ZapPromptWindowWaiter 29417 . 
+29865) (NC.GreyCard 29867 . 30467) (NC.IDFromNumber 30469 . 30663) (NC.MoveWindowOntoScreen 30665 . 
+34077) (NC.NotDaughterP 34079 . 35342) (NC.MarkerMatchesCardP 35344 . 35783) (NC.PlaceMarkerP 35785 . 
+36013) (NC.ReportError 36015 . 36930) (NC.PrintMsg 36932 . 46781) (DFIRSTREMOVE 46783 . 47608) (
+NC.HoldTTYProcess 47610 . 47967) (NC.GetShrunkenWin 47969 . 48655) (NC.CoerceToNoteFileStream 48657 . 
+49164) (NC.DrawInnerBox 49166 . 53949) (NC.UnionListsOfLinks 53951 . 54752) (NC.ParseString 54754 . 
+56379) (NC.AppendStringToStream 56381 . 57066) (NC.CoerceToInterestedWindow 57068 . 58579) (
+NC.UpperLeftCH# 58581 . 59492) (NC.ScrollToCH# 59494 . 60239)) (60242 64259 (NC.UpdateConfig 60252 . 
+61916) (NC.UpdateSingleFile 61918 . 62436) (NC.SetStandardConfigProps 62438 . 63639) (
+MAKECONFIGPROPSCOMS 63641 . 64257)))))
 STOP
