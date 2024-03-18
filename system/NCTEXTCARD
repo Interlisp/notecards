@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 4-Mar-2024 21:26:54" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;31 64341  
+(FILECREATED "18-Mar-2024 00:12:54" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;38 63386  
 
-      :CHANGES-TO (FNS NC.DelReferencesToCardFromText NC.CharPosFromTextObject NC.PutTextSubstance)
+      :CHANGES-TO (FNS NC.PutTextSubstance)
 
-      :PREVIOUS-DATE " 4-Mar-2024 13:04:07" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;28)
+      :PREVIOUS-DATE " 8-Mar-2024 15:42:18" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;36)
 
 
 (PRETTYCOMPRINT NCTEXTCARDCOMS)
@@ -30,7 +30,8 @@
              NC.MarkTextDirty NC.ResetTEdit NC.ResetTEditProcess NC.TEditBasedP NC.TEditCloseFn 
              NC.TEditMenuFn NC.TEditQuitFn NC.TextCopySubstance NC.TextDirtyP NC.TextCardShrinkFn 
              NC.PutTextSubstance NC.GetTextSubstance NC.UpdateLinkImagesInText 
-             NC.CharPosFromTextObject NC.DelReferencesToCardFromText)
+             NC.CharPosFromTextStream NC.DelReferencesToCardFromText NC.TEditWindow 
+             NC.TEditCollectObjects)
                                                              (* ; "(DECLARE%%: DONTEVAL@LOAD (VARS (TEDIT.DEFAULT.PROPS (CONS 'SLOWUPDATE (CONS 'T TEDIT.DEFAULT.PROPS)))))")
         (INITVARS (NC.TEditPasswordDividedBy100 314))
         
@@ -45,17 +46,6 @@
         (GLOBALVARS NC.ExternalPutLinkIconImageFns)
         (FNS NC.CardFromTextStream NC.TEditPutFn NC.TEditPutFnAuxiliary NC.TEditGetFn 
              NC.MakeTEditPropsList NC.TEditPropsListQuitFn NC.DelTEditProcesses)
-        
-
-(* ;;; "prevent TEdit splitwindow facilities")
-
-        [INITADVISE (\TEDIT.SPLITW (NIL (BEFORE NIL (if (NC.CardP (WINDOWPROP WINDOW 'NoteCardObject)
-                                                               )
-                                                        then
-                                                        (NC.PrintMsg WINDOW T 
-                                                               "Can't split a TEdit NoteCard.  Sorry"
-                                                               (CHARACTER 13))
-                                                        (RETURN NIL]
         
 
 (* ;;; "Add the Text card type to the card types list.")
@@ -247,7 +237,8 @@
                 (WINDOWPROP TEditWindow 'MODERNIZE.TITLEPROPORTION NC.MODERNIZE.TITLEPROPORTION)
                 (NC.InstallTitleBarLeftMenu TEditWindow Type)
                 (NC.InstallTextTitleBarMiddleMenu TEditWindow Type)
-                (SETQ TEditProcess (TEDIT TextStream TEditWindow)) 
+                (SETQ TEditProcess (TEDIT TextStream TEditWindow NIL (NC.MakeTEditPropsList 
+                                                                            TEditWindow))) 
 
                 (* ;; "wait for process to get established.  ")
 
@@ -264,7 +255,78 @@
 
 (NC.RevertTextCard  [LAMBDA (Card)                                             (* Randy.Gobbel " 7-Dec-87 12:04")    (NC.GetNoteCard Card)    (LET (TEditProcess (Window (NC.FetchWindow Card)))         (UNINTERRUPTABLY             (KILL-PROCESS-OF-TEDIT-WINDOW Window)             (UNMARK-AS-WITHOUT-PROCESS Window))         [SETQ TEditProcess (TEDIT (NC.FetchSubstance Card)                                   Window NIL (NC.MakeTEditPropsList Window (NC.FileBoxP Card T)                                                     (fetch (Card NoteFile) of Card]         (until (TEDIT-PROCESS-P TEditProcess) do (BLOCK)))                                                             (* wait for process to establish                                                            itself so TEdit killer doesn't get                                                            confused)    (NC.MarkCardDirty Card T])
 
-(NC.CollectReferencesInText  [LAMBDA (Card CheckAndDeleteFlg ReturnLinkIconsFlg ReturnLocationsFlg)                                                             (* rht%: " 1-Jun-87 22:11")         (* * Return a list of all links or link icons in text substance Substance.       If CheckAndDeleteFlg, then delete any links found that are not valid links.)         (* * fgh |11/13/85| Updated to handle Card object.       Eliminated DatabaseStream argument.)         (* * rht 5/26/87%: Changed to match reduced functionality of NC.ValidLinkP, now        have to check that destination of ActualLink is a valid card.)    (DECLARE (GLOBALVARS NC.DeletedLinkImageObject))    (PROG (ActualLink DirtyFlg Links (Substance (NC.FetchSubstance Card)))          [SETQ Links (for ImageObjectDecriptor in (TEDIT.LIST.OF.OBJECTS                                                            (TEXTOBJ Substance)                                                            (FUNCTION NC.LinkIconImageObjP))                         when (PROGN (SETQ ActualLink (NC.FetchLinkFromLinkIcon (CAR                                                                                  ImageObjectDecriptor                                                                                         )))                                         (COND                                            ((NULL CheckAndDeleteFlg)                                                             (* No checking required)                                             T)                                            ((AND (LISTP CheckAndDeleteFlg)                                                  (FMEMB (fetch (Link DestinationCard)                                                            of ActualLink)                                                         CheckAndDeleteFlg))                                                             (* Already checked since ID cached                                                            on CheckAndDeleteFlg list)                                             T)                                            ((AND (NC.ValidLinkP ActualLink)                                                  (NC.ValidCardP (fetch (Link DestinationCard)                                                                    of ActualLink)))                                                             (* Link is valid)                                             T)                                            (T               (* Link is bad. Replace it with the                                                            DeletedLink image object.)                                               (create IMAGEOBJ smashing (CAR                                                                                  ImageObjectDecriptor                                                                                      )                                                                          OBJECTDATUM _                                                                          (fetch (IMAGEOBJ                                                                                           OBJECTDATUM                                                                                            )                                                                             of                                                                             NC.DeletedLinkImageObject                                                                                 )                                                                          IMAGEOBJPLIST _                                                                          (fetch (IMAGEOBJ                                                                                         IMAGEOBJPLIST                                                                                            )                                                                             of                                                                             NC.DeletedLinkImageObject                                                                                 )                                                                          IMAGEOBJFNS _                                                                          (fetch (IMAGEOBJ                                                                                           IMAGEOBJFNS                                                                                            )                                                                             of                                                                             NC.DeletedLinkImageObject                                                                                 ))                                               (SETQ DirtyFlg T)                                               NIL))) collect (COND                                                                     ((AND ReturnLinkIconsFlg                                                                           (NOT ReturnLocationsFlg))                                                                      (CAR ImageObjectDecriptor))                                                                     ((AND ReturnLinkIconsFlg                                                                            ReturnLocationsFlg)                                                                      (CONS (CAR ImageObjectDecriptor                                                                                 )                                                                            (CADR                                                                                  ImageObjectDecriptor                                                                                  )))                                                                     ((AND (NOT ReturnLinkIconsFlg)                                                                           ReturnLocationsFlg)                                                                      (CONS ActualLink (CADR                                                                                  ImageObjectDecriptor                                                                                             )))                                                                     (T ActualLink]          (RETURN (CONS Links DirtyFlg])
+(NC.CollectReferencesInText
+  [LAMBDA (Card CheckAndDeleteFlg ReturnLinkIconsFlg ReturnLocationsFlg)
+                                                             (* rht%: " 1-Jun-87 22:11")
+
+         (* * Return a list of all links or link icons in text substance Substance.
+         If CheckAndDeleteFlg, then delete any links found that are not valid links.)
+
+         (* * fgh |11/13/85| Updated to handle Card object.
+         Eliminated DatabaseStream argument.)
+
+         (* * rht 5/26/87%: Changed to match reduced functionality of NC.ValidLinkP, now 
+         have to check that destination of ActualLink is a valid card.)
+
+    (DECLARE (GLOBALVARS NC.DeletedLinkImageObject))
+    (PROG (ActualLink DirtyFlg Links (Substance (NC.FetchSubstance Card)))
+          [SETQ Links (for ImageObjectDecriptor in (NC.TEditCollectObjects Substance
+                                                          (FUNCTION NC.LinkIconImageObjP))
+                         when (PROGN (SETQ ActualLink (NC.FetchLinkFromLinkIcon (CAR 
+                                                                                 ImageObjectDecriptor
+                                                                                     )))
+                                     (COND
+                                        ((NULL CheckAndDeleteFlg)
+                                                             (* No checking required)
+                                         T)
+                                        ((AND (LISTP CheckAndDeleteFlg)
+                                              (FMEMB (fetch (Link DestinationCard) of ActualLink)
+                                                     CheckAndDeleteFlg))
+                                                             (* Already checked since ID cached on 
+                                                             CheckAndDeleteFlg list)
+                                         T)
+                                        ((AND (NC.ValidLinkP ActualLink)
+                                              (NC.ValidCardP (fetch (Link DestinationCard)
+                                                                of ActualLink)))
+                                                             (* Link is valid)
+                                         T)
+                                        (T                   (* Link is bad. Replace it with the 
+                                                             DeletedLink image object.)
+                                           (create IMAGEOBJ smashing (CAR ImageObjectDecriptor)
+                                                                  OBJECTDATUM _ (fetch (IMAGEOBJ
+                                                                                        OBJECTDATUM)
+                                                                                   of 
+                                                                            NC.DeletedLinkImageObject
+                                                                                       )
+                                                                  IMAGEOBJPLIST _ (fetch (IMAGEOBJ
+                                                                                          
+                                                                                        IMAGEOBJPLIST
+                                                                                          )
+                                                                                     of 
+                                                                            NC.DeletedLinkImageObject
+                                                                                         )
+                                                                  IMAGEOBJFNS _ (fetch (IMAGEOBJ
+                                                                                        IMAGEOBJFNS)
+                                                                                   of 
+                                                                            NC.DeletedLinkImageObject
+                                                                                       ))
+                                           (SETQ DirtyFlg T)
+                                           NIL))) collect (COND
+                                                             ((AND ReturnLinkIconsFlg (NOT 
+                                                                                   ReturnLocationsFlg
+                                                                                           ))
+                                                              (CAR ImageObjectDecriptor))
+                                                             ((AND ReturnLinkIconsFlg 
+                                                                   ReturnLocationsFlg)
+                                                              (CONS (CAR ImageObjectDecriptor)
+                                                                    (CADR ImageObjectDecriptor)))
+                                                             ((AND (NOT ReturnLinkIconsFlg)
+                                                                   ReturnLocationsFlg)
+                                                              (CONS ActualLink (CADR 
+                                                                                 ImageObjectDecriptor
+                                                                                     )))
+                                                             (T ActualLink]
+          (RETURN (CONS Links DirtyFlg])
 
 (NC.InstallTextTitleBarMiddleMenu  [LAMBDA (Window CardType)                                  (* pmi%: " 2-Apr-87 10:23")         (* * Make a text card middle button title bar menu and install.)         (* * pmi 4/1/87%: Changed to replace MENUFONT with NC.MenuFont)    (DECLARE (GLOBALVARS NC.MenuFont))    (LET (Menu)         [WINDOWPROP Window 'TitleBarMiddleButtonMenu (SETQ Menu (\TEDIT.CREATEMENU (                                                                                  NC.GetCardTypeField                                                                                                                                                                     MiddleButtonMenuItems                                                                                     CardType]         (replace (MENU MENUFONT) of Menu with NC.MenuFont)         (replace (MENU ITEMHEIGHT) of Menu with (IPLUS (FONTPROP NC.MenuFont                                                                           'HEIGHT)                                                                    1))         (replace (MENU IMAGE) of Menu with NIL])
 
@@ -272,7 +334,40 @@
 
 (NC.ResetTEdit  [LAMBDA (TextStream)                                       (* NoteCards% User "17-Jun-84 01:58")         (* * Kill the Tedit process running on TextStream and the restart a new one.       Goal is to clean up display if TEdit goea awary.)    (ADD.PROCESS (LIST (FUNCTION NC.ResetTEditProcess)                       TextStream)           'NAME           'ResetTEdit])
 
-(NC.ResetTEditProcess  [LAMBDA (TextStream)                                       (* fgh%: " 7-Jun-86 19:16")         (* * Added-process that actually does the works for NC.ResetTEdit.       Kill the Tedit process running on TextStream and the restart a new one.       Goal is to clean up display if TEdit goea awary.)         (* * rht 2/1/85%: Changed to calls to NC.MarkCardDirty and NC.CardDirtyP.)         (* * rht 10/8/85%: Now closes prompt window if TEDIT call brought it up.)         (* * fgh |11/13/85| Updated to handle Card object.)         (* * fgh |6/7/86| Upodated to use NC.GETPROMPTWINDOW.       Added WINDOWADDPROP call to make sure that NC.QUitCard is first on the CLOSEFN        list)    (LET ((Window (WINDOW.FROM.TEDIT.THING TextStream))          (TextObj (TEXTOBJ TextStream))          DirtyFlg Card PromptWin)         (COND            ((AND (WINDOWP Window)                  (SETQ Card (NC.CoerceToCard Window)))             (SETQ DirtyFlg (NC.CardDirtyP Card))             (TEDIT.KILL TextStream)             (until (NULL (WINDOWPROP Window 'TEXTSTREAM)) do (BLOCK))             (TEDIT TextStream Window)             (until (TEXTSTREAMP (WINDOWPROP Window 'TEXTSTREAM)) do (BLOCK))             (COND                ((OPENWP (SETQ PromptWin (NC.GETPROMPTWINDOW Window NIL NIL T)))                 (CLOSEW PromptWin)))             (NC.MarkCardDirty Card (NOT DirtyFlg))             (WINDOWPROP Window 'TITLE (NC.RetrieveTitle Card))             (WINDOWADDPROP Window 'CLOSEFN (FUNCTION NC.QuitCard)                    T])
+(NC.ResetTEditProcess
+  [LAMBDA (TextStream)                                       (* fgh%: " 7-Jun-86 19:16")
+
+         (* * Added-process that actually does the works for NC.ResetTEdit.
+         Kill the Tedit process running on TextStream and the restart a new one.
+         Goal is to clean up display if TEdit goea awary.)
+
+         (* * rht 2/1/85%: Changed to calls to NC.MarkCardDirty and NC.CardDirtyP.)
+
+         (* * rht 10/8/85%: Now closes prompt window if TEDIT call brought it up.)
+
+         (* * fgh |11/13/85| Updated to handle Card object.)
+
+         (* * fgh |6/7/86| Upodated to use NC.GETPROMPTWINDOW.
+         Added WINDOWADDPROP call to make sure that NC.QUitCard is first on the CLOSEFN 
+         list)
+
+    (LET ((Window (NC.TEditWindow TextStream))
+          DirtyFlg Card PromptWin)
+         (COND
+            ((AND (WINDOWP Window)
+                  (SETQ Card (NC.CoerceToCard Window)))
+             (SETQ DirtyFlg (NC.CardDirtyP Card))
+             (TEDIT.KILL TextStream)
+             (until (NULL (WINDOWPROP Window 'TEXTSTREAM)) do (BLOCK))
+             (TEDIT TextStream Window NIL (NC.MakeTEditPropsList Window))
+             (until (TEXTSTREAMP (WINDOWPROP Window 'TEXTSTREAM)) do (BLOCK))
+             (COND
+                ((OPENWP (SETQ PromptWin (NC.GETPROMPTWINDOW Window NIL NIL T)))
+                 (CLOSEW PromptWin)))
+             (NC.MarkCardDirty Card (NOT DirtyFlg))
+             (WINDOWPROP Window 'TITLE (NC.RetrieveTitle Card))
+             (WINDOWADDPROP Window 'CLOSEFN (FUNCTION NC.QuitCard)
+                    T])
 
 (NC.TEditBasedP  [LAMBDA (CardOrTypeName)                                   (* fgh%: "17-Nov-85 19:21")         (* * Returns T if Type is a note card type that is based on TEdit or else an ID        of such a note card. NIL otherise.)         (* * rht 11/8/84%: Hacked to reflect notecards typing mechanism.       Seems gross to have to search the types list to get the record.)         (* * fgh |11/13/85| Updated to handle Card object.)    (LET [(TypeName (COND                       ((NC.CardP CardOrTypeName)                        (NC.RetrieveType CardOrTypeName))                       (T CardOrTypeName]         (NC.IsSubTypeOfP TypeName 'Text])
 
@@ -344,6 +439,9 @@
 
     (LET [(Substance (NC.FetchSubstance Card))
           (TmpStrm (OPENSTREAM '{NODIRCORE} 'BOTH]
+         (if (EQ (TEDIT.NCHARS Substance)
+                 0)
+             then (TEDIT.INSERT Substance " " 1))
          (TEDIT.PUT.STREAM Substance TmpStrm NIL NIL T)
          (SETFILEPTR TmpStrm 0)
          (COPYBYTES TmpStrm Stream)
@@ -352,12 +450,48 @@
 
 (NC.GetTextSubstance  [LAMBDA (Card Length Stream)                               (* rht%: " 2-Feb-87 17:51")                                                             (* Get a text stream from the                                                            database file)         (* * fgh |11/13/85| Updated to handle Card objects.)         (* * fgh |11/20/85| NoteCards now passes down start and end pointer as args.)         (* * fgh |11/21/85| Now passed Length instead of start and end ptrs.)         (* * rht 1/23/86%: Now takes Stream as arg instead of computing from Card.)         (* * rht 2/2/87%: Fixed bug in the way NC.MakeTEditPropsList was being called.)    (LET ((TempStream (OPENSTREAM '{NODIRCORE} 'BOTH 'NEW))          TextStream StartPtr)         (* * Copy text stream to a NODIRCORE file from the current location.       Number of bytes copied should be Length minus the 4 bytes already read for        OriginalLocation)         (COPYBYTES Stream TempStream (SETQ StartPtr (GETFILEPTR Stream))                (PLUS StartPtr Length))         (* * return an open textstream on the temp file)         [SETQ TextStream (OPENTEXTSTREAM TempStream NIL NIL NIL (NC.MakeTEditPropsList                                                                  NIL                                                                  (NC.FileBoxP Card T)                                                                  (fetch (Card NoteFile)                                                                     of Card]         (STREAMPROP TextStream 'NoteCardObject Card)         TextStream])
 
-(NC.UpdateLinkImagesInText  [LAMBDA (SourceCardOrWindow DestinationCard)               (* rht%: "28-Oct-87 18:47")         (* * Update the notecard link image objects that point to DestinationID fromn        text card SourceCardIDOrWindow)         (* * rht 2/8/85%: Makes sure not to dirty the card if it wasn't dirty before.)         (* * fgh |11/17/85| Updated to handle card objects.)         (* * rht 10/28/87%: Updated to handle pointer imageobjs as well.)    (LET (Window TextObject LinksAndPointers SourceCard WasDirtyFlg)         [SETQ Window (COND                         ((WINDOWP SourceCardOrWindow)                          SourceCardOrWindow)                         (T (NC.FetchWindow SourceCardOrWindow]         (SETQ TextObject (WINDOWPROP Window 'TEXTOBJ))         [SETQ LinksAndPointers (TEDIT.LIST.OF.OBJECTS TextObject (FUNCTION (LAMBDA (ImageObj)                                                                              (OR (                                                                                 NC.LinkIconImageObjP                                                                                   ImageObj)                                                                                  (                                                                              NC.PointerIconImageObjP                                                                                   ImageObj]         [SETQ WasDirtyFlg (NC.CardDirtyP (SETQ SourceCard (NC.CoerceToCard Window]         [for LinkOrPointer in LinksAndPointers            do (if (OR (AND (NC.LinkIconImageObjP (CAR LinkOrPointer))                                    (NC.SameCardP (fetch (Link DestinationCard)                                                     of (NC.FetchLinkFromLinkIcon (CAR                                                                                         LinkOrPointer                                                                                           )))                                           DestinationCard))                               (AND (NC.PointerIconImageObjP (CAR LinkOrPointer))                                    (NC.SameCardP (fetch (NCPointer DestinationCard)                                                     of (NC.FetchPointerFromPointerIcon                                                             (CAR LinkOrPointer)))                                           DestinationCard)))                       then (TEDIT.OBJECT.CHANGED TextObject (CAR LinkOrPointer]         (NC.MarkCardDirty SourceCard (NOT WasDirtyFlg])
+(NC.UpdateLinkImagesInText
+  [LAMBDA (SourceCardOrWindow DestinationCard)               (* rht%: "28-Oct-87 18:47")
 
-(NC.CharPosFromTextObject
+         (* * Update the notecard link image objects that point to DestinationID fromn 
+         text card SourceCardIDOrWindow)
+
+         (* * rht 2/8/85%: Makes sure not to dirty the card if it wasn't dirty before.)
+
+         (* * fgh |11/17/85| Updated to handle card objects.)
+
+         (* * rht 10/28/87%: Updated to handle pointer imageobjs as well.)
+
+    (LET (Window TextObject LinksAndPointers SourceCard WasDirtyFlg)
+         [SETQ Window (COND
+                         ((WINDOWP SourceCardOrWindow)
+                          SourceCardOrWindow)
+                         (T (NC.FetchWindow SourceCardOrWindow]
+         (SETQ TextObject (WINDOWPROP Window 'TEXTOBJ))
+         [SETQ LinksAndPointers (NC.TEditCollectObjects TextObject (FUNCTION (LAMBDA (ImageObj)
+                                                                               (OR (
+                                                                                 NC.LinkIconImageObjP
+                                                                                    ImageObj)
+                                                                                   (
+                                                                              NC.PointerIconImageObjP
+                                                                                    ImageObj]
+         [SETQ WasDirtyFlg (NC.CardDirtyP (SETQ SourceCard (NC.CoerceToCard Window]
+         [for LinkOrPointer in LinksAndPointers
+            do (if (OR (AND (NC.LinkIconImageObjP (CAR LinkOrPointer))
+                            (NC.SameCardP (fetch (Link DestinationCard) of (NC.FetchLinkFromLinkIcon
+                                                                            (CAR LinkOrPointer)))
+                                   DestinationCard))
+                       (AND (NC.PointerIconImageObjP (CAR LinkOrPointer))
+                            (NC.SameCardP (fetch (NCPointer DestinationCard)
+                                             of (NC.FetchPointerFromPointerIcon (CAR LinkOrPointer)))
+                                   DestinationCard)))
+                   then (TEDIT.OBJECT.CHANGED TextObject (CAR LinkOrPointer]
+         (NC.MarkCardDirty SourceCard (NOT WasDirtyFlg])
+
+(NC.CharPosFromTextStream
   [LAMBDA (TEXTSTREAM)                                       (* rht%: "27-Jun-85 15:38")
 
-         (* * Return the position %# of current selection in TextObject)
+         (* * Return the position %# of current selection in TextStream)
 
     (TEDIT.GETPOINT TEXTSTREAM])
 
@@ -388,7 +522,7 @@
                          (SETQ SourceCard (fetch (Link SourceCard) of LinkOrDestinationCard]
             (T (SETQ DestinationCard LinkOrDestinationCard)))
          (SETQ Substance (NC.FetchSubstance SourceCard))
-         (for Link in (TEDIT.LIST.OF.OBJECTS Substance (FUNCTION NC.LinkIconImageObjP)) bind OldSel
+         (for Link in (NC.TEditCollectObjects Substance (FUNCTION NC.LinkIconImageObjP)) bind OldSel
             when [COND
                     [LinkFlg (NC.SameLinkP LinkOrDestinationCard (NC.FetchLinkFromLinkIcon
                                                                   (CAR Link]
@@ -403,6 +537,35 @@
                (AND NC.UseDeletedLinkIconIndicatorsFlg (NOT Don'tCreateDeletedImageObjFlg)
                     (TEDIT.INSERT.OBJECT NC.DeletedLinkImageObject Substance (CADR Link)))
                (TEDIT.SETSEL Substance OldSel])
+
+(NC.TEditWindow
+  [LAMBDA (TEditThing NoError)
+
+    (* ;; "Return the Window associated with a TEXTOBJ or TEXTSTREAM ")
+
+    (LET ((TEditWindow (TEDITWINDOWP TEditThing)))
+         (if (NULL TEditThing)
+             then                                            (* Create the window, if none is 
+                                                             given.)
+                  (CREATEW NIL "Editing Window")
+           elseif (AND (NULL TEditWindow)
+                       (NULL NoError))
+             then (ERROR TEditThing "is not associated with a TEdit window.")
+           else TEditWindow])
+
+(NC.TEditCollectObjects
+  [LAMBDA (TEXTSTREAM TESTFN)                                (* rrb " 8-Jun-84 11:12")
+                                                             (* fgh " 3-Mar-24" 
+                                "Modified to use public Tedit API - no need to know about pieces etc")
+
+         (* Map thru all the pieces in a text stream, and select the image objects paired 
+         with their character positions)
+
+    (for FoundObj in (TEDIT.MAP.OBJECTS TEXTSTREAM [FUNCTION (LAMBDA (CH# OBJ FNARG)
+                                                               (OR (NULL TESTFN)
+                                                                   (APPLY* TESTFN OBJ]
+                            NIL T) collect (LIST (CADR FoundObj)
+                                                 (CAR FoundObj])
 )
 
 
@@ -420,7 +583,19 @@
 
 (DEFINEQ
 
-(NC.TranslateWindowPositionToTEditPosition  [LAMBDA (Card Window WindowPositionX WindowPositionY)      (* fgh%: " 6-Feb-86 22:12")         (* * fgh |2/6/86| Added Card argument.)    (PROG (TextObj)          (COND             ([AND (WINDOWP Window)                   (type? TEXTOBJ (SETQ TextObj (WINDOWPROP Window 'TEXTOBJ]              (RETURN (fetch (SELECTION CH#) of (TEDIT.SELECT WindowPositionX WindowPositionY                                                               TextObj (fetch (TEXTOBJ                                                                                          MOUSEREGION)                                                                          of TextObj)                                                               NIL NIL Window])
+(NC.TranslateWindowPositionToTEditPosition
+  [LAMBDA (Card Window WindowPositionX WindowPositionY)      (* fgh%: " 6-Feb-86 22:12")
+
+         (* * fgh |2/6/86| Added Card argument.)
+
+    (PROG (TextObj)
+          (COND
+             ([AND (WINDOWP Window)
+                   (type? TEXTOBJ (SETQ TextObj (WINDOWPROP Window 'TEXTOBJ]
+              (RETURN (fetch (SELECTION CH#) of (\TEDIT.SELECT WindowPositionX WindowPositionY 
+                                                       TextObj (fetch (TEXTOBJ MOUSEREGION)
+                                                                  of TextObj)
+                                                       NIL NIL Window])
 
 (NC.InsertLinkInTextWindow  [LAMBDA (Card TextWindow LinkOrLinkLabel CharacterPosition)(* fgh%: " 6-Feb-86 22:12")         (* * Given a Window and a Link, insert the Link at CharacterPosition in the        TextStream of Window)         (* * fgh |2/6/86| Added Card argument)    (PROG [(TextStream (WINDOWPROP TextWindow 'TEXTSTREAM]          (RETURN (NC.InsertLinkInText TextStream LinkOrLinkLabel NIL NIL NIL CharacterPosition])
 )
@@ -437,13 +612,144 @@
 
 (NC.CardFromTextStream  [LAMBDA (TextStream)                                       (* fgh%: "13-Nov-85 23:34")         (* * Return the NoteCards ID for a TextStream)         (* * fgh |11/13/85| Updated to handle Card object.)    (STREAMPROP TextStream 'NoteCardObject])
 
-(NC.TEditPutFn  [LAMBDA (TextStream FileName When?)                        (* ; "Edited  6-Jan-89 18:33 by rtk")(* ;;; "This function designed to be attached to the PUTFN Tedit property of NC textstreams.")(* ;;; "Before actions: Mark the card dirty for NoteCards, if TEdit thinks the card is dirty.  Also, change the link icons to be ExternalPut Link Icons so that thety are no longer active in the file being put to.  Necessary when a put is done outside the normal NoteCards mechanism.")(* ;;; "fgh 5/7/86 Added kludge to get around bug in TEDIT.PUT that causes FileName to be NIL most of the time.  Submitted AR #5621 about TEDIT.PUT bug.  Also added scheme to temporarily set the TEXPROP CACHE in order to prevent TEDIT.PUT from updating the file info in the piece table.")(* ;;; "BK 1/6/89 Add extra NC.ExternalBitMapPutLinkIconImageFns to NC.TEditPutFnAuxiliary call.")    (SELECTQ When?        (BEFORE (PROG ((TextObj (TEXTOBJ TextStream))                       LinkIcons)(* ;;; "Kludge to get around bug in TEDIT.PUT described in AR #5621.  Note the OFILE is called freely!!!")                      [SETQ FileName (COND                                        (FileName (FULLNAME (PACKFILENAME 'VERSION NIL 'BODY FileName                                                                   'VERSION NIL)                                                         'NEW))                                        (T (FULLNAME OFILE 'NEW](* ;;; "first Mark the card dirty NoteCards style, if necessary")                      [COND                         ((TEDIT.STREAMCHANGEDP TextStream)                          (NC.MarkCardDirty (NC.CardFromTextStream (TEXTSTREAM TextStream]                      (RESETLST(* ;;; "Remove this PUTFN from the TEXTOBJ temporarily")                          [RESETSAVE (TEXTPROP TextObj 'PUTFN NIL)                                 `(TEXTPROP ,TextObj PUTFN ,(TEXTPROP TextObj 'PUTFN](* ;;; "Collect all the link icons in the TextStream")                          (SETQ LinkIcons (TEDIT.LIST.OF.OBJECTS TextObj (FUNCTION                                                                           NC.LinkIconImageObjP)))(* ;;; "Temporarily set them to be ExternalPut link icons")                          [RESETSAVE (NC.TEditPutFnAuxiliary LinkIcons                                             NC.ExternalPutLinkIconImageFns                                             NC.ExternalBitMapPutLinkIconImageFns)                                 `(NC.TEditPutFnAuxiliary ,LinkIcons ,NC.LinkIconImageFns](* ;;; "Fix up the title on the way out")                          [RESETSAVE NIL `(AND ,(WINDOW.FROM.TEDIT.THING TextStream)                                               (WINDOWPROP ,(WINDOW.FROM.TEDIT.THING TextStream)                                                      'TITLE                                                      ,(NC.RetrieveTitle (NC.CardFromTextStream                                                                          TextStream](* ;;; "Temporarily set TEdit to think this is CAHCEd so that the piece table doesn't get messed up.")                          [RESETSAVE (TEXTPROP (TEXTOBJ TextStream)                                            'CACHE T)                                 `(TEXTPROP ,(TEXTOBJ TextStream)                                         CACHE                                         ,(TEXTPROP (TEXTOBJ TextStream)                                                 'CACHE](* ;;; "Put the file as usual.  NOTE: FORCENEW UNFORMATTED?  OLDFORMAT?  used freely!!!!")                          (TEDIT.PUT TextStream FileName FORCENEW UNFORMATTED? OLDFORMAT?))                      (RETURN 'DON'T)))        NIL])
+(NC.TEditPutFn
+  [LAMBDA (TextStream FileName When?)                        (* ; "Edited  6-Jan-89 18:33 by rtk")
+
+(* ;;; "This function designed to be attached to the PUTFN Tedit property of NC textstreams.")
+
+(* ;;; "Before actions: Mark the card dirty for NoteCards, if TEdit thinks the card is dirty.  Also, change the link icons to be ExternalPut Link Icons so that thety are no longer active in the file being put to.  Necessary when a put is done outside the normal NoteCards mechanism.")
+
+(* ;;; "fgh 5/7/86 Added kludge to get around bug in TEDIT.PUT that causes FileName to be NIL most of the time.  Submitted AR #5621 about TEDIT.PUT bug.  Also added scheme to temporarily set the TEXPROP CACHE in order to prevent TEDIT.PUT from updating the file info in the piece table.")
+
+(* ;;; "BK 1/6/89 Add extra NC.ExternalBitMapPutLinkIconImageFns to NC.TEditPutFnAuxiliary call.")
+
+    (SELECTQ When?
+        (BEFORE (PROG (LinkIcons)
+
+                 (* ;; 
+   "Kludge to get around bug in TEDIT.PUT described in AR #5621.  Note the OFILE is called freely!!!")
+
+                      [SETQ FileName (COND
+                                        (FileName (FULLNAME (PACKFILENAME 'VERSION NIL 'BODY FileName
+                                                                   'VERSION NIL)
+                                                         'NEW))
+                                        (T (FULLNAME OFILE 'NEW]
+
+                 (* ;; "first Mark the card dirty NoteCards style, if necessary")
+
+                      [COND
+                         ((TEDIT.STREAMCHANGEDP TextStream)
+                          (NC.MarkCardDirty (NC.CardFromTextStream (TEXTSTREAM TextStream]
+                      (RESETLST
+
+                          (* ;; "Remove this PUTFN from the TEXTSTREAM temporarily")
+
+                          [RESETSAVE (TEXTPROP TextStream 'PUTFN NIL)
+                                 `(TEXTPROP ,TextStream PUTFN ,(TEXTPROP TextStream 'PUTFN]
+
+                          (* ;; "Collect all the link icons in the TextStream")
+
+                          (SETQ LinkIcons (NC.TEditCollectObjects TextStream (FUNCTION 
+                                                                              NC.LinkIconImageObjP)))
+
+                          (* ;; "Temporarily set them to be ExternalPut link icons")
+
+                          [RESETSAVE (NC.TEditPutFnAuxiliary LinkIcons NC.ExternalPutLinkIconImageFns
+                                            NC.ExternalBitMapPutLinkIconImageFns)
+                                 `(NC.TEditPutFnAuxiliary ,LinkIcons ,NC.LinkIconImageFns]
+
+                          (* ;; "Fix up the title on the way out")
+
+                          [RESETSAVE NIL `(AND ,(NC.TEditWindow TextStream)
+                                               (WINDOWPROP ,(NC.TEditWindow TextStream)
+                                                      'TITLE
+                                                      ,(NC.RetrieveTitle (NC.CardFromTextStream
+                                                                          TextStream]
+
+                          (* ;; 
+       "Temporarily set TEdit to think this is CAHCEd so that the piece table doesn't get messed up.")
+
+                          [RESETSAVE (TEXTPROP TextStream 'CACHE T)
+                                 `(TEXTPROP ,TextStream CACHE ,(TEXTPROP TextStream 'CACHE]
+
+                          (* ;; 
+                   "Put the file as usual.  NOTE: FORCENEW UNFORMATTED?  OLDFORMAT?  used freely!!!!")
+
+                          (TEDIT.PUT TextStream FileName FORCENEW UNFORMATTED? OLDFORMAT?))
+                      (RETURN 'DON'T)))
+        NIL])
 
 (NC.TEditPutFnAuxiliary  [LAMBDA (LinkIcons NewImageFns BitMapGetImageFns)          (* ; "Edited  6-Jan-89 16:19 by rtk")(* ;;; "BK 1/6/89 Test for A Bitmap & Set to Alternage BitMapGetImageFns & TextStream")(* ;;; "For a list of link icons as returned by TEDIT.LIST.OF.OBJECTS, replace all the IMAGEFNS of the objects with NewImageFns")    (for LinkIconPair in LinkIcons       do (LET ((IMAGE-OBJECT (CAR LinkIconPair)))                   (replace (IMAGEOBJ IMAGEOBJFNS) of IMAGE-OBJECT                      with (if [AND BitMapGetImageFns (OR T (NC.SetBitMap&Box                                                                     IMAGE-OBJECT                                                                     (IMAGEOBJPROP IMAGE-OBJECT                                                                            'IMAGEBITMAP]                                   then BitMapGetImageFns                                 else NewImageFns])
 
-(NC.TEditGetFn  [LAMBDA (TextStream FileName When?)                        (* fgh%: "19-May-86 13:09")         (* * This function called from the GETFN for all NC TextStreams)         (* * fgh |5/19/86| Added WINDOWP check to make sure that the window title isn't        changed if there is no window.)    (SELECTQ When?        (BEFORE (LET [(LinkIcons (TEDIT.LIST.OF.OBJECTS (TEXTOBJ TextStream)                                        (FUNCTION NC.LinkIconImageObjP]         (* * Delete all the links currentluy in the text stream)                     (for LinkIconPair in LinkIcons do (TEDIT.DELETE TextStream                                                                          (CADR LinkIconPair)                                                                          1))))        (AFTER [LET ((Card (NC.CardFromTextStream TextStream)))         (* * Mark the card dirty ala NoteCards)                    (NC.MarkCardDirty Card)         (* * Reset the NC title)                    (AND (WINDOWP (WINDOW.FROM.TEDIT.THING TextStream))                         (WINDOWPROP (WINDOW.FROM.TEDIT.THING TextStream)                                'TITLE                                (NC.RetrieveTitle Card])        NIL])
+(NC.TEditGetFn
+  [LAMBDA (TextStream FileName When?)                        (* fgh%: "19-May-86 13:09")
 
-(NC.MakeTEditPropsList  [LAMBDA (TEditWindow Don'tAttachUserSpecifiedPropsFlg NoteFile)                                                             (* rht%: " 9-Mar-87 11:00")         (* * Create the props list to hand to all TEdit and OPENTEXTSTREAM calls)         (* * rht 9/10/85%: Now takes a TEditWindow arg so can compute a prompt window.)         (* * 5/1/86%: Now appends NC-specific props in front of TEdit props specified        as global param by user.)         (* * rht 8/2/86%: Added Don'tAttachUserSpecifiedPropsFlg to override attaching        user-specified props. For use by fileboxes.)         (* * rht&pmi 11/19/86%: Added another set of props at the notefile level        stashed on NoteFile user data. Also added NoteFile argument.)         (* * rht 3/9/87%: Now passes DON'T to PROMPTWINDOW to fix things for lyric.)    (DECLARE (GLOBALVARS NC.UserSpecifiedTEditProps NC.DefaultFont))    (APPEND (LIST 'TITLEMENUFN (FUNCTION NC.TEditMenuFn)                  'PUTFN                  (FUNCTION NC.TEditPutFn)                  'GETFN                  (FUNCTION NC.TEditGetFn)                  'QUITFN                  [LIST (FUNCTION NC.TEditPropsListQuitFn)                        (FUNCTION (LAMBDA NIL                                    'DON'T]                  'PROMPTWINDOW                  'DON'T)           (LIST 'FONT (OR (AND (type? NoteFile NoteFile)                                (NC.NoteFileProp NoteFile 'Font))                           NC.DefaultFont))           (if Don'tAttachUserSpecifiedPropsFlg               then NIL             else (OR (AND (type? NoteFile NoteFile)                               (NC.NoteFileProp NoteFile 'ExtraTEditProps))                          NC.UserSpecifiedTEditProps])
+         (* * This function called from the GETFN for all NC TextStreams)
+
+         (* * fgh |5/19/86| Added WINDOWP check to make sure that the window title isn't 
+         changed if there is no window.)
+
+    (SELECTQ When?
+        (BEFORE (LET [(LinkIcons (NC.TEditCollectObjects TextStream (FUNCTION NC.LinkIconImageObjP]
+
+         (* * Delete all the links currentluy in the text stream)
+
+                     (for LinkIconPair in LinkIcons do (TEDIT.DELETE TextStream (CADR LinkIconPair)
+                                                              1))))
+        (AFTER [LET ((Card (NC.CardFromTextStream TextStream)))
+
+         (* * Mark the card dirty ala NoteCards)
+
+                    (NC.MarkCardDirty Card)
+
+         (* * Reset the NC title)
+
+                    (AND (WINDOWP (NC.TEditWindow TextStream T))
+                         (WINDOWPROP (NC.TEditWindow TextStream)
+                                'TITLE
+                                (NC.RetrieveTitle Card])
+        NIL])
+
+(NC.MakeTEditPropsList
+  [LAMBDA (TEditWindow Don'tAttachUserSpecifiedPropsFlg NoteFile)
+                                                             (* rht%: " 9-Mar-87 11:00")
+
+         (* * Create the props list to hand to all TEdit and OPENTEXTSTREAM calls)
+
+         (* * rht 9/10/85%: Now takes a TEditWindow arg so can compute a prompt window.)
+
+         (* * 5/1/86%: Now appends NC-specific props in front of TEdit props specified as 
+         global param by user.)
+
+         (* * rht 8/2/86%: Added Don'tAttachUserSpecifiedPropsFlg to override attaching 
+         user-specified props. For use by fileboxes.)
+
+         (* * rht&pmi 11/19/86%: Added another set of props at the notefile level stashed 
+         on NoteFile user data. Also added NoteFile argument.)
+
+         (* * rht 3/9/87%: Now passes DON'T to PROMPTWINDOW to fix things for lyric.)
+
+    (DECLARE (GLOBALVARS NC.UserSpecifiedTEditProps NC.DefaultFont))
+    (APPEND (LIST 'TITLEMENUFN (FUNCTION NC.TEditMenuFn)
+                  'PUTFN
+                  (FUNCTION NC.TEditPutFn)
+                  'GETFN
+                  (FUNCTION NC.TEditGetFn)
+                  'QUITFN
+                  [LIST (FUNCTION NC.TEditPropsListQuitFn)
+                        (FUNCTION (LAMBDA NIL
+                                    'DON'T]
+                  'PROMPTWINDOW
+                  'DON'T)
+           (LIST 'FONT (OR (AND (type? NoteFile NoteFile)
+                                (NC.NoteFileProp NoteFile 'Font))
+                           NC.DefaultFont))
+           (if Don'tAttachUserSpecifiedPropsFlg
+               then NIL
+             else (OR (AND (type? NoteFile NoteFile)
+                           (NC.NoteFileProp NoteFile 'ExtraTEditProps))
+                      NC.UserSpecifiedTEditProps))
+           (LIST 'NOTSPLITTABLE T])
 
 (NC.TEditPropsListQuitFn
   [LAMBDA (Window TextStream TextObj)                        (* fgh%: " 4-Jun-86 20:15")
@@ -462,18 +768,6 @@
 
 
 
-(* ;;; "prevent TEdit splitwindow facilities")
-
-
-[LOADINITADVISE NC-ADVICE0107 (\TEDIT.SPLITW (NIL (BEFORE NIL (if (NC.CardP (WINDOWPROP WINDOW
-                                                                                   'NoteCardObject))
-                                                                  then (NC.PrintMsg WINDOW T 
-                                                               "Can't split a TEdit NoteCard.  Sorry"
-                                                                              (CHARACTER 13))
-                                                                       (RETURN NIL]
-
-
-
 (* ;;; "Add the Text card type to the card types list.")
 
 (DEFINEQ
@@ -486,7 +780,7 @@
 (RPAQQ NC.TextCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@OOOOOH@@
 )
 
-[LOADINITADVISE NC-ADVICE0108 [TEDIT.ADD.MENUITEM
+[LOADINITADVISE NC-ADVICE0182 [TEDIT.ADD.MENUITEM
                                (NIL (AFTER NIL (if (EQ MENU TEDIT.DEFAULT.MENU)
                                                    then (NCP.ChangeCardTypeFields
                                                          'Text NIL `((MiddleButtonMenuItems
@@ -508,18 +802,19 @@
 
 (PUTPROPS NCTEXTCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (4304 4574 (NCAddStub.TextCard 4314 . 4572)) (5017 48141 (NC.MakeTEditCard 5027 . 8596) 
-(NC.BringUpTEditCard 8598 . 13824) (NC.MakeTextCardReadOnly 13826 . 15752) (NC.MakeTextCardReadWrite 
-15754 . 17405) (NC.RevertTextCard 17407 . 18360) (NC.CollectReferencesInText 18362 . 25015) (
-NC.InstallTextTitleBarMiddleMenu 25017 . 26215) (NC.MarkTextDirty 26217 . 26610) (NC.ResetTEdit 26612
- . 27018) (NC.ResetTEditProcess 27020 . 28657) (NC.TEditBasedP 28659 . 29354) (NC.TEditCloseFn 29356
- . 30873) (NC.TEditMenuFn 30875 . 31942) (NC.TEditQuitFn 31944 . 33559) (NC.TextCopySubstance 33561 . 
-34180) (NC.TextDirtyP 34182 . 34489) (NC.TextCardShrinkFn 34491 . 39607) (NC.PutTextSubstance 39609 . 
-41087) (NC.GetTextSubstance 41089 . 42777) (NC.UpdateLinkImagesInText 42779 . 45453) (
-NC.CharPosFromTextObject 45455 . 45689) (NC.DelReferencesToCardFromText 45691 . 48139)) (48393 49678 (
-NC.TranslateWindowPositionToTEditPosition 48403 . 49216) (NC.InsertLinkInTextWindow 49218 . 49676)) (
-49787 59022 (NC.CardFromTextStream 49797 . 50089) (NC.TEditPutFn 50091 . 53921) (
-NC.TEditPutFnAuxiliary 53923 . 54927) (NC.TEditGetFn 54929 . 56227) (NC.MakeTEditPropsList 56229 . 
-58072) (NC.TEditPropsListQuitFn 58074 . 58409) (NC.DelTEditProcesses 58411 . 59020)) (59722 62841 (
-NC.AddTextCard 59732 . 61867) (NC.ComputeTextCardMiddleButtonMenuItems 61869 . 62839)))))
+  (FILEMAP (NIL (3681 3951 (NCAddStub.TextCard 3691 . 3949)) (4394 48106 (NC.MakeTEditCard 4404 . 7973) 
+(NC.BringUpTEditCard 7975 . 13322) (NC.MakeTextCardReadOnly 13324 . 15250) (NC.MakeTextCardReadWrite 
+15252 . 16903) (NC.RevertTextCard 16905 . 17858) (NC.CollectReferencesInText 17860 . 23623) (
+NC.InstallTextTitleBarMiddleMenu 23625 . 24823) (NC.MarkTextDirty 24825 . 25218) (NC.ResetTEdit 25220
+ . 25626) (NC.ResetTEditProcess 25628 . 27266) (NC.TEditBasedP 27268 . 27963) (NC.TEditCloseFn 27965
+ . 29482) (NC.TEditMenuFn 29484 . 30551) (NC.TEditQuitFn 30553 . 32168) (NC.TextCopySubstance 32170 . 
+32789) (NC.TextDirtyP 32791 . 33098) (NC.TextCardShrinkFn 33100 . 38216) (NC.PutTextSubstance 38218 . 
+39816) (NC.GetTextSubstance 39818 . 41506) (NC.UpdateLinkImagesInText 41508 . 43922) (
+NC.CharPosFromTextStream 43924 . 44158) (NC.DelReferencesToCardFromText 44160 . 46613) (NC.TEditWindow
+ 46615 . 47255) (NC.TEditCollectObjects 47257 . 48104)) (48358 49531 (
+NC.TranslateWindowPositionToTEditPosition 48368 . 49069) (NC.InsertLinkInTextWindow 49071 . 49529)) (
+49640 58701 (NC.CardFromTextStream 49650 . 49942) (NC.TEditPutFn 49944 . 53703) (
+NC.TEditPutFnAuxiliary 53705 . 54709) (NC.TEditGetFn 54711 . 55872) (NC.MakeTEditPropsList 55874 . 
+57751) (NC.TEditPropsListQuitFn 57753 . 58088) (NC.DelTEditProcesses 58090 . 58699)) (58767 61886 (
+NC.AddTextCard 58777 . 60912) (NC.ComputeTextCardMiddleButtonMenuItems 60914 . 61884)))))
 STOP

@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "18-Oct-2023 22:03:03" {DSK}<home>frank>il>notecards>system>NCPROGINT.;2 192630 
+(FILECREATED " 7-Mar-2024 22:42:36" {DSK}<home>frank>il>notecards>system>NCPROGINT.;2 192563 
 
-      :CHANGES-TO (FNS NCP.CheckInNoteFile NCP.CheckOutNoteFile)
+      :CHANGES-TO (FNS NCP.ChangeLoc)
 
-      :PREVIOUS-DATE " 3-Nov-2020 16:13:47" {DSK}<home>frank>il>notecards>system>NCPROGINT.;1)
+      :PREVIOUS-DATE "18-Oct-2023 22:03:03" {DSK}<home>frank>il>notecards>system>NCPROGINT.;1)
 
 
 (PRETTYCOMPRINT NCPROGINTCOMS)
@@ -1780,35 +1780,35 @@
           (RETURN Card))))
 
 (NCP.ChangeLoc
-  (LAMBDA (Card Loc)                                         (* rht%: " 2-Mar-87 22:03")
-          
-          (* * Changes the location within ID's textstream to the new loc Loc.
-          Loc can be the litatoms START or END, a number, or nil.
-          The latter indicates to use the current cursor position.
-          Note that we don't mark card as dirty just because its selection changed.
-          Note that this leaves card active even if inactive when we were called.)
-          
-          (* * rht 11/17/85%: Updated to handle new card and notefile objects.)
-          
-          (* * rht 11/16/86%: Changed call to NCP.ReportError)
+  [LAMBDA (Card Loc)                                         (* rht%: " 2-Mar-87 22:03")
+
+         (* * Changes the location within ID's textstream to the new loc Loc.
+         Loc can be the litatoms START or END, a number, or nil.
+         The latter indicates to use the current cursor position.
+         Note that we don't mark card as dirty just because its selection changed.
+         Note that this leaves card active even if inactive when we were called.)
+
+         (* * rht 11/17/85%: Updated to handle new card and notefile objects.)
+
+         (* * rht 11/16/86%: Changed call to NCP.ReportError)
 
     (if (AND (NC.ValidCardP Card)
              (NCP.TextBasedP Card))
         then (if (NOT (NCP.CardCachedP Card))
                  then (NCP.CacheCards Card))
              (LET ((Stream (NC.FetchSubstance Card)))
-                  (SELECTQ Loc
+                  [SELECTQ Loc
                       ((START 0) 
                            (TEDIT.SETSEL Stream 0 0 'RIGHT))
-                      (END (TEDIT.SETSEL Stream (ADD1 (fetch (TEXTOBJ TEXTLEN) of (TEXTOBJ Stream)))
+                      (END (TEDIT.SETSEL Stream (ADD1 (TEDIT.NCHARS Stream))
                                   0
                                   'RIGHT))
                       (AND (FIXP Loc)
                            (GEQ Loc 0)
-                           (TEDIT.SETSEL Stream Loc 0 'RIGHT)))
+                           (TEDIT.SETSEL Stream Loc 0 'RIGHT]
                   Card)
       else (NCP.ReportError 'NCP.ChangeLoc (CONCAT Card " not an existing card or not TEdit based."))
-           NIL)))
+           NIL])
 
 (NCP.DeleteCards
   (LAMBDA (Cards)                                            (* rht%: " 2-Mar-87 22:04")
@@ -3819,74 +3819,74 @@
                      NCP.CardTypeDisplayedInMenu)
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (9188 27866 (NCP.CreateNoteFile 9198 . 9933) (NCP.OpenNoteFile 9935 . 11631) (
-NCP.OpenNoteFileP 11633 . 12011) (NCP.ListOfOpenNoteFiles 12013 . 12447) (NCP.CloseNoteFiles 12449 . 
-13650) (NCP.CheckpointNoteFiles 13652 . 14543) (NCP.AbortNoteFiles 14545 . 15359) (NCP.CompactNoteFile
- 15361 . 15689) (NCP.CompactNoteFileInPlace 15691 . 15956) (NCP.RepairNoteFile 15958 . 16725) (
-NCP.DeleteNoteFile 16727 . 17512) (NCP.NoteFileFromFileName 17514 . 17749) (NCP.FileNameFromNoteFile 
-17751 . 18382) (NCP.NoteFileMenu 18384 . 18644) (NCP.CheckInNoteFile 18646 . 21549) (
-NCP.CheckOutNoteFile 21551 . 24059) (NCP.LockFileName 24061 . 24442) (NCP.NumCardSlotsRemaining 24444
- . 25022) (NCP.ExpandNoteFileIndex 25024 . 25782) (NCP.NoteFileAddProp 25784 . 26014) (
-NCP.NoteFileClosingP 26016 . 26512) (NCP.ForgetNoteFileName 26514 . 27077) (NCP.RememberNoteFileName 
-27079 . 27641) (NCP.ValidNoteFileP 27643 . 27864)) (27939 41209 (NCP.CardTypes 27949 . 28153) (
-NCP.CreateCardType 28155 . 28816) (NCP.DeleteCardType 28818 . 28990) (NCP.CreateCardTypeStub 28992 . 
-29885) (NCP.ChangeCardTypeFields 29887 . 30369) (NCP.CardTypeSuper 30371 . 30834) (
-NCP.CardTypeLinkDisplayMode 30836 . 31397) (NCP.CardTypeFn 31399 . 32497) (NCP.CardTypeVar 32499 . 
-33606) (NCP.CardTypeP 33608 . 33876) (NCP.CardTypeFnP 33878 . 34179) (NCP.CardTypeVarP 34181 . 34488) 
-(NCP.CardTypeFns 34490 . 34712) (NCP.CardTypeVars 34714 . 34939) (NCP.CardTypeDisplayedInMenu 34941 . 
-36502) (NCP.IsSubTypeOfP 36504 . 37085) (NCP.TextBasedP 37087 . 37707) (NCP.SketchBasedP 37709 . 38381
-) (NCP.GraphBasedP 38383 . 39052) (NCP.AutoLoadCardType 39054 . 39318) (NCP.AddSpecialCard 39320 . 
-39868) (NCP.RemoveSpecialCard 39870 . 40241) (NCP.CardsOfTypes 40243 . 41207)) (41261 54062 (
-NCP.CreateCard 41271 . 44196) (NCP.CreateTextCard 44198 . 44895) (NCP.CreateFileBox 44897 . 45710) (
-NCP.CreateBrowserCard 45712 . 48714) (NCP.CreateSketchCard 48716 . 49366) (NCP.CreateGraphCard 49368
- . 50011) (NCP.MakeDocument 50013 . 51991) (NCP.MakeLinkIndex 51993 . 53792) (NCP.NewCardP 53794 . 
-54060)) (54125 64794 (NCP.OpenCard 54135 . 55328) (NCP.CloseCards 55330 . 57415) (NCP.DisplayCard 
-57417 . 59285) (NCP.UndisplayCards 59287 . 60731) (NCP.CacheCards 60733 . 61653) (NCP.UncacheCards 
-61655 . 63113) (NCP.CardCachedP 63115 . 63314) (NCP.CardDisplayedP 63316 . 63591) (NCP.CardWindow 
-63593 . 63996) (NCP.WindowFromCard 63998 . 64275) (NCP.CardFromWindow 64277 . 64512) (
-NCP.CardFromTextStream 64514 . 64792)) (64839 97902 (NCP.CardType 64849 . 65183) (NCP.ValidCardP 65185
- . 65662) (NCP.CardTitle 65664 . 66683) (NCP.FileCards 66685 . 68421) (NCP.UnfileCards 68423 . 71839) 
-(NCP.CardParents 71841 . 72530) (NCP.FileBoxChildren 72532 . 73117) (NCP.CardNeighbors 73119 . 76753) 
-(NCP.GetLinks 76755 . 80799) (NCP.CardPropList 80801 . 81093) (NCP.CardProp 81095 . 82667) (
-NCP.CardAddProp 82669 . 84151) (NCP.CardDelProp 84153 . 85522) (NCP.CardSubstance 85524 . 86961) (
-NCP.CardRegion 86963 . 88965) (NCP.CardAddText 88967 . 90327) (NCP.ChangeLoc 90329 . 91842) (
-NCP.DeleteCards 91844 . 92945) (NCP.FileBoxP 92947 . 93255) (NCP.AllCards 93257 . 93600) (NCP.AllBoxes
- 93602 . 93956) (NCP.ContentsFileBox 93958 . 94295) (NCP.OrphansFileBox 94297 . 94623) (
-NCP.ToBeFiledFileBox 94625 . 94950) (NCP.NoteFileFromCard 94952 . 95201) (NCP.CardNoteFile 95203 . 
-95448) (NCP.SameCardP 95450 . 95932) (NCP.CoerceToCard 95934 . 96244) (NCP.DetermineDisplayRegion 
-96246 . 96678) (NCP.LockListOfCards 96680 . 97078) (NCP.GetCrossFileLinkDestCard 97080 . 97618) (
-NCP.CardBeingDeletedP 97620 . 97900)) (97966 102026 (NCP.CollectCards 97976 . 100629) (NCP.CopyCards 
-100631 . 101553) (NCP.MoveCards 101555 . 102024)) (102074 126009 (NCP.CreateLink 102084 . 103635) (
-NCP.LocalGlobalLink 103637 . 111852) (NCP.GlobalGlobalLink 111854 . 113893) (NCP.GlobalLocalLink 
-113895 . 114300) (NCP.LocalLocalLink 114302 . 114712) (NCP.LinkDesc 114714 . 115565) (
-NCP.LinkDisplayMode 115567 . 117943) (NCP.LinkType 117945 . 121089) (NCP.LinkSource 121091 . 121517) (
-NCP.LinkDestination 121519 . 121959) (NCP.DeleteLinks 121961 . 122792) (NCP.ValidLinkP 122794 . 123009
-) (NCP.AllLinks 123011 . 123796) (NCP.SameLinkP 123798 . 124280) (NCP.LinkFromLinkIcon 124282 . 124612
-) (NCP.MakeLinkIcon 124614 . 124823) (NCP.MarkCardDirty 124825 . 125246) (NCP.LinkIconAttachedBitMap 
-125248 . 126007)) (126064 132203 (NCP.CreateLinkType 126074 . 126923) (NCP.DeleteLinkType 126925 . 
-128275) (NCP.RenameLinkType 128277 . 130446) (NCP.LinkTypes 130448 . 130761) (NCP.ReverseLinkTypes 
-130763 . 131146) (NCP.UserLinkTypes 131148 . 131523) (NCP.ValidLinkTypeP 131525 . 131882) (
-NCP.SystemLinkTypeP 131884 . 132201)) (132253 133356 (NCP.CardDates 132263 . 133354)) (133392 135061 (
-NCP.GetOpenEventsCard 133402 . 134088) (NCP.GetCloseEventsCard 134090 . 134787) (
-NCP.MarkAsNotNeedingFiling 134789 . 135059)) (135112 155887 (NCP.AddSessionIconMenuItem 135122 . 
-137454) (NCP.RemoveSessionIconMenuItem 137456 . 139916) (NCP.RestoreSessionIconMenu 139918 . 141228) (
-NCP.AddNoteFileIconMenuItem 141230 . 145404) (NCP.RemoveNoteFileIconMenuItem 145406 . 147465) (
-NCP.RestoreNoteFileIconMenu 147467 . 148305) (NC.CreateSessionIconNoteFileMenuItem 148307 . 149330) (
-NCP.AddDefaultNoteFileIconMiddleButtonItems 149332 . 150381) (NCP.NoticedNoteFileNamesMenu 150383 . 
-151234) (NCP.AddTitleBarMenuItemsToType 151236 . 153212) (NCP.AddTitleBarMenuItemsToWindow 153214 . 
-155222) (NCP.BringUpSessionIcon 155224 . 155556) (NCP.SessionIconWindow 155558 . 155885)) (155920 
-182465 (NCP.TitleSearch 155930 . 157474) (NCP.PropSearch 157476 . 159176) (NCP.WhichCard 159178 . 
-159632) (NCP.WhichNoteFile 159634 . 160399) (NCP.SelectCards 160401 . 162058) (NCP.DocumentParameters 
-162060 . 164500) (NCP.NoteCardsParameters 164502 . 168064) (NCP.PrintMsg 168066 . 168519) (
-NCP.ClearMsg 168521 . 168850) (NCP.AskUser 168852 . 169291) (NCP.AskYesOrNo 169293 . 169719) (
-NCP.RegisterCardByName 169721 . 170822) (NCP.ListRegisteredCards 170824 . 172416) (
-NCP.LookupCardByName 172418 . 173778) (NCP.UnregisterName 173780 . 174776) (NCP.DisplayedCards 174778
- . 176009) (NCP.CardUserDataProp 176011 . 177039) (NCP.NoteFileProp 177041 . 178430) (
-NCP.SetUpTitleBar 178432 . 178876) (NCP.AddNoteFileIconMiddleButtonItems 178878 . 180246) (
-NCP.NoteFileIconWindow 180248 . 180497) (NCP.CoerceToInterestedWindow 180499 . 180821) (
-NCP.SetGrayShade 180823 . 181924) (NCP.MakeTypeIconBitMapSet 181926 . 182463)) (182608 189703 (
-NCP.ReportError 182618 . 183348) (NCP.ReportWarning 183350 . 183945) (NCP.LinkAnchorDesc 183947 . 
-186388) (NCP.GetTypeRecord 186390 . 186684) (NCP.AddLeftButtonTitleBarMenuItems 186686 . 187271) (
-NCP.AddMiddleButtonTitleBarMenuItems 187273 . 187864) (NCP.CoerceToLinkDisplayMode 187866 . 189701))))
+  (FILEMAP (NIL (9161 27839 (NCP.CreateNoteFile 9171 . 9906) (NCP.OpenNoteFile 9908 . 11604) (
+NCP.OpenNoteFileP 11606 . 11984) (NCP.ListOfOpenNoteFiles 11986 . 12420) (NCP.CloseNoteFiles 12422 . 
+13623) (NCP.CheckpointNoteFiles 13625 . 14516) (NCP.AbortNoteFiles 14518 . 15332) (NCP.CompactNoteFile
+ 15334 . 15662) (NCP.CompactNoteFileInPlace 15664 . 15929) (NCP.RepairNoteFile 15931 . 16698) (
+NCP.DeleteNoteFile 16700 . 17485) (NCP.NoteFileFromFileName 17487 . 17722) (NCP.FileNameFromNoteFile 
+17724 . 18355) (NCP.NoteFileMenu 18357 . 18617) (NCP.CheckInNoteFile 18619 . 21522) (
+NCP.CheckOutNoteFile 21524 . 24032) (NCP.LockFileName 24034 . 24415) (NCP.NumCardSlotsRemaining 24417
+ . 24995) (NCP.ExpandNoteFileIndex 24997 . 25755) (NCP.NoteFileAddProp 25757 . 25987) (
+NCP.NoteFileClosingP 25989 . 26485) (NCP.ForgetNoteFileName 26487 . 27050) (NCP.RememberNoteFileName 
+27052 . 27614) (NCP.ValidNoteFileP 27616 . 27837)) (27912 41182 (NCP.CardTypes 27922 . 28126) (
+NCP.CreateCardType 28128 . 28789) (NCP.DeleteCardType 28791 . 28963) (NCP.CreateCardTypeStub 28965 . 
+29858) (NCP.ChangeCardTypeFields 29860 . 30342) (NCP.CardTypeSuper 30344 . 30807) (
+NCP.CardTypeLinkDisplayMode 30809 . 31370) (NCP.CardTypeFn 31372 . 32470) (NCP.CardTypeVar 32472 . 
+33579) (NCP.CardTypeP 33581 . 33849) (NCP.CardTypeFnP 33851 . 34152) (NCP.CardTypeVarP 34154 . 34461) 
+(NCP.CardTypeFns 34463 . 34685) (NCP.CardTypeVars 34687 . 34912) (NCP.CardTypeDisplayedInMenu 34914 . 
+36475) (NCP.IsSubTypeOfP 36477 . 37058) (NCP.TextBasedP 37060 . 37680) (NCP.SketchBasedP 37682 . 38354
+) (NCP.GraphBasedP 38356 . 39025) (NCP.AutoLoadCardType 39027 . 39291) (NCP.AddSpecialCard 39293 . 
+39841) (NCP.RemoveSpecialCard 39843 . 40214) (NCP.CardsOfTypes 40216 . 41180)) (41234 54035 (
+NCP.CreateCard 41244 . 44169) (NCP.CreateTextCard 44171 . 44868) (NCP.CreateFileBox 44870 . 45683) (
+NCP.CreateBrowserCard 45685 . 48687) (NCP.CreateSketchCard 48689 . 49339) (NCP.CreateGraphCard 49341
+ . 49984) (NCP.MakeDocument 49986 . 51964) (NCP.MakeLinkIndex 51966 . 53765) (NCP.NewCardP 53767 . 
+54033)) (54098 64767 (NCP.OpenCard 54108 . 55301) (NCP.CloseCards 55303 . 57388) (NCP.DisplayCard 
+57390 . 59258) (NCP.UndisplayCards 59260 . 60704) (NCP.CacheCards 60706 . 61626) (NCP.UncacheCards 
+61628 . 63086) (NCP.CardCachedP 63088 . 63287) (NCP.CardDisplayedP 63289 . 63564) (NCP.CardWindow 
+63566 . 63969) (NCP.WindowFromCard 63971 . 64248) (NCP.CardFromWindow 64250 . 64485) (
+NCP.CardFromTextStream 64487 . 64765)) (64812 97835 (NCP.CardType 64822 . 65156) (NCP.ValidCardP 65158
+ . 65635) (NCP.CardTitle 65637 . 66656) (NCP.FileCards 66658 . 68394) (NCP.UnfileCards 68396 . 71812) 
+(NCP.CardParents 71814 . 72503) (NCP.FileBoxChildren 72505 . 73090) (NCP.CardNeighbors 73092 . 76726) 
+(NCP.GetLinks 76728 . 80772) (NCP.CardPropList 80774 . 81066) (NCP.CardProp 81068 . 82640) (
+NCP.CardAddProp 82642 . 84124) (NCP.CardDelProp 84126 . 85495) (NCP.CardSubstance 85497 . 86934) (
+NCP.CardRegion 86936 . 88938) (NCP.CardAddText 88940 . 90300) (NCP.ChangeLoc 90302 . 91775) (
+NCP.DeleteCards 91777 . 92878) (NCP.FileBoxP 92880 . 93188) (NCP.AllCards 93190 . 93533) (NCP.AllBoxes
+ 93535 . 93889) (NCP.ContentsFileBox 93891 . 94228) (NCP.OrphansFileBox 94230 . 94556) (
+NCP.ToBeFiledFileBox 94558 . 94883) (NCP.NoteFileFromCard 94885 . 95134) (NCP.CardNoteFile 95136 . 
+95381) (NCP.SameCardP 95383 . 95865) (NCP.CoerceToCard 95867 . 96177) (NCP.DetermineDisplayRegion 
+96179 . 96611) (NCP.LockListOfCards 96613 . 97011) (NCP.GetCrossFileLinkDestCard 97013 . 97551) (
+NCP.CardBeingDeletedP 97553 . 97833)) (97899 101959 (NCP.CollectCards 97909 . 100562) (NCP.CopyCards 
+100564 . 101486) (NCP.MoveCards 101488 . 101957)) (102007 125942 (NCP.CreateLink 102017 . 103568) (
+NCP.LocalGlobalLink 103570 . 111785) (NCP.GlobalGlobalLink 111787 . 113826) (NCP.GlobalLocalLink 
+113828 . 114233) (NCP.LocalLocalLink 114235 . 114645) (NCP.LinkDesc 114647 . 115498) (
+NCP.LinkDisplayMode 115500 . 117876) (NCP.LinkType 117878 . 121022) (NCP.LinkSource 121024 . 121450) (
+NCP.LinkDestination 121452 . 121892) (NCP.DeleteLinks 121894 . 122725) (NCP.ValidLinkP 122727 . 122942
+) (NCP.AllLinks 122944 . 123729) (NCP.SameLinkP 123731 . 124213) (NCP.LinkFromLinkIcon 124215 . 124545
+) (NCP.MakeLinkIcon 124547 . 124756) (NCP.MarkCardDirty 124758 . 125179) (NCP.LinkIconAttachedBitMap 
+125181 . 125940)) (125997 132136 (NCP.CreateLinkType 126007 . 126856) (NCP.DeleteLinkType 126858 . 
+128208) (NCP.RenameLinkType 128210 . 130379) (NCP.LinkTypes 130381 . 130694) (NCP.ReverseLinkTypes 
+130696 . 131079) (NCP.UserLinkTypes 131081 . 131456) (NCP.ValidLinkTypeP 131458 . 131815) (
+NCP.SystemLinkTypeP 131817 . 132134)) (132186 133289 (NCP.CardDates 132196 . 133287)) (133325 134994 (
+NCP.GetOpenEventsCard 133335 . 134021) (NCP.GetCloseEventsCard 134023 . 134720) (
+NCP.MarkAsNotNeedingFiling 134722 . 134992)) (135045 155820 (NCP.AddSessionIconMenuItem 135055 . 
+137387) (NCP.RemoveSessionIconMenuItem 137389 . 139849) (NCP.RestoreSessionIconMenu 139851 . 141161) (
+NCP.AddNoteFileIconMenuItem 141163 . 145337) (NCP.RemoveNoteFileIconMenuItem 145339 . 147398) (
+NCP.RestoreNoteFileIconMenu 147400 . 148238) (NC.CreateSessionIconNoteFileMenuItem 148240 . 149263) (
+NCP.AddDefaultNoteFileIconMiddleButtonItems 149265 . 150314) (NCP.NoticedNoteFileNamesMenu 150316 . 
+151167) (NCP.AddTitleBarMenuItemsToType 151169 . 153145) (NCP.AddTitleBarMenuItemsToWindow 153147 . 
+155155) (NCP.BringUpSessionIcon 155157 . 155489) (NCP.SessionIconWindow 155491 . 155818)) (155853 
+182398 (NCP.TitleSearch 155863 . 157407) (NCP.PropSearch 157409 . 159109) (NCP.WhichCard 159111 . 
+159565) (NCP.WhichNoteFile 159567 . 160332) (NCP.SelectCards 160334 . 161991) (NCP.DocumentParameters 
+161993 . 164433) (NCP.NoteCardsParameters 164435 . 167997) (NCP.PrintMsg 167999 . 168452) (
+NCP.ClearMsg 168454 . 168783) (NCP.AskUser 168785 . 169224) (NCP.AskYesOrNo 169226 . 169652) (
+NCP.RegisterCardByName 169654 . 170755) (NCP.ListRegisteredCards 170757 . 172349) (
+NCP.LookupCardByName 172351 . 173711) (NCP.UnregisterName 173713 . 174709) (NCP.DisplayedCards 174711
+ . 175942) (NCP.CardUserDataProp 175944 . 176972) (NCP.NoteFileProp 176974 . 178363) (
+NCP.SetUpTitleBar 178365 . 178809) (NCP.AddNoteFileIconMiddleButtonItems 178811 . 180179) (
+NCP.NoteFileIconWindow 180181 . 180430) (NCP.CoerceToInterestedWindow 180432 . 180754) (
+NCP.SetGrayShade 180756 . 181857) (NCP.MakeTypeIconBitMapSet 181859 . 182396)) (182541 189636 (
+NCP.ReportError 182551 . 183281) (NCP.ReportWarning 183283 . 183878) (NCP.LinkAnchorDesc 183880 . 
+186321) (NCP.GetTypeRecord 186323 . 186617) (NCP.AddLeftButtonTitleBarMenuItems 186619 . 187204) (
+NCP.AddMiddleButtonTitleBarMenuItems 187206 . 187797) (NCP.CoerceToLinkDisplayMode 187799 . 189634))))
 )
 STOP

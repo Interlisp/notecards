@@ -1,4 +1,69 @@
-(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 5-Nov-2020 20:00:36" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCLINKINDEXCARD.;5 23867        previous date%: " 9-Jan-94 20:20:27" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCLINKINDEXCARD.;4)(* ; "Copyright (c) 1986, 1987, 1988, 1989, 1990, 1993, 1994, 2020 by Venue & Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCLINKINDEXCARDCOMS)(RPAQQ NCLINKINDEXCARDCOMS       ((* ;;; "Link Index stuff")        (DECLARE%: DONTEVAL@LOAD (FILES NCTEXTCARD))        (FNS NCAddStub.LinkIndexCard)        (GLOBALVARS NC.LinkIndexExtraMenuItems NC.LinkIndexSpecsStylesheet)        (INITVARS [NC.LinkIndexExtraMenuItems '((|Recompute Link Index| (FUNCTION                                                                                NC.RecomputeLinkIndex)                                                                                                 "Recompute this link index throwing away current contents."                                                       )                                                (|Change Link Index Specs| (FUNCTION                                                                               NC.ChangeLinkIndexSpecs                                                                                  )                                                       "Change some or all of Link Index specs."]               (NC.LinkIndexSpecsStylesheet (CREATE.STYLE 'ITEMS (LIST (create MENU ITEMS _ T)                                                                       (create MENU ITEMS _ T)                                                                       (create MENU ITEMS _ T))                                                   'SELECTIONS                                                   '(T T T)                                                   'ITEM.TITLES                                                   '(| Forward Links | | Backward Links |                                                            | Include Link Icons? |)                                                   'ITEM.TITLE.FONT                                                   (FONTCOPY MENUFONT 'WEIGHT 'BOLD)                                                   'NEED.NOT.FILL.IN                                                   '(MULTI MULTI NIL)                                                   'TITLE "Link Index Specs?")))        (* ;;; "Link Index functions")        (FNS NC.MakeLinkIndex NC.BringUpLinkIndexCard NC.ComputeLinkIndex NC.RecomputeLinkIndex              NC.AskLinkIndexSpecs NC.ChangeLinkIndexSpecs NC.AppendLinkIndexEntry              NC.LinkIndexCompareFn)        (FNS NC.AddLinkIndexCard)        (BITMAPS NC.LinkIndexCardIcon)        (DECLARE%: DONTEVAL@LOAD (P (NC.AddLinkIndexCard)))        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)              NCLINKINDEXCARD)))(* ;;; "Link Index stuff")(DECLARE%: DONTEVAL@LOAD (FILESLOAD NCTEXTCARD))(DEFINEQ(NCAddStub.LinkIndexCard
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+
+(FILECREATED " 7-Mar-2024 22:45:45" {DSK}<home>frank>il>notecards>system>NCLINKINDEXCARD.;2 23418  
+
+      :CHANGES-TO (FNS NC.RecomputeLinkIndex)
+
+      :PREVIOUS-DATE " 5-Nov-2020 20:00:36" {DSK}<home>frank>il>notecards>system>NCLINKINDEXCARD.;1
+)
+
+
+(PRETTYCOMPRINT NCLINKINDEXCARDCOMS)
+
+(RPAQQ NCLINKINDEXCARDCOMS
+       (
+
+(* ;;; "Link Index stuff")
+
+        (DECLARE%: DONTEVAL@LOAD (FILES NCTEXTCARD))
+        (FNS NCAddStub.LinkIndexCard)
+        (GLOBALVARS NC.LinkIndexExtraMenuItems NC.LinkIndexSpecsStylesheet)
+        (INITVARS [NC.LinkIndexExtraMenuItems '((|Recompute Link Index| (FUNCTION 
+                                                                               NC.RecomputeLinkIndex)
+                                                       
+                                          "Recompute this link index throwing away current contents."
+                                                       )
+                                                (|Change Link Index Specs| (FUNCTION 
+                                                                              NC.ChangeLinkIndexSpecs
+                                                                                  )
+                                                       "Change some or all of Link Index specs."]
+               (NC.LinkIndexSpecsStylesheet (CREATE.STYLE 'ITEMS (LIST (create MENU ITEMS _ T)
+                                                                       (create MENU ITEMS _ T)
+                                                                       (create MENU ITEMS _ T))
+                                                   'SELECTIONS
+                                                   '(T T T)
+                                                   'ITEM.TITLES
+                                                   '(| Forward Links | | Backward Links | 
+                                                           | Include Link Icons? |)
+                                                   'ITEM.TITLE.FONT
+                                                   (FONTCOPY MENUFONT 'WEIGHT 'BOLD)
+                                                   'NEED.NOT.FILL.IN
+                                                   '(MULTI MULTI NIL)
+                                                   'TITLE "Link Index Specs?")))
+        
+
+(* ;;; "Link Index functions")
+
+        (FNS NC.MakeLinkIndex NC.BringUpLinkIndexCard NC.ComputeLinkIndex NC.RecomputeLinkIndex 
+             NC.AskLinkIndexSpecs NC.ChangeLinkIndexSpecs NC.AppendLinkIndexEntry 
+             NC.LinkIndexCompareFn)
+        (FNS NC.AddLinkIndexCard)
+        (BITMAPS NC.LinkIndexCardIcon)
+        (DECLARE%: DONTEVAL@LOAD (P (NC.AddLinkIndexCard)))
+        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)
+              NCLINKINDEXCARD)))
+
+
+
+(* ;;; "Link Index stuff")
+
+(DECLARE%: DONTEVAL@LOAD 
+
+(FILESLOAD NCTEXTCARD)
+)
+(DEFINEQ
+
+(NCAddStub.LinkIndexCard
   [LAMBDA NIL                                         (* ; "Edited  6-Dec-88 12:25 by krivacic")
 
 (* ;;; "kirk 18Jun86 Add the LinkIndex card stub")
@@ -7,7 +72,41 @@
 
     (NC.AddCardTypeStub 'LinkIndex 'Text 'NCLINKINDEXCARD NIL `((DisplayedInMenuFlg T)
                                                                 (LinkIconAttachedBitMap 
-                                                                       ,NC.LinkIndexCardIcon]))(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.LinkIndexExtraMenuItems NC.LinkIndexSpecsStylesheet))(RPAQ? NC.LinkIndexExtraMenuItems '((|Recompute Link Index| (FUNCTION NC.RecomputeLinkIndex)                                                                                         "Recompute this link index throwing away current contents."                                               )                                        (|Change Link Index Specs| (FUNCTION NC.ChangeLinkIndexSpecs)                                               "Change some or all of Link Index specs.")))(RPAQ? NC.LinkIndexSpecsStylesheet       (CREATE.STYLE 'ITEMS (LIST (create MENU ITEMS _ T)                                  (create MENU ITEMS _ T)                                  (create MENU ITEMS _ T))              'SELECTIONS              '(T T T)              'ITEM.TITLES              '(| Forward Links | | Backward Links | | Include Link Icons? |)              'ITEM.TITLE.FONT              (FONTCOPY MENUFONT 'WEIGHT 'BOLD)              'NEED.NOT.FILL.IN              '(MULTI MULTI NIL)              'TITLE "Link Index Specs?"))(* ;;; "Link Index functions")(DEFINEQ(NC.MakeLinkIndex
+                                                                       ,NC.LinkIndexCardIcon])
+)
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.LinkIndexExtraMenuItems NC.LinkIndexSpecsStylesheet)
+)
+
+(RPAQ? NC.LinkIndexExtraMenuItems '((|Recompute Link Index| (FUNCTION NC.RecomputeLinkIndex)
+                                           
+                                          "Recompute this link index throwing away current contents."
+                                           )
+                                    (|Change Link Index Specs| (FUNCTION NC.ChangeLinkIndexSpecs)
+                                           "Change some or all of Link Index specs.")))
+
+(RPAQ? NC.LinkIndexSpecsStylesheet
+       (CREATE.STYLE 'ITEMS (LIST (create MENU ITEMS _ T)
+                                  (create MENU ITEMS _ T)
+                                  (create MENU ITEMS _ T))
+              'SELECTIONS
+              '(T T T)
+              'ITEM.TITLES
+              '(| Forward Links | | Backward Links | | Include Link Icons? |)
+              'ITEM.TITLE.FONT
+              (FONTCOPY MENUFONT 'WEIGHT 'BOLD)
+              'NEED.NOT.FILL.IN
+              '(MULTI MULTI NIL)
+              'TITLE "Link Index Specs?"))
+
+
+
+(* ;;; "Link Index functions")
+
+(DEFINEQ
+
+(NC.MakeLinkIndex
   [LAMBDA (Card Title NoDisplayFlg SpecialArgsList InterestedWindow RegionOrPosition)
                                                              (* ; "Edited  5-Aug-88 13:53 by Trigg")
 
@@ -48,7 +147,9 @@
                       then Card
                     else (NC.ClearMsg (OR Window InterestedWindow)
                                 T)
-                         Window])(NC.BringUpLinkIndexCard
+                         Window])
+
+(NC.BringUpLinkIndexCard
   (LAMBDA (Card Substance Region/Position)                   (* rht%: "11-Apr-86 21:58")
           
           (* * Given a link index substance, open a link index window set up properly.)
@@ -56,7 +157,9 @@
           (* * rht 4/11/86%: Removed stuff that adds items to title bar left menu.
           Now done at card type defn time.)
 
-    (NC.BringUpTEditCard Card Substance Region/Position)))(NC.ComputeLinkIndex
+    (NC.BringUpTEditCard Card Substance Region/Position)))
+
+(NC.ComputeLinkIndex
   (LAMBDA (IndexCard LinkLabels BackLinksFlg)                (* kirk%: " 9-Sep-86 15:13")
           
           (* * This is the workhorse. Walks through all links, gathering those with label 
@@ -108,19 +211,21 @@
                     (NC.PrintMsg Window NIL "Done!" (CHARACTER 13))))
           (NC.PutProp IndexCard 'LinkIndexLinkLabels (LIST LinkLabels))
           (NC.PutProp IndexCard 'LinkIndexBackLinksFlg BackLinksFlg)
-          (NC.SetPropListDirtyFlg IndexCard T)))))(NC.RecomputeLinkIndex
-  (LAMBDA (WindowOrTextStream)                               (* Randy.Gobbel " 4-Mar-87 14:31")
-          
-          (* * Recompute the contents of the link index card.
-          Modeled after NC.UpdateBrowserCard.)
-          
-          (* * fgh |11/17/85| Updated to handle Card object.)
-          
-          (* * rht 11/1/86%: Added NC.ProtectedCardOperation wrapper and check for ops in 
-          progress.)
-          
-          (* * rg |3/4/87| rewritten for new version of NC.ProtectedCardOperation, 
-          removed DontCheckOpInProgressFlg)
+          (NC.SetPropListDirtyFlg IndexCard T)))))
+
+(NC.RecomputeLinkIndex
+  [LAMBDA (WindowOrTextStream)                               (* Randy.Gobbel " 4-Mar-87 14:31")
+
+         (* * Recompute the contents of the link index card.
+         Modeled after NC.UpdateBrowserCard.)
+
+         (* * fgh |11/17/85| Updated to handle Card object.)
+
+         (* * rht 11/1/86%: Added NC.ProtectedCardOperation wrapper and check for ops in 
+         progress.)
+
+         (* * rg |3/4/87| rewritten for new version of NC.ProtectedCardOperation, removed 
+         DontCheckOpInProgressFlg)
 
     (LET ((Card (NC.CoerceToCard WindowOrTextStream))
           Window LinkLabels BackLinksFlg PropList BrowserSpecs TextStream)
@@ -128,14 +233,15 @@
                                                                                  Card))
                 (SETQ TextStream (TEXTSTREAM WindowOrTextStream))
                 (SETQ PropList (NC.FetchPropList Card))
-                (SETQ LinkLabels (CAR (LISTGET PropList 'LinkIndexLinkLabels)))
+                [SETQ LinkLabels (CAR (LISTGET PropList 'LinkIndexLinkLabels]
                 (SETQ BackLinksFlg (LISTGET PropList 'LinkIndexBackLinksFlg))
                 (NC.PrintMsg Window T "Clearing old contents of link index ..." (CHARACTER 13))
-                (TEDIT.DELETE TextStream (TEDIT.SETSEL TextStream 1 (fetch (TEXTOBJ TEXTLEN)
-                                                                       of (TEXTOBJ TextStream))))
+                (TEDIT.DELETE TextStream (TEDIT.SETSEL TextStream 1 (TEDIT.NCHARS TextStream)))
                 (NC.PrintMsg Window NIL "Done." (CHARACTER 13))
                 (NC.ComputeLinkIndex Card LinkLabels BackLinksFlg)
-                (NC.ClearMsg Window T)))))(NC.AskLinkIndexSpecs
+                (NC.ClearMsg Window T])
+
+(NC.AskLinkIndexSpecs
   (LAMBDA (Card OldLinkLabels OldBackLinksFlg CreatingLinkIndexFlg)
                                                              (* pmi%: " 2-Apr-87 11:23")
           
@@ -191,7 +297,9 @@
                                T)
                               (T NIL))))
             (CreatingLinkIndexFlg NIL)
-            (T (LIST OldLinkLabels OldBackLinksFlg))))))(NC.ChangeLinkIndexSpecs
+            (T (LIST OldLinkLabels OldBackLinksFlg))))))
+
+(NC.ChangeLinkIndexSpecs
   (LAMBDA (WindowOrTextStream)                               (* Randy.Gobbel " 4-Mar-87 14:32")
           
           (* * Change the values of the various link index specs including link types and 
@@ -219,7 +327,9 @@
                 (NC.PutProp Card 'LinkIndexLinkLabels (LIST LinkLabels))
                 (NC.PutProp Card 'LinkIndexBackLinksFlg BackLinksFlg)
                 (NC.ClearMsg (NC.FetchWindow Card)
-                       T)))))(NC.AppendLinkIndexEntry
+                       T)))))
+
+(NC.AppendLinkIndexEntry
   (LAMBDA (TextStream IndexCard WinnerList LinkLabels BackLinksP)
                                                              (* kirk%: "22-Sep-86 17:21")
           
@@ -297,7 +407,9 @@
                          (NCP.LocalGlobalLink NC.LinkIndexBackPtrLinkLabel IndexCard DestCard
                                 (create LINKDISPLAYMODE
                                        ATTACHBITMAPFLG _ T))))
-               (NC.AppendStringToStream TextStream (CONCAT (CHARACTER 13)))))))(NC.LinkIndexCompareFn
+               (NC.AppendStringToStream TextStream (CONCAT (CHARACTER 13)))))))
+
+(NC.LinkIndexCompareFn
   (LAMBDA (Pair1 Pair2)                                      (* fgh%: "17-Nov-85 16:20")
           
           (* * Used when sorting cons pairs of link labels and links.
@@ -309,7 +421,11 @@
         (ALPHORDER (NC.RetrieveTitle (fetch (Link DestinationCard) of (CDR Pair1)))
                (NC.RetrieveTitle (fetch (Link DestinationCard) of (CDR Pair2)))))
        (T (ALPHORDER (CAR Pair1)
-                 (CAR Pair2)))))))(DEFINEQ(NC.AddLinkIndexCard
+                 (CAR Pair2))))))
+)
+(DEFINEQ
+
+(NC.AddLinkIndexCard
   [LAMBDA NIL                                         (* ; "Edited 15-Dec-88 11:01 by krivacic")
 
          (* * fgh |11/14/85| Updated toremove substance type param to add card type.)
@@ -323,4 +439,23 @@
              (DisplayedInMenuFlg ,T)
              [LeftButtonMenuItems ,(NC.GetCardTypeField LeftButtonMenuItems 'Text]
              (MiddleButtonMenuItems ,(APPEND (NC.GetCardTypeField MiddleButtonMenuItems 'Text)
-                                            NC.LinkIndexExtraMenuItems]))(RPAQQ NC.LinkIndexCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@@@@H@@KOO@@H@@JHACNH@@KOO@@H@@H@@@@H@@KOO@@H@@JHACNH@@KOO@@H@@H@@@@H@@KOO@@H@@JHACNH@@KOO@@H@@H@@@@H@@OOOOOH@@)(DECLARE%: DONTEVAL@LOAD (NC.AddLinkIndexCard))(PUTPROPS NCLINKINDEXCARD FILETYPE :FAKE-COMPILE-FILE)(PUTPROPS NCLINKINDEXCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10                                                              ))(PUTPROPS NCLINKINDEXCARD COPYRIGHT ("Venue & Xerox Corporation" 1986 1987 1988 1989 1990 1993 1994 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (3100 3637 (NCAddStub.LinkIndexCard 3110 . 3635)) (4830 22416 (NC.MakeLinkIndex 4840 . 7301) (NC.BringUpLinkIndexCard 7303 . 7717) (NC.ComputeLinkIndex 7719 . 11354) (NC.RecomputeLinkIndex 11356 . 13000) (NC.AskLinkIndexSpecs 13002 . 15970) (NC.ChangeLinkIndexSpecs 15972 . 17538) (NC.AppendLinkIndexEntry 17540 . 21858) (NC.LinkIndexCompareFn 21860 . 22414)) (22417 23260 (NC.AddLinkIndexCard 22427 . 23258)))))STOP
+                                            NC.LinkIndexExtraMenuItems])
+)
+
+(RPAQQ NC.LinkIndexCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@@@@H@@KOO@@H@@JHACNH@@KOO@@H@@H@@@@H@@KOO@@H@@JHACNH@@KOO@@H@@H@@@@H@@KOO@@H@@JHACNH@@KOO@@H@@H@@@@H@@OOOOOH@@
+)
+(DECLARE%: DONTEVAL@LOAD 
+
+(NC.AddLinkIndexCard)
+)
+
+(PUTPROPS NCLINKINDEXCARD FILETYPE :FAKE-COMPILE-FILE)
+
+(PUTPROPS NCLINKINDEXCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (2961 3498 (NCAddStub.LinkIndexCard 2971 . 3496)) (4675 22138 (NC.MakeLinkIndex 4685 . 
+7146) (NC.BringUpLinkIndexCard 7148 . 7562) (NC.ComputeLinkIndex 7564 . 11199) (NC.RecomputeLinkIndex 
+11201 . 12722) (NC.AskLinkIndexSpecs 12724 . 15692) (NC.ChangeLinkIndexSpecs 15694 . 17260) (
+NC.AppendLinkIndexEntry 17262 . 21580) (NC.LinkIndexCompareFn 21582 . 22136)) (22139 22982 (
+NC.AddLinkIndexCard 22149 . 22980)))))
+STOP

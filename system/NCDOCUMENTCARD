@@ -1,11 +1,104 @@
-(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 5-Nov-2020 19:29:04" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCDOCUMENTCARD.;5 51553        previous date%: " 9-Jan-94 20:16:13" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCDOCUMENTCARD.;4)(* ; "Copyright (c) 1986, 1987, 1988, 1989, 1990, 1993, 1994, 2020 by Venue & Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCDOCUMENTCARDCOMS)(RPAQQ NCDOCUMENTCARDCOMS       ((* ;;; "Stuff for the Document compiler facility.")        (DECLARE%: DONTEVAL@LOAD (FILES NCTEXTCARD))        (FNS NCAddStub.DocumentCard)        (GLOBALVARS NC.MakeDocParameters NC.DocBackPtrLinkLabel NC.SubBoxLinkLabel                NC.FiledCardLinkLabel PSA.Database NC.SelectingCardMenu NC.CRString                NC.DocTitleParaLeading)        (INITVARS [NC.MakeDocParameters '((|Headings From Fileboxes| Numbered% Bold Unnumbered% Bold                                                 NONE)                                          (|Titles From NoteCards| Bold Not% Bold NONE)                                          (|Build Back Links| |Cards and Boxes| Cards% only                                                  Boxes% only NONE)                                          (|Copy Embedded Links| ALL NONE Select)                                          (|Expand Embedded Links| ALL NONE Select)                                          (--DONE--]               (NC.CRString (CONCAT (CHARACTER 13)))               (NC.DocTitleParaLeading 20))        (* ;;; "MakeDocument stuff")        (FNS NC.MakeDocument NC.DumpCardToDoc NC.DumpFileBoxToDoc NC.DumpNoteCardToDoc              NC.FetchToLinksInOrder NC.BuildMakeDocInspector NC.MakeDocInspectorSelectionFn              NC.AddCRIfNeeded NC.ChangeParaLeading NC.DumpExportableCardToDoc)        [INITPROPS (NC.MakeDocParameters (|Headings From Fileboxes| Numbered% Bold)                          (|Titles From NoteCards| Bold)                          (|Build Back Links| NONE)                          (|Copy Embedded Links| ALL)                          (|Expand Embedded Links| NONE)                          (--DONE-- --CANCEL--)                          (VALUE ((|Headings From Fileboxes| Numbered% Bold Unnumbered% Bold NONE)                                  (|Titles From NoteCards| Bold Not% Bold NONE)                                  (|Build Back Links| |Cards and Boxes| Cards% only Boxes% only NONE)                                  (|Copy Embedded Links| ALL NONE Select)                                  (|Expand Embedded Links| ALL NONE Select)                                  (--DONE--]        (FNS NC.AddDocumentCard)        (BITMAPS NC.DocumentCardIcon)        (DECLARE%: DONTEVAL@LOAD (P (NC.AddDocumentCard)))        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)              NCDOCUMENTCARD)))(* ;;; "Stuff for the Document compiler facility.")(DECLARE%: DONTEVAL@LOAD (FILESLOAD NCTEXTCARD))(DEFINEQ(NCAddStub.DocumentCard
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+
+(FILECREATED " 8-Mar-2024 12:41:19" {DSK}<home>frank>il>notecards>system>NCDOCUMENTCARD.;3 49253  
+
+      :CHANGES-TO (FNS NC.DumpNoteCardToDoc NC.FetchToLinksInOrder NC.DumpFileBoxToDoc 
+                       NC.AddCRIfNeeded NC.ChangeParaLeading NC.DumpExportableCardToDoc)
+
+      :PREVIOUS-DATE " 5-Nov-2020 19:29:04" {DSK}<home>frank>il>notecards>system>NCDOCUMENTCARD.;1)
+
+
+(PRETTYCOMPRINT NCDOCUMENTCARDCOMS)
+
+(RPAQQ NCDOCUMENTCARDCOMS
+       (
+
+(* ;;; "Stuff for the Document compiler facility.")
+
+        (DECLARE%: DONTEVAL@LOAD (FILES NCTEXTCARD))
+        (FNS NCAddStub.DocumentCard)
+        (GLOBALVARS NC.MakeDocParameters NC.DocBackPtrLinkLabel NC.SubBoxLinkLabel 
+               NC.FiledCardLinkLabel PSA.Database NC.SelectingCardMenu NC.CRString 
+               NC.DocTitleParaLeading)
+        (INITVARS [NC.MakeDocParameters '((|Headings From Fileboxes| Numbered% Bold Unnumbered% Bold
+                                                 NONE)
+                                          (|Titles From NoteCards| Bold Not% Bold NONE)
+                                          (|Build Back Links| |Cards and Boxes| Cards% only 
+                                                 Boxes% only NONE)
+                                          (|Copy Embedded Links| ALL NONE Select)
+                                          (|Expand Embedded Links| ALL NONE Select)
+                                          (--DONE--]
+               (NC.CRString (CONCAT (CHARACTER 13)))
+               (NC.DocTitleParaLeading 20))
+        
+
+(* ;;; "MakeDocument stuff")
+
+        (FNS NC.MakeDocument NC.DumpCardToDoc NC.DumpFileBoxToDoc NC.DumpNoteCardToDoc 
+             NC.FetchToLinksInOrder NC.BuildMakeDocInspector NC.MakeDocInspectorSelectionFn 
+             NC.AddCRIfNeeded NC.ChangeParaLeading NC.DumpExportableCardToDoc)
+        [INITPROPS (NC.MakeDocParameters (|Headings From Fileboxes| Numbered% Bold)
+                          (|Titles From NoteCards| Bold)
+                          (|Build Back Links| NONE)
+                          (|Copy Embedded Links| ALL)
+                          (|Expand Embedded Links| NONE)
+                          (--DONE-- --CANCEL--)
+                          (VALUE ((|Headings From Fileboxes| Numbered% Bold Unnumbered% Bold NONE)
+                                  (|Titles From NoteCards| Bold Not% Bold NONE)
+                                  (|Build Back Links| |Cards and Boxes| Cards% only Boxes% only NONE)
+                                  (|Copy Embedded Links| ALL NONE Select)
+                                  (|Expand Embedded Links| ALL NONE Select)
+                                  (--DONE--]
+        (FNS NC.AddDocumentCard)
+        (BITMAPS NC.DocumentCardIcon)
+        (DECLARE%: DONTEVAL@LOAD (P (NC.AddDocumentCard)))
+        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)
+              NCDOCUMENTCARD)))
+
+
+
+(* ;;; "Stuff for the Document compiler facility.")
+
+(DECLARE%: DONTEVAL@LOAD 
+
+(FILESLOAD NCTEXTCARD)
+)
+(DEFINEQ
+
+(NCAddStub.DocumentCard
   [LAMBDA NIL                                         (* ; "Edited  6-Dec-88 12:21 by krivacic")
 
 (* ;;; "kirk 18Jun86 Add the FileBox card stub")
 
     (NC.AddCardTypeStub 'Document 'Text 'NCDOCUMENTCARD NIL `((DisplayedInMenuFlg . T)
                                                               (LinkIconAttachedBitMap 
-                                                                     ,NC.DocumentCardIcon]))(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.MakeDocParameters NC.DocBackPtrLinkLabel NC.SubBoxLinkLabel NC.FiledCardLinkLabel        PSA.Database NC.SelectingCardMenu NC.CRString NC.DocTitleParaLeading))(RPAQ? NC.MakeDocParameters       '((|Headings From Fileboxes| Numbered% Bold Unnumbered% Bold NONE)         (|Titles From NoteCards| Bold Not% Bold NONE)         (|Build Back Links| |Cards and Boxes| Cards% only Boxes% only NONE)         (|Copy Embedded Links| ALL NONE Select)         (|Expand Embedded Links| ALL NONE Select)         (--DONE--)))(RPAQ? NC.CRString (CONCAT (CHARACTER 13)))(RPAQ? NC.DocTitleParaLeading 20)(* ;;; "MakeDocument stuff")(DEFINEQ(NC.MakeDocument
+                                                                     ,NC.DocumentCardIcon])
+)
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.MakeDocParameters NC.DocBackPtrLinkLabel NC.SubBoxLinkLabel NC.FiledCardLinkLabel 
+       PSA.Database NC.SelectingCardMenu NC.CRString NC.DocTitleParaLeading)
+)
+
+(RPAQ? NC.MakeDocParameters
+       '((|Headings From Fileboxes| Numbered% Bold Unnumbered% Bold NONE)
+         (|Titles From NoteCards| Bold Not% Bold NONE)
+         (|Build Back Links| |Cards and Boxes| Cards% only Boxes% only NONE)
+         (|Copy Embedded Links| ALL NONE Select)
+         (|Expand Embedded Links| ALL NONE Select)
+         (--DONE--)))
+
+(RPAQ? NC.CRString (CONCAT (CHARACTER 13)))
+
+(RPAQ? NC.DocTitleParaLeading 20)
+
+
+
+(* ;;; "MakeDocument stuff")
+
+(DEFINEQ
+
+(NC.MakeDocument
   [LAMBDA (Card Title NoDisplayFlg TypeSpecificArgs InterestedWindow RegionOrPosition)
                                                              (* ; "Edited 27-Dec-88 14:40 by rtk")
 
@@ -144,7 +237,9 @@
 
                                (if ParamProps
                                    then (SETPROPLIST 'NC.MakeDocParameters CurParams))
-                               (RETURN DocWindowOrCard])(NC.DumpCardToDoc
+                               (RETURN DocWindowOrCard])
+
+(NC.DumpCardToDoc
   [LAMBDA (Card DocCard DocStream CurSection SubSectionNum HeadingsFromFileboxes TitlesFromNoteCards
                 BuildBackLinks CopyEmbeddedLinks ExpandEmbeddedLinks)
                                                              (* ; "Edited  8-Feb-88 17:18 by Trigg")
@@ -183,7 +278,9 @@
                         (T (NC.PrintMsg NIL NIL "Can't make document from non-exportable card "
                                   (NC.RetrieveTitle Card)
                                   (CHARACTER 13))
-                           SubSectionNum])(NC.DumpFileBoxToDoc
+                           SubSectionNum])
+
+(NC.DumpFileBoxToDoc
   [LAMBDA (FileBoxCard DocCard DocStream CurSection SubSectionNum HeadingsFromFileboxes 
                  TitlesFromNoteCards BuildBackLinks CopyEmbeddedLinks ExpandEmbeddedLinks)
                                                           (* ; "Edited 20-Dec-88 09:57 by krivacic")
@@ -204,18 +301,17 @@
 
 (* ;;; "rht 6/4/87: Now calls NC.MakeLink rather than NCP.LocalGlobalLink and handles computes proper cross-file links mode.")
 
-    (LET ((DocObject (TEXTOBJ DocStream))
-          (InterestedWindow (NC.CoerceToInterestedWindow DocCard))
+    (LET ((InterestedWindow (NC.CoerceToInterestedWindow DocCard))
           ShrunkenFlg OldLoc)
          (NC.AddCRIfNeeded DocStream)
-         (SETQ OldLoc (fetch (TEXTOBJ TEXTLEN) of DocObject))
+         (SETQ OldLoc (TEDIT.NCHARS DocStream))
          (if (AND (EQ HeadingsFromFileboxes 'Numbered% Bold)
-                      (NOT (ZEROP SubSectionNum)))
+                  (NOT (ZEROP SubSectionNum)))
              then (SETQ CurSection (if (ZEROP CurSection)
-                                           then SubSectionNum
-                                         else (CONCAT CurSection "." SubSectionNum)))
-                   (NC.AppendStringToStream DocStream (CONCAT CurSection " ")
-                          T))
+                                       then SubSectionNum
+                                     else (CONCAT CurSection "." SubSectionNum)))
+                  (NC.AppendStringToStream DocStream (CONCAT CurSection " ")
+                         T))
          (AND (NEQ HeadingsFromFileboxes 'NONE)
               (NC.AppendStringToStream DocStream (CONCAT (NC.RetrieveTitle FileBoxCard))
                      T))
@@ -229,31 +325,32 @@
                                                                        'CrossFileLinkModePropList)
                                                                 InterestedWindow))
                      FileBoxCard))
-         (if (GREATERP (fetch (TEXTOBJ TEXTLEN) of DocObject)
-                        OldLoc)
+         (if (GREATERP (TEDIT.NCHARS DocStream)
+                    OldLoc)
              then (NC.AddCRIfNeeded DocStream)
-                   (NC.ChangeParaLeading DocStream))
+                  (NC.ChangeParaLeading DocStream))
          (if (NOT (NC.FetchUserDataProp FileBoxCard 'SeenBefore))
              then (SETQ ShrunkenFlg (NC.GetShrunkenWin FileBoxCard))
-                   [NC.SetUserDataProp DocCard 'SeenCards (CONS FileBoxCard (NC.FetchUserDataProp
-                                                                             DocCard
-                                                                             'SeenCards]
-                   (NC.SetUserDataProp FileBoxCard 'SeenBefore T)
-                   [for Link in (NC.FetchToLinksInOrder FileBoxCard)
-                      bind (SubSectionCounter _ 1) eachtime (BLOCK)
-                      when (FMEMB (fetch (Link Label) of Link)
-                                      (LIST NC.FiledCardLinkLabel NC.SubBoxLinkLabel))
-                      do (LET ((ChildCard (fetch (Link DestinationCard) of Link)))
-                                  (SETQ SubSectionCounter
-                                   (NC.DumpCardToDoc ChildCard DocCard DocStream CurSection 
-                                          SubSectionCounter HeadingsFromFileboxes TitlesFromNoteCards
-                                          BuildBackLinks CopyEmbeddedLinks ExpandEmbeddedLinks]
-                   (NC.SetUserDataProp FileBoxCard 'SeenBefore NIL)
-                   (AND ShrunkenFlg (SHRINKW (NC.FetchWindow FileBoxCard)))
-                   (ADD1 SubSectionNum)
+                  [NC.SetUserDataProp DocCard 'SeenCards (CONS FileBoxCard (NC.FetchUserDataProp
+                                                                            DocCard
+                                                                            'SeenCards]
+                  (NC.SetUserDataProp FileBoxCard 'SeenBefore T)
+                  [for Link in (NC.FetchToLinksInOrder FileBoxCard) bind (SubSectionCounter _ 1)
+                     eachtime (BLOCK) when (FMEMB (fetch (Link Label) of Link)
+                                                  (LIST NC.FiledCardLinkLabel NC.SubBoxLinkLabel))
+                     do (LET ((ChildCard (fetch (Link DestinationCard) of Link)))
+                             (SETQ SubSectionCounter
+                              (NC.DumpCardToDoc ChildCard DocCard DocStream CurSection 
+                                     SubSectionCounter HeadingsFromFileboxes TitlesFromNoteCards 
+                                     BuildBackLinks CopyEmbeddedLinks ExpandEmbeddedLinks]
+                  (NC.SetUserDataProp FileBoxCard 'SeenBefore NIL)
+                  (AND ShrunkenFlg (SHRINKW (NC.FetchWindow FileBoxCard)))
+                  (ADD1 SubSectionNum)
            else (NC.PrintMsg NIL NIL (NC.RetrieveTitle FileBoxCard)
-                           " only expanded once in this cycle.")
-                 SubSectionNum])(NC.DumpNoteCardToDoc
+                       " only expanded once in this cycle.")
+                SubSectionNum])
+
+(NC.DumpNoteCardToDoc
   [LAMBDA (Card DocCard DocStream CurSection SubSectionNum HeadingsFromFileboxes TitlesFromNoteCards
                 BuildBackLinks CopyEmbeddedLinks ExpandEmbeddedLinks)
                                                           (* ; "Edited 20-Dec-88 09:56 by krivacic")
@@ -278,12 +375,10 @@
 
     (LET
      ((CardStream (NC.FetchSubstance Card))
-      (DocObj (TEXTOBJ DocStream))
       (InterestedWindow (NC.CoerceToInterestedWindow DocCard))
-      ShrunkenFlg CardObj OldLoc)
-     (SETQ CardObj (TEXTOBJ CardStream))
+      ShrunkenFlg OldLoc)
      (NC.AddCRIfNeeded DocStream)
-     (SETQ OldLoc (fetch (TEXTOBJ TEXTLEN) of DocObj))
+     (SETQ OldLoc (TEDIT.NCHARS DocStream))
      [AND (NEQ TitlesFromNoteCards 'NONE)
           (NC.AppendStringToStream DocStream (CONCAT (NC.RetrieveTitle Card))
                  (EQ TitlesFromNoteCards 'Bold]
@@ -297,103 +392,103 @@
                                                                    'CrossFileLinkModePropList)
                                                             InterestedWindow))
                  Card))
-     (if (GREATERP (fetch (TEXTOBJ TEXTLEN) of DocObj)
-                    OldLoc)
+     (if (GREATERP (TEDIT.NCHARS DocStream)
+                OldLoc)
          then (NC.AddCRIfNeeded DocStream)
-               (NC.ChangeParaLeading DocStream))
+              (NC.ChangeParaLeading DocStream))
      (if (NOT (NC.FetchUserDataProp Card 'SeenBefore))
          then (SETQ ShrunkenFlg (NC.GetShrunkenWin Card))
-               [NC.SetUserDataProp DocCard 'SeenCards (CONS Card (NC.FetchUserDataProp DocCard
-                                                                        'SeenCards]
-               (NC.SetUserDataProp Card 'SeenBefore T) 
+              [NC.SetUserDataProp DocCard 'SeenCards (CONS Card (NC.FetchUserDataProp DocCard
+                                                                       'SeenCards]
+              (NC.SetUserDataProp Card 'SeenBefore T) 
 
-               (* ;; "Step through list of notecard imageobjs in the card we're working on and either expand or copy or ignore each according to values of ExpandEmbeddedLinks and CopyEmbeddedLinks.")
+              (* ;; "Step through list of notecard imageobjs in the card we're working on and either expand or copy or ignore each according to values of ExpandEmbeddedLinks and CopyEmbeddedLinks.")
 
-               (for Object in (TEDIT.LIST.OF.OBJECTS CardObj (FUNCTION NC.LinkIconImageObjP))
-                  bind LinkSpec LinkLabel ToCard ToCardType (LastLoc _ 1)
-                        (CurLoc _ 0)
-                        ActiveP ExpandP CopyP AlreadyExpanded eachtime (BLOCK)
-                  do [(SETQ LinkSpec (NC.FetchLinkFromLinkIcon (CAR Object)))
-                          (SETQ LinkLabel (fetch (Link Label) of LinkSpec))
-                          (SETQ CurLoc (CADR Object))        (* ; 
-                                                "Copy over any text between this obj and the last.")
-                          [if (ILESSP LastLoc CurLoc)
-                              then (TEDIT.COPY (TEDIT.SETSEL CardStream LastLoc (IDIFFERENCE
-                                                                                     CurLoc LastLoc))
-                                              (TEDIT.SETSEL DocStream (fetch TEXTLEN of
-                                                                                         DocObj)
-                                                     1
-                                                     'RIGHT]
-                          (SETQ LastLoc (ADD1 CurLoc))
-                          [SETQ CopyP (OR (EQ CopyEmbeddedLinks 'ALL)
-                                          (AND (LISTP CopyEmbeddedLinks)
-                                               (FMEMB LinkLabel CopyEmbeddedLinks]
-                          [SETQ ExpandP (OR (EQ ExpandEmbeddedLinks 'ALL)
-                                            (AND (LISTP ExpandEmbeddedLinks)
-                                                 (FMEMB LinkLabel ExpandEmbeddedLinks]
-                          (SETQ ToCard (fetch (Link DestinationCard) of LinkSpec))
-                          (if (AND (NC.CrossFileLinkCardP ToCard)
-                                       (OR ExpandP CopyP))
-                              then (SETQ ToCard (NC.GetCrossFileLinkDestCard ToCard 
-                                                           InterestedWindow)))
-                          (if (NC.ValidCardP ToCard)
-                              then (if (AND (SETQ AlreadyExpanded (NC.FetchUserDataProp
-                                                                           ToCard
-                                                                           'SeenBefore))
-                                                    ExpandP)
-                                           then (NC.PrintMsg NIL NIL (NC.RetrieveTitle ToCard)
-                                                           " only expanded once in this cycle."
-                                                           (CHARACTER 13)))
-                                    (if (OR CopyP (AND ExpandP AlreadyExpanded))
-                                        then             (* ; "Copy this link.")
-                                              (NC.AddLinkToCard DocCard
-                                                     (NC.MakeLink NIL LinkLabel ToCard DocCard
-                                                            (fetch (Link DisplayMode)
-                                                               of LinkSpec)
-                                                            NIL NIL NIL NIL
-                                                            (NC.ComputeCrossFileLinkMode
-                                                             ToCard
-                                                             (NC.FetchUserDataProp DocCard
-                                                                    'CrossFileLinkModePropList)
-                                                             InterestedWindow))
-                                                     ToCard) (* ; "(TEDIT.COPY (TEDIT.SETSEL CardStream CurLoc 1) (TEDIT.SETSEL DocStream (ADD1 (fetch TEXTLEN of DocObj)) 0 'RIGHT))")
-                                           )
-                                    (if (AND ExpandP (NOT AlreadyExpanded))
-                                        then             (* ; 
-                                           "Expand this link.  Check type and make recursive call.")
-                                              (SETQ SubSectionNum
-                                               (NC.DumpCardToDoc ToCard DocCard DocStream 
-                                                      CurSection SubSectionNum HeadingsFromFileboxes
-                                                      TitlesFromNoteCards BuildBackLinks 
-                                                      CopyEmbeddedLinks ExpandEmbeddedLinks]
-                  finally [COND
-                                 ((ILESSP CurLoc (fetch TEXTLEN of CardObj))
-                                  (TEDIT.COPY (TEDIT.SETSEL CardStream LastLoc
-                                                     (IDIFFERENCE (fetch TEXTLEN of CardObj)
-                                                            CurLoc))
-                                         (TEDIT.SETSEL DocStream (ADD1 (fetch TEXTLEN
-                                                                          of DocObj))
-                                                0
-                                                'RIGHT]
-                        (TEDIT.SETSEL DocStream (ADD1 (fetch TEXTLEN of DocObj))
-                               0
-                               'RIGHT))
-               (NC.SetUserDataProp Card 'SeenBefore NIL)
-               (AND ShrunkenFlg (SHRINKW (NC.FetchWindow Card)))
+              (for Object in (NC.TEditCollectObjects CardStream (FUNCTION NC.LinkIconImageObjP))
+                 bind LinkSpec LinkLabel ToCard ToCardType (LastLoc _ 1)
+                      (CurLoc _ 0)
+                      ActiveP ExpandP CopyP AlreadyExpanded eachtime (BLOCK)
+                 do [(SETQ LinkSpec (NC.FetchLinkFromLinkIcon (CAR Object)))
+                     (SETQ LinkLabel (fetch (Link Label) of LinkSpec))
+                     (SETQ CurLoc (CADR Object))             (* ; 
+                                                  "Copy over any text between this obj and the last.")
+                     [if (ILESSP LastLoc CurLoc)
+                         then (TEDIT.COPY (TEDIT.SETSEL CardStream LastLoc (IDIFFERENCE CurLoc 
+                                                                                  LastLoc))
+                                     (TEDIT.SETSEL DocStream (TEDIT.NCHARS DocStream)
+                                            1
+                                            'RIGHT]
+                     (SETQ LastLoc (ADD1 CurLoc))
+                     [SETQ CopyP (OR (EQ CopyEmbeddedLinks 'ALL)
+                                     (AND (LISTP CopyEmbeddedLinks)
+                                          (FMEMB LinkLabel CopyEmbeddedLinks]
+                     [SETQ ExpandP (OR (EQ ExpandEmbeddedLinks 'ALL)
+                                       (AND (LISTP ExpandEmbeddedLinks)
+                                            (FMEMB LinkLabel ExpandEmbeddedLinks]
+                     (SETQ ToCard (fetch (Link DestinationCard) of LinkSpec))
+                     (if (AND (NC.CrossFileLinkCardP ToCard)
+                              (OR ExpandP CopyP))
+                         then (SETQ ToCard (NC.GetCrossFileLinkDestCard ToCard InterestedWindow)))
+                     (if (NC.ValidCardP ToCard)
+                         then (if (AND (SETQ AlreadyExpanded (NC.FetchUserDataProp ToCard
+                                                                    'SeenBefore))
+                                       ExpandP)
+                                  then (NC.PrintMsg NIL NIL (NC.RetrieveTitle ToCard)
+                                              " only expanded once in this cycle."
+                                              (CHARACTER 13)))
+                              (if (OR CopyP (AND ExpandP AlreadyExpanded))
+                                  then                       (* ; "Copy this link.")
+                                       (NC.AddLinkToCard DocCard (NC.MakeLink
+                                                                  NIL LinkLabel ToCard DocCard
+                                                                  (fetch (Link DisplayMode)
+                                                                     of LinkSpec)
+                                                                  NIL NIL NIL NIL
+                                                                  (NC.ComputeCrossFileLinkMode
+                                                                   ToCard
+                                                                   (NC.FetchUserDataProp DocCard
+                                                                          'CrossFileLinkModePropList)
+                                                                   InterestedWindow))
+                                              ToCard)        (* ; "(TEDIT.COPY (TEDIT.SETSEL CardStream CurLoc 1) (TEDIT.SETSEL DocStream (ADD1 (fetch TEXTLEN of DocObj)) 0 'RIGHT))")
+                                  )
+                              (if (AND ExpandP (NOT AlreadyExpanded))
+                                  then                       (* ; 
+                                             "Expand this link.  Check type and make recursive call.")
+                                       (SETQ SubSectionNum
+                                        (NC.DumpCardToDoc ToCard DocCard DocStream CurSection 
+                                               SubSectionNum HeadingsFromFileboxes 
+                                               TitlesFromNoteCards BuildBackLinks CopyEmbeddedLinks 
+                                               ExpandEmbeddedLinks]
+                 finally [COND
+                            ((ILESSP CurLoc (TEDIT.NCHARS CardStream))
+                             (TEDIT.COPY (TEDIT.SETSEL CardStream LastLoc (IDIFFERENCE (TEDIT.NCHARS
+                                                                                        CardStream)
+                                                                                 CurLoc))
+                                    (TEDIT.SETSEL DocStream (ADD1 (TEDIT.NCHARS DocStream))
+                                           0
+                                           'RIGHT]
+                       (TEDIT.SETSEL DocStream (ADD1 (TEDIT.NCHARS DocStream))
+                              0
+                              'RIGHT))
+              (NC.SetUserDataProp Card 'SeenBefore NIL)
+              (AND ShrunkenFlg (SHRINKW (NC.FetchWindow Card)))
        else (NC.PrintMsg NIL NIL (NC.RetrieveTitle Card)
-                       " only expanded once in this cycle."
-                       (CHARACTER 13)))
-     SubSectionNum])(NC.FetchToLinksInOrder
-  (LAMBDA (Card)                                             (* fgh%: "17-Nov-85 18:23")
-          
-          (* * Return the list of To links appearing in the text of ID in the order in 
-          which they appear.)
-          
-          (* * fgh |11/17/85| Updated to handle card object.)
+                   " only expanded once in this cycle."
+                   (CHARACTER 13)))
+     SubSectionNum])
 
-    (for ObjectPair in (TEDIT.LIST.OF.OBJECTS (TEXTOBJ (NC.FetchSubstance Card))
+(NC.FetchToLinksInOrder
+  [LAMBDA (Card)                                             (* fgh%: "17-Nov-85 18:23")
+
+         (* * Return the list of To links appearing in the text of ID in the order in 
+         which they appear.)
+
+         (* * fgh |11/17/85| Updated to handle card object.)
+
+    (for ObjectPair in (NC.TEditCollectObjects (NC.FetchSubstance Card)
                               (FUNCTION NC.LinkIconImageObjP)) collect (NC.FetchLinkFromLinkIcon
-                                                                        (CAR ObjectPair)))))(NC.BuildMakeDocInspector
+                                                                        (CAR ObjectPair])
+
+(NC.BuildMakeDocInspector
   [LAMBDA (MainWin)                                      (* ; "Edited 28-Dec-88 14:55 by rtk")
 
 (* ;;; "bk 12/28/88  Use a STYLE SHEET to display the Doc card parameters")
@@ -450,7 +545,9 @@
                                                               else OLD-VALUE]
                            (PUTPROP 'NC.MakeDocParameters PROP NEW-VALUE))
                (PUTPROP 'NC.MakeDocParameters '--DONE-- '--DONE--)
-       else (PUTPROP 'NC.MakeDocParameters '--DONE-- 'QUIT])(NC.MakeDocInspectorSelectionFn
+       else (PUTPROP 'NC.MakeDocParameters '--DONE-- 'QUIT])
+
+(NC.MakeDocInspectorSelectionFn
   [LAMBDA (Property ValueFlg InspectWin)              (* ; "Edited 19-Dec-88 18:06 by krivacic")
 
 (* ;;; "Called when user buttons in the make document inspector menu on the Property parameter.  Put up a menu of choices for new values for this parameter.")
@@ -505,24 +602,30 @@
                          then (PUTPROP 'NC.MakeDocParameters Property Answer)
                                (INSPECTW.REDISPLAY InspectWin Property))
                      (INSPECTW.SELECTITEM InspectWin)
-                     NIL])(NC.AddCRIfNeeded
-  (LAMBDA (Stream)                                           (* rht%: " 2-Oct-85 17:15")
-          
-          (* * Check last character of Stream. If not a CR, then add one.)
+                     NIL])
 
-    (LET ((Len (fetch (TEXTOBJ TEXTLEN) of (TEXTOBJ Stream))))
+(NC.AddCRIfNeeded
+  [LAMBDA (Stream)                                           (* rht%: " 2-Oct-85 17:15")
+
+         (* * Check last character of Stream. If not a CR, then add one.)
+
+    (LET ((Len (TEDIT.NCHARS Stream)))
          (if (NOT (ZEROP Len))
              then (SETFILEPTR Stream (SUB1 Len))
                   (if (NEQ 13 (BIN Stream))
-                      then (NC.AppendStringToStream Stream NC.CRString))))))(NC.ChangeParaLeading
-  (LAMBDA (Stream)                                           (* rht%: "16-Sep-85 19:34")
-          
-          (* * Change the para leading on the text stream Stream using default value.)
+                      then (NC.AppendStringToStream Stream NC.CRString])
 
-    (LET ((TextObj (TEXTOBJ Stream)))
-         (TEDIT.PARALOOKS TextObj (LIST 'PARALEADING NC.DocTitleParaLeading)
-                (fetch (TEXTOBJ TEXTLEN) of TextObj)
-                1))))(NC.DumpExportableCardToDoc
+(NC.ChangeParaLeading
+  [LAMBDA (Stream)                                           (* rht%: "16-Sep-85 19:34")
+
+         (* * Change the para leading on the text stream Stream using default value.)
+
+    (TEDIT.PARALOOKS (TEXTOBJ Stream)
+           (LIST 'PARALEADING NC.DocTitleParaLeading)
+           (TEDIT.NCHARS Stream)
+           1])
+
+(NC.DumpExportableCardToDoc
   [LAMBDA (Card DocCard DocStream CurSection SubSectionNum HeadingsFromFileboxes TitlesFromNoteCards
                 BuildBackLinks CopyEmbeddedLinks ExpandEmbeddedLinks CardType)
                                                              (* ; "Edited  6-Jan-89 19:00 by rtk")
@@ -548,7 +651,7 @@
     (* ;; "rht 6/4/87: Now calls NC.MakeLink rather than NCP.LocalGlobalLink and handles computes proper cross-file links mode.")
 
     (* ;; 
- "pmi 8/7/87: Now 'externalizes' graphs so that they won't break when edited once in the document.")
+   "pmi 8/7/87: Now 'externalizes' graphs so that they won't break when edited once in the document.")
 
     (* ;; "rht 2/10/88: Added a check for link to copy being crossfilelink.")
 
@@ -556,11 +659,10 @@
 
     (DECLARE (GLOBALVARS NC.DocBackPtrLinkLabel))
     (LET ((CardStream (NC.FetchSubstance Card))
-          (DocObj (TEXTOBJ DocStream))
           (InterestedWindow (NC.CoerceToInterestedWindow DocCard))
           ShrunkenFlg OldLoc ThingToInsert)
          (NC.AddCRIfNeeded DocStream)
-         (SETQ OldLoc (fetch (TEXTOBJ TEXTLEN) of DocObj))
+         (SETQ OldLoc (TEDIT.NCHARS DocStream))
          [AND (NEQ TitlesFromNoteCards 'NONE)
               (NC.AppendStringToStream DocStream (CONCAT (NC.RetrieveTitle Card))
                      (EQ TitlesFromNoteCards 'Bold]
@@ -574,108 +676,112 @@
                                                                        'CrossFileLinkModePropList)
                                                                 InterestedWindow))
                      Card))
-         (if (GREATERP (fetch (TEXTOBJ TEXTLEN) of DocObj)
-                        OldLoc)
+         (if (GREATERP (TEDIT.NCHARS DocStream)
+                    OldLoc)
              then (NC.AddCRIfNeeded DocStream)
-                   (NC.ChangeParaLeading DocStream))
+                  (NC.ChangeParaLeading DocStream))
          (if (NOT (NC.FetchUserDataProp Card 'SeenBefore))
              then (SETQ ShrunkenFlg (NC.GetShrunkenWin Card))
-                   [NC.SetUserDataProp DocCard 'SeenCards (CONS Card (NC.FetchUserDataProp
-                                                                      DocCard
-                                                                      'SeenCards]
-                   (NC.SetUserDataProp Card 'SeenBefore T) 
+                  [NC.SetUserDataProp DocCard 'SeenCards (CONS Card (NC.FetchUserDataProp
+                                                                     DocCard
+                                                                     'SeenCards]
+                  (NC.SetUserDataProp Card 'SeenBefore T) 
 
 (* ;;; "Stick an imageobj made from the card into the document.  Also might be a textstream computed by the card type's ExportSubstanceFn.")
 
-                   [SETQ ThingToInsert (if (NCP.GraphBasedP CardType)
-                                           then (GRAPHEROBJ (NC.MakeExternalGraphCopy CardStream)
-                                                           )
-                                         elseif (NCP.SketchBasedP CardType)
-                                           then (NC.MakeExternalSketchCopy (OR (NC.FetchWindow
-                                                                                    Card)
-                                                                                   CardStream))
-                                         elseif (LET [(ExportSubstanceFn (GETPROP CardType
-                                                                                    
-                                                                                    '
-                                                                                    ExportSubstanceFn
-                                                                                    ]
-                                                         (AND ExportSubstanceFn (APPLY* 
-                                                                                    ExportSubstanceFn
-                                                                                       CardStream]
-                   [AND CardStream (if (IMAGEOBJP ThingToInsert)
-                                       then (TEDIT.INSERT.OBJECT ThingToInsert DocStream)
-                                     elseif (TEXTSTREAMP ThingToInsert)
-                                       then (TEDIT.COPY (TEDIT.SETSEL ThingToInsert 1
-                                                                   (fetch TEXTLEN
-                                                                      of (TEXTOBJ ThingToInsert))
-                                                                   )
-                                                       (TEDIT.SETSEL DocStream (fetch TEXTLEN
-                                                                                  of DocObj)
-                                                              1
-                                                              'RIGHT] 
+                  [SETQ ThingToInsert (if (NCP.GraphBasedP CardType)
+                                          then (GRAPHEROBJ (NC.MakeExternalGraphCopy CardStream))
+                                        elseif (NCP.SketchBasedP CardType)
+                                          then (NC.MakeExternalSketchCopy (OR (NC.FetchWindow Card)
+                                                                              CardStream))
+                                        elseif (LET [(ExportSubstanceFn (GETPROP CardType
+                                                                               'ExportSubstanceFn]
+                                                    (AND ExportSubstanceFn (APPLY* ExportSubstanceFn
+                                                                                  CardStream]
+                  [AND CardStream (if (IMAGEOBJP ThingToInsert)
+                                      then (TEDIT.INSERT.OBJECT ThingToInsert DocStream)
+                                    elseif (TEXTSTREAMP ThingToInsert)
+                                      then (TEDIT.COPY (TEDIT.SETSEL ThingToInsert 1 (TEDIT.NCHARS
+                                                                                      ThingToInsert))
+                                                  (TEDIT.SETSEL DocStream (TEDIT.NCHARS DocStream)
+                                                         1
+                                                         'RIGHT] 
 
 (* ;;; "Point Past the Image Object")
 
-                   (TEDIT.SETSEL DocStream (ADD1 (fetch TEXTLEN of DocObj))
-                          0
-                          'RIGHT)
-                   (NC.AddCRIfNeeded DocStream) 
+                  (TEDIT.SETSEL DocStream (ADD1 (TEDIT.NCHARS DocStream))
+                         0
+                         'RIGHT)
+                  (NC.AddCRIfNeeded DocStream) 
 
 (* ;;; "Step through list of notecard imageobjs in the card we're working on and either expand or copy or ignore each according to values of ExpandEmbeddedLinks and CopyEmbeddedLinks.")
 
-                   [for Link in (CAR (NC.CollectReferences Card NIL NIL NIL))
-                      bind LinkLabel ToCard ToCardType ActiveFlg ExpandFlg CopyFlg 
-                            AlreadyExpanded eachtime (BLOCK)
-                      do (SETQ LinkLabel (fetch (Link Label) of Link))
-                            [SETQ CopyFlg (OR (EQ CopyEmbeddedLinks 'ALL)
-                                              (AND (LISTP CopyEmbeddedLinks)
-                                                   (FMEMB LinkLabel CopyEmbeddedLinks]
-                            [SETQ ExpandFlg (OR (EQ ExpandEmbeddedLinks 'ALL)
-                                                (AND (LISTP ExpandEmbeddedLinks)
-                                                     (FMEMB LinkLabel ExpandEmbeddedLinks]
-                            (SETQ ToCard (fetch (Link DestinationCard) of Link))
-                            (if (AND (NC.CrossFileLinkCardP ToCard)
-                                         (OR ExpandFlg CopyFlg))
-                                then (SETQ ToCard (NC.GetCrossFileLinkDestCard ToCard 
-                                                             InterestedWindow)))
-                            [if (NC.ValidCardP ToCard)
-                                then (if (AND (SETQ AlreadyExpanded (NC.FetchUserDataProp
-                                                                             ToCard
-                                                                             'SeenBefore))
-                                                      ExpandFlg)
-                                             then (NC.PrintMsg NIL NIL (NC.RetrieveTitle ToCard)
-                                                             " only expanded once in this cycle."
-                                                             (CHARACTER 13)))
-                                      (if (OR CopyFlg (AND ExpandFlg AlreadyExpanded))
-                                          then           (* ; "Copy this link.")
-                                                (NC.AddLinkToCard DocCard
-                                                       (NC.MakeLink NIL LinkLabel ToCard DocCard NIL
-                                                              NIL NIL NIL NIL
-                                                              (NC.ComputeCrossFileLinkMode
-                                                               ToCard
-                                                               (NC.FetchUserDataProp DocCard
+                  [for Link in (CAR (NC.CollectReferences Card NIL NIL NIL))
+                     bind LinkLabel ToCard ToCardType ActiveFlg ExpandFlg CopyFlg AlreadyExpanded
+                     eachtime (BLOCK)
+                     do (SETQ LinkLabel (fetch (Link Label) of Link))
+                        [SETQ CopyFlg (OR (EQ CopyEmbeddedLinks 'ALL)
+                                          (AND (LISTP CopyEmbeddedLinks)
+                                               (FMEMB LinkLabel CopyEmbeddedLinks]
+                        [SETQ ExpandFlg (OR (EQ ExpandEmbeddedLinks 'ALL)
+                                            (AND (LISTP ExpandEmbeddedLinks)
+                                                 (FMEMB LinkLabel ExpandEmbeddedLinks]
+                        (SETQ ToCard (fetch (Link DestinationCard) of Link))
+                        (if (AND (NC.CrossFileLinkCardP ToCard)
+                                 (OR ExpandFlg CopyFlg))
+                            then (SETQ ToCard (NC.GetCrossFileLinkDestCard ToCard InterestedWindow)))
+                        [if (NC.ValidCardP ToCard)
+                            then (if (AND (SETQ AlreadyExpanded (NC.FetchUserDataProp ToCard
+                                                                       'SeenBefore))
+                                          ExpandFlg)
+                                     then (NC.PrintMsg NIL NIL (NC.RetrieveTitle ToCard)
+                                                 " only expanded once in this cycle."
+                                                 (CHARACTER 13)))
+                                 (if (OR CopyFlg (AND ExpandFlg AlreadyExpanded))
+                                     then                    (* ; "Copy this link.")
+                                          (NC.AddLinkToCard DocCard
+                                                 (NC.MakeLink NIL LinkLabel ToCard DocCard NIL NIL 
+                                                        NIL NIL NIL (NC.ComputeCrossFileLinkMode
+                                                                     ToCard
+                                                                     (NC.FetchUserDataProp
+                                                                      DocCard
                                                                       'CrossFileLinkModePropList)
-                                                               InterestedWindow))
-                                                       ToCard))
-                                      (if (AND ExpandFlg (NOT AlreadyExpanded))
-                                          then           (* ; 
-                                           "Expand this link.  Check type and make recursive call.")
-                                                (SETQ SubSectionNum
-                                                 (NC.DumpCardToDoc ToCard DocCard DocStream 
-                                                        CurSection SubSectionNum 
-                                                        HeadingsFromFileboxes TitlesFromNoteCards 
-                                                        BuildBackLinks CopyEmbeddedLinks 
-                                                        ExpandEmbeddedLinks]
-                      finally (AND NIL (TEDIT.SETSEL DocStream (ADD1 (fetch TEXTLEN
-                                                                            of DocObj))
-                                                  0
-                                                  'RIGHT]
-                   (NC.SetUserDataProp Card 'SeenBefore NIL)
-                   (AND ShrunkenFlg (SHRINKW (NC.FetchWindow Card)))
+                                                                     InterestedWindow))
+                                                 ToCard))
+                                 (if (AND ExpandFlg (NOT AlreadyExpanded))
+                                     then                    (* ; 
+                                             "Expand this link.  Check type and make recursive call.")
+                                          (SETQ SubSectionNum
+                                           (NC.DumpCardToDoc ToCard DocCard DocStream CurSection 
+                                                  SubSectionNum HeadingsFromFileboxes 
+                                                  TitlesFromNoteCards BuildBackLinks 
+                                                  CopyEmbeddedLinks ExpandEmbeddedLinks]
+                     finally (AND NIL (TEDIT.SETSEL DocStream (ADD1 (TEDIT.NCHARS DocStream))
+                                             0
+                                             'RIGHT]
+                  (NC.SetUserDataProp Card 'SeenBefore NIL)
+                  (AND ShrunkenFlg (SHRINKW (NC.FetchWindow Card)))
            else (NC.PrintMsg NIL NIL (NC.RetrieveTitle Card)
-                           " only expanded once in this cycle."
-                           (CHARACTER 13)))
-         SubSectionNum]))[LOADINITPROPS (NC.MakeDocParameters (|Headings From Fileboxes| Numbered% Bold)                      (|Titles From NoteCards| Bold)                      (|Build Back Links| NONE)                      (|Copy Embedded Links| ALL)                      (|Expand Embedded Links| NONE)                      (--DONE-- --CANCEL--)                      (VALUE ((|Headings From Fileboxes| Numbered% Bold Unnumbered% Bold NONE)                              (|Titles From NoteCards| Bold Not% Bold NONE)                              (|Build Back Links| |Cards and Boxes| Cards% only Boxes% only NONE)                              (|Copy Embedded Links| ALL NONE Select)                              (|Expand Embedded Links| ALL NONE Select)                              (--DONE--](DEFINEQ(NC.AddDocumentCard
+                       " only expanded once in this cycle."
+                       (CHARACTER 13)))
+         SubSectionNum])
+)
+
+[LOADINITPROPS (NC.MakeDocParameters (|Headings From Fileboxes| Numbered% Bold)
+                      (|Titles From NoteCards| Bold)
+                      (|Build Back Links| NONE)
+                      (|Copy Embedded Links| ALL)
+                      (|Expand Embedded Links| NONE)
+                      (--DONE-- --CANCEL--)
+                      (VALUE ((|Headings From Fileboxes| Numbered% Bold Unnumbered% Bold NONE)
+                              (|Titles From NoteCards| Bold Not% Bold NONE)
+                              (|Build Back Links| |Cards and Boxes| Cards% only Boxes% only NONE)
+                              (|Copy Embedded Links| ALL NONE Select)
+                              (|Expand Embedded Links| ALL NONE Select)
+                              (--DONE--]
+(DEFINEQ
+
+(NC.AddDocumentCard
   [LAMBDA NIL                                         (* ; "Edited  2-Dec-88 17:03 by krivacic")
 
          (* * fgh |11/14/85| removed substance type param.)
@@ -685,4 +791,24 @@
              (LinkIconAttachedBitMap ,NC.DocumentCardIcon)
              (DefaultHeight 350)
              (DefaultWidth 350)
-             (DisplayedInMenuFlg ,T]))(RPAQQ NC.DocumentCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@B@@H@@H@B@@H@@KOJONH@@KOJONH@@J@OHBH@@J@JHBH@@KOJONH@@H@B@@H@@KOJONH@@KOJONH@@J@OHBH@@J@HHBH@@KOHONH@@H@@@@H@@OOOOOH@@)(DECLARE%: DONTEVAL@LOAD (NC.AddDocumentCard))(PUTPROPS NCDOCUMENTCARD FILETYPE :FAKE-COMPILE-FILE)(PUTPROPS NCDOCUMENTCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))(PUTPROPS NCDOCUMENTCARD COPYRIGHT ("Venue & Xerox Corporation" 1986 1987 1988 1989 1990 1993 1994 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (3071 3536 (NCAddStub.DocumentCard 3081 . 3534)) (4236 49754 (NC.MakeDocument 4246 . 13384) (NC.DumpCardToDoc 13386 . 15923) (NC.DumpFileBoxToDoc 15925 . 20752) (NC.DumpNoteCardToDoc 20754 . 29683) (NC.FetchToLinksInOrder 29685 . 30287) (NC.BuildMakeDocInspector 30289 . 34343) (NC.MakeDocInspectorSelectionFn 34345 . 38025) (NC.AddCRIfNeeded 38027 . 38512) (NC.ChangeParaLeading 38514 . 38925) (NC.DumpExportableCardToDoc 38927 . 49752)) (50536 51014 (NC.AddDocumentCard 50546 . 51012)))))STOP
+             (DisplayedInMenuFlg ,T])
+)
+
+(RPAQQ NC.DocumentCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@B@@H@@H@B@@H@@KOJONH@@KOJONH@@J@OHBH@@J@JHBH@@KOJONH@@H@B@@H@@KOJONH@@KOJONH@@J@OHBH@@J@HHBH@@KOHONH@@H@@@@H@@OOOOOH@@
+)
+(DECLARE%: DONTEVAL@LOAD 
+
+(NC.AddDocumentCard)
+)
+
+(PUTPROPS NCDOCUMENTCARD FILETYPE :FAKE-COMPILE-FILE)
+
+(PUTPROPS NCDOCUMENTCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (3062 3527 (NCAddStub.DocumentCard 3072 . 3525)) (4227 47561 (NC.MakeDocument 4237 . 
+13375) (NC.DumpCardToDoc 13377 . 15914) (NC.DumpFileBoxToDoc 15916 . 20594) (NC.DumpNoteCardToDoc 
+20596 . 28908) (NC.FetchToLinksInOrder 28910 . 29493) (NC.BuildMakeDocInspector 29495 . 33549) (
+NC.MakeDocInspectorSelectionFn 33551 . 37231) (NC.AddCRIfNeeded 37233 . 37679) (NC.ChangeParaLeading 
+37681 . 38031) (NC.DumpExportableCardToDoc 38033 . 47559)) (48343 48821 (NC.AddDocumentCard 48353 . 
+48819)))))
+STOP

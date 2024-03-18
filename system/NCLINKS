@@ -1,25 +1,271 @@
-(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 3-Nov-2020 16:13:36" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCLINKS.;5 292555       previous date%: " 9-Jan-94 19:15:07" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCLINKS.;4)(* ; "Copyright (c) 1984, 1985, 1986, 1987, 1988, 1989, 1990, 1993, 1994, 2020 by Venue & Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCLINKSCOMS)(RPAQQ NCLINKSCOMS       ((* ;;; "Internal variables")        (GLOBALVARS NC.LinkIconSpaceInterLine NC.FileBoxLinkSpacer NC.NoDeleteImageFns                NC.SystemLinkLabels NC.InitialLinkLabels NC.SubBoxLinkLabel NC.FiledCardLinkLabel                NC.BrowserContentsLinkLabel NC.ListContentsLinkLabel NC.UnspecifiedLinkLabel                NC.UCASESystemLinkLabels NC.DocBackPtrLinkLabel NC.LinkIndexBackPtrLinkLabel                NC.LinkIconImageFns NC.LinkIconMiddleButtonMenu NC.LinkDisplayModesStylesheet                NC.LinkIconBorderWidth NC.LinkIconSpaceOuterY NC.LinkIconSpaceInnerY                NC.LinkIconSpaceOuterX NC.LinkIconSpaceInnerX NC.OrphanID MINIMUM.VISIBLE.SCALE.FACTOR               DEFAULT.VISIBLE.SCALE.FACTOR TEDIT.DEFAULT.FONT)        (INITVARS (NC.SubBoxLinkLabel 'SubBox)               (NC.FiledCardLinkLabel 'FiledCard)               (NC.BrowserContentsLinkLabel 'BrowserContents)               (NC.ListContentsLinkLabel 'ListContents)               (NC.UnspecifiedLinkLabel 'Unspecified)               (NC.DocBackPtrLinkLabel 'DocBackPtr)               (NC.LinkIndexBackPtrLinkLabel 'LinkIndexBackPtr)               (NC.SystemLinkLabels (LIST NC.ListContentsLinkLabel NC.BrowserContentsLinkLabel                                           NC.FiledCardLinkLabel NC.SubBoxLinkLabel                                           NC.DocBackPtrLinkLabel NC.LinkIndexBackPtrLinkLabel))               (NC.UCASESystemLinkLabels (for Label in NC.SystemLinkLabels collect (U-CASE Label)))               (NC.InitialLinkLabels (APPEND '(Comment See Unspecified)                                            NC.SystemLinkLabels))               (NC.LinkIconSpaceInterLine 0)               (NC.LinkIconBorderWidth 1)               (NC.LinkIconSpaceOuterY 2)               (NC.LinkIconSpaceInnerY 1)               (NC.LinkIconSpaceOuterX 2)               (NC.LinkIconSpaceInnerX 3)               (NC.FileBoxLinkSpacer (CHARACTER 13)))        (* ;;; "Links mechanism")        (FNS NC.GlobalLinkP NC.ChildLinkP NC.ContentsLinkP NC.SubContentsLinkP NC.ReverseLinkLabelP              NC.MakeGlobalLink NC.AddFromLink NC.AddLinkToGraphCard NC.AddLinkToSketchCard              NC.InsertLinkInSketch NC.InsertLinkInText NC.AddToLink NC.CachedAddToLink NC.DelFromLink             NC.CachedDelFromLink NC.DelToLink NC.DelReferencesToCard              NC.DelReferencesToCardFromGlobalList NC.DeleteLink NC.DeleteToLink NC.DeleteFromLink              NC.DeletedLinkDisplayFn NC.DeletedLinkGetFn NC.DeletedLinkImageBoxFn NC.DeletedLinkPutFn             NC.DeletedLinkImageObjP NC.DeleteBadLink NC.ReplaceWithDeletedLinkImageObj              NC.CheckForOrphanDelete NC.FileInOrphanBox NC.HookToOrphanCard NC.InsertLinkBeforeMarker             NC.LinkLabelP NC.IDAlphOrder NC.MakeLink NC.CachedMakeFilingLink NC.MakeFilingLink              NC.MakeFilingLinks NC.RelabelLink NC.SystemLinkLabelP NC.ValidLinkP NC.MakeChildLink              NC.EnsureNoCycles NC.SameLinkP NC.SameLinksP NC.AddGlobalLinkToCard              NC.AddGlobalLinksToCard NC.ChangeCardTitleFromLinkIcon NC.UncacheLinks NC.TraverseLink              NC.CreateLinkIconStrings NC.ShrinkIcon)        (FNS NC.AddLinkToCard NC.AddLinksToCard)        (FNS NC.DelReferencesToCardFromShowLinks NC.UpdateLinkImagesInShowLinks              NC.FetchShowLinksWindow NC.ChangeLinkLabelInShowLinksWin)        (* ;;; "New Display Mode format")        (FNS NC.CheckDisplayModeFormat NC.InsureLinkDisplayMode NC.MakeNewDisplayMode              NC.DisplayModeFromStylesheetSelections NC.StylesheetSelectionsFromDisplayMode)        (GLOBALVARS NC.MenuItems/DisplayModeValues)        [INITVARS (NC.MenuItems/DisplayModeValues '(Yes T No NIL System% Defaults FLOAT Yes T No NIL                                                        System% Defaults FLOAT Yes T No NIL                                                         System% Defaults FLOAT]        (* ;;; "New fns to support No-Link cards/substances")        (FNS NC.LinksSupportedP)        (* ;;; "Link display icons")        (FNS NC.FetchLinkIconForLink NC.MakeLinkIcon NC.LinkIconButtonEventInFn NC.LinkIconDisplayFn             NC.LinkIconImageBoxFn NC.LinkIconImageObjP NC.LinkIconPutFn NC.LinkIconGetFn              NC.LinkIconMiddleButtonFn NC.LinkIconWhenCopiedFn NC.LinkIconWhenDeletedFn              NC.LinkIconWhenInsertedFn NC.LinkIconWhenMovedFn NC.FetchLinkFromLinkIcon              NC.ChangeLinkDisplayMode NC.UpdateLinkImages NC.LinkIconCopyFn NC.LinkAtCharPos              NC.LinkIconLeftButtonFn NC.LinkToBitMap NC.SetBitMap&Box)        (FNS NC.FillInLinkIcon NC.InvisibleLinkImageBoxFn NC.InvisibleLinkPutFn NC.InvisibleLinkGetFn             )        (* ;;; "Pointer icons. These act like links, except that their icon boxes are dashed, and they're invisible as far as the source or destination cards are concerned. That is, only the imageobject containing the pointer knows about the connection. Functions exist for creating pointer icons and converting them into link icons.")        (GLOBALVARS NC.PointerIconImageObjFns NC.PointerIconDashingStyle                NC.PointerIconMiddleButtonMenu)        [INITVARS (NC.PointerIconImageObjFns (IMAGEFNSCREATE (FUNCTION NC.PointerIconDisplayFn)                                                    (FUNCTION NC.PointerIconImageBoxFn)                                                    (FUNCTION NC.PointerIconPutFn)                                                    (FUNCTION NC.PointerIconGetFn)                                                    (FUNCTION NC.PointerIconCopyFn)                                                    (FUNCTION NC.LinkIconButtonEventInFn)))               (NC.PointerIconDashingStyle '(4 2]        (* ;;; "Functions likely to be useful externally.")        (FNS NC.InsertPointerInText NC.ConvertPointerIconToLinkIcon NC.MakePointerIcon NC.MakePointer             NC.PointerIconImageObjP NC.FetchPointerFromPointerIcon)        (* ;;; "Internal functions.")        (FNS NC.PointerIconDisplayFn NC.PointerIconImageBoxFn NC.PointerIconPutFn NC.PointerIconGetFn             NC.PointerIconCopyFn NC.WritePointer NC.ReadPointer)        (FNS NC.PointerIconLeftButtonFn NC.PointerIconMiddleButtonFn NC.TraversePointer              NC.ChangePointerDisplayMode NC.RelabelPointer NC.ChangeCardTitleFromPointerIcon)        (FNS NC.DeleteBadPointer NC.DrawLinkOrPointerIcon NC.ComputeLinkOrPointerImageBox)        (DECLARE%: DONTEVAL@LOAD (P (NC.MakePointerIcon)))        (* ;;; "New stuff for allowing put to work from TEdit.")        (GLOBALVARS NC.ExternalPutLinkIconImageFns)        [INITVARS (NC.ExternalPutLinkIconImageFns (IMAGEFNSCREATE (FUNCTION                                                                       NC.ExternalPutLinkIconDisplayFn                                                                         )                                                         (FUNCTION NC.ExternalPutLinkIconImageBoxFn)                                                         (FUNCTION NC.ExternalPutLinkIconPutFn)                                                         (FUNCTION NC.ExternalPutLinkIconGetFn)                                                         NIL                                                         (FUNCTION NILL]        (FNS NC.ExternalPutLinkIconDisplayFn NC.ExternalPutLinkIconImageBoxFn              NC.ExternalPutLinkIconPutFn NC.ExternalPutLinkIconGetFn NC.ExternalGetLinkIconFn              NC.CoerceToExternalPutLinkIcon)        (* ;;; "Stuff to register our image object for intermezzo.")        (FNS NC.RegisterPlaceMarkerImageObj)        (DECLARE%: DONTEVAL@LOAD (P (NC.RegisterPlaceMarkerImageObj)))        (* ;;; "Stuff for Having BitMap external Link Images")        (GLOBALVARS NC.ExternalBitMapPutLinkIconImageFns NC.LinkIconBitMapStream)        [INITVARS (NC.ExternalBitMapPutLinkIconImageFns (IMAGEFNSCREATE (FUNCTION                                                                       NC.ExternalPutLinkIconDisplayFn                                                                               )                                                               (FUNCTION                                                                      NC.ExternalPutLinkIconImageBoxFn                                                                      )                                                               (FUNCTION NC.ExternalPutLinkIconPutFn)                                                               (FUNCTION NC.ExternalGetLinkIconFn)                                                               NIL                                                               (FUNCTION NILL]        [P (SETQ NC.LinkIconBitMapStream (DSPCREATE (BITMAPCREATE 512 128]        (* ;;; "Stuff for handling link icons in sketches.")        (FNS NC.LinkIconSketchElementP NC.DeleteLinkIconSketchElement)        (* ;;; "Icons representing notecards types.")        (GLOBALVARS NC.FileBoxIcon NC.GraphCardIcon NC.SketchCardIcon NC.TextCardIcon NC.TypelessIcon               )        (* ;;; "DELETEME imageobjs")        (GLOBALVARS NC.DELETEMEImageObjDatum NC.RemoveDELETEMEImageObjsFromCardFlg)        (INITVARS (NC.DELETEMEImageObjDatum "[[DELETE ME]]")               (NC.RemoveDELETEMEImageObjsFromCardFlg NIL))        (FNS NC.DELETEMEImageObjP)        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)              NCLINKS)))(* ;;; "Internal variables")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.LinkIconSpaceInterLine NC.FileBoxLinkSpacer NC.NoDeleteImageFns NC.SystemLinkLabels        NC.InitialLinkLabels NC.SubBoxLinkLabel NC.FiledCardLinkLabel NC.BrowserContentsLinkLabel        NC.ListContentsLinkLabel NC.UnspecifiedLinkLabel NC.UCASESystemLinkLabels        NC.DocBackPtrLinkLabel NC.LinkIndexBackPtrLinkLabel NC.LinkIconImageFns        NC.LinkIconMiddleButtonMenu NC.LinkDisplayModesStylesheet NC.LinkIconBorderWidth        NC.LinkIconSpaceOuterY NC.LinkIconSpaceInnerY NC.LinkIconSpaceOuterX NC.LinkIconSpaceInnerX        NC.OrphanID MINIMUM.VISIBLE.SCALE.FACTOR DEFAULT.VISIBLE.SCALE.FACTOR TEDIT.DEFAULT.FONT))(RPAQ? NC.SubBoxLinkLabel 'SubBox)(RPAQ? NC.FiledCardLinkLabel 'FiledCard)(RPAQ? NC.BrowserContentsLinkLabel 'BrowserContents)(RPAQ? NC.ListContentsLinkLabel 'ListContents)(RPAQ? NC.UnspecifiedLinkLabel 'Unspecified)(RPAQ? NC.DocBackPtrLinkLabel 'DocBackPtr)(RPAQ? NC.LinkIndexBackPtrLinkLabel 'LinkIndexBackPtr)(RPAQ? NC.SystemLinkLabels (LIST NC.ListContentsLinkLabel NC.BrowserContentsLinkLabel                                      NC.FiledCardLinkLabel NC.SubBoxLinkLabel NC.DocBackPtrLinkLabel                                     NC.LinkIndexBackPtrLinkLabel))(RPAQ? NC.UCASESystemLinkLabels (for Label in NC.SystemLinkLabels collect (U-CASE Label)))(RPAQ? NC.InitialLinkLabels (APPEND '(Comment See Unspecified)                                       NC.SystemLinkLabels))(RPAQ? NC.LinkIconSpaceInterLine 0)(RPAQ? NC.LinkIconBorderWidth 1)(RPAQ? NC.LinkIconSpaceOuterY 2)(RPAQ? NC.LinkIconSpaceInnerY 1)(RPAQ? NC.LinkIconSpaceOuterX 2)(RPAQ? NC.LinkIconSpaceInnerX 3)(RPAQ? NC.FileBoxLinkSpacer (CHARACTER 13))(* ;;; "Links mechanism")(DEFINEQ(NC.GlobalLinkP
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+
+(FILECREATED " 8-Mar-2024 15:58:49" {DSK}<home>frank>il>notecards>system>NCLINKS.;5 291026 
+
+      :CHANGES-TO (FNS NC.InsertLinkInText)
+
+      :PREVIOUS-DATE " 8-Mar-2024 12:40:39" {DSK}<home>frank>il>notecards>system>NCLINKS.;4)
+
+
+(PRETTYCOMPRINT NCLINKSCOMS)
+
+(RPAQQ NCLINKSCOMS
+       (
+
+(* ;;; "Internal variables")
+
+        (GLOBALVARS NC.LinkIconSpaceInterLine NC.FileBoxLinkSpacer NC.NoDeleteImageFns 
+               NC.SystemLinkLabels NC.InitialLinkLabels NC.SubBoxLinkLabel NC.FiledCardLinkLabel 
+               NC.BrowserContentsLinkLabel NC.ListContentsLinkLabel NC.UnspecifiedLinkLabel 
+               NC.UCASESystemLinkLabels NC.DocBackPtrLinkLabel NC.LinkIndexBackPtrLinkLabel 
+               NC.LinkIconImageFns NC.LinkIconMiddleButtonMenu NC.LinkDisplayModesStylesheet 
+               NC.LinkIconBorderWidth NC.LinkIconSpaceOuterY NC.LinkIconSpaceInnerY 
+               NC.LinkIconSpaceOuterX NC.LinkIconSpaceInnerX NC.OrphanID MINIMUM.VISIBLE.SCALE.FACTOR
+               DEFAULT.VISIBLE.SCALE.FACTOR TEDIT.DEFAULT.FONT)
+        (INITVARS (NC.SubBoxLinkLabel 'SubBox)
+               (NC.FiledCardLinkLabel 'FiledCard)
+               (NC.BrowserContentsLinkLabel 'BrowserContents)
+               (NC.ListContentsLinkLabel 'ListContents)
+               (NC.UnspecifiedLinkLabel 'Unspecified)
+               (NC.DocBackPtrLinkLabel 'DocBackPtr)
+               (NC.LinkIndexBackPtrLinkLabel 'LinkIndexBackPtr)
+               (NC.SystemLinkLabels (LIST NC.ListContentsLinkLabel NC.BrowserContentsLinkLabel 
+                                          NC.FiledCardLinkLabel NC.SubBoxLinkLabel 
+                                          NC.DocBackPtrLinkLabel NC.LinkIndexBackPtrLinkLabel))
+               (NC.UCASESystemLinkLabels (for Label in NC.SystemLinkLabels collect (U-CASE Label)))
+               (NC.InitialLinkLabels (APPEND '(Comment See Unspecified)
+                                            NC.SystemLinkLabels))
+               (NC.LinkIconSpaceInterLine 0)
+               (NC.LinkIconBorderWidth 1)
+               (NC.LinkIconSpaceOuterY 2)
+               (NC.LinkIconSpaceInnerY 1)
+               (NC.LinkIconSpaceOuterX 2)
+               (NC.LinkIconSpaceInnerX 3)
+               (NC.FileBoxLinkSpacer (CHARACTER 13)))
+        
+
+(* ;;; "Links mechanism")
+
+        (FNS NC.GlobalLinkP NC.ChildLinkP NC.ContentsLinkP NC.SubContentsLinkP NC.ReverseLinkLabelP 
+             NC.MakeGlobalLink NC.AddFromLink NC.AddLinkToGraphCard NC.AddLinkToSketchCard 
+             NC.InsertLinkInSketch NC.InsertLinkInText NC.AddToLink NC.CachedAddToLink NC.DelFromLink
+             NC.CachedDelFromLink NC.DelToLink NC.DelReferencesToCard 
+             NC.DelReferencesToCardFromGlobalList NC.DeleteLink NC.DeleteToLink NC.DeleteFromLink 
+             NC.DeletedLinkDisplayFn NC.DeletedLinkGetFn NC.DeletedLinkImageBoxFn NC.DeletedLinkPutFn
+             NC.DeletedLinkImageObjP NC.DeleteBadLink NC.ReplaceWithDeletedLinkImageObj 
+             NC.CheckForOrphanDelete NC.FileInOrphanBox NC.HookToOrphanCard NC.InsertLinkBeforeMarker
+             NC.LinkLabelP NC.IDAlphOrder NC.MakeLink NC.CachedMakeFilingLink NC.MakeFilingLink 
+             NC.MakeFilingLinks NC.RelabelLink NC.SystemLinkLabelP NC.ValidLinkP NC.MakeChildLink 
+             NC.EnsureNoCycles NC.SameLinkP NC.SameLinksP NC.AddGlobalLinkToCard 
+             NC.AddGlobalLinksToCard NC.ChangeCardTitleFromLinkIcon NC.UncacheLinks NC.TraverseLink 
+             NC.CreateLinkIconStrings NC.ShrinkIcon)
+        (FNS NC.AddLinkToCard NC.AddLinksToCard)
+        (FNS NC.DelReferencesToCardFromShowLinks NC.UpdateLinkImagesInShowLinks 
+             NC.FetchShowLinksWindow NC.ChangeLinkLabelInShowLinksWin)
+        
+
+(* ;;; "New Display Mode format")
+
+        (FNS NC.CheckDisplayModeFormat NC.InsureLinkDisplayMode NC.MakeNewDisplayMode 
+             NC.DisplayModeFromStylesheetSelections NC.StylesheetSelectionsFromDisplayMode)
+        (GLOBALVARS NC.MenuItems/DisplayModeValues)
+        [INITVARS (NC.MenuItems/DisplayModeValues '(Yes T No NIL System% Defaults FLOAT Yes T No NIL
+                                                        System% Defaults FLOAT Yes T No NIL 
+                                                        System% Defaults FLOAT]
+        
+
+(* ;;; "New fns to support No-Link cards/substances")
+
+        (FNS NC.LinksSupportedP)
+        
+
+(* ;;; "Link display icons")
+
+        (FNS NC.FetchLinkIconForLink NC.MakeLinkIcon NC.LinkIconButtonEventInFn NC.LinkIconDisplayFn
+             NC.LinkIconImageBoxFn NC.LinkIconImageObjP NC.LinkIconPutFn NC.LinkIconGetFn 
+             NC.LinkIconMiddleButtonFn NC.LinkIconWhenCopiedFn NC.LinkIconWhenDeletedFn 
+             NC.LinkIconWhenInsertedFn NC.LinkIconWhenMovedFn NC.FetchLinkFromLinkIcon 
+             NC.ChangeLinkDisplayMode NC.UpdateLinkImages NC.LinkIconCopyFn NC.LinkAtCharPos 
+             NC.LinkIconLeftButtonFn NC.LinkToBitMap NC.SetBitMap&Box)
+        (FNS NC.FillInLinkIcon NC.InvisibleLinkImageBoxFn NC.InvisibleLinkPutFn NC.InvisibleLinkGetFn
+             )
+        
+
+(* ;;; "Pointer icons. These act like links, except that their icon boxes are dashed, and they're invisible as far as the source or destination cards are concerned. That is, only the imageobject containing the pointer knows about the connection. Functions exist for creating pointer icons and converting them into link icons.")
+
+        (GLOBALVARS NC.PointerIconImageObjFns NC.PointerIconDashingStyle 
+               NC.PointerIconMiddleButtonMenu)
+        [INITVARS (NC.PointerIconImageObjFns (IMAGEFNSCREATE (FUNCTION NC.PointerIconDisplayFn)
+                                                    (FUNCTION NC.PointerIconImageBoxFn)
+                                                    (FUNCTION NC.PointerIconPutFn)
+                                                    (FUNCTION NC.PointerIconGetFn)
+                                                    (FUNCTION NC.PointerIconCopyFn)
+                                                    (FUNCTION NC.LinkIconButtonEventInFn)))
+               (NC.PointerIconDashingStyle '(4 2]
+        
+
+(* ;;; "Functions likely to be useful externally.")
+
+        (FNS NC.InsertPointerInText NC.ConvertPointerIconToLinkIcon NC.MakePointerIcon NC.MakePointer
+             NC.PointerIconImageObjP NC.FetchPointerFromPointerIcon)
+        
+
+(* ;;; "Internal functions.")
+
+        (FNS NC.PointerIconDisplayFn NC.PointerIconImageBoxFn NC.PointerIconPutFn NC.PointerIconGetFn
+             NC.PointerIconCopyFn NC.WritePointer NC.ReadPointer)
+        (FNS NC.PointerIconLeftButtonFn NC.PointerIconMiddleButtonFn NC.TraversePointer 
+             NC.ChangePointerDisplayMode NC.RelabelPointer NC.ChangeCardTitleFromPointerIcon)
+        (FNS NC.DeleteBadPointer NC.DrawLinkOrPointerIcon NC.ComputeLinkOrPointerImageBox)
+        (DECLARE%: DONTEVAL@LOAD (P (NC.MakePointerIcon)))
+        
+
+(* ;;; "New stuff for allowing put to work from TEdit.")
+
+        (GLOBALVARS NC.ExternalPutLinkIconImageFns)
+        [INITVARS (NC.ExternalPutLinkIconImageFns (IMAGEFNSCREATE (FUNCTION 
+                                                                      NC.ExternalPutLinkIconDisplayFn
+                                                                         )
+                                                         (FUNCTION NC.ExternalPutLinkIconImageBoxFn)
+                                                         (FUNCTION NC.ExternalPutLinkIconPutFn)
+                                                         (FUNCTION NC.ExternalPutLinkIconGetFn)
+                                                         NIL
+                                                         (FUNCTION NILL]
+        (FNS NC.ExternalPutLinkIconDisplayFn NC.ExternalPutLinkIconImageBoxFn 
+             NC.ExternalPutLinkIconPutFn NC.ExternalPutLinkIconGetFn NC.ExternalGetLinkIconFn 
+             NC.CoerceToExternalPutLinkIcon)
+        
+
+(* ;;; "Stuff to register our image object for intermezzo.")
+
+        (FNS NC.RegisterPlaceMarkerImageObj)
+        (DECLARE%: DONTEVAL@LOAD (P (NC.RegisterPlaceMarkerImageObj)))
+        
+
+(* ;;; "Stuff for Having BitMap external Link Images")
+
+        (GLOBALVARS NC.ExternalBitMapPutLinkIconImageFns NC.LinkIconBitMapStream)
+        [INITVARS (NC.ExternalBitMapPutLinkIconImageFns (IMAGEFNSCREATE (FUNCTION 
+                                                                      NC.ExternalPutLinkIconDisplayFn
+                                                                               )
+                                                               (FUNCTION 
+                                                                     NC.ExternalPutLinkIconImageBoxFn
+                                                                      )
+                                                               (FUNCTION NC.ExternalPutLinkIconPutFn)
+                                                               (FUNCTION NC.ExternalGetLinkIconFn)
+                                                               NIL
+                                                               (FUNCTION NILL]
+        [P (SETQ NC.LinkIconBitMapStream (DSPCREATE (BITMAPCREATE 512 128]
+        
+
+(* ;;; "Stuff for handling link icons in sketches.")
+
+        (FNS NC.LinkIconSketchElementP NC.DeleteLinkIconSketchElement)
+        
+
+(* ;;; "Icons representing notecards types.")
+
+        (GLOBALVARS NC.FileBoxIcon NC.GraphCardIcon NC.SketchCardIcon NC.TextCardIcon NC.TypelessIcon
+               )
+        
+
+(* ;;; "DELETEME imageobjs")
+
+        (GLOBALVARS NC.DELETEMEImageObjDatum NC.RemoveDELETEMEImageObjsFromCardFlg)
+        (INITVARS (NC.DELETEMEImageObjDatum "[[DELETE ME]]")
+               (NC.RemoveDELETEMEImageObjsFromCardFlg NIL))
+        (FNS NC.DELETEMEImageObjP)
+        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)
+              NCLINKS)))
+
+
+
+(* ;;; "Internal variables")
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.LinkIconSpaceInterLine NC.FileBoxLinkSpacer NC.NoDeleteImageFns NC.SystemLinkLabels 
+       NC.InitialLinkLabels NC.SubBoxLinkLabel NC.FiledCardLinkLabel NC.BrowserContentsLinkLabel 
+       NC.ListContentsLinkLabel NC.UnspecifiedLinkLabel NC.UCASESystemLinkLabels 
+       NC.DocBackPtrLinkLabel NC.LinkIndexBackPtrLinkLabel NC.LinkIconImageFns 
+       NC.LinkIconMiddleButtonMenu NC.LinkDisplayModesStylesheet NC.LinkIconBorderWidth 
+       NC.LinkIconSpaceOuterY NC.LinkIconSpaceInnerY NC.LinkIconSpaceOuterX NC.LinkIconSpaceInnerX 
+       NC.OrphanID MINIMUM.VISIBLE.SCALE.FACTOR DEFAULT.VISIBLE.SCALE.FACTOR TEDIT.DEFAULT.FONT)
+)
+
+(RPAQ? NC.SubBoxLinkLabel 'SubBox)
+
+(RPAQ? NC.FiledCardLinkLabel 'FiledCard)
+
+(RPAQ? NC.BrowserContentsLinkLabel 'BrowserContents)
+
+(RPAQ? NC.ListContentsLinkLabel 'ListContents)
+
+(RPAQ? NC.UnspecifiedLinkLabel 'Unspecified)
+
+(RPAQ? NC.DocBackPtrLinkLabel 'DocBackPtr)
+
+(RPAQ? NC.LinkIndexBackPtrLinkLabel 'LinkIndexBackPtr)
+
+(RPAQ? NC.SystemLinkLabels (LIST NC.ListContentsLinkLabel NC.BrowserContentsLinkLabel 
+                                 NC.FiledCardLinkLabel NC.SubBoxLinkLabel NC.DocBackPtrLinkLabel 
+                                 NC.LinkIndexBackPtrLinkLabel))
+
+(RPAQ? NC.UCASESystemLinkLabels (for Label in NC.SystemLinkLabels collect (U-CASE Label)))
+
+(RPAQ? NC.InitialLinkLabels (APPEND '(Comment See Unspecified)
+                                   NC.SystemLinkLabels))
+
+(RPAQ? NC.LinkIconSpaceInterLine 0)
+
+(RPAQ? NC.LinkIconBorderWidth 1)
+
+(RPAQ? NC.LinkIconSpaceOuterY 2)
+
+(RPAQ? NC.LinkIconSpaceInnerY 1)
+
+(RPAQ? NC.LinkIconSpaceOuterX 2)
+
+(RPAQ? NC.LinkIconSpaceInnerX 3)
+
+(RPAQ? NC.FileBoxLinkSpacer (CHARACTER 13))
+
+
+
+(* ;;; "Links mechanism")
+
+(DEFINEQ
+
+(NC.GlobalLinkP
   (LAMBDA (Link)                                             (* kirk%: "15-Nov-85 03:36")
           
           (* * Return T if Link is a Global to Global link)
 
-    (EQ 'GlobalGlobal (fetch (Link AnchorMode) of Link))))(NC.ChildLinkP
+    (EQ 'GlobalGlobal (fetch (Link AnchorMode) of Link))))
+
+(NC.ChildLinkP
   (LAMBDA (Link)                                             (* rht%: " 1-Aug-84 09:34")
           
           (* * Is link either to a filed card or sub filebox?)
 
     (OR (NC.ContentsLinkP Link)
-        (NC.SubContentsLinkP Link))))(NC.ContentsLinkP
+        (NC.SubContentsLinkP Link))))
+
+(NC.ContentsLinkP
   (LAMBDA (Link)                                             (* kirk%: "15-Nov-85 01:42")
     (COND
        ((EQ NC.FiledCardLinkLabel (fetch (Link Label) of Link))
         T)
-       (T NIL))))(NC.SubContentsLinkP
+       (T NIL))))
+
+(NC.SubContentsLinkP
   (LAMBDA (Link)                                             (* kirk%: "15-Nov-85 01:42")
     (COND
        ((EQ NC.SubBoxLinkLabel (fetch (Link Label) of Link))
         T)
-       (T NIL))))(NC.ReverseLinkLabelP
+       (T NIL))))
+
+(NC.ReverseLinkLabelP
   (LAMBDA (Link ListOfLabels)                                (* kirk%: "15-Nov-85 01:43")
           
           (* Is the reverse of Link, i.e. with "_" prefix attached, present on 
@@ -32,7 +278,9 @@
                      ((FMEMB (PACK* '_ Label)
                              (OR (LISTP ListOfLabels)
                                  (LIST ListOfLabels)))
-                      Label))))))(NC.MakeGlobalLink
+                      Label))))))
+
+(NC.MakeGlobalLink
   (LAMBDA (Window LinkLabel DestinationCard SourceCard DisplayMode)
                                                              (* rht%: "26-Oct-87 19:32")
           
@@ -46,7 +294,9 @@
           global links list.)
 
     (NC.MakeLink Window LinkLabel DestinationCard SourceCard DisplayMode 'GlobalGlobal NIL NIL
-           'ATEND)))(NC.AddFromLink
+           'ATEND)))
+
+(NC.AddFromLink
   (LAMBDA (Link)                                             (* Randy.Gobbel "15-Jul-87 17:54")
           
           (* * Add Link to the FromLinks of the appropraite card on DatbaseStream)
@@ -71,7 +321,9 @@
                       (NC.SetFromLinks Card (CONS Link (NC.FetchFromLinks Card)))
                       (NC.PutFromLinks Card)
                       (NC.UncacheLinks Card))))
-         Link)))(NC.AddLinkToGraphCard
+         Link)))
+
+(NC.AddLinkToGraphCard
   [LAMBDA (Window LinkOrLinkLabel DestinationCard)       (* ; "Edited  1-Jun-88 17:47 by pmi")
 
     (* ;; "Add a NOTECARD link to a graph card.  Pass the fact that this is a link-add to NC.GraphAddNodeFn via the NoteCardInsertingLink window property")
@@ -91,7 +343,9 @@
                    (replace (GRAPH GRAPH.ADDNODEFN) of (WINDOWPROP Window 'GRAPH)
                       with (FUNCTION NC.GraphAddNodeFn))
                    (EDITADDNODE Window NIL AttachW (FUNCTION NC.NameOfCardorNodeorImageObj))
-                   (CLOSEW AttachW])(NC.AddLinkToSketchCard
+                   (CLOSEW AttachW])
+
+(NC.AddLinkToSketchCard
   (LAMBDA (SketchWindow LinkOrLinkLabel DestinationCard)     (* rht%: " 7-Apr-86 17:24")
           
           (* Called from a SKETCH window to add a new NoteCard Link Icon to the sketch)
@@ -106,7 +360,9 @@
                                                                  (NC.AskLinkLabel SketchWindow NIL 
                                                                         NIL T T))
                                           DestinationCard)))
-    (NC.InsertLinkInSketch SketchWindow LinkOrLinkLabel)))(NC.InsertLinkInSketch
+    (NC.InsertLinkInSketch SketchWindow LinkOrLinkLabel)))
+
+(NC.InsertLinkInSketch
   (LAMBDA (SketchWindow Link SketchWindowPosition)           (* kirk%: " 4-Sep-86 18:42")
           
           (* * rht 8/20/85%: Rewritten to use Richard's sketch programmer's interface.
@@ -137,44 +393,46 @@
                        then (SKETCH.ADD.ELEMENT SketchIcon SketchWindow)
                             SketchIcon
                      else (NCP.DeleteLinks Link)
-                          NIL)))))(NC.InsertLinkInText
-  (LAMBDA (TextStream LinkOrLinkLabel DestinationCard SourceCard DisplayMode CharacterPosition)
-                                                             (* kirk%: "15-Nov-85 11:53")
-          
-          (* * Add a link image object (and hence a link) to the text specified by 
-          TextStream. Link has LinkLabel, goes to DestinationCard and has DisplayMode.
-          Returns the Link inserted.)
-          
-          (* * rht 11/9/84%: Now checks result of NC.MakeLink before building link.)
-          
-          (* * rht 3/26/85%: Now uses insert position to calculate the link after which 
-          to insert new link and passes this to NC.MakeLink.)
+                          NIL)))))
 
-    (PROG ((Window (WINDOW.FROM.TEDIT.THING TextStream))
-           (TextObject (TEXTOBJ TextStream))
+(NC.InsertLinkInText
+  [LAMBDA (TextStream LinkOrLinkLabel DestinationCard SourceCard DisplayMode CharacterPosition)
+                                                             (* kirk%: "15-Nov-85 11:53")
+
+         (* * Add a link image object (and hence a link) to the text specified by 
+         TextStream. Link has LinkLabel, goes to DestinationCard and has DisplayMode.
+         Returns the Link inserted.)
+
+         (* * rht 11/9/84%: Now checks result of NC.MakeLink before building link.)
+
+         (* * rht 3/26/85%: Now uses insert position to calculate the link after which to 
+         insert new link and passes this to NC.MakeLink.)
+
+    (PROG ((Window (NC.TEditWindow TextStream T))
            Link InsertPos)
           (RETURN (COND
                      ((SETQ InsertPos (OR (if (AND (FIXP CharacterPosition)
-                                                   (ILEQ CharacterPosition (fetch (TEXTOBJ TEXTLEN)
-                                                                              of TextObject)))
+                                                   (ILEQ CharacterPosition (TEDIT.NCHARS TextStream))
+                                                   )
                                               then CharacterPosition)
-                                          (NC.CharPosFromTextObject TextObject)))
-                      (if (SETQ Link (COND
+                                          (NC.CharPosFromTextStream TextStream)))
+                      (if [SETQ Link (COND
                                         ((type? Link LinkOrLinkLabel)
                                          LinkOrLinkLabel)
                                         (T (NC.MakeLink Window LinkOrLinkLabel DestinationCard 
                                                   SourceCard DisplayMode NIL NIL NIL (
                                                                                      NC.LinkAtCharPos
                                                                                       InsertPos 
-                                                                                      TextStream)))))
-                          then (TEDIT.SETSEL TextObject InsertPos 0 'LEFT)
+                                                                                      TextStream]
+                          then (TEDIT.SETSEL TextStream InsertPos 0 'LEFT)
                                (TEDIT.INSERT.OBJECT (NC.MakeLinkIcon Link)
-                                      (TEXTSTREAM TextObject)
-                                      InsertPos))
+                                      TextStream InsertPos))
                       Link)
                      (T (NC.ReportError "NC.InsertLinkInText" 
                                "No selection set when inserting link image object.")
-                        NIL))))))(NC.AddToLink
+                        NIL])
+
+(NC.AddToLink
   [LAMBDA (Link LinkToInsertAfter BeingMovedFlg)      (* ; "Edited  9-Dec-88 18:46 by krivacic")
 
 (* ;;; "Add Link to the ToLinks of the source card")
@@ -198,7 +456,9 @@
                    (NC.CachedAddToLink Link SourceCard LinkToInsertAfter BeingMovedFlg)
                    (NC.PutLinks SourceCard)
                    (NC.UncacheLinks SourceCard))]
-    Link])(NC.CachedAddToLink
+    Link])
+
+(NC.CachedAddToLink
   (LAMBDA (Link SourceCard LinkToInsertAfter BeingMovedFlg)  (* rht%: "26-Oct-87 19:31")
           
           (* * Add Link to the cached ToLinks of the source card)
@@ -241,7 +501,9 @@
                  'GlobalGlobal)
              then (NC.SetGlobalLinks SourceCard (CONS Link (NC.FetchGlobalLinks SourceCard))))
          (NC.SetLinksDirtyFlg SourceCard T)
-         Link)))(NC.DelFromLink
+         Link)))
+
+(NC.DelFromLink
   (LAMBDA (Link NoOrphanHookFlg)                             (* Randy.Gobbel "15-Jul-87 18:21")
           
           (* * Delete a FromLink from its destination card Hook card to orphan if this is 
@@ -285,7 +547,9 @@
                           (OR NoOrphanHookFlg (NC.FileInOrphanBox Link DestinationCard))
                           (NC.PutFromLinks DestinationCard)
                           (NC.UncacheLinks DestinationCard))
-                   Link)))))))(NC.CachedDelFromLink
+                   Link)))))))
+
+(NC.CachedDelFromLink
   (LAMBDA (Link DestinationCard)                             (* kirk%: "29-Jan-86 17:07")
           
           (* * Delete a FromLink from its destination card Hook card to orphan if this is 
@@ -314,7 +578,9 @@
                                                               OldLink))
                                             (NC.FetchFromLinks DestinationCard)))
     (NC.SetLinksDirtyFlg DestinationCard T)
-    Link))(NC.DelToLink
+    Link))
+
+(NC.DelToLink
   (LAMBDA (Link)                                             (* Randy.Gobbel "15-May-87 16:54")
           
           (* * Delete ToLink spoecified by Link from cards on DatabasseStream)
@@ -350,7 +616,9 @@
                        (NC.SetLinksDirtyFlg SourceCard T)
                        (NC.PutLinks SourceCard))
                 (NC.UncacheLinks SourceCard)))
-          (RETURN Link))))(NC.DelReferencesToCard
+          (RETURN Link))))
+
+(NC.DelReferencesToCard
   (LAMBDA (SourceCard LinkOrDestinationCard Don'tCreateDeletedImageObjFlg)
                                                              (* ; "Edited  3-Dec-87 19:00 by rht:")
           
@@ -413,7 +681,9 @@
                                              Don'tCreateDeletedImageObjFlg)
                                       (NC.PutMainCardData SourceCard))))))
          (NC.DelReferencesToCardFromGlobalList SourceCard LinkOrDestinationCard)
-         (AND ShrunkenFlg (SHRINKW (NC.FetchWindow SourceCard))))))(NC.DelReferencesToCardFromGlobalList
+         (AND ShrunkenFlg (SHRINKW (NC.FetchWindow SourceCard))))))
+
+(NC.DelReferencesToCardFromGlobalList
   (LAMBDA (SourceCard LinkOrDestinationCard)                 (* rht%: " 5-Jun-87 14:56")
           
           (* * LinkOrDestinationCard is being deleted.
@@ -450,7 +720,9 @@
                                   else (NOT (NC.SameLinkP LinkOrDestinationCard Link))) collect
                                                                                         Link))
                  (NC.PutLinks SourceCard)
-                 (NC.UncacheLinks SourceCard))))))(NC.DeleteLink
+                 (NC.UncacheLinks SourceCard))))))
+
+(NC.DeleteLink
   [LAMBDA (Link NoOrphanHookFlg Don'tDelLinkIconFlg)  (* ; "Edited  9-Dec-88 18:53 by krivacic")
 
 (* ;;; "Delete a link with the option of not putting an orphan hook in case of last filing link.  Also option of not deleting link icon from the source card's substance.")
@@ -496,7 +768,9 @@
                                         T)
                                  (ERROR!))
                              T)
-                      (ERROR!)))])(NC.DeleteToLink
+                      (ERROR!)))])
+
+(NC.DeleteToLink
   (LAMBDA (Link Don'tDelLinkIconFlg)                         (* rht%: "27-May-87 14:40")
           
           (* * This is part of what used to be the innards of NC.DeleteLink.)
@@ -518,7 +792,9 @@
           (* * Delete cross file link cards when their links are deleted.)
 
                           (if (NC.CrossFileLinkCardP SourceCard)
-                              then (NC.DeleteCrossFileLinkCard SourceCard))))))))(NC.DeleteFromLink
+                              then (NC.DeleteCrossFileLinkCard SourceCard))))))))
+
+(NC.DeleteFromLink
   (LAMBDA (Link NoOrphanHookFlg)                             (* rht%: "27-May-87 14:40")
           
           (* * This is part of what used to be the innards of NC.DeleteLink.)
@@ -540,7 +816,9 @@
           (* * Delete cross file link cards when their links are deleted.)
 
                           (if (NC.CrossFileLinkCardP DestinationCard)
-                              then (NC.DeleteCrossFileLinkCard DestinationCard))))))))(NC.DeletedLinkDisplayFn
+                              then (NC.DeleteCrossFileLinkCard DestinationCard))))))))
+
+(NC.DeletedLinkDisplayFn
   [LAMBDA (ImageObj ImageStream ImageStreamType HostStream)  (* ; "Edited 18-Aug-88 16:19 by pmi")
 
     (* ;; "pmi 8/18/88: Completely rewrote so that Deleted icons would hardcopy.  They were being skipped entirely.")
@@ -594,7 +872,9 @@
 
          (* ;; "Send the deleted icon, in the form of a bitmap, to the image stream.")
 
-         (BITBLT Bitmap 0 0 ImageStream Left Bottom])(NC.DeletedLinkGetFn
+         (BITBLT Bitmap 0 0 ImageStream Left Bottom])
+
+(NC.DeletedLinkGetFn
   (LAMBDA (InputStream TextStream)                           (* rht%: "10-Jun-87 14:56")
           
           (* * rht 6/10/87%: Now skips carriage return if any.)
@@ -603,7 +883,9 @@
             13)
         then (BIN InputStream))
     (BIN InputStream)
-    NC.DeletedLinkImageObject))(NC.DeletedLinkImageBoxFn
+    NC.DeletedLinkImageObject))
+
+(NC.DeletedLinkImageBoxFn
   [LAMBDA (ImageObj ImageStream CurrentX RightMargin) (* ; "Edited 11-Oct-88 18:09 by Randy.Gobbel")
 
     (* ;; "pmi 8/18/88: Completely rewrote so that Deleted icons would hardcopy.  They were being skipped entirely.")
@@ -628,16 +910,22 @@
                                   (TIMES Scale (PLUS (FONTDESCENT Font)
                                                      NC.LinkIconSpaceInnerY NC.LinkIconSpaceOuterY)))
                            (T 0))
-                XKERN _ 0])(NC.DeletedLinkPutFn
+                XKERN _ 0])
+
+(NC.DeletedLinkPutFn
   (LAMBDA (ImageObj OutputStream)                            (* fgh%: "26-Feb-84 01:04")
-    (BOUT OutputStream 1)))(NC.DeletedLinkImageObjP
+    (BOUT OutputStream 1)))
+
+(NC.DeletedLinkImageObjP
   (LAMBDA (ImageObj)                                         (* rht%: "12-Jun-85 10:07")
           
           (* * Returns non-nil if ImageObj is a deleted link icon.)
 
     (AND (IMAGEOBJP ImageObj)
          (EQ (FUNCTION NC.DeletedLinkDisplayFn)
-             (IMAGEOBJPROP ImageObj 'DISPLAYFN)))))(NC.DeleteBadLink
+             (IMAGEOBJPROP ImageObj 'DISPLAYFN)))))
+
+(NC.DeleteBadLink
   [LAMBDA (Link ImageObj ImageStream StreamType TextStream Scale)
                                                              (* ; "Edited 30-May-88 12:07 by Trigg")
 
@@ -665,7 +953,9 @@
             (T 
                (* ;; "Mark the link as needing deletion.  NC.EditNoteCard will remove it once we return from the card type's editfn.")
 
-               (NC.SetUserDataProp Card 'BadLinks (CONS Link (NC.FetchUserDataProp Card 'BadLinks])(NC.ReplaceWithDeletedLinkImageObj
+               (NC.SetUserDataProp Card 'BadLinks (CONS Link (NC.FetchUserDataProp Card 'BadLinks])
+
+(NC.ReplaceWithDeletedLinkImageObj
   (LAMBDA (ImageObject)                                      (* pmi%: "19-Jun-87 10:28")
           
           (* * pmi 6/19/87%: smash a bad link's image object with the fields of a "Deleted" 
@@ -679,7 +969,9 @@
                                                                             NC.DeletedLinkImageObject
                                                   )
                            IMAGEOBJFNS _ (fetch (IMAGEOBJ IMAGEOBJFNS) of NC.DeletedLinkImageObject))
-    ))(NC.CheckForOrphanDelete
+    ))
+
+(NC.CheckForOrphanDelete
   [LAMBDA (SourceCard DestinationCard SourceWindow)          (* rht%: " 9-Dec-87 16:52")
           
           (* Check to make sure we are not deleteing the last reference to a note card 
@@ -709,7 +1001,9 @@
                      T "You have just deleted the last filing link to " (NC.RetrieveTitle 
                                                                                DestinationCard)
                      (CHARACTER 13)
-                     "The Search operation can be used to find it."])(NC.FileInOrphanBox
+                     "The Search operation can be used to find it."])
+
+(NC.FileInOrphanBox
   (LAMBDA (Link DestinationCard)                             (* rht%: "29-May-87 01:00")
           
           (* * Hook card to orphan if this is the last link.)
@@ -751,7 +1045,9 @@
                          (CHARACTER 13)
                          "It is being filed in the Orphan FileBox.")
                   (NC.HookToOrphanCard DestinationCard))))
-         Link)))(NC.HookToOrphanCard
+         Link)))
+
+(NC.HookToOrphanCard
   (LAMBDA (Card OrphansCard)                                 (* Randy.Gobbel "19-Feb-87 16:57")
           
           (* The last reference to the card has just been deleted.
@@ -789,121 +1085,121 @@
                          ((NC.MakeFilingLink OrphansCard Card (if (NC.FileBoxP Card T)
                                                                   then NC.SubBoxLinkLabel
                                                                 else NC.FiledCardLinkLabel))
-                          OrphansCard))))))))(NC.InsertLinkBeforeMarker
-  (LAMBDA (SourceCard DestinationCard LinkLabel DisplayMode Marker# NoSpacerFlg)
-                                                             (* ; "Edited  3-Dec-87 19:00 by rht:")
-          
-          (* Insert a link to DestinationCard in SourceCard just before the Marker#'th 
-          place marker object)
-          
-          (* * rht 12/7/84%: Now returns the newly created link.)
-          
-          (* * rht 9/13/85%: When card is inactive, there won't be a current cursor 
-          position. So if no marker# is specified, then insert at end.)
-          
-          (* * kirk%: 14Nov85%: deleted use of of DatabaseStream)
-          
-          (* * kef 7/28/86%: Added call to obtain write locks on SUBSTANCE and all LINKS 
-          in the case when the card is not NC.ActiveCardP.)
-          
-          (* * kef 7/31/86%: Added "balancing" of write lock ownership with 
-          NC.DeactivateCard.)
-          
-          (* * kef 8/7/86%: Now cached changes only occur if the card is currently being 
-          edited.)
-          
-          (* * fgh |8/30/86| Adpated to NC.IfCardPartsNotBusy)
-          
-          (* * fgh |9/1/86| Rescinded kef's change of |8/7/86.|
-          This causes active but nit visible cards to be written over even if they are 
-          dirty.)
+                          OrphansCard))))))))
 
-    (LET (Objects TextStream TextObject (Spacer (CONCAT (CHARACTER 13)))
+(NC.InsertLinkBeforeMarker
+  [LAMBDA (SourceCard DestinationCard LinkLabel DisplayMode Marker# NoSpacerFlg)
+                                                             (* ; "Edited  3-Dec-87 19:00 by rht:")
+                                                             (* Insert a link to DestinationCard in 
+                                                             SourceCard just before the Marker#'th 
+                                                             place marker object)
+
+         (* * rht 12/7/84%: Now returns the newly created link.)
+
+         (* * rht 9/13/85%: When card is inactive, there won't be a current cursor 
+         position. So if no marker# is specified, then insert at end.)
+
+         (* * kirk%: 14Nov85%: deleted use of of DatabaseStream)
+
+         (* * kef 7/28/86%: Added call to obtain write locks on SUBSTANCE and all LINKS in 
+         the case when the card is not NC.ActiveCardP.)
+
+         (* * kef 7/31/86%: Added "balancing" of write lock ownership with 
+         NC.DeactivateCard.)
+
+         (* * kef 8/7/86%: Now cached changes only occur if the card is currently being 
+         edited.)
+
+         (* * fgh |8/30/86| Adpated to NC.IfCardPartsNotBusy)
+
+         (* * fgh |9/1/86| Rescinded kef's change of |8/7/86.|
+         This causes active but nit visible cards to be written over even if they are 
+         dirty.)
+
+    (LET (Objects TextStream (Spacer (CONCAT (CHARACTER 13)))
                 Link BusyPart)
-         (COND
-            ((NC.ActiveCardP SourceCard)
+         [COND
+            [(NC.ActiveCardP SourceCard)
              (NC.IfMultipleCardPartsNotBusy SourceCard (SUBSTANCE TOLINKS FROMLINKS GLOBALTOLINKS)
-                    (SETQ TextObject (TEXTOBJ (SETQ TextStream (NC.FetchSubstance SourceCard))))
-                    (COND
-                       ((AND (FIXP Marker#)
-                             (SETQ Objects (TEDIT.LIST.OF.OBJECTS TextObject (FUNCTION 
-                                                                              NC.PlaceMarkerP))))
+                    (SETQ TextStream (NC.FetchSubstance SourceCard))
+                    [COND
+                       [[AND (FIXP Marker#)
+                             (SETQ Objects (NC.TEditCollectObjects TextStream (FUNCTION 
+                                                                               NC.PlaceMarkerP]
                         (COND
                            ((EQ Marker# 0)
                             (TEDIT.SETSEL TextStream 1 0 'LEFT))
                            ((IGREATERP Marker# (FLENGTH Objects))
-                            (TEDIT.SETSEL TextStream (ADD1 (fetch (TEXTOBJ TEXTLEN) of TextObject))
+                            (TEDIT.SETSEL TextStream (ADD1 (TEDIT.NCHARS TextStream))
                                    0
                                    'RIGHT))
                            (T (TEDIT.SETSEL TextStream (CADAR (FNTH Objects Marker#))
                                      0
-                                     'LEFT))))
+                                     'LEFT]
                        (NC.MarkersInFileBoxesFlg (TEDIT.SETSEL TextStream (GETEOFPTR TextStream)
                                                         0
-                                                        'RIGHT)))
+                                                        'RIGHT]
                     (SETQ Link (NC.InsertLinkInText TextStream LinkLabel DestinationCard SourceCard 
                                       DisplayMode))
                     (COND
                        ((NULL NoSpacerFlg)
-                        (TEDIT.INSERT TextStream Spacer)))))
+                        (TEDIT.INSERT TextStream Spacer]
             (T (WITH.MONITOR (NC.FetchMonitor (fetch (Card NoteFile) of SourceCard))
-                      (NC.IfMultipleCardPartsNotBusy
-                       SourceCard
-                       (SUBSTANCE TOLINKS FROMLINKS GLOBALTOLINKS)
-                       (COND
-                          ((NC.CardP (NC.GetNoteCard SourceCard))
-          
-          (* * This next set of obtain write locks is only to make sure that we come out 
-          even when NC.DeactivateCard releases the write locks.
-          Note that the SourceCard will be deactivated upon exit of the RESETLST, as set 
-          up by the RESETSAVE.)
+                   [NC.IfMultipleCardPartsNotBusy SourceCard (SUBSTANCE TOLINKS FROMLINKS 
+                                                                    GLOBALTOLINKS)
+                          (COND
+                             ((NC.CardP (NC.GetNoteCard SourceCard))
 
-                           (RESETSAVE (for CardPart in '(SUBSTANCE TOLINKS GLOBALTOLINKS PROPLIST)
-                                         do (APPLY* (fetch (Card ObtainWritePermissionFn)
-                                                       of SourceCard)
-                                                   SourceCard CardPart))
-                                  `(NC.DeactivateCard ,SourceCard))
-                           (SETQ TextObject (TEXTOBJ (SETQ TextStream (NC.FetchSubstance SourceCard))
-                                                   ))
-                           (COND
-                              ((AND (FIXP Marker#)
-                                    (SETQ Objects (TEDIT.LIST.OF.OBJECTS TextObject
-                                                         (FUNCTION NC.PlaceMarkerP))))
-                               (COND
-                                  ((EQ Marker# 0)
-                                   (TEDIT.SETSEL TextStream 1 0 'LEFT))
-                                  ((IGREATERP Marker# (FLENGTH Objects))
-                                   (TEDIT.SETSEL TextStream (ADD1 (fetch (TEXTOBJ TEXTLEN)
-                                                                     of TextObject))
-                                          0
-                                          'RIGHT))
-                                  (T (TEDIT.SETSEL TextStream (CADAR (FNTH Objects Marker#))
-                                            0
-                                            'LEFT))))
-                              (T 
-          
-          (* Cursor has no position in closed Tedit win, so just set selection to end.)
+         (* * This next set of obtain write locks is only to make sure that we come out 
+         even when NC.DeactivateCard releases the write locks.
+         Note that the SourceCard will be deactivated upon exit of the RESETLST, as set up 
+         by the RESETSAVE.)
 
-                                 (TEDIT.SETSEL TextStream (ADD1 (fetch (TEXTOBJ TEXTLEN) of 
-                                                                                           TextObject
-                                                                       ))
-                                        0
-                                        'RIGHT)))
-                           (SETQ Link (NC.InsertLinkInText TextStream LinkLabel DestinationCard 
-                                             SourceCard DisplayMode))
-                           (COND
-                              ((NULL NoSpacerFlg)
-                               (TEDIT.INSERT TextStream Spacer)))
-                           (NC.PutMainCardData SourceCard)
-                           (NC.PutLinks SourceCard)))))))
-         Link)))(NC.LinkLabelP
+                              [RESETSAVE (for CardPart in '(SUBSTANCE TOLINKS GLOBALTOLINKS PROPLIST)
+                                            do (APPLY* (fetch (Card ObtainWritePermissionFn)
+                                                          of SourceCard)
+                                                      SourceCard CardPart))
+                                     `(NC.DeactivateCard ,SourceCard]
+                              (SETQ TextStream (NC.FetchSubstance SourceCard))
+                              [COND
+                                 [[AND (FIXP Marker#)
+                                       (SETQ Objects (NC.TEditCollectObjects TextStream
+                                                            (FUNCTION NC.PlaceMarkerP]
+                                  (COND
+                                     ((EQ Marker# 0)
+                                      (TEDIT.SETSEL TextStream 1 0 'LEFT))
+                                     ((IGREATERP Marker# (FLENGTH Objects))
+                                      (TEDIT.SETSEL TextStream (ADD1 (TEDIT.NCHARS TextStream))
+                                             0
+                                             'RIGHT))
+                                     (T (TEDIT.SETSEL TextStream (CADAR (FNTH Objects Marker#))
+                                               0
+                                               'LEFT]
+                                 (T                          (* Cursor has no position in closed 
+                                                             Tedit win, so just set selection to 
+                                                             end.)
+                                    (TEDIT.SETSEL TextStream (ADD1 (TEDIT.NCHARS TextStream))
+                                           0
+                                           'RIGHT]
+                              (SETQ Link (NC.InsertLinkInText TextStream LinkLabel DestinationCard 
+                                                SourceCard DisplayMode))
+                              (COND
+                                 ((NULL NoSpacerFlg)
+                                  (TEDIT.INSERT TextStream Spacer)))
+                              (NC.PutMainCardData SourceCard)
+                              (NC.PutLinks SourceCard])]
+         Link])
+
+(NC.LinkLabelP
   (LAMBDA (Link ListOfLabels)                                (* kirk%: "15-Nov-85 01:43")
           
           (* * rht 9/4/84%: Modified so as to return the linklabel if found or nil.)
 
     (CAR (FMEMB (fetch (Link Label) of Link)
                 (OR (LISTP ListOfLabels)
-                    (LIST ListOfLabels))))))(NC.IDAlphOrder
+                    (LIST ListOfLabels))))))
+
+(NC.IDAlphOrder
   (LAMBDA (LinkOrCard1 LinkOrCard2)                          (* rht%: "18-Jul-86 15:20")
           
           (* * Return T if Card1's title is alphabetically before Card2's)
@@ -915,7 +1211,9 @@
                                 else LinkOrCard1))
            (NCP.CardTitle (if (NC.ValidLinkP LinkOrCard2)
                               then (fetch (Link DestinationCard) of LinkOrCard2)
-                            else LinkOrCard2)))))(NC.MakeLink
+                            else LinkOrCard2)))))
+
+(NC.MakeLink
   [LAMBDA (Window LinkLabel DestinationCard SourceCard DisplayMode AnchorMode Message NoDisplayFlg 
                  LinkToInsertAfter CrossFileLinksMode)       (* ; "Edited 24-Feb-88 15:03 by pmi")
 
@@ -1067,52 +1365,54 @@
              (if (NC.FetchShowLinksWindow DestinationCard)
                  then (NC.ShowLinks DestinationCard))
              Link))
-         else NIL])(NC.CachedMakeFilingLink
-  (LAMBDA (SourceCard DestinationCard LinkType DisplayMode IgnoreMarkersFlg)
-                                                             (* rht%: "13-Oct-86 12:31")
-          
-          (* * Assumes SourceCard is cached. Inserts a link to DestinationCard into 
-          SourceCard. Unless IgnoreMarkersFlg is non-nil or there's no marker for type of 
-          DestinationCard, then will insert somewhere between appropriate marker and 
-          either the next marker or the end of SourceCard substance using SourceCard's 
-          OrderingFn to determine where to insert.
-          If there's no OrderingFn, but there is an appropriate marker, then stick at end 
-          of group. If no marker and no OrderingFn, then stick wherever cursor is.)
+         else NIL])
+
+(NC.CachedMakeFilingLink
+  [LAMBDA (SourceCard DestinationCard LinkType DisplayMode IgnoreMarkersFlg)
+                                                             (* rht%: "13-Oct-86 12:31")
+
+         (* * Assumes SourceCard is cached. Inserts a link to DestinationCard into 
+         SourceCard. Unless IgnoreMarkersFlg is non-nil or there's no marker for type of 
+         DestinationCard, then will insert somewhere between appropriate marker and either 
+         the next marker or the end of SourceCard substance using SourceCard's OrderingFn 
+         to determine where to insert. If there's no OrderingFn, but there is an 
+         appropriate marker, then stick at end of group.
+         If no marker and no OrderingFn, then stick wherever cursor is.)
 
     (LET ((OrderingFn (NC.GetProp SourceCard 'OrderingFn))
           (TextStream (NC.FetchSubstance SourceCard))
-          StartLoc EndLoc TextObject FoundMarkerFlg Link)
-         (SETQ TextObject (TEXTOBJ TextStream))
-         (OR IgnoreMarkersFlg (SETQ FoundMarkerFlg
-                               (for MarkerPairs on (TEDIT.LIST.OF.OBJECTS TextObject
+          StartLoc EndLoc FoundMarkerFlg Link)
+         [OR IgnoreMarkersFlg (SETQ FoundMarkerFlg
+                               (for MarkerPairs on (NC.TEditCollectObjects TextStream
                                                           (FUNCTION NC.PlaceMarkerP))
                                   eachtime (BLOCK)
                                   do (if (NC.MarkerMatchesCardP (CAAR MarkerPairs)
                                                 DestinationCard)
                                          then (SETQ StartLoc (CADAR MarkerPairs))
-                                              (SETQ EndLoc (OR (CADADR MarkerPairs)
-                                                               (ADD1 (GETEOFPTR TextStream))))
+                                              [SETQ EndLoc (OR (CADADR MarkerPairs)
+                                                               (ADD1 (GETEOFPTR TextStream]
                                               (RETURN T)) finally (SETQ StartLoc 1)
                                                                 (SETQ EndLoc (ADD1 (GETEOFPTR 
-                                                                                          TextStream)
-                                                                                   )))))
-         (COND
-            (OrderingFn (for ObjectPair in (TEDIT.LIST.OF.OBJECTS TextObject (FUNCTION 
-                                                                              NC.LinkIconImageObjP))
+                                                                                          TextStream]
+         [COND
+            [OrderingFn (for ObjectPair in (NC.TEditCollectObjects TextStream (FUNCTION 
+                                                                               NC.LinkIconImageObjP))
                            eachtime (BLOCK) until (GREATERP (CADR ObjectPair)
                                                          EndLoc)
-                           when (AND (LEQ StartLoc (CADR ObjectPair))
+                           when [AND (LEQ StartLoc (CADR ObjectPair))
                                      (APPLY* OrderingFn DestinationCard (fetch (Link DestinationCard)
                                                                            of (
                                                                              NC.FetchLinkFromLinkIcon
-                                                                               (CAR ObjectPair)))))
+                                                                               (CAR ObjectPair]
                            do (TEDIT.SETSEL TextStream (CADR ObjectPair)
                                      0
                                      'LEFT)
-                              (RETURN) finally (TEDIT.SETSEL TextStream EndLoc 0 'RIGHT)))
-            (FoundMarkerFlg (TEDIT.SETSEL TextStream EndLoc 0 'RIGHT)))
+                              (RETURN) finally (TEDIT.SETSEL TextStream EndLoc 0 'RIGHT]
+            (FoundMarkerFlg (TEDIT.SETSEL TextStream EndLoc 0 'RIGHT]
          (PROG1 (NC.InsertLinkInText TextStream LinkType DestinationCard SourceCard DisplayMode)
-                (TEDIT.INSERT TextStream NC.FileBoxLinkSpacer)))))(NC.MakeFilingLink
+                (TEDIT.INSERT TextStream NC.FileBoxLinkSpacer])
+
+(NC.MakeFilingLink
   (LAMBDA (SourceCard DestinationCard LinkType)              (* ; "Edited  3-Dec-87 19:00 by rht:")
           
           (* Make a link from FileBox to DestinationCard If card is a regular card, 
@@ -1157,7 +1457,9 @@
                                    `(NC.DeactivateCard ,SourceCard))
                             (PROG1 (NC.CachedMakeFilingLink SourceCard DestinationCard LinkType)
                                    (NC.PutMainCardData SourceCard)
-                                   (NC.PutLinks SourceCard))))))))(NC.MakeFilingLinks
+                                   (NC.PutLinks SourceCard))))))))
+
+(NC.MakeFilingLinks
   [LAMBDA (Card Msg InterestedWindow)                        (* Randy.Gobbel " 2-Apr-87 15:38")
           
           (* Hooks card specified by Card to all of the current contents cards by a 
@@ -1239,7 +1541,9 @@
                                        (SPAWN.MOUSE)
                                        (DISMISS 2000)
                                        (NC.ClearMsg InterestedWindow T]
-                               (RETURN NewParents])(NC.RelabelLink
+                               (RETURN NewParents])
+
+(NC.RelabelLink
   [LAMBDA (LinkOrLinkIcon Window NewLinkLabel ForceRedisplayFlg)
                                                              (* ; "Edited  9-Jan-89 10:06 by rtk")
                                                              (* ; "rht: '30-Sep-87 20:52' pp pp")
@@ -1383,13 +1687,17 @@
                               (if (AND (NULL ForceRedisplayFlg)
                                            (NC.TEditBasedP NoteCardType))
                                   then 'CHANGED
-                                else NIL])(NC.SystemLinkLabelP
+                                else NIL])
+
+(NC.SystemLinkLabelP
   (LAMBDA (LinkLabel)                                        (* fgh%: "23-Apr-84 23:07")
           
           (* Return T in LinkLabel is a label for a system maintained link.
           NIL otherwise. System maintained links determined by hardwire list for now.)
 
-    (FMEMB LinkLabel NC.SystemLinkLabels)))(NC.ValidLinkP
+    (FMEMB LinkLabel NC.SystemLinkLabels)))
+
+(NC.ValidLinkP
   (LAMBDA (Link)                                             (* rht%: "27-May-87 12:13")
           
           (* Check Link to see if it is a valid NOTECARDLINK, incvluding check that the 
@@ -1405,7 +1713,9 @@
     (LET (DestinationCard)
          (AND (type? Link Link)
               (NEQ (fetch (Link UID) of Link)
-                   -1)))))(NC.MakeChildLink
+                   -1)))))
+
+(NC.MakeChildLink
   (LAMBDA (Child Parent Window)                              (* Randy.Gobbel "18-Dec-86 18:26")
           
           (* * Tries to add Child as a child of Parent using either FiledCard or SubBox 
@@ -1421,7 +1731,9 @@
                 Window)
          (NC.MakeFilingLink Parent Child (if (NC.FileBoxP Child T)
                                              then NC.SubBoxLinkLabel
-                                           else NC.FiledCardLinkLabel)))))(NC.EnsureNoCycles
+                                           else NC.FiledCardLinkLabel)))))
+
+(NC.EnsureNoCycles
   (LAMBDA (Parent Child LinkPredicate InterestedWindow)      (* Randy.Gobbel "18-Dec-86 18:14")
           
           (* * Return T if no cycles via specified link predicate, else NIL.)
@@ -1444,21 +1756,29 @@
                  " is an ancestor of "
                  (NC.RetrieveTitle Parent)
                  (CHARACTER 13))
-          NIL))))(NC.SameLinkP
+          NIL))))
+
+(NC.SameLinkP
   (LAMBDA (Link1 Link2)                                      (* rht%: "15-Nov-85 15:45")
                                                              (* Compare two link UIDs)
     (NC.SameUIDP (fetch (Link UID) of Link1)
-           (fetch (Link UID) of Link2))))(NC.SameLinksP
+           (fetch (Link UID) of Link2))))
+
+(NC.SameLinksP
   (LAMBDA (LinkListA LinkListB)                              (* rht%: "15-Nov-85 15:39")
           
           (* * ARe these two lists of links the same?)
 
-    (for LinkA in LinkListA as LinkB in LinkListB always (NC.SameLinkP LinkA LinkB))))(NC.AddGlobalLinkToCard
+    (for LinkA in LinkListA as LinkB in LinkListB always (NC.SameLinkP LinkA LinkB))))
+
+(NC.AddGlobalLinkToCard
   (LAMBDA (WindowOrTextStream)                               (* rht%: "15-Feb-85 18:54")
           
           (* * Called from card's menu to add one global link.)
 
-    (NC.AddGlobalLinksToCard WindowOrTextStream T)))(NC.AddGlobalLinksToCard
+    (NC.AddGlobalLinksToCard WindowOrTextStream T)))
+
+(NC.AddGlobalLinksToCard
   [LAMBDA (CardIdentifier SingleLinkFlg)                     (* pmi%: "21-May-87 15:42")
           
           (* * Called from card's menu to add some global links.)
@@ -1511,7 +1831,9 @@
                                                  (NC.ClearMsg Window T)
                                                  (for DestinationCard in DestinationCards
                                                     do (NC.MakeGlobalLink Window Label 
-                                                              DestinationCard SourceCard])(NC.ChangeCardTitleFromLinkIcon
+                                                              DestinationCard SourceCard])
+
+(NC.ChangeCardTitleFromLinkIcon
   (LAMBDA (LinkIcon Window)                                  (* ; "Edited  3-Dec-87 19:00 by rht:")
           
           (* * From a link icon sitting in Window, change the title of the link's 
@@ -1568,12 +1890,16 @@
                                                   else OldTitle)
                                                 T Window))
                           then (NC.AssignTitle DestinationCard NIL NewTitle)
-                               'CHANGED)))))))))(NC.UncacheLinks
+                               'CHANGED)))))))))
+
+(NC.UncacheLinks
   (LAMBDA (Card)                                             (* rht%: "14-Feb-86 15:06")
           
           (* * Throw away the links cache for this card.)
 
-    (replace (Card Links) of Card with NIL)))(NC.TraverseLink
+    (replace (Card Links) of Card with NIL)))
+
+(NC.TraverseLink
   (LAMBDA (LinkIcon Window)                                  (* Randy.Gobbel " 4-Nov-87 13:57")
           
           (* * Follow the link to the card at the other end.
@@ -1611,7 +1937,9 @@
                        "This is a bad link - the destination card is invalid." (CHARACTER 13))
                 (DISMISS NC.MsgDelay)
                 (NC.ClearMsg InterestedWindow T)
-                (NC.DeleteBadLink Link LinkIcon Window)))))(NC.CreateLinkIconStrings
+                (NC.DeleteBadLink Link LinkIcon Window)))))
+
+(NC.CreateLinkIconStrings
   [LAMBDA (LinkIconString Icon CrossFileLinkIcon ImageStream)
                                                              (* ; "Edited 24-Jan-89 15:35 by rtk")
 
@@ -1798,7 +2126,9 @@
                                        then (RETURN "")
                                      else (RETURN (SUBSTRING LinkIconString 1 (SUB1 CharsPtr]
                             finally (RETURN (SUBSTRING LinkIconString 1 (SUB1 CharsPtr]
-          (RETURN LinkIconLines])(NC.ShrinkIcon
+          (RETURN LinkIconLines])
+
+(NC.ShrinkIcon
   [LAMBDA (WINDOW)                                    (* ; "Edited  7-Dec-88 14:57 by krivacic")
                                                              (* LET* ((NC.ShrinkLinkIconBitMap
                                                            (BITMAPCREATE 200 200 1))
@@ -1877,7 +2207,11 @@
           (COND
              (New-Title (WINDOWPROP W 'NoteCardsIconTitle IconTitle)
                     (ICONTITLE IconTitle (fetch (TITLEDICON TITLEREG) of IconInfo)
-                           NIL Icon]))(DEFINEQ(NC.AddLinkToCard
+                           NIL Icon])
+)
+(DEFINEQ
+
+(NC.AddLinkToCard
   (LAMBDA (CardIdentifier LinkOrLinkLabel DestinationCard)   (* Randy.Gobbel " 4-Mar-87 14:15")
           
           (* * Add a link to card designated by CardIdentifier.
@@ -1903,7 +2237,9 @@
                                                 DestinationCard))
                                         ((NC.IsSubTypeOfP CardType 'Sketch)
                                          (NC.AddLinkToSketchCard Window LinkOrLinkLabel 
-                                                DestinationCard))))))))(NC.AddLinksToCard
+                                                DestinationCard))))))))
+
+(NC.AddLinksToCard
   [LAMBDA (CardIdentifier LinkLabel DestinationCards)        (* Randy.Gobbel " 2-Apr-87 15:38")
           
           (* * Adds multiple links to card designated by CardIdentifier.
@@ -1956,53 +2292,59 @@
                           (NC.ClearMsg Window T)
                           (for DestinationCard in DestinationCards do (NC.AddLinkToCard 
                                                                              CardIdentifier LinkLabel 
-                                                                             DestinationCard]))(DEFINEQ(NC.DelReferencesToCardFromShowLinks
-  (LAMBDA (Card Link)                                        (* rht%: "30-Sep-87 20:56")
-          
-          (* * Delete any references to link from the show links editor above Card, if 
-          any)
-          
-          (* * fgh |5/2/86| First created.)
-          
-          (* * rht 9/30/87%: Now calls NC.FetchShowLinksWindow making things a bit 
-          cleaner.)
+                                                                             DestinationCard])
+)
+(DEFINEQ
+
+(NC.DelReferencesToCardFromShowLinks
+  [LAMBDA (Card Link)                                        (* rht%: "30-Sep-87 20:56")
+
+         (* * Delete any references to link from the show links editor above Card, if any)
+
+         (* * fgh |5/2/86| First created.)
+
+         (* * rht 9/30/87%: Now calls NC.FetchShowLinksWindow making things a bit cleaner.)
 
     (DECLARE (GLOBALVARS NC.NoDeleteImageFns NC.DeletedLinkImageObject))
     (LET ((ShowLinksWindow (NC.FetchShowLinksWindow Card))
           TextStream OldSel)
          (if (AND (OPENWP ShowLinksWindow)
                   (SETQ TextStream (TEXTSTREAM ShowLinksWindow)))
-             then (for LinkIconPair in (TEDIT.LIST.OF.OBJECTS (TEXTOBJ TextStream)
-                                              (FUNCTION NC.LinkIconImageObjP))
+             then (for LinkIconPair in (NC.TEditCollectObjects TextStream (FUNCTION 
+                                                                           NC.LinkIconImageObjP))
                      when (NC.SameLinkP Link (NC.FetchLinkFromLinkIcon (CAR LinkIconPair)))
                      do (replace (IMAGEOBJ IMAGEOBJFNS) of (CAR LinkIconPair) with 
                                                                                   NC.NoDeleteImageFns
-                               )                             (* WHENDELETEDFN taken care of earlier 
-                                                             in delete cycle)
+                               )                             (* WHENDELETEDFN taken care of earlier 
+                                                             in delete cycle)
                         (SETQ OldSel (TEDIT.GETSEL TextStream))
                         (TEDIT.DELETE TextStream (CADR LinkIconPair)
                                1)
                         (TEDIT.INSERT.OBJECT NC.DeletedLinkImageObject TextStream (CADR LinkIconPair)
                                )
-                        (TEDIT.SETSEL TextStream OldSel))))))(NC.UpdateLinkImagesInShowLinks
-  (LAMBDA (SourceCard DestinationCard)                       (* rht%: "30-Sep-87 15:17")
-          
-          (* * If there's a ShowLinks window up, then update the affected link icons if 
-          any.)
+                        (TEDIT.SETSEL TextStream OldSel])
+
+(NC.UpdateLinkImagesInShowLinks
+  [LAMBDA (SourceCard DestinationCard)                       (* rht%: "30-Sep-87 15:17")
+
+         (* * If there's a ShowLinks window up, then update the affected link icons if 
+         any.)
 
     (LET ((ShowLinksWindow (NC.FetchShowLinksWindow SourceCard))
-          TextObject)
+          TextStream)
          (if (AND (OPENWP ShowLinksWindow)
-                  (SETQ TextObject (TEXTOBJ ShowLinksWindow)))
-             then (for LinkIconPair in (TEDIT.LIST.OF.OBJECTS TextObject (FUNCTION 
-                                                                          NC.LinkIconImageObjP))
+                  (SETQ TextStream (TEXTSTREAM ShowLinksWindow)))
+             then (for LinkIconPair in (NC.TEditCollectObjects TextStream (FUNCTION 
+                                                                           NC.LinkIconImageObjP))
                      bind Link when (PROGN (SETQ Link (NC.FetchLinkFromLinkIcon (CAR LinkIconPair)))
                                            (OR (NC.SameCardP (fetch (Link DestinationCard)
                                                                 of Link)
                                                       DestinationCard)
                                                (NC.SameCardP (fetch (Link SourceCard) of Link)
                                                       DestinationCard)))
-                     do (TEDIT.OBJECT.CHANGED TextObject (CAR LinkIconPair)))))))(NC.FetchShowLinksWindow
+                     do (TEDIT.OBJECT.CHANGED TextStream (CAR LinkIconPair])
+
+(NC.FetchShowLinksWindow
   (LAMBDA (Card)                                             (* rht%: "30-Sep-87 15:33")
           
           (* * Return the ShowLinks window if there is one for Card, else NIL.)
@@ -2011,17 +2353,28 @@
          (if Window
              then (for AttachedWindow in (ALLATTACHEDWINDOWS Window) when (WINDOWPROP AttachedWindow
                                                                                  'ShowLinks)
-                     do (RETURN AttachedWindow))))))(NC.ChangeLinkLabelInShowLinksWin
-  (LAMBDA (Link ShowLinksWin NewLinkLabel)                   (* rht%: "30-Sep-87 20:49")
-          
-          (* * Find the Link Icon corresponding to Link in a ShowLinks window and change 
-          its label.)
+                     do (RETURN AttachedWindow))))))
 
-    (for LinkIconPair in (TEDIT.LIST.OF.OBJECTS (TEXTOBJ ShowLinksWin)
+(NC.ChangeLinkLabelInShowLinksWin
+  [LAMBDA (Link ShowLinksWin NewLinkLabel)                   (* rht%: "30-Sep-87 20:49")
+
+         (* * Find the Link Icon corresponding to Link in a ShowLinks window and change 
+         its label.)
+
+    (for LinkIconPair in (NC.TEditCollectObjects (TEXTSTREAM ShowLinksWin)
                                 (FUNCTION NC.LinkIconImageObjP))
        do (LET (FoundLink)
-               (if (NC.SameLinkP Link (SETQ FoundLink (NC.FetchLinkFromLinkIcon (CAR LinkIconPair))))
-                   then (replace (Link Label) of FoundLink with NewLinkLabel)))))))(* ;;; "New Display Mode format")(DEFINEQ(NC.CheckDisplayModeFormat
+               (if [NC.SameLinkP Link (SETQ FoundLink (NC.FetchLinkFromLinkIcon (CAR LinkIconPair]
+                   then (replace (Link Label) of FoundLink with NewLinkLabel])
+)
+
+
+
+(* ;;; "New Display Mode format")
+
+(DEFINEQ
+
+(NC.CheckDisplayModeFormat
   (LAMBDA (Link)                                             (* fgh%: "16-Nov-85 17:56")
           
           (* * If Link's display mode is an atom, then change to the new record format.)
@@ -2044,7 +2397,9 @@
                 ((NEQ (CAR DisplayMode)
                       'LINKDISPLAYMODE)
                  (replace (Link DisplayMode) of Link with (CONS 'LINKDISPLAYMODE DisplayMode))))))
-         Link)))(NC.InsureLinkDisplayMode
+         Link)))
+
+(NC.InsureLinkDisplayMode
   (LAMBDA (LinkDisplayMode)                                  (* rht%: " 6-Oct-86 23:40")
           
           (* * Return the recordized form of the LinkDisplayMode argument.)
@@ -2071,7 +2426,9 @@
                            SHOWLINKTYPEFLG _ T
                            ATTACHBITMAPFLG _ 'FLOAT))
               (create LINKDISPLAYMODE
-                     ATTACHBITMAPFLG _ T))))))(NC.MakeNewDisplayMode
+                     ATTACHBITMAPFLG _ T))))))
+
+(NC.MakeNewDisplayMode
   (LAMBDA (ModeAtom)                                         (* rht%: " 9-Sep-85 22:12")
           
           (* * Makes a new display mode record structure using info in ModeAtom.)
@@ -2084,7 +2441,9 @@
            ATTACHBITMAPFLG _ (if (OR (NULL ModeAtom)
                                      (EQ ModeAtom 'Icon))
                                  then T
-                               else 'FLOAT))))(NC.DisplayModeFromStylesheetSelections
+                               else 'FLOAT))))
+
+(NC.DisplayModeFromStylesheetSelections
   (LAMBDA (Selections)                                       (* rht%: "18-Jul-85 14:35")
           
           (* * Return the display mode corresponding to the user's selection from the 
@@ -2096,7 +2455,9 @@
                                                                                            ))
                            ATTACHBITMAPFLG _ (LISTGET NC.MenuItems/DisplayModeValues (CADDR 
                                                                                            Selections
-                                                                                            ))))))(NC.StylesheetSelectionsFromDisplayMode
+                                                                                            ))))))
+
+(NC.StylesheetSelectionsFromDisplayMode
   [LAMBDA (DisplayMode)                                  (* ; "Edited  9-Jan-89 10:20 by rtk")
 
 (* ;;; "BK 1/9/89Change FLOAT Names to System Defaults")
@@ -2115,7 +2476,24 @@
           (SELECTQ (fetch (LINKDISPLAYMODE ATTACHBITMAPFLG) of DisplayMode)
               (NIL 'No)
               (FLOAT 'System% Defaults)
-              'Yes]))(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.MenuItems/DisplayModeValues))(RPAQ? NC.MenuItems/DisplayModeValues '(Yes T No NIL System% Defaults FLOAT Yes T No NIL                                                 System% Defaults FLOAT Yes T No NIL System% Defaults                                                FLOAT))(* ;;; "New fns to support No-Link cards/substances")(DEFINEQ(NC.LinksSupportedP
+              'Yes])
+)
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.MenuItems/DisplayModeValues)
+)
+
+(RPAQ? NC.MenuItems/DisplayModeValues '(Yes T No NIL System% Defaults FLOAT Yes T No NIL 
+                                            System% Defaults FLOAT Yes T No NIL System% Defaults 
+                                            FLOAT))
+
+
+
+(* ;;; "New fns to support No-Link cards/substances")
+
+(DEFINEQ
+
+(NC.LinksSupportedP
   (LAMBDA (Card AnchorModesList)                             (* fgh%: " 5-Feb-86 14:08")
           
           (* * Are all of the anchor modes supporterd by the card Card)
@@ -2129,7 +2507,16 @@
             ((NULL SupportedAnchorModes)
              NIL)
             (T (SETQ SupportedAnchorModes (MKLIST SupportedAnchorModes))
-               (for AnchorMode in AnchorModesList always (FMEMB AnchorMode SupportedAnchorModes))))))))(* ;;; "Link display icons")(DEFINEQ(NC.FetchLinkIconForLink
+               (for AnchorMode in AnchorModesList always (FMEMB AnchorMode SupportedAnchorModes)))))))
+)
+
+
+
+(* ;;; "Link display icons")
+
+(DEFINEQ
+
+(NC.FetchLinkIconForLink
   (LAMBDA (Link)                                             (* fgh%: " 5-Feb-86 19:52")
           
           (* * Find the Link Icon corresponding to Link)
@@ -2141,15 +2528,19 @@
     (LET ((SourceCard (fetch (Link SourceCard) of Link)))
          (for LinkIcon in (CAR (NC.ApplyFn CollectLinksFn SourceCard NIL T))
             thereis (if (NC.SameLinkP Link (NC.FetchLinkFromLinkIcon LinkIcon))
-                        then LinkIcon)))))(NC.MakeLinkIcon
+                        then LinkIcon)))))
+
+(NC.MakeLinkIcon
   (LAMBDA (Link)                                             (* fgh%: " 1-Oct-84 20:48")
           
           (* * Create a Link Icon image object from the lionk info in Link)
 
-    (IMAGEOBJCREATE Link NC.LinkIconImageFns)))(NC.LinkIconButtonEventInFn
-  [LAMBDA (ImageObject Window)                        (* ; "Edited 10-Mar-89 16:55 by krivacic")
+    (IMAGEOBJCREATE Link NC.LinkIconImageFns)))
+
+(NC.LinkIconButtonEventInFn
+  [LAMBDA (ImageObject Window)                            (* ; "Edited 10-Mar-89 16:55 by krivacic")
                                                              (* ; 
-                                                    "If the guy buttons inside a link image object")
+                                                      "If the guy buttons inside a link image object")
 
 (* ;;; "bk 12/14/88:  Start the button event fns as seperate processes so Shift Select from a TEdit will work")
 
@@ -2169,37 +2560,36 @@
                      ((DISPLAYSTREAMP Window)
                       (WFROMDS Window))
                      ((TEXTSTREAMP Window)
-                      (WINDOW.FROM.TEDIT.THING Window))
+                      (NC.TEditWindow Window))
                      (T NIL)))
           (ClippingRegion (DSPCLIPPINGREGION NIL Window))
           HotRegion MouseButtonState TTYWindow ClippingRegionWidth)
 
 (* ;;; "Figure out the hot region -- basically the clipping region minus a few pts at right and left to allow for TEdit selection of icon.")
 
-         [SETQ HotRegion (if (GREATERP (SETQ ClippingRegionWidth (fetch (REGION WIDTH)
-                                                                        of ClippingRegion))
-                                        24)
-                             then                        (* ; 
-                      "There's at least 10 pts between the two 7pt cold regions at left and right.")
-                                   (CREATEREGION (PLUS (fetch (REGION LEFT) of ClippingRegion
-                                                              )
-                                                       7)
-                                          (fetch (REGION BOTTOM) of ClippingRegion)
-                                          (DIFFERENCE (fetch (REGION WIDTH) of ClippingRegion
-                                                             )
-                                                 14)
-                                          (fetch (REGION HEIGHT) of ClippingRegion))
+         [SETQ HotRegion (if (GREATERP (SETQ ClippingRegionWidth (fetch (REGION WIDTH) of 
+                                                                                       ClippingRegion
+                                                                        ))
+                                    24)
+                             then                            (* ; 
+                        "There's at least 10 pts between the two 7pt cold regions at left and right.")
+                                  (CREATEREGION (PLUS (fetch (REGION LEFT) of ClippingRegion)
+                                                      7)
+                                         (fetch (REGION BOTTOM) of ClippingRegion)
+                                         (DIFFERENCE (fetch (REGION WIDTH) of ClippingRegion)
+                                                14)
+                                         (fetch (REGION HEIGHT) of ClippingRegion))
                            elseif (AND (LESSP ClippingRegionWidth 9))
-                             then                        (* ; 
-                                              "if link icon width less than 9 then no cold regions")
-                                   ClippingRegion
-                           else                          (* ; 
-                                      "Divide into 4ths and give 1/4 at each edge as cold regions.")
-                                 (CREATEREGION (PLUS (fetch (REGION LEFT) of ClippingRegion)
-                                                     (TIMES 0.25 ClippingRegionWidth))
-                                        (fetch (REGION BOTTOM) of ClippingRegion)
-                                        (QUOTIENT ClippingRegionWidth 2)
-                                        (fetch (REGION HEIGHT) of ClippingRegion]
+                             then                            (* ; 
+                                                "if link icon width less than 9 then no cold regions")
+                                  ClippingRegion
+                           else                              (* ; 
+                                        "Divide into 4ths and give 1/4 at each edge as cold regions.")
+                                (CREATEREGION (PLUS (fetch (REGION LEFT) of ClippingRegion)
+                                                    (TIMES 0.25 ClippingRegionWidth))
+                                       (fetch (REGION BOTTOM) of ClippingRegion)
+                                       (QUOTIENT ClippingRegionWidth 2)
+                                       (fetch (REGION HEIGHT) of ClippingRegion]
          (COND
             ((NOT (INSIDEP HotRegion (LASTMOUSEX Window)
                          (LASTMOUSEY Window)))
@@ -2214,9 +2604,9 @@
                (RESETLST
                    (RESETSAVE (INVERTW Window))
                    (until [OR (MOUSESTATE UP)
-                                  (NOT (INSIDEP HotRegion (LASTMOUSEX Window)
-                                              (LASTMOUSEY Window] do (SETQ MouseButtonState 
-                                                                          LASTMOUSEBUTTONS)))
+                              (NOT (INSIDEP HotRegion (LASTMOUSEX Window)
+                                          (LASTMOUSEY Window] do (SETQ MouseButtonState 
+                                                                  LASTMOUSEBUTTONS)))
 
 (* ;;; "If user let up inside the link icon, then call the appropriate function.")
 
@@ -2234,10 +2624,10 @@
                            (KEYDOWNP 'COPY)
                            (KEYDOWNP 'DELETE)
                            (KEYDOWNP 'MOVE))                 (* ; 
-                                            "Copy or move or delete key is down, just do selection")
+                                              "Copy or move or delete key is down, just do selection")
                        NIL)
                       [(ZEROP (LOGXOR MouseButtonState 4))   (* ; 
-                                               "The left button was down, call the left button fn.")
+                                                 "The left button was down, call the left button fn.")
                        (COND
                           ((NC.LinkIconImageObjP ImageObject)
                            (NC.LinkIconLeftButtonFn ImageObject Window))
@@ -2246,17 +2636,17 @@
                       [(OR (ZEROP (LOGXOR MouseButtonState 1))
                            (ZEROP (LOGXOR MouseButtonState 6)))
                                                              (* ; 
-                                           "The middle button was down, call the middle button fn.")
+                                             "The middle button was down, call the middle button fn.")
                        (COND
                           [(NC.LinkIconImageObjP ImageObject)
                            (ADD.PROCESS `(NC.LinkIconMiddleButtonFn ,ImageObject ,Window]
                           ((NC.PointerIconImageObjP ImageObject)
                            (ADD.PROCESS `(NC.PointerIconMiddleButtonFn ,ImageObject ,Window]
                       ((ZEROP (LOGXOR MouseButtonState 2))   (* ; 
-                                                       "The right button was down, allow selection")
+                                                         "The right button was down, allow selection")
                        NIL)
                       (T                                     (* ; 
-                                                           "Hmmm, don't know know, allow selectin")
+                                                             "Hmmm, don't know know, allow selectin")
                          NIL)))
                   ([AND (INSIDEP ClippingRegion (LASTMOUSEX Window)
                                (LASTMOUSEY Window))
@@ -2270,7 +2660,9 @@
 
 (* ;;; "User let up outside the link icon -- don't select the link icon")
 
-                     'DON'T])(NC.LinkIconDisplayFn
+                     'DON'T])
+
+(NC.LinkIconDisplayFn
   [LAMBDA (ImageObj ImageStream StreamType TextStream Scale) (* ; "Edited 21-Jan-88 18:23 by Trigg")
 
 (* ;;; "Display a link icon")
@@ -2365,7 +2757,9 @@
                             (NC.LinkIconImageBoxFn ImageObj ImageStream NIL NIL NIL DisplayType Title 
                                    Label LinkIconString))
                         LinkIconString AttachBitmapFlg Card NIL (IMAGEOBJPROP ImageObj '
-                                                                       BorderWidthIncrement])(NC.LinkIconImageBoxFn
+                                                                       BorderWidthIncrement])
+
+(NC.LinkIconImageBoxFn
   [LAMBDA (ImageObj ImageStream CurrentX RightMargin DummyArg DisplayType Title Label LinkIconString)
                                                              (* ; "Edited 24-Jan-89 15:54 by rtk")
 
@@ -2459,14 +2853,18 @@
 
               (RETURN (NC.ComputeLinkOrPointerImageBox ImageStream LinkIconString AttachBitmapFlg
                              Card RightMargin (IMAGEOBJPROP ImageObj 'BorderWidthIncrement)
-                             CurrentX))))])(NC.LinkIconImageObjP
+                             CurrentX))))])
+
+(NC.LinkIconImageObjP
   (LAMBDA (IMAGEOBJ)                                         (* fgh%: " 1-Oct-84 20:04")
           
           (* * Is IMAGEOBJ a Link Icon?)
 
     (AND (IMAGEOBJP IMAGEOBJ)
          (EQ (FUNCTION NC.LinkIconGetFn)
-             (IMAGEOBJPROP IMAGEOBJ 'GETFN)))))(NC.LinkIconPutFn
+             (IMAGEOBJPROP IMAGEOBJ 'GETFN)))))
+
+(NC.LinkIconPutFn
   (LAMBDA (ImageObject Stream)                               (* rht%: "15-Jul-86 14:52")
           
           (* * Writes the Link information in the link icon specified by ImageObject onto 
@@ -2482,14 +2880,18 @@
              then (NC.WriteLink Link Stream)
            else (IMAGEOBJPROP ImageObject 'OBJECTDATUM "[[Old style link.]]")
                 (replace (IMAGEOBJ IMAGEOBJFNS) of ImageObject with NC.ExternalPutLinkIconImageFns)
-                (NC.ExternalPutLinkIconPutFn ImageObject Stream)))))(NC.LinkIconGetFn
+                (NC.ExternalPutLinkIconPutFn ImageObject Stream)))))
+
+(NC.LinkIconGetFn
   (LAMBDA (Stream)                                           (* fgh%: "16-Nov-85 20:40")
           
           (* * Reads the link information from Stream and returns a link icon image 
           object for this link info. If the value on the stream is an atom in the old 
           style, convert to a proper record.)
 
-    (NC.MakeLinkIcon (NC.ReadLink Stream))))(NC.LinkIconMiddleButtonFn
+    (NC.MakeLinkIcon (NC.ReadLink Stream))))
+
+(NC.LinkIconMiddleButtonFn
   [LAMBDA (LinkIcon Window)                                  (* ; "Edited 23-Jan-88 20:44 by Trigg")
           
           (* ;; "Middle button has been pressed in the Notecard link icon.  Bring up menu of choices for manipulating this link icon.")
@@ -2547,7 +2949,9 @@
                       (NIL NIL)
                       (ADD.PROCESS `(APPLY* ',Selection ',Card ',Window) 'NAME 'LinkIconMiddleButton)
                    )
-           else NIL])(NC.LinkIconWhenCopiedFn
+           else NIL])
+
+(NC.LinkIconWhenCopiedFn
   [LAMBDA (ImageObject ToWindowStream FromTextStream ToTextStream)
                                                           (* ; "Edited 15-Feb-89 16:50 by krivacic")
 
@@ -2564,10 +2968,10 @@
     (* ;; "fgh 6/30/86 Now ERROR! out of attempt to copy between NoteFiles")
 
     (* ;; 
-"rht 7/14/86: Reversed order of tests for WINDOWP and TEXTSTREAMP in computation of NewSourceCard.")
+  "rht 7/14/86: Reversed order of tests for WINDOWP and TEXTSTREAMP in computation of NewSourceCard.")
 
     (* ;; 
-  "rht 8/11/86: Now only resets NewSourceCard if it was NIL so that copies to a sketch will work.")
+    "rht 8/11/86: Now only resets NewSourceCard if it was NIL so that copies to a sketch will work.")
 
     (* ;; "rht 10/5/86: Undid change fgh 6/30/86: now allows copies of links across notefiles.  Also handles illegal copies differently.  Rather than RETFROM'ing or ERROR!'ing, it puts in a DELETE ME imageobj.")
 
@@ -2586,7 +2990,7 @@
     (* ;; "bk 2/15/89: Use NC.REPLACEWITHDELETEDLINKIMAGEOBJ when IllegalCopyFlg is set to smash the ImageObjectCopy object.")
 
     (DECLARE (GLOBALVARS NC.CopyCrossFileLinksMode NC.DELETEMEImageObjDatum NC.SystemLinkLabels 
-                        NC.UnspecifiedLinkLabel NC.NewCrossFileLinksTwoWayFlg))
+                    NC.UnspecifiedLinkLabel NC.NewCrossFileLinksTwoWayFlg))
     (LET ((Link (NC.FetchLinkFromLinkIcon ImageObject))
           (ImageObjectCopy (IMAGEOBJPROP ImageObject 'ImageObjectCopy))
           (InTEditCopyFlg (COND
@@ -2606,11 +3010,11 @@
                                  (NC.CoerceToCard Window]
          [COND
             ((TEXTSTREAMP ToTextStream)                      (* ; 
-                                    "If it's a text copy, then compute position to insert link at.")
-             (SETQ InsertPos (NC.CharPosFromTextObject (TEXTOBJ ToTextStream]
+                                      "If it's a text copy, then compute position to insert link at.")
+             (SETQ InsertPos (NC.CharPosFromTextStream ToTextStream]
          [COND
             ((NULL NewSourceCard)                            (* ; 
-                                                          "Trying to copy to a non NoteCard stream")
+                                                            "Trying to copy to a non NoteCard stream")
              (NC.PrintMsg NIL NIL (CONCAT "Tried to copy a NoteCards link icon" 
                                          " to a non-NoteCards stream." (CHARACTER 13)))
              (SETQ ExternalCopyFlg T))
@@ -2626,8 +3030,7 @@
              (SETQ IllegalCopyFlg T))
             ((AND (FMEMB Label '(FiledCard SubBox))
                   (NEQ (NC.RetrieveType NewSourceCard)
-                       'FileBox))                            (* ; 
-                                                           "Copy from filebox to non-filebox.")
+                       'FileBox))                            (* ; "Copy from filebox to non-filebox.")
              (NC.PrintMsg Window NIL (CONCAT 
                                            "Tried to copy filedcard or subbox link to a non-filebox."
                                             (CHARACTER 13)
@@ -2637,8 +3040,7 @@
             ((AND (NEQ (NC.RetrieveType SourceCard)
                        'FileBox)
                   (EQ (NC.RetrieveType NewSourceCard)
-                      'FileBox))                             (* ; 
-                                                           "Copy from non-filebox to filebox.")
+                      'FileBox))                             (* ; "Copy from non-filebox to filebox.")
              (NC.PrintMsg Window NIL (CONCAT "Can't copy links from non-filebox to filebox."
                                             (CHARACTER 13)
                                             "Try using 'PutCardsHere'."
@@ -2653,10 +3055,9 @@
                       'FileBox)
                   (for Link1 in (NC.FetchToLinks NewSourceCard)
                      thereis (AND (NC.ChildLinkP Link1)
-                                      (EQ DestinationCard (fetch (Link DestinationCard)
-                                                             of Link1]
+                                  (EQ DestinationCard (fetch (Link DestinationCard) of Link1]
                                                              (* ; 
-                                                 "Copy to a filebox already containing this child.")
+                                                   "Copy to a filebox already containing this child.")
              (NC.PrintMsg Window NIL (CONCAT (NC.RetrieveTitle DestinationCard)
                                             " not copied: already appears as a child of "
                                             (NC.RetrieveTitle NewSourceCard)
@@ -2665,28 +3066,26 @@
             ([AND (EQ Label 'SubBox)
                   (OR (EQ NewSourceCard DestinationCard)
                       (NOT (NC.NotDaughterP DestinationCard NewSourceCard (FUNCTION NC.ChildLinkP]
-                                                             (* ; 
-                                                           "Copy to a filebox causes a cycle.")
+                                                             (* ; "Copy to a filebox causes a cycle.")
              (NC.PrintMsg Window NIL (CONCAT "Couldn't copy " Link " because of subbox cycle."
                                             (CHARACTER 13)))
              (SETQ IllegalCopyFlg T))
             ((AND (FMEMB Label NC.SystemLinkLabels)
                   [NOT (FMEMB Label '(FiledCard SubBox]
                   (NEQ NewSourceCard SourceCard))            (* ; 
-                                                         "Copy of system link outside of own card.")
+                                                           "Copy of system link outside of own card.")
              (NC.PrintMsg Window NIL (CONCAT "Tried to copy system link." (CHARACTER 13)
                                             "Link type of copy set to 'Unspecified'."
                                             (CHARACTER 13)))
              (SETQ NewLabel NC.UnspecifiedLinkLabel))
             ((NC.CrossFileLinkCardP DestinationCard)         (* ; "Copy of a cross-file link.")
              (if (NOT (NC.ActiveCardP DestinationCard))
-                 then (NC.GetNoteCard DestinationCard))  (* ; 
-                                      "If it's to be two-way, then make a fresh CrossFileLinkCard.")
+                 then (NC.GetNoteCard DestinationCard))      (* ; 
+                                        "If it's to be two-way, then make a fresh CrossFileLinkCard.")
              (if (OR (EQ NC.CopyCrossFileLinksMode 'TWOWAY)
-                         (AND (NULL NC.CopyCrossFileLinksMode)
-                              NC.NewCrossFileLinksTwoWayFlg))
-                 then (SETQ DestinationCard (NC.GetCrossFileLinkDestCard DestinationCard Window))
-                    )
+                     (AND (NULL NC.CopyCrossFileLinksMode)
+                          NC.NewCrossFileLinksTwoWayFlg))
+                 then (SETQ DestinationCard (NC.GetCrossFileLinkDestCard DestinationCard Window)))
              (OR DestinationCard (SETQ IllegalCopyFlg T]
          [COND
             (IllegalCopyFlg (NC.ReplaceWithDeletedLinkImageObj ImageObjectCopy)
@@ -2698,11 +3097,12 @@
                                                                          (OR NewLabel Label)
                                                                          DestinationCard 
                                                                          NewSourceCard OldDisplayMode
-                                                                         (NC.LinkAtCharPos 
-                                                                                InsertPos 
+                                                                         (NC.LinkAtCharPos InsertPos
                                                                                 ToTextStream)
                                                                          NC.CopyCrossFileLinksMode]
-         (IMAGEOBJPROP ImageObject 'ImageObjectCopy NIL])(NC.LinkIconWhenDeletedFn
+         (IMAGEOBJPROP ImageObject 'ImageObjectCopy NIL])
+
+(NC.LinkIconWhenDeletedFn
   [LAMBDA (ImageObject Stream)                        (* ; "Edited  9-Dec-88 18:58 by krivacic")
 
 (* ;;; "bk 12/9/88 Add the OriginalImageObject property to the resulting IMAGEOBJ")
@@ -2803,7 +3203,9 @@
                                                                             NC.DeletedLinkImageObject
                                                ))
                    (replace (Link UID) of Link with -1]
-            (T (ERROR!])(NC.LinkIconWhenInsertedFn
+            (T (ERROR!])
+
+(NC.LinkIconWhenInsertedFn
   [LAMBDA (ImageObj WindowStream)                     (* ; "Edited  9-Dec-88 18:56 by krivacic")
 
 (* ;;; "Make a new UID for a LINK which is being re-inserted (i.e. it's UID is -1)")
@@ -2835,7 +3237,9 @@
                                    (AND (EQ -1 (fetch (Link UID) of Link))
                                         (replace (Link UID) of Link with (NC.MakeUID)))
                                    (NC.AddFromLink Link)
-                                   (NC.AddToLink Link])(NC.LinkIconWhenMovedFn
+                                   (NC.AddToLink Link])
+
+(NC.LinkIconWhenMovedFn
   [LAMBDA (ImageObject ToWindowStream FromTextStream ToTextStream)
                                                              (* ; "Edited 10-Jan-89 16:08 by rtk")
 
@@ -2852,7 +3256,7 @@
     (* ;; "kirk 24Mar86: added Dave Newman patch to avoid duplicate links in sketch cards")
 
     (* ;; 
-"rht 7/14/86: Reversed order of tests for WINDOWP and TEXTSTREAMP in computation of NewSourceCard.")
+  "rht 7/14/86: Reversed order of tests for WINDOWP and TEXTSTREAMP in computation of NewSourceCard.")
 
     (* ;; "rht 8/11/86: Now only resets NewSourceCard if it was NIL so that moves to a sketch will work.  Now checks if SourceCard = NewSourceCard in which case we're moving within a card.  Don't make a new link in that case.")
 
@@ -2892,14 +3296,14 @@
             ((AND (NULL NewSourceCard)
                   (NULL FromTextStream)
                   (NULL ToTextStream))                       (* ; 
-                                                           "We must be moving within a sketch.")
+                                                             "We must be moving within a sketch.")
              (SETQ NewSourceCard SourceCard))
             ((TEXTSTREAMP ToTextStream)                      (* ; 
-                                    "If it's a text copy, then compute position to insert link at.")
-             (SETQ InsertPos (NC.CharPosFromTextObject (TEXTOBJ ToTextStream]
+                                      "If it's a text copy, then compute position to insert link at.")
+             (SETQ InsertPos (NC.CharPosFromTextStream ToTextStream]
          (COND
             ((NULL NewSourceCard)                            (* ; 
-                                                          "Trying to copy to a non NoteCard stream")
+                                                            "Trying to copy to a non NoteCard stream")
              (NC.PrintMsg Window NIL (CONCAT "Tried to move a NoteCards link icon" 
                                             " to a non-NoteCards stream!!." (CHARACTER 13)))
              (RETFROM 'TEDIT.MOVE NIL T))
@@ -2919,8 +3323,7 @@
              (RETFROM 'TEDIT.MOVE NIL T))
             ((AND (FMEMB Label '(FiledCard SubBox))
                   (NEQ (NC.RetrieveType NewSourceCard)
-                       'FileBox))                            (* ; 
-                                                           "Move from filebox to non-filebox.")
+                       'FileBox))                            (* ; "Move from filebox to non-filebox.")
              (NC.PrintMsg Window NIL (CONCAT 
                                            "Tried to move filedcard or subbox link to a non-filebox."
                                             (CHARACTER 13)
@@ -2930,8 +3333,7 @@
             ((AND (NEQ (NC.RetrieveType SourceCard)
                        'FileBox)
                   (EQ (NC.RetrieveType NewSourceCard)
-                      'FileBox))                             (* ; 
-                                                           "Move from non-filebox to filebox.")
+                      'FileBox))                             (* ; "Move from non-filebox to filebox.")
              (NC.PrintMsg Window NIL (CONCAT "Can't move links from non-filebox to filebox."
                                             (CHARACTER 13)
                                             "Try using PutCardsHere."
@@ -2942,10 +3344,9 @@
                   (NEQ NewSourceCard SourceCard)
                   (for Link1 in (NC.FetchToLinks NewSourceCard)
                      thereis (AND (NC.ChildLinkP Link1)
-                                      (EQ DestinationCard (fetch (Link DestinationCard)
-                                                             of Link1]
+                                  (EQ DestinationCard (fetch (Link DestinationCard) of Link1]
                                                              (* ; 
-                                                 "Move to a filebox already containing this child.")
+                                                   "Move to a filebox already containing this child.")
              (NC.PrintMsg Window NIL (CONCAT (NC.RetrieveTitle DestinationCard)
                                             " not moved: already appears as a child of "
                                             (NC.RetrieveTitle NewSourceCard)
@@ -2955,15 +3356,14 @@
                   (NEQ NewSourceCard SourceCard)
                   (OR (EQ NewSourceCard DestinationCard)
                       (NOT (NC.NotDaughterP DestinationCard NewSourceCard (FUNCTION NC.ChildLinkP]
-                                                             (* ; 
-                                                           "Move to a filebox causes a cycle.")
+                                                             (* ; "Move to a filebox causes a cycle.")
              (NC.PrintMsg Window NIL (CONCAT "Couldn't move " Link " because of subbox cycle."
                                             (CHARACTER 13)))
              (RETFROM 'TEDIT.MOVE NIL T))
             ((AND (FMEMB Label NC.SystemLinkLabels)
                   [NOT (FMEMB Label '(FiledCard SubBox]
                   (NEQ NewSourceCard SourceCard))            (* ; 
-                                                         "Move of system link outside of own card.")
+                                                           "Move of system link outside of own card.")
              (NC.PrintMsg Window NIL (CONCAT "Tried to copy system link." (CHARACTER 13)
                                             "Link type of copy set to 'Unspecified'."
                                             (CHARACTER 13)))
@@ -2971,25 +3371,27 @@
             ((AND (NC.CrossFileLinkCardP DestinationCard)
                   (NOT (NC.GetCrossFileLinkDestCard DestinationCard Window)))
                                                              (* ; 
-                               "Trying to move a cross-file link, but can't get to it so bail out.")
+                                 "Trying to move a cross-file link, but can't get to it so bail out.")
              (RETFROM 'TEDIT.MOVE NIL T)))
          (if (EQ SourceCard NewSourceCard)
-             then                                        (* ; 
-                                   "Moving within a card, so just reposition Link in ToLinks list.")
-                   (AND (NC.TEditBasedP SourceCard)
-                        (IMAGEOBJPROP ImageObject 'LinkBeingMovedWithinCard Link))
-                   (PROG1 (NC.AddToLink Link (NC.LinkAtCharPos InsertPos ToTextStream)
-                                 T)
-                       (NC.SetUserDataProp SourceCard 'LastLinkCopiedOrMoved Link))
+             then                                            (* ; 
+                                     "Moving within a card, so just reposition Link in ToLinks list.")
+                  (AND (NC.TEditBasedP SourceCard)
+                       (IMAGEOBJPROP ImageObject 'LinkBeingMovedWithinCard Link))
+                  (PROG1 (NC.AddToLink Link (NC.LinkAtCharPos InsertPos ToTextStream)
+                                T)
+                      (NC.SetUserDataProp SourceCard 'LastLinkCopiedOrMoved Link))
            else (IMAGEOBJPROP ImageObject 'LinkBeingMoved Link)
-                 (NC.SetUserDataProp NewSourceCard 'LastLinkCopiedOrMoved (NC.FillInLinkIcon
-                                                                           ImageObject
-                                                                           (OR NewLabel Label)
-                                                                           DestinationCard 
-                                                                           NewSourceCard 
-                                                                           OldDisplayMode
-                                                                           (NC.LinkAtCharPos
-                                                                            InsertPos ToTextStream])(NC.FetchLinkFromLinkIcon
+                (NC.SetUserDataProp NewSourceCard 'LastLinkCopiedOrMoved (NC.FillInLinkIcon
+                                                                          ImageObject
+                                                                          (OR NewLabel Label)
+                                                                          DestinationCard 
+                                                                          NewSourceCard 
+                                                                          OldDisplayMode
+                                                                          (NC.LinkAtCharPos InsertPos
+                                                                                 ToTextStream])
+
+(NC.FetchLinkFromLinkIcon
   [LAMBDA (LinkIcon)                                  (* ; "Edited  9-Dec-88 14:21 by krivacic")
 
 (* ;;; "Return the link information from the LinkIcon image object")
@@ -2998,7 +3400,9 @@
 
 (* ;;; "fgh 11/16/85 Removed code to make link into aTYPEDRECORD, since links are now datatypes.")
 
-    (NC.CheckDisplayModeFormat (IMAGEOBJPROP LinkIcon 'OBJECTDATUM])(NC.ChangeLinkDisplayMode
+    (NC.CheckDisplayModeFormat (IMAGEOBJPROP LinkIcon 'OBJECTDATUM])
+
+(NC.ChangeLinkDisplayMode
   [LAMBDA (LinkOrLinkIcon Window NewDisplayMode)         (* ; "Edited  9-Jan-89 10:20 by rtk")
 
 (* ;;; "Change the display mode of the NOTECARDLINK defined by LinkOrLinkIcon.  Have the user choose the new display mode.")
@@ -3132,7 +3536,9 @@
                                                                                          Link))) 
                                                              (* ; 
                                                 "This used to cause tedit to redisplay the screen.")
-                            'CHANGED])(NC.UpdateLinkImages
+                            'CHANGED])
+
+(NC.UpdateLinkImages
   (LAMBDA (SourceWindowOrCard DestinationCard)               (* rht%: "30-Sep-87 19:35")
           
           (* * Update the Link Image Objects in SourceCard that point to DestinationID)
@@ -3162,7 +3568,9 @@
          (NC.ApplyFn UpdateLinkIconsFn SourceCard DestinationCard)
          (COND
             (ShrunkenWin (SHRINKW SourceWindow)))
-         NIL)))(NC.LinkIconCopyFn
+         NIL)))
+
+(NC.LinkIconCopyFn
   [LAMBDA (ImageObject)                                  (* ; "Edited  5-Jan-89 17:14 by rtk")
 
 (* ;;; 
@@ -3188,31 +3596,36 @@
                 (fetch (Link DestinationCard) of Link)
                 (fetch (Link Label) of Link))
          (IMAGEOBJPROP ImageObjectCopy 'WHENINSERTEDFN (FUNCTION NC.LinkIconWhenInsertedFn))
-         ImageObjectCopy])(NC.LinkAtCharPos
-  (LAMBDA (CharPos TextStream)                               (* rht%: " 1-Feb-87 15:45")
-          
-          (* * Returns the link right before CharPos in TextStream.
-          Return NIL if there is no link icon located before CharPos.)
-          
-          (* * rht 1/25/87%: Now takes special kludgy action if we're under a copy of 
-          multiple links. If it's past the first link in the copy then the value returned 
-          is the link just copied previously.)
-          
-          (* * rht 2/1/87%: Fix to above kludgy action so that STKARG call is safe.)
+         ImageObjectCopy])
+
+(NC.LinkAtCharPos
+  [LAMBDA (CharPos TextStream)                               (* rht%: " 1-Feb-87 15:45")
+
+         (* * Returns the link right before CharPos in TextStream.
+         Return NIL if there is no link icon located before CharPos.)
+
+         (* * rht 1/25/87%: Now takes special kludgy action if we're under a copy of 
+         multiple links. If it's past the first link in the copy then the value returned 
+         is the link just copied previously.)
+
+         (* * rht 2/1/87%: Fix to above kludgy action so that STKARG call is safe.)
 
     (if (TEXTSTREAMP TextStream)
-        then (if (LET ((StkPos (STKPOS 'TEDIT.SELECTED.PIECES)))
+        then (if [LET [(StkPos (STKPOS 'TEDIT.SELECTED.PIECES]
                       (AND StkPos (PROG1 (STKARG 'NPC StkPos)
-                                         (RELSTK StkPos))))
+                                         (RELSTK StkPos]
                  then (NC.FetchUserDataProp (NC.CoerceToCard TextStream)
                              'LastLinkCopiedOrMoved)
-               else (for LinkIconPair in (TEDIT.LIST.OF.OBJECTS (TEXTOBJ TextStream)
-                                                (FUNCTION NC.LinkIconImageObjP)) bind OldLinkIconPair
-                       while (LESSP (CADR LinkIconPair)
-                                    CharPos) do (SETQ OldLinkIconPair LinkIconPair)
+               else (for LinkIconPair in (NC.TEditCollectObjects TextStream (FUNCTION 
+                                                                             NC.LinkIconImageObjP))
+                       bind OldLinkIconPair while (LESSP (CADR LinkIconPair)
+                                                         CharPos) do (SETQ OldLinkIconPair 
+                                                                      LinkIconPair)
                        finally (RETURN (AND OldLinkIconPair (NC.FetchLinkFromLinkIcon (CAR 
                                                                                       OldLinkIconPair
-                                                                                           )))))))))(NC.LinkIconLeftButtonFn
+                                                                                           ])
+
+(NC.LinkIconLeftButtonFn
   [LAMBDA (LinkIcon Window)                                  (* ; "Edited 30-May-88 15:23 by Trigg")
 
 (* ;;; "Left button has been pressed in the link icon.  For now, just traverse the link.")
@@ -3226,7 +3639,9 @@
              then (ADD.PROCESS `(APPLY* ',LinkIconLeftButtonFn ',Card ',Window)
                          'NAME
                          'LinkIconLeftButton)
-           else (NC.TraverseLink LinkIcon Window])(NC.LinkToBitMap
+           else (NC.TraverseLink LinkIcon Window])
+
+(NC.LinkToBitMap
   [LAMBDA (IMAGE-OBJ)                                    (* ; "Edited  6-Jan-89 16:19 by rtk")
 
 (* ;;; "Return the BitMap for the Link Image object.")
@@ -3252,7 +3667,9 @@
           (* ;; "return the resulting bitmap")
 
           (CL:VALUES DEST-BITMAP (OR (IMAGEOBJPROP IMAGE-OBJ 'BOUNDBOX)
-                                     LINK-BOX])(NC.SetBitMap&Box
+                                     LINK-BOX])
+
+(NC.SetBitMap&Box
   [LAMBDA (IMAGE-OBJ BITMAP)                             (* ; "Edited  6-Jan-89 16:19 by rtk")
 
 (* ;;; "Set the IMAGEBOX and IMAGEBITMAP properties of IMAGE-OBJ.  Return both BITMAP & IMAGEBOX.")
@@ -3271,7 +3688,11 @@
                                                    YDESC _ 0
                                                    XKERN _ 0]
          (IMAGEOBJPROP IMAGE-OBJ 'IMAGEBOX DEST-IMAGEBOX)
-         (CL:VALUES BITMAP DEST-IMAGEBOX]))(DEFINEQ(NC.FillInLinkIcon
+         (CL:VALUES BITMAP DEST-IMAGEBOX])
+)
+(DEFINEQ
+
+(NC.FillInLinkIcon
   (LAMBDA (ImageObj Label DestinationCard SourceCard DisplayMode LinkToInsertAfter CrossFileLinksMode
                  )                                           (* rht%: "25-Jan-87 20:01")
           
@@ -3285,7 +3706,9 @@
                        LinkToInsertAfter CrossFileLinksMode)))
          (IMAGEOBJPROP ImageObj 'OBJECTDATUM Link)
          (replace (IMAGEOBJ IMAGEOBJFNS) of ImageObj with NC.LinkIconImageFns)
-         Link)))(NC.InvisibleLinkImageBoxFn
+         Link)))
+
+(NC.InvisibleLinkImageBoxFn
   (LAMBDA (ImageObj Stream)                                  (* rht%: "20-Nov-84 10:57")
           
           (* * Returns a zero-size image box.)
@@ -3294,54 +3717,87 @@
            XSIZE _ 0
            YSIZE _ 0
            YDESC _ 0
-           XKERN _ 0)))(NC.InvisibleLinkPutFn
+           XKERN _ 0)))
+
+(NC.InvisibleLinkPutFn
   (LAMBDA (ImageObj OutputStream)                            (* fgh%: "26-Feb-84 01:04")
-    (BOUT OutputStream 1)))(NC.InvisibleLinkGetFn
+    (BOUT OutputStream 1)))
+
+(NC.InvisibleLinkGetFn
   (LAMBDA (InputStream TextStream)                           (* rht%: "21-Nov-84 12:10")
     (BIN InputStream)
-    NC.InvisibleLinkImageObject)))(* ;;; "Pointer icons. These act like links, except that their icon boxes are dashed, and they're invisible as far as the source or destination cards are concerned. That is, only the imageobject containing the pointer knows about the connection. Functions exist for creating pointer icons and converting them into link icons.")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.PointerIconImageObjFns NC.PointerIconDashingStyle NC.PointerIconMiddleButtonMenu))(RPAQ? NC.PointerIconImageObjFns (IMAGEFNSCREATE (FUNCTION NC.PointerIconDisplayFn)                                            (FUNCTION NC.PointerIconImageBoxFn)                                            (FUNCTION NC.PointerIconPutFn)                                            (FUNCTION NC.PointerIconGetFn)                                            (FUNCTION NC.PointerIconCopyFn)                                            (FUNCTION NC.LinkIconButtonEventInFn)))(RPAQ? NC.PointerIconDashingStyle '(4 2))(* ;;; "Functions likely to be useful externally.")(DEFINEQ(NC.InsertPointerInText
-  (LAMBDA (SourceCard DestinationCard PointerOrPointerLabel DisplayMode CharacterPosition)
-                                                             (* rht%: "27-Oct-87 12:23")
-          
-          (* * Create a Pointer icon pointing to DestinationCard and stick it in 
-          SourceCard at location Loc. Loc defaults to current cursor position.
-          Return the Pointer icon.)
+    NC.InvisibleLinkImageObject))
+)
+
+
+
+(* ;;; 
+"Pointer icons. These act like links, except that their icon boxes are dashed, and they're invisible as far as the source or destination cards are concerned. That is, only the imageobject containing the pointer knows about the connection. Functions exist for creating pointer icons and converting them into link icons."
+)
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.PointerIconImageObjFns NC.PointerIconDashingStyle NC.PointerIconMiddleButtonMenu)
+)
+
+(RPAQ? NC.PointerIconImageObjFns (IMAGEFNSCREATE (FUNCTION NC.PointerIconDisplayFn)
+                                        (FUNCTION NC.PointerIconImageBoxFn)
+                                        (FUNCTION NC.PointerIconPutFn)
+                                        (FUNCTION NC.PointerIconGetFn)
+                                        (FUNCTION NC.PointerIconCopyFn)
+                                        (FUNCTION NC.LinkIconButtonEventInFn)))
+
+(RPAQ? NC.PointerIconDashingStyle '(4 2))
+
+
+
+(* ;;; "Functions likely to be useful externally.")
+
+(DEFINEQ
+
+(NC.InsertPointerInText
+  [LAMBDA (SourceCard DestinationCard PointerOrPointerLabel DisplayMode CharacterPosition)
+                                                             (* rht%: "27-Oct-87 12:23")
+
+         (* * Create a Pointer icon pointing to DestinationCard and stick it in SourceCard 
+         at location Loc. Loc defaults to current cursor position.
+         Return the Pointer icon.)
 
     (LET ((WasActiveFlg (NCP.CardCachedP SourceCard))
-          Pointer TextStream TextObj InsertPos)
+          Pointer TextStream InsertPos)
          (if (NOT WasActiveFlg)
              then (NCP.CacheCards SourceCard))
          (SETQ TextStream (NCP.CardSubstance SourceCard))
-         (SETQ TextObj (TEXTOBJ TextStream))
          (if (SETQ InsertPos (OR (if (AND (FIXP CharacterPosition)
-                                          (ILEQ CharacterPosition (fetch (TEXTOBJ TEXTLEN)
-                                                                     of TextObj)))
+                                          (ILEQ CharacterPosition (TEDIT.NCHARS TextStream)))
                                      then CharacterPosition)
-                                 (NC.CharPosFromTextObject TextObj)))
-             then (if (SETQ Pointer (COND
+                                 (NC.CharPosFromTextStream TextStream)))
+             then (if [SETQ Pointer (COND
                                        ((type? NCPointer PointerOrPointerLabel)
                                         PointerOrPointerLabel)
                                        (T (NC.MakePointer DestinationCard PointerOrPointerLabel 
-                                                 DisplayMode))))
-                      then (TEDIT.SETSEL TextObj InsertPos 0 'LEFT)
+                                                 DisplayMode]
+                      then (TEDIT.SETSEL TextStream InsertPos 0 'LEFT)
                            (TEDIT.INSERT.OBJECT (NC.MakePointerIcon Pointer)
                                   TextStream InsertPos))
            else (NC.ReportError "NC.InsertPointerInText" 
                        "No selection set when inserting pointer image object."))
          (if (NOT WasActiveFlg)
              then (NCP.UncacheCards SourceCard T))
-         Pointer)))(NC.ConvertPointerIconToLinkIcon
-  (LAMBDA (SourceCardOrWindow PointerIcon)                   (* rht%: "29-Oct-87 12:19")
-          
-          (* * Create a new link out of information in PointerIcon and replace the 
-          PointerIcon with it.)
+         Pointer])
+
+(NC.ConvertPointerIconToLinkIcon
+  [LAMBDA (SourceCardOrWindow PointerIcon)                   (* rht%: "29-Oct-87 12:19")
+
+         (* * Create a new link out of information in PointerIcon and replace the 
+         PointerIcon with it.)
 
     (DECLARE (GLOBALVARS NC.LinkIconImageFns))
     (LET ((Pointer (NC.FetchPointerFromPointerIcon PointerIcon))
           (SourceCard (NC.CoerceToCard SourceCardOrWindow))
           TextStream)
          (SETQ TextStream (NC.FetchSubstance SourceCard))
-         (IMAGEOBJPROP PointerIcon 'OBJECTDATUM (NC.MakeLink
+         [IMAGEOBJPROP PointerIcon 'OBJECTDATUM (NC.MakeLink
                                                  NIL
                                                  (fetch (NCPointer Label) of Pointer)
                                                  (fetch (NCPointer DestinationCard) of Pointer)
@@ -3349,30 +3805,34 @@
                                                  (fetch (NCPointer DisplayMode) of Pointer)
                                                  NIL NIL NIL
                                                  (for LinkIconPair
-                                                    in (TEDIT.LIST.OF.OBJECTS (TEXTOBJ TextStream)
-                                                              (FUNCTION (LAMBDA (ImageObj)
-                                                                          (OR (NC.LinkIconImageObjP
+                                                    in [NC.TEditCollectObjects
+                                                        TextStream
+                                                        (FUNCTION (LAMBDA (ImageObj)
+                                                                    (OR (NC.LinkIconImageObjP 
                                                                                ImageObj)
-                                                                              (
-                                                                              NC.PointerIconImageObjP
-                                                                               ImageObj)))))
-                                                    bind OldLinkIconPair
+                                                                        (NC.PointerIconImageObjP
+                                                                         ImageObj] bind 
+                                                                                      OldLinkIconPair
                                                     until (EQ (CAR LinkIconPair)
                                                               PointerIcon)
                                                     do (if (NC.LinkIconImageObjP (CAR LinkIconPair))
                                                            then (SETQ OldLinkIconPair LinkIconPair))
                                                     finally (RETURN (AND OldLinkIconPair
                                                                          (NC.FetchLinkFromLinkIcon
-                                                                          (CAR OldLinkIconPair)))))))
+                                                                          (CAR OldLinkIconPair]
          (replace (IMAGEOBJ IMAGEOBJFNS) of PointerIcon with NC.LinkIconImageFns)
          (TEDIT.OBJECT.CHANGED TextStream PointerIcon)
-         PointerIcon)))(NC.MakePointerIcon
+         PointerIcon])
+
+(NC.MakePointerIcon
   (LAMBDA (Pointer)                                          (* rht%: "19-Oct-87 14:35")
           
           (* * Create and return a pointer icon image object.)
 
     (DECLARE (GLOBALVARS NC.PointerIconImageObjFns))
-    (IMAGEOBJCREATE Pointer NC.PointerIconImageObjFns)))(NC.MakePointer
+    (IMAGEOBJCREATE Pointer NC.PointerIconImageObjFns)))
+
+(NC.MakePointer
   [LAMBDA (DestinationCard Label DisplayMode UserData)(* ; "Edited  6-Dec-88 11:17 by krivacic")
 
 (* ;;; "Create and return a pointer datatype suitable as OBJECTDATUM for a pointer icon imageobj.  DisplayMode, Label and UserData args are optional.")
@@ -3382,19 +3842,32 @@
            DestinationCard _ DestinationCard
            Label _ Label
            DisplayMode _ DisplayMode
-           UserData _ UserData])(NC.PointerIconImageObjP
+           UserData _ UserData])
+
+(NC.PointerIconImageObjP
   (LAMBDA (IMAGEOBJ)                                         (* rht%: "24-Oct-87 23:46")
           
           (* * Is IMAGEOBJ a Pointer Icon?)
 
     (AND (IMAGEOBJP IMAGEOBJ)
          (EQ (FUNCTION NC.PointerIconGetFn)
-             (IMAGEOBJPROP IMAGEOBJ 'GETFN)))))(NC.FetchPointerFromPointerIcon
+             (IMAGEOBJPROP IMAGEOBJ 'GETFN)))))
+
+(NC.FetchPointerFromPointerIcon
   (LAMBDA (PointerIcon)                                      (* rht%: "24-Oct-87 18:35")
           
           (* * Return the Pointer object found in PointerIcon)
 
-    (IMAGEOBJPROP PointerIcon 'OBJECTDATUM))))(* ;;; "Internal functions.")(DEFINEQ(NC.PointerIconDisplayFn
+    (IMAGEOBJPROP PointerIcon 'OBJECTDATUM)))
+)
+
+
+
+(* ;;; "Internal functions.")
+
+(DEFINEQ
+
+(NC.PointerIconDisplayFn
   [LAMBDA (ImageObj ImageStream StreamType TextStream Scale)
                                                              (* ; "Edited 30-Jan-89 18:48 by pmi")
 
@@ -3466,7 +3939,9 @@
                                                          (IMAGEOBJPROP ImageObj 'RightMargin)
                                                          NIL DisplayType Title Label LinkIconString)
                      LinkIconString AttachBitmapFlg Card T (IMAGEOBJPROP ImageObj 
-                                                                  'BorderWidthIncrement])])(NC.PointerIconImageBoxFn
+                                                                  'BorderWidthIncrement])])
+
+(NC.PointerIconImageBoxFn
   [LAMBDA (ImageObj ImageStream CurrentX RightMargin DummyArg DisplayType Title Label LinkIconString)
                                                              (* ; "Edited 30-Jan-89 18:48 by pmi")
 
@@ -3536,7 +4011,9 @@
 
               (RETURN (NC.ComputeLinkOrPointerImageBox ImageStream LinkIconString AttachBitmapFlg
                              Card RightMargin (IMAGEOBJPROP ImageObj 'BorderWidthIncrement)
-                             CurrentX))))])(NC.PointerIconPutFn
+                             CurrentX))))])
+
+(NC.PointerIconPutFn
   [LAMBDA (ImageObject Stream)                               (* ; "Edited 21-Jun-88 09:21 by pmi")
 
     (* ;; "Writes the Pointer information in the pointer icon specified by ImageObject onto Stream")
@@ -3555,7 +4032,9 @@
                            (NC.ReplaceWithDeletedLinkImageObj ImageObject)
                            (APPLY* (IMAGEOBJPROP ImageObject 'PUTFN)
                                   ImageObject Stream)
-                    else (NC.WritePointer Pointer Stream])(NC.PointerIconGetFn
+                    else (NC.WritePointer Pointer Stream])
+
+(NC.PointerIconGetFn
   [LAMBDA (Stream)                                           (* ; "Edited 22-Jun-88 12:37 by pmi")
 
     (* ;; "Reads the pointer information from Stream and returns a pointer icon image object.")
@@ -3566,7 +4045,9 @@
     (LET ((Pointer (NC.ReadPointer Stream)))
          (if (type? NCPointer Pointer)
              then (NC.MakePointerIcon Pointer)
-           else NC.DeletedLinkImageObject])(NC.PointerIconCopyFn
+           else NC.DeletedLinkImageObject])
+
+(NC.PointerIconCopyFn
   (LAMBDA (PointerIcon)                                      (* rht%: "29-Oct-87 12:33")
           
           (* * Return a copy of this pointer icon.)
@@ -3574,7 +4055,9 @@
     (LET ((Pointer (NC.FetchPointerFromPointerIcon PointerIcon)))
          (NC.MakePointerIcon (NC.MakePointer (fetch (NCPointer DestinationCard) of Pointer)
                                     (fetch (NCPointer Label) of Pointer)
-                                    (fetch (NCPointer DisplayMode) of Pointer))))))(NC.WritePointer
+                                    (fetch (NCPointer DisplayMode) of Pointer))))))
+
+(NC.WritePointer
   (LAMBDA (Pointer Stream)                                   (* rht%: "24-Oct-87 23:05")
           
           (* * Write a single Pointer DATAYPE instance down to Stream)
@@ -3590,7 +4073,9 @@
          (PRINT (fetch (NCPointer Label) of Pointer)
                 Stream NC.OrigReadTable)
          (PRINT (fetch (NCPointer DisplayMode) of Pointer)
-                Stream NC.OrigReadTable))))(NC.ReadPointer
+                Stream NC.OrigReadTable))))
+
+(NC.ReadPointer
   [LAMBDA (Stream)                                           (* ; "Edited 22-Jun-88 12:11 by pmi")
 
     (* ;; "Read a single Pointer DATAYPE instance from Stream")
@@ -3619,13 +4104,19 @@
 
 (* ;;; "KLUDGE to account for fact that some versions of WRITE.IMAGEOBJ put a CR before beginning the actual stuff.")
 
-             (NC.ReadPointer Stream]))(DEFINEQ(NC.PointerIconLeftButtonFn
+             (NC.ReadPointer Stream])
+)
+(DEFINEQ
+
+(NC.PointerIconLeftButtonFn
   (LAMBDA (PointerIcon Window)                               (* rht%: "25-Oct-87 00:42")
           
           (* * Left button has been pressed in the pointer icon.
           For now, just traverse the pointer.)
 
-    (NC.TraversePointer PointerIcon Window)))(NC.PointerIconMiddleButtonFn
+    (NC.TraversePointer PointerIcon Window)))
+
+(NC.PointerIconMiddleButtonFn
   (LAMBDA (PointerIcon Window)                               (* rht%: "29-Oct-87 12:09")
           
           (* * Middle button has been pressed in a pointer icon.
@@ -3672,7 +4163,9 @@
                                'CHANGED)
                       (NIL NIL)
                       (APPLY* Selection Card))
-           else NIL))))(NC.TraversePointer
+           else NIL))))
+
+(NC.TraversePointer
   (LAMBDA (PointerIcon Window)                               (* rht%: "25-Oct-87 00:45")
           
           (* * Follow the pointer to the card at the other end.
@@ -3702,7 +4195,9 @@
                        "This is a bad pointer - the destination card is invalid." (CHARACTER 13))
                 (DISMISS NC.MsgDelay)
                 (NC.ClearMsg InterestedWindow T)
-                (NC.DeleteBadPointer Pointer PointerIcon Window)))))(NC.ChangePointerDisplayMode
+                (NC.DeleteBadPointer Pointer PointerIcon Window)))))
+
+(NC.ChangePointerDisplayMode
   (LAMBDA (PointerIcon Window NewDisplayMode)                (* rht%: "25-Oct-87 01:00")
           
           (* * Change the display mode of the pointer icon defined by LinkOrLinkIcon.
@@ -3762,7 +4257,9 @@
                           (replace (NCPointer DisplayMode) of Pointer with NewDisplayMode)
                           (NC.MarkCardDirty Card)            (* This causes tedit to redisplay the 
                                                              screen.)
-                          'CHANGED))))))(NC.RelabelPointer
+                          'CHANGED))))))
+
+(NC.RelabelPointer
   (LAMBDA (PointerIcon Window NewLinkLabel ForceRedisplayFlg)(* rht%: "25-Oct-87 19:37" pp pp)
           
           (* * Relabel a NoteCard pointer. Ask user for new label.)
@@ -3793,7 +4290,9 @@
 
                              (replace (NCPointer Label) of Pointer with NewLinkLabel)
                              (NC.MarkCardDirty Card)
-                             'CHANGED)))))))(NC.ChangeCardTitleFromPointerIcon
+                             'CHANGED)))))))
+
+(NC.ChangeCardTitleFromPointerIcon
   (LAMBDA (PointerIcon Window)                               (* ; "Edited  3-Dec-87 19:00 by rht:")
           
           (* * From a pointer icon sitting in Window, change the title of the pointer's 
@@ -3831,7 +4330,11 @@
                                                   else OldTitle)
                                                 T Window))
                           then (NC.AssignTitle DestinationCard NIL NewTitle)
-                               'CHANGED))))))))))(DEFINEQ(NC.DeleteBadPointer
+                               'CHANGED)))))))))
+)
+(DEFINEQ
+
+(NC.DeleteBadPointer
   (LAMBDA (Pointer ImageObj ImageStream StreamType TextStream Scale)
                                                              (* rht%: "24-Oct-87 19:04")
           
@@ -3841,7 +4344,9 @@
          (NC.ReplaceWithDeletedLinkImageObj ImageObj)
          (APPLY* (IMAGEOBJPROP ImageObj 'DISPLAYFN)
                 ImageObj ImageStream StreamType TextStream Scale)
-         'CHANGED)))(NC.DrawLinkOrPointerIcon
+         'CHANGED)))
+
+(NC.DrawLinkOrPointerIcon
   [LAMBDA (ImageStream ImageBox LinkIconString AttachBitmapFlg Card PointerStyleFlg 
                  BorderWidthIncrement)                   (* ; "Edited 10-Jan-89 17:24 by rtk")
 
@@ -4128,7 +4633,9 @@
           (if CrossFileLinkIcon
               then (BITBLT CrossFileLinkIcon 0 0 ImageStream (DIFFERENCE (PLUS Left BoxWidth)
                                                                         ScaledIconWidth)
-                              (DIFFERENCE Top ScaledIconHeight])(NC.ComputeLinkOrPointerImageBox
+                              (DIFFERENCE Top ScaledIconHeight])
+
+(NC.ComputeLinkOrPointerImageBox
   [LAMBDA (ImageStream LinkIconString AttachBitmapFlg Card RightMargin BorderWidthIncrement CurrentX)
                                                              (* ; "Edited  6-Jan-89 14:17 by rtk")
 
@@ -4398,7 +4905,31 @@
                                                 else (PLUS (FONTDESCENT Font)
                                                                TotalEdgeSpaceY]
                            (T 0))
-                XKERN _ 0]))(DECLARE%: DONTEVAL@LOAD (NC.MakePointerIcon))(* ;;; "New stuff for allowing put to work from TEdit.")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.ExternalPutLinkIconImageFns))(RPAQ? NC.ExternalPutLinkIconImageFns (IMAGEFNSCREATE (FUNCTION NC.ExternalPutLinkIconDisplayFn)                                                 (FUNCTION NC.ExternalPutLinkIconImageBoxFn)                                                 (FUNCTION NC.ExternalPutLinkIconPutFn)                                                 (FUNCTION NC.ExternalPutLinkIconGetFn)                                                 NIL                                                 (FUNCTION NILL)))(DEFINEQ(NC.ExternalPutLinkIconDisplayFn
+                XKERN _ 0])
+)
+(DECLARE%: DONTEVAL@LOAD 
+
+(NC.MakePointerIcon)
+)
+
+
+
+(* ;;; "New stuff for allowing put to work from TEdit.")
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.ExternalPutLinkIconImageFns)
+)
+
+(RPAQ? NC.ExternalPutLinkIconImageFns (IMAGEFNSCREATE (FUNCTION NC.ExternalPutLinkIconDisplayFn)
+                                             (FUNCTION NC.ExternalPutLinkIconImageBoxFn)
+                                             (FUNCTION NC.ExternalPutLinkIconPutFn)
+                                             (FUNCTION NC.ExternalPutLinkIconGetFn)
+                                             NIL
+                                             (FUNCTION NILL)))
+(DEFINEQ
+
+(NC.ExternalPutLinkIconDisplayFn
   [LAMBDA (ImageObj ImageStream STREAMTYPE TEXTSTREAM SCALE)
                                                              (* ; "Edited  5-Jan-89 16:33 by rtk")
 
@@ -4420,7 +4951,9 @@
             else (DSPFONT (PROG1 (DSPFONT Font ImageStream)
                                   (PRIN1 (IMAGEOBJPROP ImageObj 'OBJECTDATUM)
                                          ImageStream))
-                            ImageStream])(NC.ExternalPutLinkIconImageBoxFn
+                            ImageStream])
+
+(NC.ExternalPutLinkIconImageBoxFn
   [LAMBDA (ImageObj ImageStream CurrentX RightMargin)    (* ; "Edited 12-Jan-89 17:08 by rtk")
 
 (* ;;; "bk 1/5/89 look for IMAGEBOX property")
@@ -4442,7 +4975,9 @@
                                         (RightMargin         (* ; "This is in a TEdittextstream")
                                                (FONTPROP FONT 'DESCENT))
                                         (T 0))
-                             XKERN _ 0])(NC.ExternalPutLinkIconPutFn
+                             XKERN _ 0])
+
+(NC.ExternalPutLinkIconPutFn
   [LAMBDA (ImageObject Stream)                           (* ; "Edited 24-Jan-89 15:54 by rtk")
 
 (* ;;; 
@@ -4480,21 +5015,27 @@
                              " link to "
                              (NC.RetrieveTitle (fetch (Link DestinationCard) of Link))
                              "]]***")
-                      Stream])(NC.ExternalPutLinkIconGetFn
+                      Stream])
+
+(NC.ExternalPutLinkIconGetFn
   (LAMBDA (Stream)                                           (* fgh%: "30-May-85 16:43")
           
           (* * Reads the link information from Stream and returns a link icon image 
           object for this link info.)
 
     (IMAGEOBJCREATE (READ Stream)
-           NC.ExternalPutLinkIconImageFns)))(NC.ExternalGetLinkIconFn
+           NC.ExternalPutLinkIconImageFns)))
+
+(NC.ExternalGetLinkIconFn
   [LAMBDA (STREAM)                                    (* ; "Edited 28-Feb-89 11:32 by krivacic")
 
 (* ;;; "Call The Latest BITMAP GETFN to read the image object back")
 
     (APPLY* (IMAGEOBJPROP (BITMAPTEDITOBJ)
                    'GETFN)
-           STREAM])(NC.CoerceToExternalPutLinkIcon
+           STREAM])
+
+(NC.CoerceToExternalPutLinkIcon
   [LAMBDA (ImageObject SourceCard DestinationCard LinkLabel)
                                                              (* ; "Edited  5-Jan-89 18:36 by rtk")
 
@@ -4515,18 +5056,61 @@
                                                                    "]]"))
                   (replace (IMAGEOBJ IMAGEOBJFNS) of ImageObject with 
                                                                        NC.ExternalPutLinkIconImageFns
-                         ]))(* ;;; "Stuff to register our image object for intermezzo.")(DEFINEQ(NC.RegisterPlaceMarkerImageObj
+                         ])
+)
+
+
+
+(* ;;; "Stuff to register our image object for intermezzo.")
+
+(DEFINEQ
+
+(NC.RegisterPlaceMarkerImageObj
   (LAMBDA NIL                                                (* rht%: "31-May-85 11:40")
           
           (* * Cause the PlaceMarker Image Obj to be registered by creating the make 
           place marker function once)
 
-    (NC.MakePlaceMarker))))(DECLARE%: DONTEVAL@LOAD (NC.RegisterPlaceMarkerImageObj))(* ;;; "Stuff for Having BitMap external Link Images")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.ExternalBitMapPutLinkIconImageFns NC.LinkIconBitMapStream))(RPAQ? NC.ExternalBitMapPutLinkIconImageFns (IMAGEFNSCREATE (FUNCTION                                                                       NC.ExternalPutLinkIconDisplayFn                                                                       )                                                       (FUNCTION NC.ExternalPutLinkIconImageBoxFn)                                                       (FUNCTION NC.ExternalPutLinkIconPutFn)                                                       (FUNCTION NC.ExternalGetLinkIconFn)                                                       NIL                                                       (FUNCTION NILL)))(SETQ NC.LinkIconBitMapStream (DSPCREATE (BITMAPCREATE 512 128)))(* ;;; "Stuff for handling link icons in sketches.")(DEFINEQ(NC.LinkIconSketchElementP
+    (NC.MakePlaceMarker)))
+)
+(DECLARE%: DONTEVAL@LOAD 
+
+(NC.RegisterPlaceMarkerImageObj)
+)
+
+
+
+(* ;;; "Stuff for Having BitMap external Link Images")
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.ExternalBitMapPutLinkIconImageFns NC.LinkIconBitMapStream)
+)
+
+(RPAQ? NC.ExternalBitMapPutLinkIconImageFns (IMAGEFNSCREATE (FUNCTION NC.ExternalPutLinkIconDisplayFn
+                                                                   )
+                                                   (FUNCTION NC.ExternalPutLinkIconImageBoxFn)
+                                                   (FUNCTION NC.ExternalPutLinkIconPutFn)
+                                                   (FUNCTION NC.ExternalGetLinkIconFn)
+                                                   NIL
+                                                   (FUNCTION NILL)))
+
+(SETQ NC.LinkIconBitMapStream (DSPCREATE (BITMAPCREATE 512 128)))
+
+
+
+(* ;;; "Stuff for handling link icons in sketches.")
+
+(DEFINEQ
+
+(NC.LinkIconSketchElementP
   (LAMBDA (SketchElement)                                    (* rht%: "20-Aug-85 16:23")
           
           (* * Return non-nil if SketchElement is a link icon imageobj.)
 
-    (NC.LinkIconImageObjP (SKETCH.IMAGEOBJ.OF.ELEMENT SketchElement))))(NC.DeleteLinkIconSketchElement
+    (NC.LinkIconImageObjP (SKETCH.IMAGEOBJ.OF.ELEMENT SketchElement))))
+
+(NC.DeleteLinkIconSketchElement
   (LAMBDA (SketchElement CardID Don'tCreateDeletedImageObjFlg)
                                                              (* rht%: " 4-Nov-86 21:01")
           
@@ -4554,7 +5138,33 @@
                                                                           'OBJECTDATUM)
                                          IMAGEOBJFNS _ NC.DeletedLinkImageFns)
                   (AND Window (SKETCH.ELEMENT.CHANGED SketchSubstance SketchElement Window))
-           else (SKETCH.DELETE.ELEMENT SketchElement SketchSubstance T))))))(* ;;; "Icons representing notecards types.")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.FileBoxIcon NC.GraphCardIcon NC.SketchCardIcon NC.TextCardIcon NC.TypelessIcon))(* ;;; "DELETEME imageobjs")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NC.DELETEMEImageObjDatum NC.RemoveDELETEMEImageObjsFromCardFlg))(RPAQ? NC.DELETEMEImageObjDatum "[[DELETE ME]]")(RPAQ? NC.RemoveDELETEMEImageObjsFromCardFlg NIL)(DEFINEQ(NC.DELETEMEImageObjP
+           else (SKETCH.DELETE.ELEMENT SketchElement SketchSubstance T)))))
+)
+
+
+
+(* ;;; "Icons representing notecards types.")
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.FileBoxIcon NC.GraphCardIcon NC.SketchCardIcon NC.TextCardIcon NC.TypelessIcon)
+)
+
+
+
+(* ;;; "DELETEME imageobjs")
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NC.DELETEMEImageObjDatum NC.RemoveDELETEMEImageObjsFromCardFlg)
+)
+
+(RPAQ? NC.DELETEMEImageObjDatum "[[DELETE ME]]")
+
+(RPAQ? NC.RemoveDELETEMEImageObjsFromCardFlg NIL)
+(DEFINEQ
+
+(NC.DELETEMEImageObjP
   (LAMBDA (ImageObj)                                         (* rht%: " 7-Oct-86 16:26")
           
           (* * Returns non-nil if ImageObj is a DELETEME imageobj.)
@@ -4562,4 +5172,64 @@
     (DECLARE (GLOBALVARS NC.DELETEMEImageObjDatum))
     (AND (IMAGEOBJP ImageObj)
          (EQUAL (IMAGEOBJPROP ImageObj 'OBJECTDATUM)
-                NC.DELETEMEImageObjDatum)))))(PUTPROPS NCLINKS FILETYPE :FAKE-COMPILE-FILE)(PUTPROPS NCLINKS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))(PUTPROPS NCLINKS COPYRIGHT ("Venue & Xerox Corporation" 1984 1985 1986 1987 1988 1989 1990 1993 1994 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (11948 126225 (NC.GlobalLinkP 11958 . 12206) (NC.ChildLinkP 12208 . 12468) (NC.ContentsLinkP 12470 . 12692) (NC.SubContentsLinkP 12694 . 12916) (NC.ReverseLinkLabelP 12918 . 13513) (NC.MakeGlobalLink 13515 . 14274) (NC.AddFromLink 14276 . 15534) (NC.AddLinkToGraphCard 15536 . 16817) (NC.AddLinkToSketchCard 16819 . 17708) (NC.InsertLinkInSketch 17710 . 19372) (NC.InsertLinkInText 19374 . 21810) (NC.AddToLink 21812 . 23107) (NC.CachedAddToLink 23109 . 25818) (NC.DelFromLink 25820 . 28042) (NC.CachedDelFromLink 28044 . 29540) (NC.DelToLink 29542 . 31664) (NC.DelReferencesToCard 31666 . 35397) (NC.DelReferencesToCardFromGlobalList 35399 . 37860) (NC.DeleteLink 37862 . 41224) (NC.DeleteToLink 41226 . 42522) (NC.DeleteFromLink 42524 . 43796) (NC.DeletedLinkDisplayFn 43798 . 46956) (NC.DeletedLinkGetFn 46958 . 47292) (NC.DeletedLinkImageBoxFn 47294 . 48800) (NC.DeletedLinkPutFn 48802 . 48943) (NC.DeletedLinkImageObjP 48945 . 49272) (NC.DeleteBadLink 49274 . 51116) (NC.ReplaceWithDeletedLinkImageObj 51118 . 52063) (NC.CheckForOrphanDelete 52065 . 53918) (NC.FileInOrphanBox 53920 . 56403) (NC.HookToOrphanCard 56405 . 58491) (NC.InsertLinkBeforeMarker 58493 . 64618) (NC.LinkLabelP 64620 . 64964) (NC.IDAlphOrder 64966 . 65682) (NC.MakeLink 65684 . 75433) (NC.CachedMakeFilingLink 75435 . 78848) (NC.MakeFilingLink 78850 . 81630) (NC.MakeFilingLinks 81632 . 86749) (NC.RelabelLink 86751 . 96015) (NC.SystemLinkLabelP 96017 . 96349) (NC.ValidLinkP 96351 . 97059) (NC.MakeChildLink 97061 . 97950) (NC.EnsureNoCycles 97952 . 99155) (NC.SameLinkP 99157 . 99453) (NC.SameLinksP 99455 . 99740) (NC.AddGlobalLinkToCard 99742 . 99991) (NC.AddGlobalLinksToCard 99993 . 103305) (NC.ChangeCardTitleFromLinkIcon 103307 . 106537) (NC.UncacheLinks 106539 . 106776) (NC.TraverseLink 106778 . 108627) (NC.CreateLinkIconStrings 108629 . 119955) (NC.ShrinkIcon 119957 . 126223)) (126226 131353 (NC.AddLinkToCard 126236 . 127918) (NC.AddLinksToCard 127920 . 131351)) (131354 135524 (NC.DelReferencesToCardFromShowLinks 131364 . 133083) (NC.UpdateLinkImagesInShowLinks 133085 . 134338) (NC.FetchShowLinksWindow 134340 . 134882) (NC.ChangeLinkLabelInShowLinksWin 134884 . 135522)) (135567 140323 (NC.CheckDisplayModeFormat 135577 . 136728) (NC.InsureLinkDisplayMode 136730 . 137926) (NC.MakeNewDisplayMode 137928 . 138577) (NC.DisplayModeFromStylesheetSelections 138579 . 139489) (NC.StylesheetSelectionsFromDisplayMode 139491 . 140321)) (140720 141433 (NC.LinksSupportedP 140730 . 141431)) (141471 212669 (NC.FetchLinkIconForLink 141481 . 142107) (NC.MakeLinkIcon 142109 . 142354) (NC.LinkIconButtonEventInFn 142356 . 149311) (NC.LinkIconDisplayFn 149313 . 155074) (NC.LinkIconImageBoxFn 155076 . 160768) (NC.LinkIconImageObjP 160770 . 161056) (NC.LinkIconPutFn 161058 . 161929) (NC.LinkIconGetFn 161931 . 162320) (NC.LinkIconMiddleButtonFn 162322 . 166117) (NC.LinkIconWhenCopiedFn 166119 . 176586) (NC.LinkIconWhenDeletedFn 176588 . 183337) (NC.LinkIconWhenInsertedFn 183339 . 185162) (NC.LinkIconWhenMovedFn 185164 . 195685) (NC.FetchLinkFromLinkIcon 195687 . 196136) (NC.ChangeLinkDisplayMode 196138 . 204607) (NC.UpdateLinkImages 204609 . 206011) (NC.LinkIconCopyFn 206013 . 207916) (NC.LinkAtCharPos 207918 . 209527) (NC.LinkIconLeftButtonFn 209529 . 210397) (NC.LinkToBitMap 210399 . 211525) (NC.SetBitMap&Box 211527 . 212667)) (212670 214071 (NC.FillInLinkIcon 212680 . 213458) (NC.InvisibleLinkImageBoxFn 213460 . 213751) (NC.InvisibleLinkPutFn 213753 . 213896) (NC.InvisibleLinkGetFn 213898 . 214069)) (215131 221111 (NC.InsertPointerInText 215141 . 217068) (NC.ConvertPointerIconToLinkIcon 217070 . 219787) (NC.MakePointerIcon 219789 . 220090) (NC.MakePointer 220092 . 220565) (NC.PointerIconImageObjP 220567 . 220862) (NC.FetchPointerFromPointerIcon 220864 . 221109)) (221150 233759 (NC.PointerIconDisplayFn 221160 . 225201) (NC.PointerIconImageBoxFn 225203 . 229418) (NC.PointerIconPutFn 229420 . 230514) (NC.PointerIconGetFn 230516 . 231178) (NC.PointerIconCopyFn 231180 . 231709) (NC.WritePointer 231711 . 232518) (NC.ReadPointer 232520 . 233757)) (233760 246198 (NC.PointerIconLeftButtonFn 233770 . 234064) (NC.PointerIconMiddleButtonFn 234066 . 237129) (NC.TraversePointer 237131 . 238523) (NC.ChangePointerDisplayMode 238525 . 242138) (NC.RelabelPointer 242140 . 243882) (NC.ChangeCardTitleFromPointerIcon 243884 . 246196)) (246199 280532 (NC.DeleteBadPointer 246209 . 246693) (NC.DrawLinkOrPointerIcon 246695 . 263273) (NC.ComputeLinkOrPointerImageBox 263275 . 280530)) (281225 288018 (NC.ExternalPutLinkIconDisplayFn 281235 . 282364) (NC.ExternalPutLinkIconImageBoxFn 282366 . 283671) (NC.ExternalPutLinkIconPutFn 283673 . 286095) (NC.ExternalPutLinkIconGetFn 286097 . 286432) (NC.ExternalGetLinkIconFn 286434 . 286733) (NC.CoerceToExternalPutLinkIcon 286735 . 288016)) (288088 288387 (NC.RegisterPlaceMarkerImageObj 288098 . 288385)) (289424 291431 (NC.LinkIconSketchElementP 289434 . 289714) (NC.DeleteLinkIconSketchElement 289716 . 291429)) (291879 292269 (NC.DELETEMEImageObjP 291889 . 292267)))))STOP
+                NC.DELETEMEImageObjDatum))))
+)
+
+(PUTPROPS NCLINKS FILETYPE :FAKE-COMPILE-FILE)
+
+(PUTPROPS NCLINKS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (11783 125702 (NC.GlobalLinkP 11793 . 12041) (NC.ChildLinkP 12043 . 12303) (
+NC.ContentsLinkP 12305 . 12527) (NC.SubContentsLinkP 12529 . 12751) (NC.ReverseLinkLabelP 12753 . 
+13348) (NC.MakeGlobalLink 13350 . 14109) (NC.AddFromLink 14111 . 15369) (NC.AddLinkToGraphCard 15371
+ . 16652) (NC.AddLinkToSketchCard 16654 . 17543) (NC.InsertLinkInSketch 17545 . 19207) (
+NC.InsertLinkInText 19209 . 21478) (NC.AddToLink 21480 . 22775) (NC.CachedAddToLink 22777 . 25486) (
+NC.DelFromLink 25488 . 27710) (NC.CachedDelFromLink 27712 . 29208) (NC.DelToLink 29210 . 31332) (
+NC.DelReferencesToCard 31334 . 35065) (NC.DelReferencesToCardFromGlobalList 35067 . 37528) (
+NC.DeleteLink 37530 . 40892) (NC.DeleteToLink 40894 . 42190) (NC.DeleteFromLink 42192 . 43464) (
+NC.DeletedLinkDisplayFn 43466 . 46624) (NC.DeletedLinkGetFn 46626 . 46960) (NC.DeletedLinkImageBoxFn 
+46962 . 48468) (NC.DeletedLinkPutFn 48470 . 48611) (NC.DeletedLinkImageObjP 48613 . 48940) (
+NC.DeleteBadLink 48942 . 50784) (NC.ReplaceWithDeletedLinkImageObj 50786 . 51731) (
+NC.CheckForOrphanDelete 51733 . 53586) (NC.FileInOrphanBox 53588 . 56071) (NC.HookToOrphanCard 56073
+ . 58159) (NC.InsertLinkBeforeMarker 58161 . 64239) (NC.LinkLabelP 64241 . 64585) (NC.IDAlphOrder 
+64587 . 65303) (NC.MakeLink 65305 . 75054) (NC.CachedMakeFilingLink 75056 . 78325) (NC.MakeFilingLink 
+78327 . 81107) (NC.MakeFilingLinks 81109 . 86226) (NC.RelabelLink 86228 . 95492) (NC.SystemLinkLabelP 
+95494 . 95826) (NC.ValidLinkP 95828 . 96536) (NC.MakeChildLink 96538 . 97427) (NC.EnsureNoCycles 97429
+ . 98632) (NC.SameLinkP 98634 . 98930) (NC.SameLinksP 98932 . 99217) (NC.AddGlobalLinkToCard 99219 . 
+99468) (NC.AddGlobalLinksToCard 99470 . 102782) (NC.ChangeCardTitleFromLinkIcon 102784 . 106014) (
+NC.UncacheLinks 106016 . 106253) (NC.TraverseLink 106255 . 108104) (NC.CreateLinkIconStrings 108106 . 
+119432) (NC.ShrinkIcon 119434 . 125700)) (125703 130830 (NC.AddLinkToCard 125713 . 127395) (
+NC.AddLinksToCard 127397 . 130828)) (130831 134984 (NC.DelReferencesToCardFromShowLinks 130841 . 
+132546) (NC.UpdateLinkImagesInShowLinks 132548 . 133801) (NC.FetchShowLinksWindow 133803 . 134345) (
+NC.ChangeLinkLabelInShowLinksWin 134347 . 134982)) (135027 139783 (NC.CheckDisplayModeFormat 135037 . 
+136188) (NC.InsureLinkDisplayMode 136190 . 137386) (NC.MakeNewDisplayMode 137388 . 138037) (
+NC.DisplayModeFromStylesheetSelections 138039 . 138949) (NC.StylesheetSelectionsFromDisplayMode 138951
+ . 139781)) (140173 140886 (NC.LinksSupportedP 140183 . 140884)) (140924 211556 (
+NC.FetchLinkIconForLink 140934 . 141560) (NC.MakeLinkIcon 141562 . 141807) (NC.LinkIconButtonEventInFn
+ 141809 . 148721) (NC.LinkIconDisplayFn 148723 . 154484) (NC.LinkIconImageBoxFn 154486 . 160178) (
+NC.LinkIconImageObjP 160180 . 160466) (NC.LinkIconPutFn 160468 . 161339) (NC.LinkIconGetFn 161341 . 
+161730) (NC.LinkIconMiddleButtonFn 161732 . 165527) (NC.LinkIconWhenCopiedFn 165529 . 175633) (
+NC.LinkIconWhenDeletedFn 175635 . 182384) (NC.LinkIconWhenInsertedFn 182386 . 184209) (
+NC.LinkIconWhenMovedFn 184211 . 194479) (NC.FetchLinkFromLinkIcon 194481 . 194930) (
+NC.ChangeLinkDisplayMode 194932 . 203401) (NC.UpdateLinkImages 203403 . 204805) (NC.LinkIconCopyFn 
+204807 . 206710) (NC.LinkAtCharPos 206712 . 208414) (NC.LinkIconLeftButtonFn 208416 . 209284) (
+NC.LinkToBitMap 209286 . 210412) (NC.SetBitMap&Box 210414 . 211554)) (211557 212958 (NC.FillInLinkIcon
+ 211567 . 212345) (NC.InvisibleLinkImageBoxFn 212347 . 212638) (NC.InvisibleLinkPutFn 212640 . 212783)
+ (NC.InvisibleLinkGetFn 212785 . 212956)) (213998 219807 (NC.InsertPointerInText 214008 . 215799) (
+NC.ConvertPointerIconToLinkIcon 215801 . 218483) (NC.MakePointerIcon 218485 . 218786) (NC.MakePointer 
+218788 . 219261) (NC.PointerIconImageObjP 219263 . 219558) (NC.FetchPointerFromPointerIcon 219560 . 
+219805)) (219846 232455 (NC.PointerIconDisplayFn 219856 . 223897) (NC.PointerIconImageBoxFn 223899 . 
+228114) (NC.PointerIconPutFn 228116 . 229210) (NC.PointerIconGetFn 229212 . 229874) (
+NC.PointerIconCopyFn 229876 . 230405) (NC.WritePointer 230407 . 231214) (NC.ReadPointer 231216 . 
+232453)) (232456 244894 (NC.PointerIconLeftButtonFn 232466 . 232760) (NC.PointerIconMiddleButtonFn 
+232762 . 235825) (NC.TraversePointer 235827 . 237219) (NC.ChangePointerDisplayMode 237221 . 240834) (
+NC.RelabelPointer 240836 . 242578) (NC.ChangeCardTitleFromPointerIcon 242580 . 244892)) (244895 279228
+ (NC.DeleteBadPointer 244905 . 245389) (NC.DrawLinkOrPointerIcon 245391 . 261969) (
+NC.ComputeLinkOrPointerImageBox 261971 . 279226)) (279901 286694 (NC.ExternalPutLinkIconDisplayFn 
+279911 . 281040) (NC.ExternalPutLinkIconImageBoxFn 281042 . 282347) (NC.ExternalPutLinkIconPutFn 
+282349 . 284771) (NC.ExternalPutLinkIconGetFn 284773 . 285108) (NC.ExternalGetLinkIconFn 285110 . 
+285409) (NC.CoerceToExternalPutLinkIcon 285411 . 286692)) (286764 287063 (
+NC.RegisterPlaceMarkerImageObj 286774 . 287061)) (288005 290012 (NC.LinkIconSketchElementP 288015 . 
+288295) (NC.DeleteLinkIconSketchElement 288297 . 290010)) (290460 290850 (NC.DELETEMEImageObjP 290470
+ . 290848)))))
+STOP

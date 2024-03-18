@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 4-Mar-2024 16:04:59" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;4 64606  
+(FILECREATED " 8-Mar-2024 15:43:51" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;7 62270  
 
-      :CHANGES-TO (FNS NC.ScrollToCH# TEDIT.LIST.OF.OBJECTS)
+      :CHANGES-TO (FNS GETWREGION)
 
-      :PREVIOUS-DATE "22-Oct-2023 21:58:11" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;2)
+      :PREVIOUS-DATE " 8-Mar-2024 13:22:51" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;6)
 
 
 (PRETTYCOMPRINT NCUTILITIESCOMS)
@@ -38,9 +38,8 @@
 
         (GLOBALVARS NC.PrintMsgFont)
         (INITVARS (NC.PrintMsgFont (FONTCREATE 'HELVETICA 10)))
-        (FNS GETWREGION TEDIT.LIST.OF.OBJECTS WINDOW.FROM.TEDIT.THING WINDOW.OF.TEXTSTREAM 
-             NC.AskUserWithMenu NC.AskYesOrNo NC.YesP FILDIR-EARLIEST FILDIR-VERSION GETMOUSEX 
-             GETMOUSEY LOWERLEFT MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ NC.AskUser 
+        (FNS GETWREGION NC.AskUserWithMenu NC.AskYesOrNo NC.YesP FILDIR-EARLIEST FILDIR-VERSION 
+             GETMOUSEX GETMOUSEY LOWERLEFT MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ NC.AskUser 
              NC.ZapAskUserProcess NC.AskUserResetWindow NC.ClearMsg NC.ClearMsgNow NC.ClearMsgWaiter
              NC.ZapPromptWindowWaiter NC.GreyCard NC.IDFromNumber NC.MoveWindowOntoScreen 
              NC.NotDaughterP NC.MarkerMatchesCardP NC.PlaceMarkerP NC.ReportError NC.PrintMsg 
@@ -76,7 +75,7 @@
 (DEFINEQ
 
 (NC.CoerceToCard
-  [LAMBDA (CardIdentifier)                               (* ; "Edited  4-Jan-89 17:16 by rtk")
+  [LAMBDA (CardIdentifier)                                   (* ; "Edited  4-Jan-89 17:16 by rtk")
 
 (* ;;; "Get the Card object corresponding to CardIdentifier.")
 
@@ -91,22 +90,21 @@
                                 [(TEXTSTREAMP CardIdentifier)
                                  (COND
                                     ((STREAMPROP CardIdentifier 'NoteCardObject))
-                                    ((WINDOWP (SETQ Window (WINDOW.FROM.TEDIT.THING 
-                                                                  CardIdentifier)))
+                                    ((WINDOWP (SETQ Window (NC.TEditWindow CardIdentifier)))
                                      (NC.CardFromWindow Window]
                                 ([AND (STREAMP CardIdentifier)
                                       (WINDOWP (SETQ Window (WFROMDS CardIdentifier]
                                  (NC.CardFromWindow Window))
                                 (T (NC.ReportError "NC.CoerceToCard " (CONCAT 
                                                            "Arg not Window or TextStream or Card:   "
-                                                                                 CardIdentifier])
+                                                                             CardIdentifier])
 
 (NC.CardFromWindow
-  (LAMBDA (Window)                                           (* fgh%: "14-Nov-85 00:07")
-          
-          (* * fgh |11/13/85| Updated to handle Card object.)
+  [LAMBDA (Window)                                           (* fgh%: "14-Nov-85 00:07")
 
-    (WINDOWPROP Window 'NoteCardObject)))
+         (* * fgh |11/13/85| Updated to handle Card object.)
+
+    (WINDOWPROP Window 'NoteCardObject])
 )
 (DECLARE%: DONTEVAL@LOAD DOCOPY 
 
@@ -122,15 +120,15 @@
 (DEFINEQ
 
 (WW
-  (LAMBDA (X Y)                                              (* fgh%: " 2-Apr-84 15:15")
-    (WHICHW X Y)))
+  [LAMBDA (X Y)                                              (* fgh%: " 2-Apr-84 15:15")
+    (WHICHW X Y])
 
 (FLASHW
-  (LAMBDA (WIN? N FLASHINTERVAL SHADE)                       (* kirk%: "15-Jul-86 08:51")
-          
-          (* * kirk 15Jul86 Old name kept for historical and shorthand reasons)
+  [LAMBDA (WIN? N FLASHINTERVAL SHADE)                       (* kirk%: "15-Jul-86 08:51")
 
-    (FLASHWINDOW WIN? N FLASHINTERVAL SHADE)))
+         (* * kirk 15Jul86 Old name kept for historical and shorthand reasons)
+
+    (FLASHWINDOW WIN? N FLASHINTERVAL SHADE])
 )
 
 
@@ -146,40 +144,15 @@
 (DEFINEQ
 
 (GETWREGION
-  (LAMBDA (W NEWREGIONFN NEWREGIONFNDATA MINWIDTH MINHEIGHT) (* rrb " 7-May-85 09:26")
-                                                             (* gets a region from a window)
+  [LAMBDA (W NEWREGIONFN NEWREGIONFNDATA MINWIDTH MINHEIGHT)(* ; "Edited 12-Jun-90 13:25 by mitani")
+                                                             (* gets a region from a window)
     (PROG ((REG (GETREGION MINWIDTH MINHEIGHT NIL NEWREGIONFN NEWREGIONFNDATA)))
-          (RETURN (CREATEREGION (IDIFFERENCE (fetch LEFT of REG)
+          (RETURN (CREATEREGION (IDIFFERENCE (fetch (REGION LEFT) of REG)
                                        (DSPXOFFSET NIL W))
-                         (IDIFFERENCE (fetch BOTTOM of REG)
+                         (IDIFFERENCE (fetch (REGION BOTTOM) of REG)
                                 (DSPYOFFSET NIL W))
-                         (fetch WIDTH of REG)
-                         (fetch HEIGHT of REG))))))
-
-(TEDIT.LIST.OF.OBJECTS
-  [LAMBDA (TEXTSTREAM TESTFN)                                (* rrb " 8-Jun-84 11:12")
-                                                             (* fgh " 3-Mar-24" 
-                                "Modified to use public Tedit API - no need to know about pieces etc")
-
-         (* Map thru all the pieces in a text stream, and select the image objects paired 
-         with their character positions)
-
-    (for FoundObj in (TEDIT.MAP.OBJECTS TEXTSTREAM [FUNCTION (LAMBDA (CH# OBJ FNARG)
-                                                               (OR (NULL TESTFN)
-                                                                   (APPLY* TESTFN OBJ]
-                            NIL T) collect (LIST (CADR FoundObj)
-                                                 (CAR FoundObj])
-
-(WINDOW.FROM.TEDIT.THING
-(LAMBDA (W) (* ; "Edited  9-Jul-91 21:44 by jds") (COND ((WINDOWP W)) ((STREAMP W) (* We got passed a stream; find the window for it) (WINDOW.OF.TEXTSTREAM W)) ((type? TEXTOBJ W) (* We got a textobj; use its window) (CAR (MKLIST (fetch (TEXTOBJ \WINDOW) of W)))) ((NULL W) (* Create the window, if none is given.) (CREATEW NIL "Editing Window")) (T (ERROR W "not a window."))))
-)
-
-(WINDOW.OF.TEXTSTREAM
-  (LAMBDA (TEXTSTREAM)                                       (* fgh%: "29-Mar-85 14:02")
-          
-          (* returns the window in which a textstream is being editted.)
-
-    (CAR (MKLIST (fetch (TEXTOBJ \WINDOW) of (TEXTOBJ TEXTSTREAM))))))
+                         (fetch (REGION WIDTH) of REG)
+                         (fetch (REGION HEIGHT) of REG])
 
 (NC.AskUserWithMenu
   [LAMBDA (MenuItems Message InterestedWindow DontCloseAtEndFlg FlashFlg)
@@ -226,7 +199,7 @@
          (OR DontCloseAtEndFlg (NC.ClearMsg InterestedWindow T))
 
          (* ;; 
-       "Return the selected menu item and trash that WINDOWPROP at the same time just to be safe.")
+         "Return the selected menu item and trash that WINDOWPROP at the same time just to be safe.")
 
          (WINDOWPROP PromptWin 'AskUserWithMenu-SelectedItem NIL])
 
@@ -279,31 +252,31 @@
 (* ;;; "print msg in prompt window and wait for user repsonse")
 
          (NC.YesP (PROG1 (NC.AskUser "" Prompt FirstTry NIL MainWindow T DontClearAtEndFlg T)
-                          (DELETEMENU Menu T)
-                          (DETACHWINDOW MenuWindow)
-                          (if (OR DontCloseAtEndFlg (EQ PromptWin PROMPTWINDOW))
-                            else (CLOSEW PromptWin)))])
+                      (DELETEMENU Menu T)
+                      (DETACHWINDOW MenuWindow)
+                      (if (OR DontCloseAtEndFlg (EQ PromptWin PROMPTWINDOW))
+                        else (CLOSEW PromptWin)))])
 
 (NC.YesP
-  (LAMBDA (Answer)                                           (* fgh%: "19-Dec-85 17:03")
-          
-          (* * Is Answer a "yes" ?)
+  [LAMBDA (Answer)                                           (* fgh%: "19-Dec-85 17:03")
+
+         (* * Is Answer a "yes" ?)
 
     (if (FMEMB (MKATOM Answer)
                '(Yes Y y YES yes))
-        then T)))
+        then T])
 
 (FILDIR-EARLIEST
-  (LAMBDA (FileSpec)
-    (FILDIR-VERSION FileSpec 'EARLIEST)))
+  [LAMBDA (FileSpec)
+    (FILDIR-VERSION FileSpec 'EARLIEST])
 
 (FILDIR-VERSION
-  (LAMBDA (FileSpec Version)                                 (* edited%: "30-SEP-83 15:38")
-    (PROG (FileName FileVersion Entry ResultsList (LatestFlag (COND
+  [LAMBDA (FileSpec Version)                                 (* edited%: "30-SEP-83 15:38")
+    (PROG [FileName FileVersion Entry ResultsList (LatestFlag (COND
                                                                  ((EQ Version 'LATEST)
                                                                   T)
-                                                                 (T NIL))))
-          (for File in (FILDIR FileSpec) do (SETQ FileName (UNPACKFILENAME File))
+                                                                 (T NIL]
+          [for File in (FILDIR FileSpec) do (SETQ FileName (UNPACKFILENAME File))
                                             (SETQ FileVersion (LISTGET FileName 'VERSION))
                                             (LISTPUT FileName 'VERSION NIL)
                                             (SETQ FileName (PACKFILENAME FileName))
@@ -315,53 +288,52 @@
                                                ((AND LatestFlag (IGREATERP FileVersion (CDR Entry)))
                                                 (RPLACD Entry FileVersion))
                                                ((ILESSP FileVersion (CDR Entry))
-                                                (RPLACD Entry FileVersion))))
+                                                (RPLACD Entry FileVersion]
           (RETURN (for File in (DREVERSE ResultsList) collect (PACK* (CAR File)
                                                                      ';
-                                                                     (CDR File)))))))
+                                                                     (CDR File])
 
 (GETMOUSEX
-  (LAMBDA NIL                                                (* fgh%: " 1-Apr-84 13:18")
+  [LAMBDA NIL                                                (* fgh%: " 1-Apr-84 13:18")
     (GETMOUSESTATE)
-    LASTMOUSEX))
+    LASTMOUSEX])
 
 (GETMOUSEY
-  (LAMBDA NIL                                                (* fgh%: " 1-Apr-84 13:18")
+  [LAMBDA NIL                                                (* fgh%: " 1-Apr-84 13:18")
     (GETMOUSESTATE)
-    LASTMOUSEY))
+    LASTMOUSEY])
 
 (LOWERLEFT
-  (LAMBDA (Region)                                           (* fgh%: "30-Mar-84 20:01")
+  [LAMBDA (Region)                                           (* fgh%: "30-Mar-84 20:01")
     (create POSITION
            XCOORD _ (fetch LEFT of Region)
-           YCOORD _ (fetch BOTTOM of Region))))
+           YCOORD _ (fetch BOTTOM of Region])
 
 (MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ
-  (LAMBDA (TEXTOBJ CH#)                                      (* fgh%: "31-May-84 18:06")
-          
-          (* Returns the first IMAGEOBJ in the next field.
-          IF no such beast, returns the next field as text)
+  [LAMBDA (TEDIT.THING CH#)                                  (* fgh%: "31-May-84 18:06")
 
-    (COND
-       ((MBUTTON.FIND.NEXT.FIELD TEXTOBJ CH#)
-        (\SETUPGETCH (fetch (SELECTION CH#) of (fetch (TEXTOBJ SCRATCHSEL) of TEXTOBJ))
-               TEXTOBJ)
-        (COND
-           ((CAR (bind ImageObj for CHNO from 1 to (fetch (SELECTION DCH) of (fetch (TEXTOBJ 
-                                                                                           SCRATCHSEL
-                                                                                           )
-                                                                                of TEXTOBJ))
-                    when (SETQ ImageObj (IMAGEOBJP (BIN (fetch (TEXTOBJ STREAMHINT) of TEXTOBJ))))
-                    collect ImageObj)))
-           (T (replace (SELECTION SET) of (fetch (TEXTOBJ SCRATCHSEL) of TEXTOBJ) with T)
-              (TEDIT.SEL.AS.STRING (fetch (TEXTOBJ STREAMHINT) of TEXTOBJ)
-                     (fetch (TEXTOBJ SCRATCHSEL) of TEXTOBJ))))))))
+         (* Returns the first IMAGEOBJ in the next field.
+         IF no such beast, returns the next field as text)
+
+    (LET* ((TEXTOBJ (TEXTOBJ TEDIT.THING))
+           (TEXTSTREAM (TEXTSTREAM TEXTOBJ)))
+          (COND
+             ((MBUTTON.FIND.NEXT.FIELD TEXTOBJ CH#)
+              (\SETUPGETCH (fetch (SELECTION CH#) of (fetch (TEXTOBJ SCRATCHSEL) of TEXTOBJ))
+                     TEXTOBJ)
+              (COND
+                 ((CAR (bind ImageObj for CHNO from 1 to (fetch (SELECTION DCH)
+                                                            of (fetch (TEXTOBJ SCRATCHSEL)
+                                                                  of TEXTOBJ))
+                          when (SETQ ImageObj (IMAGEOBJP (BIN TEXTSTREAM))) collect ImageObj)))
+                 (T (replace (SELECTION SET) of (fetch (TEXTOBJ SCRATCHSEL) of TEXTOBJ) with T)
+                    (TEDIT.SEL.AS.STRING TEXTSTREAM (fetch (TEXTOBJ SCRATCHSEL) of TEXTOBJ])
 
 (NC.AskUser
   [LAMBDA (Msg Prompt FirstTry ClearFirstFlg MainWindow DontCloseAtEndFlg DontClearAtEndFlg 
-               PROMPTFORWORDFlg)                      (* ; "Edited 14-Dec-88 14:06 by krivacic")
+               PROMPTFORWORDFlg)                          (* ; "Edited 14-Dec-88 14:06 by krivacic")
                                                              (* ; 
-                   "Get a response from the user --- using the promptwindow attached to MainWindow")
+                     "Get a response from the user --- using the promptwindow attached to MainWindow")
 
 (* ;;; "rht 9/16/84: Added DontClearAtEndFlg which if non-nil prevents the call to NC.ClearMsg.")
 
@@ -385,30 +357,27 @@
 
 (* ;;; "If MainWindow is a TEdit window, make sur we can shift select into the prompt window.")
 
-             [RESETSAVE NIL `(NC.AskUserResetWindow ,(SETQ AskWindow (NC.PrintMsg MainWindow
-                                                                                ClearFirstFlg Msg))
+             [RESETSAVE NIL `(NC.AskUserResetWindow ,(SETQ AskWindow (NC.PrintMsg MainWindow 
+                                                                            ClearFirstFlg Msg))
                                     ,MainWindow
                                     ,DontClearAtEndFlg
                                     ,DontCloseAtEndFlg]
              (RESETSAVE (TTY.PROCESS (THIS.PROCESS)))
 
              (* ;; "KEEP old code to reset & save the copy of TEDIT formatting info")
-                                                             (* if (SETQ TextObj
-                                                           (WINDOWPROP MainWindow
-                                                           (QUOTE TEXTOBJ))) then
-                                                           (RESETSAVE (TEXTPROP TextObj
-                                                           (QUOTE COPYBYBKSYSBUF) T)
-                                                           (BQUOTE (TEXTPROP (\, TextObj) 
-                                                           COPYBYBKSYSBUF (\,
-                                                           (TEXTPROP TextObj (QUOTE 
-                                                           COPYBYBKSYSBUF)))))))
+                                                             (* if (SETQ TextObj (WINDOWPROP 
+                                                             MainWindow (QUOTE TEXTOBJ))) then
+                                                             (RESETSAVE (TEXTPROP TextObj
+                                                             (QUOTE COPYBYBKSYSBUF) T)
+                                                             (BQUOTE (TEXTPROP (\, TextObj) 
+                                                             COPYBYBKSYSBUF (\, (TEXTPROP TextObj
+                                                             (QUOTE COPYBYBKSYSBUF)))))))
 
              (* ;; "Disable Formatting on text only")
 
              [if (SETQ TextObj (WINDOWPROP AskWindow 'TEXTOBJ))
                  then (RESETSAVE (TEXTPROP TextObj 'COPYBYBKSYSBUF T)
-                                 `(TEXTPROP ,TextObj COPYBYBKSYSBUF ,(TEXTPROP TextObj 
-                                                                            'COPYBYBKSYSBUF]
+                             `(TEXTPROP ,TextObj COPYBYBKSYSBUF ,(TEXTPROP TextObj 'COPYBYBKSYSBUF]
 
 (* ;;; "Go ahead and ask")
 
@@ -417,28 +386,28 @@
                     T)
              (PROG1 [if PROMPTFORWORDFlg
                         then (TTY.PROCESS (THIS.PROCESS))
-                              [RESETFORM (RESET.INTERRUPTS (LISPINTERRUPTS)
-                                                T)
-                                     (PROMPTFORWORD Prompt FirstTry 
-                                            "To type a ?, type CTRL-V followed by a ?." AskWindow NIL
-                                            NIL (CHARCODE (EOL]
+                             [RESETFORM (RESET.INTERRUPTS (LISPINTERRUPTS)
+                                               T)
+                                    (PROMPTFORWORD Prompt FirstTry 
+                                           "To type a ?, type CTRL-V followed by a ?." AskWindow NIL
+                                           NIL (CHARCODE (EOL]
                       else (RESETLST
-                                   (RESETSAVE (TTYDISPLAYSTREAM AskWindow))
-                                   (RESETSAVE (RESET.INTERRUPTS (LISPINTERRUPTS)
-                                                     T))
-                                   (CAR (OR [NLSETQ (TTYIN (MKLIST (OR Prompt ""))
-                                                           NIL NIL '(STRING NORAISE)
-                                                           NIL NIL (AND FirstTry (LIST FirstTry]
-                                            (ERROR!))))]
+                               (RESETSAVE (TTYDISPLAYSTREAM AskWindow))
+                               (RESETSAVE (RESET.INTERRUPTS (LISPINTERRUPTS)
+                                                 T))
+                               (CAR (OR [NLSETQ (TTYIN (MKLIST (OR Prompt ""))
+                                                       NIL NIL '(STRING NORAISE)
+                                                       NIL NIL (AND FirstTry (LIST FirstTry]
+                                        (ERROR!))))]
                  (WINDOWDELPROP AskWindow 'CLOSEFN (FUNCTION NC.ZapAskUserProcess))))])
 
 (NC.ZapAskUserProcess
-  (LAMBDA (Window)                                           (* Randy.Gobbel "12-Aug-87 16:04")
-    (LET ((AskUserProcess (WINDOWPROP WINDOW 'AskUserProcess)))
+  [LAMBDA (Window)                                           (* Randy.Gobbel "12-Aug-87 16:04")
+    (LET [(AskUserProcess (WINDOWPROP WINDOW 'AskUserProcess]
          (WINDOWDELPROP Window 'CLOSEFN (FUNCTION NC.ZapAskUserProcess))
-         (AND (PROCESSP AskUserProcess)
-              (PROCESS.EVAL AskUserProcess '(ERROR!)))
-         'DON'T)))
+         [AND (PROCESSP AskUserProcess)
+              (PROCESS.EVAL AskUserProcess '(ERROR!]
+         'DON'T])
 
 (NC.AskUserResetWindow
   [LAMBDA (AskWindow MainWindow DontClearAtEndFlg DontCloseAtEndFlg)
@@ -461,7 +430,8 @@
       else (OR DontClearAtEndFlg (NC.ClearMsg MainWindow (NULL DontCloseAtEndFlg])
 
 (NC.ClearMsg
-  [LAMBDA (MainWindow ClosePromptWindowFlg WaitMsecs) (* ; "Edited  9-Jun-88 17:16 by Randy.Gobbel")
+  [LAMBDA (MainWindow ClosePromptWindowFlg WaitMsecs)        (* ; 
+                                                             "Edited  9-Jun-88 17:16 by Randy.Gobbel")
                                                              (* ; "Clear and optionally close the prompt window for MainWindow.  Wait (at least) specified time if supplied")
 
 (* ;;; "rg 6/8/88: Created.  Old code now in NC.ClearMsgNow.")
@@ -482,8 +452,8 @@
              "window already has a waiter of needs one.  Must at least update close/clear parameters")
 
                [WINDOWPROP MainWindow 'ClosePromptWindowFlg (OR ClosePromptWindowFlg
-                                                                (WINDOWPROP MainWindow '
-                                                                       ClosePromptWindowFlg]
+                                                                (WINDOWPROP MainWindow 
+                                                                       'ClosePromptWindowFlg]
                [if (NUMBERP WaitMsecs)
                    then 
                         (* ;; "set time for action, overriding any previously specified value")
@@ -498,7 +468,8 @@
                                (ADD.PROCESS `(NC.ClearMsgWaiter ,MainWindow])])
 
 (NC.ClearMsgNow
-  [LAMBDA (MainWindow ClosePromptWindowFlg)           (* ; "Edited  9-Jun-88 14:25 by Randy.Gobbel")
+  [LAMBDA (MainWindow ClosePromptWindowFlg)                  (* ; 
+                                                             "Edited  9-Jun-88 14:25 by Randy.Gobbel")
                                                              (* ; 
                                         "Clear and optionally close the prompt window for MainWindow")
 
@@ -551,7 +522,8 @@
             (T (CLRPROMPT])
 
 (NC.ClearMsgWaiter
-  [LAMBDA (Window)                                    (* ; "Edited  9-Jun-88 17:23 by Randy.Gobbel")
+  [LAMBDA (Window)                                           (* ; 
+                                                             "Edited  9-Jun-88 17:23 by Randy.Gobbel")
     (LET (WakeupTime ClosePromptWindowFlg)
          (WITH.MONITOR NC.PromptWindowMonitorLock
              (while [NOT (TIMEREXPIRED? (WINDOWPROP Window 'ClearMsgTimer]
@@ -566,7 +538,8 @@
              (NC.ClearMsgNow Window ClosePromptWindowFlg))])
 
 (NC.ZapPromptWindowWaiter
-  [LAMBDA (Window)                                    (* ; "Edited  9-Jun-88 17:16 by Randy.Gobbel")
+  [LAMBDA (Window)                                           (* ; 
+                                                             "Edited  9-Jun-88 17:16 by Randy.Gobbel")
     (WITH.MONITOR NC.PromptWindowMonitorLock
         (LET [(PromptWindowWaiter (WINDOWPROP Window 'ClearPromptWindowProcess]
              (WINDOWDELPROP Window 'CLOSEFN (FUNCTION NC.ZapPromptWindowWaiter))
@@ -574,11 +547,11 @@
                   (DEL.PROCESS PromptWindowWaiter))))])
 
 (NC.GreyCard
-  [LAMBDA (Card)                                             (* ; "Edited 12-Sep-88 13:51 by pmi")
-                                                             (* ; 
-                                           "Grey over the interior of a card to mark it as obsolete.")
+  [LAMBDA (Card)                                             (* ; "Edited 12-Sep-88 13:51 by pmi")
+                                                             (* ; 
+                                           "Grey over the interior of a card to mark it as obsolete.")
 
-    (* ;; "pmi 9/12/88: Now uses NCP.GrayShade in BITBLT instead of GRAYSHADE.")
+    (* ;; "pmi 9/12/88: Now uses NCP.GrayShade in BITBLT instead of GRAYSHADE.")
 
     (DECLARE (GLOBALVARS NCP.GrayShade))
     (PROG ((Window (NC.FetchWindow Card)))
@@ -587,47 +560,46 @@
           (RETURN T])
 
 (NC.IDFromNumber
-  (LAMBDA (Number)                                           (* fgh%: " 9-Apr-84 19:24")
+  [LAMBDA (Number)                                           (* fgh%: " 9-Apr-84 19:24")
     (PACK* (SUBATOM 'NC00000 1 (IDIFFERENCE 7 (NCHARS Number)))
-           Number)))
+           Number])
 
 (NC.MoveWindowOntoScreen
-  (LAMBDA (Window)                                           (* rht%: "21-Mar-87 18:08")
-          
-          (* Make sure a window and all its attachments are on the screen.)
-          
-          (* * rht 8/28/85%: Hacked to handle very big card windows that together with 
-          attached windows might be too big to fit on screen.)
-          
-          (* * kirk 12Feb86 Added room for scroll bars.)
-          
-          (* * rht 3/4/86%: Changed to use RELMOVEW because otherwise it screws up when 
-          there's an attached window on the left or bottom of the window.)
-          
-          (* * rht 3/19/87%: Undid Kirk's change of 12Feb86.
-          No longer leaves room for scroll bars.)
+  [LAMBDA (Window)                                           (* rht%: "21-Mar-87 18:08")
+                                                             (* Make sure a window and all its 
+                                                             attachments are on the screen.)
+
+         (* * rht 8/28/85%: Hacked to handle very big card windows that together with 
+         attached windows might be too big to fit on screen.)
+
+         (* * kirk 12Feb86 Added room for scroll bars.)
+
+         (* * rht 3/4/86%: Changed to use RELMOVEW because otherwise it screws up when 
+         there's an attached window on the left or bottom of the window.)
+
+         (* * rht 3/19/87%: Undid Kirk's change of 12Feb86.
+         No longer leaves room for scroll bars.)
 
     (PROG (OldWindowRegion NewWindowRegion OldTop OldBottom NewLeft NewTop)
-          (if (AND (WINDOWP Window)
-                   (NOT (SUBREGIONP WHOLEDISPLAY (SETQ OldWindowRegion (WINDOWREGION Window)))))
+          (if [AND (WINDOWP Window)
+                   (NOT (SUBREGIONP WHOLEDISPLAY (SETQ OldWindowRegion (WINDOWREGION Window]
               then (SETQ NewWindowRegion (COPY OldWindowRegion))
                    (SETQ OldTop (fetch (REGION TOP) of NewWindowRegion))
-                   (if (GREATERP (fetch (REGION RIGHT) of NewWindowRegion)
+                   [if (GREATERP (fetch (REGION RIGHT) of NewWindowRegion)
                               (fetch (REGION RIGHT) of WHOLEDISPLAY))
                        then (SETQ NewLeft (replace (REGION LEFT) of NewWindowRegion
                                              with (DIFFERENCE (fetch (REGION RIGHT) of WHOLEDISPLAY)
-                                                         (fetch (REGION WIDTH) of NewWindowRegion))))
-                       )
+                                                         (fetch (REGION WIDTH) of NewWindowRegion]
                    (if (MINUSP (OR NewLeft (fetch (REGION LEFT) of NewWindowRegion)))
                        then (replace (REGION LEFT) of NewWindowRegion with 0))
-                   (if (MINUSP (SETQ OldBottom (fetch (REGION BOTTOM) of NewWindowRegion)))
+                   [if (MINUSP (SETQ OldBottom (fetch (REGION BOTTOM) of NewWindowRegion)))
                        then (replace (REGION BOTTOM) of NewWindowRegion with 0)
-                            (SETQ NewTop (PLUS OldTop (MINUS OldBottom))))
-                   (if (GREATERP (OR NewTop (fetch (REGION TOP) of NewWindowRegion))
+                            (SETQ NewTop (PLUS OldTop (MINUS OldBottom]
+                   [if (GREATERP (OR NewTop (fetch (REGION TOP) of NewWindowRegion))
                               (fetch (REGION TOP) of WHOLEDISPLAY))
                        then (replace (REGION BOTTOM) of NewWindowRegion
                                with (DIFFERENCE (fetch (REGION TOP) of WHOLEDISPLAY)
-                                           (fetch (REGION HEIGHT) of NewWindowRegion))))
+                                           (fetch (REGION HEIGHT) of NewWindowRegion]
                    (RELMOVEW Window (create POSITION
                                            XCOORD _ (DIFFERENCE (fetch (REGION LEFT) of 
                                                                                       NewWindowRegion
@@ -636,16 +608,15 @@
                                            YCOORD _ (DIFFERENCE (fetch (REGION BOTTOM) of 
                                                                                       NewWindowRegion
                                                                        )
-                                                           (fetch (REGION BOTTOM) of OldWindowRegion)
-                                                           )))))))
+                                                           (fetch (REGION BOTTOM) of OldWindowRegion])
 
 (NC.NotDaughterP
-  (LAMBDA (StartCard CandidateCard LinkPredicate CheckedCardList)
-                                                             (* fgh%: "16-Nov-85 00:31")
-          
-          (* Returns T if CandidateCard is not on any path emenating from StartID.
-          Only links for which LinkPredicate is true are checked.
-          LinkPredicate defaults to all links.)
+  [LAMBDA (StartCard CandidateCard LinkPredicate CheckedCardList)
+                                                             (* fgh%: "16-Nov-85 00:31")
+
+         (* Returns T if CandidateCard is not on any path emenating from StartID.
+         Only links for which LinkPredicate is true are checked.
+         LinkPredicate defaults to all links.)
 
     (LET (ToLinks)
          (OR LinkPredicate (SETQ LinkPredicate (FUNCTION TRUE)))
@@ -657,34 +628,34 @@
                       (APPLY* LinkPredicate Link)) always (AND (NEQ CandidateCard DestinationCard)
                                                                (NC.NotDaughterP DestinationCard 
                                                                       CandidateCard LinkPredicate 
-                                                                      CheckedCardList))))))
+                                                                      CheckedCardList])
 
 (NC.MarkerMatchesCardP
-  (LAMBDA (MarkerImageObject Card)                           (* rht%: "13-Oct-86 12:08")
-          
-          (* * Return non-nil if Marker is appropriate for Card.)
+  [LAMBDA (MarkerImageObject Card)                           (* rht%: "13-Oct-86 12:08")
+
+         (* * Return non-nil if Marker is appropriate for Card.)
 
     (AND (NC.PlaceMarkerP MarkerImageObject)
          (STREQUAL (IMAGEOBJPROP MarkerImageObject 'OBJECTDATUM)
                 (if (NC.FileBoxP Card T)
                     then "File Boxes"
-                  else "Note Cards")))))
+                  else "Note Cards"])
 
 (NC.PlaceMarkerP
-  (LAMBDA (ImageObject)                                      (* fgh%: " 5-Mar-84 01:37")
+  [LAMBDA (ImageObject)                                      (* fgh%: " 5-Mar-84 01:37")
     (AND ImageObject (EQ (IMAGEOBJPROP ImageObject 'PUTFN)
-                         (FUNCTION NC.PlaceMarkerPutFn)))))
+                         (FUNCTION NC.PlaceMarkerPutFn])
 
 (NC.ReportError
-  [LAMBDA (FromFunction Msg)                               (* ; "Edited 29-Dec-87 11:09 by Burwell")
+  [LAMBDA (FromFunction Msg)                               (* ; "Edited 29-Dec-87 11:09 by Burwell")
 
-(* ;;; "fgh 9/4/86 If \NC.NoBreakInReportError is non-NIL just prints msg in prompt window and cause ERROR!.")
+(* ;;; "fgh 9/4/86 If \NC.NoBreakInReportError is non-NIL just prints msg in prompt window and cause ERROR!.")
 
-(* ;;; "rht 3/2/87: coerced the function name to be an atom to fix a bug showing up in lyric.")
+(* ;;; "rht 3/2/87: coerced the function name to be an atom to fix a bug showing up in lyric.")
 
-(* ;;; "rht 5/8/87: No longer breaks if HELPFLAG is nil.")
-          
-          (* ;; "rht 12/29/87: changed BREAK1 to CL:BREAK as per Stan's suggestion")
+(* ;;; "rht 5/8/87: No longer breaks if HELPFLAG is nil.")
+
+    (* ;; "rht 12/29/87: changed BREAK1 to CL:BREAK as per Stan's suggestion")
 
     (DECLARE (GLOBALVARS HELPFLAG PROMPTWINDOW \NC.NoBreakInReportError))
     (if HELPFLAG
@@ -696,76 +667,238 @@
                       (ERROR!)
                else (CL:BREAK "~%%In ~S, ~A." FromFunction Msg])
 
-(NC.PrintMsg  [LAMBDA Msgs                                               (* ;                                                            "Edited  9-Dec-88 10:20 by krivacic")    (* ;; "Print the msgs in the specified window.  First argument is a window to print msg in, second arg is flag telling whether to clear first, rest of arguments are simply prin1'ed to the msg window")(* ;;; "rht 7/24/85: Now checks to be sure that window arg is a notecards window.  If not, doesn't use promptwindow, but prints directly to window.")(* ;;; "rht 9/11/85: Added call to NC.MoveWindowOntoScreen in case we're crammed near the top of screen.")(* ;;; "fgh 6/8/86 Now opens prompt window to width that matches longest line in Msg.")(* ;;; "fgh 6/13/86 Now attaches prompt window to NF menus as well as cards.")(* ;;; "fgh 6/26/86 Now tries to make the window an appropriate width to hold the whole msg.  Height remains a constant.")(* ;;; "rht 3/23/87: Now gets font from globalvar NC.PrintMsgFont.")    (DECLARE (GLOBALVARS NC.PrintMsgFont))    (LET     ((LineCount 1)      (CR-Count 0)      [LineHeight (+ (FONTPROP NC.PrintMsgFont 'ASCENT)                     (FONTPROP NC.PrintMsgFont 'DESCENT]      (NoteCardWinFlg NIL)      PromptWin CachedStream Window MaxWidth LineMaxes)     (SETQ Window (ARG Msgs 1))(* ;;; "find the maximun line length in the given arg list.  Cached on the main window under the PromptWindowLastNotCR prop is the length of the previous line if it didn't end in a carriage return.  Need to add this to the length of the first line in this call.")     (SETQ MaxWidth      (APPLY       (FUNCTION MAX)       (OR        (bind [LastNotCR _ (if (AND Window (NULL (ARG Msgs 2)))                                   then (WINDOWPROP Window 'PromptWindowLastNotCR] for Msg           from 3 to Msgs           join(* ;;; "Parse each arg into a list of line lengths.  Set the LastNotCR to the length of the last line in the arg if the arg does not end in a CR.  This will be added to the length of the first line in the next arg whether it be in this call or the next call to Printmsg.")           [if (STREQUAL (ARG Msgs Msg)                          "")               then (LIST 0)             else (while (SETQ Char (GNC CopyString)) as Ctr from 1                         bind Char (LastCR _ 0)                               (CopyString _ (SUBSTRING (ARG Msgs Msg)                                                    1))                               (OriginalString _ (SUBSTRING (ARG Msgs Msg)                                                        1)) when (EQ Char (CHARACTER 13))                         collect (SETQ CR-Count (+ CR-Count 1))                               (LET [(LINE-WIDTH (PLUS (OR LastNotCR 0)                                                       (STRINGWIDTH (OR (SUBSTRING OriginalString                                                                               (ADD1 LastCR)                                                                               (SUB1 Ctr))                                                                        "")                                                              NC.PrintMsgFont]                                    (SETQ LastCR Ctr)                                    (SETQ LastNotCR 0)                                    (SETQ LineMaxes (CONS LINE-WIDTH LineMaxes))                                    LINE-WIDTH)                         finally                                (* ;; "if the last line doesn't end in a CR, save its length as LastNotCR but be sure to put its length on the list anyway in case this is the last call.")                               (if (NOT (EQP Ctr LastCR))                                   then (SETQ $$VAL                                             (CONS (PLUS (OR LastNotCR 0)                                                         (STRINGWIDTH (OR (SUBSTRING OriginalString                                                                                 (ADD1 LastCR)                                                                                 (SUB1 Ctr))                                                                          "")                                                                NC.PrintMsgFont))                                                   $$VAL))                                         (SETQ LastNotCR (CAR $$VAL))                                 else (SETQ LastNotCR]           finally                  (* ;; "Cache the last linelength if it didn't end in a CR, we'll need it to add to the first line next time.")                 (SETQ LineMaxes (CONS LastNotCR LineMaxes))                 (if Window                     then (WINDOWPROP Window 'PromptWindowLastNotCR LastNotCR)))        0)))     [if (IGREATERP Msgs 2)         then (* ;;; "Figure out the prompt window")               (if (NOT (WINDOWP Window))                   then (SETQ PromptWin PROMPTWINDOW)                 elseif (NC.NoteCardsWindowP Window)                   then (SETQ PromptWin (NC.AttachPromptWindow Window NIL NIL NIL T))                         (SETQ NoteCardWinFlg 'NOTECARD-WINDOW)                 else (SETQ PromptWin Window)                       (SETQ NoteCardWinFlg 'ATTACHED-PROMPT-WINDOW)) (* ;;; "If requested, reset all the width caches.")               (if (AND PromptWin (ARG Msgs 2))                   then (WINDOWPROP PromptWin 'OldMaxWidth 300)) (* ;;; "Set window width to the max width of the current max width and the cached max width from previous lines since the last clear")               [WINDOWPROP PromptWin 'OldMaxWidth (SETQ MaxWidth (MAX MaxWidth                                                                      (OR (WINDOWPROP PromptWin                                                                                 'OldMaxWidth)                                                                          300] (* ;;; "Actual width of window is this maxwidth, except that if window is open, don't make it smaller.")               (SELECTQ NoteCardWinFlg                   (NOTECARD-WINDOW                         (SETQ PromptWin (NC.AttachPromptWindow                                         Window                                         (if (OPENWP PromptWin)                                             then (MAX MaxWidth (WINDOWPROP PromptWin                                                                           'WIDTH))                                           else MaxWidth)))                        (NC.MoveWindowOntoScreen Window))                   (ATTACHED-PROMPT-WINDOW                         (LET ((NEW-HEIGHT 0)                              (OVERFLOW-LINES (bind (WINDOW-WIDTH _ (WINDOWPROP PromptWin                                                                               'WIDTH)) for                                                                                        WIDTH                                                 in LineMaxes count (GREATERP WIDTH                                                                                    WINDOW-WIDTH)))                              [WINDOW-BORDER (ITIMES 2 (WINDOWPROP PromptWin 'BORDER]                              OLD-REGION)                             (* ;;                     "Determine if the Prompt window must be Extended in Height to fit the message.")                             (AND (GREATERP MaxWidth (+ (WINDOWPROP PromptWin 'WIDTH)                                                        WINDOW-BORDER))                                  (SETQ LineCount (+ LineCount CR-Count OVERFLOW-LINES))                                  (SETQ NEW-HEIGHT (+ (ITIMES LineCount LineHeight)                                                      WINDOW-BORDER))                                  (LESSP (WINDOWPROP PromptWin 'HEIGHT)                                         NEW-HEIGHT)                                  (SETQ OLD-REGION (WINDOWPROP PromptWin 'REGION))                                  (SHAPEW PromptWin (CREATEREGION (fetch (REGION LEFT)                                                                     of OLD-REGION)                                                           (fetch (REGION BOTTOM) of                                                                                            OLD-REGION                                                                  )                                                           (fetch (REGION WIDTH) of                                                                                            OLD-REGION                                                                  )                                                           NEW-HEIGHT))                                  (REDISPLAYW PromptWin))))                   NIL) (* ;;; "Print the msg.")               (RESETLST                   (OR NoteCardWinFlg (RESETSAVE (TTYDISPLAYSTREAM PromptWin)))                   [RESETSAVE NIL `(DSPFONT ,(DSPFONT NC.PrintMsgFont PromptWin)                                          ,PromptWin]                   (if (ARG Msgs 2)                       then (CLEARW PromptWin))                   (LINELENGTH 1000 PromptWin)                   (if (NULL PromptWin)                       then (HELP))                   (for Msg from 3 to Msgs collect (PRIN1 (ARG Msgs Msg)                                                                          PromptWin)))]     PromptWin])
+(NC.PrintMsg
+  [LAMBDA Msgs                                            (* ; "Edited  9-Dec-88 10:20 by krivacic")
+
+    (* ;; "Print the msgs in the specified window.  First argument is a window to print msg in, second arg is flag telling whether to clear first, rest of arguments are simply prin1'ed to the msg window")
+
+(* ;;; "rht 7/24/85: Now checks to be sure that window arg is a notecards window.  If not, doesn't use promptwindow, but prints directly to window.")
+
+(* ;;; 
+"rht 9/11/85: Added call to NC.MoveWindowOntoScreen in case we're crammed near the top of screen.")
+
+(* ;;; "fgh 6/8/86 Now opens prompt window to width that matches longest line in Msg.")
+
+(* ;;; "fgh 6/13/86 Now attaches prompt window to NF menus as well as cards.")
+
+(* ;;; "fgh 6/26/86 Now tries to make the window an appropriate width to hold the whole msg.  Height remains a constant.")
+
+(* ;;; "rht 3/23/87: Now gets font from globalvar NC.PrintMsgFont.")
+
+    (DECLARE (GLOBALVARS NC.PrintMsgFont))
+    (LET
+     ((LineCount 1)
+      (CR-Count 0)
+      [LineHeight (+ (FONTPROP NC.PrintMsgFont 'ASCENT)
+                     (FONTPROP NC.PrintMsgFont 'DESCENT]
+      (NoteCardWinFlg NIL)
+      PromptWin CachedStream Window MaxWidth LineMaxes)
+     (SETQ Window (ARG Msgs 1))
+
+(* ;;; "find the maximun line length in the given arg list.  Cached on the main window under the PromptWindowLastNotCR prop is the length of the previous line if it didn't end in a carriage return.  Need to add this to the length of the first line in this call.")
+
+     (SETQ MaxWidth
+      (APPLY
+       (FUNCTION MAX)
+       (OR
+        (bind [LastNotCR _ (if (AND Window (NULL (ARG Msgs 2)))
+                               then (WINDOWPROP Window 'PromptWindowLastNotCR] for Msg from 3
+           to Msgs
+           join
+
+(* ;;; "Parse each arg into a list of line lengths.  Set the LastNotCR to the length of the last line in the arg if the arg does not end in a CR.  This will be added to the length of the first line in the next arg whether it be in this call or the next call to Printmsg.")
+
+           [if (STREQUAL (ARG Msgs Msg)
+                      "")
+               then (LIST 0)
+             else (while (SETQ Char (GNC CopyString)) as Ctr from 1
+                     bind Char (LastCR _ 0)
+                          (CopyString _ (SUBSTRING (ARG Msgs Msg)
+                                               1))
+                          (OriginalString _ (SUBSTRING (ARG Msgs Msg)
+                                                   1)) when (EQ Char (CHARACTER 13))
+                     collect (SETQ CR-Count (+ CR-Count 1))
+                           (LET [(LINE-WIDTH (PLUS (OR LastNotCR 0)
+                                                   (STRINGWIDTH (OR (SUBSTRING OriginalString
+                                                                           (ADD1 LastCR)
+                                                                           (SUB1 Ctr))
+                                                                    "")
+                                                          NC.PrintMsgFont]
+                                (SETQ LastCR Ctr)
+                                (SETQ LastNotCR 0)
+                                (SETQ LineMaxes (CONS LINE-WIDTH LineMaxes))
+                                LINE-WIDTH)
+                     finally 
+
+                           (* ;; "if the last line doesn't end in a CR, save its length as LastNotCR but be sure to put its length on the list anyway in case this is the last call.")
+
+                           (if (NOT (EQP Ctr LastCR))
+                               then (SETQ $$VAL (CONS (PLUS (OR LastNotCR 0)
+                                                            (STRINGWIDTH (OR (SUBSTRING 
+                                                                                    OriginalString
+                                                                                    (ADD1 LastCR)
+                                                                                    (SUB1 Ctr))
+                                                                             "")
+                                                                   NC.PrintMsgFont))
+                                                      $$VAL))
+                                    (SETQ LastNotCR (CAR $$VAL))
+                             else (SETQ LastNotCR] finally 
+
+                                                (* ;; "Cache the last linelength if it didn't end in a CR, we'll need it to add to the first line next time.")
+
+                                                         (SETQ LineMaxes (CONS LastNotCR LineMaxes))
+                                                         (if Window
+                                                             then (WINDOWPROP Window 
+                                                                         'PromptWindowLastNotCR 
+                                                                         LastNotCR)))
+        0)))
+     [if (IGREATERP Msgs 2)
+         then 
+
+(* ;;; "Figure out the prompt window")
+
+              (if (NOT (WINDOWP Window))
+                  then (SETQ PromptWin PROMPTWINDOW)
+                elseif (NC.NoteCardsWindowP Window)
+                  then (SETQ PromptWin (NC.AttachPromptWindow Window NIL NIL NIL T))
+                       (SETQ NoteCardWinFlg 'NOTECARD-WINDOW)
+                else (SETQ PromptWin Window)
+                     (SETQ NoteCardWinFlg 'ATTACHED-PROMPT-WINDOW)) 
+
+(* ;;; "If requested, reset all the width caches.")
+
+              (if (AND PromptWin (ARG Msgs 2))
+                  then (WINDOWPROP PromptWin 'OldMaxWidth 300)) 
+
+(* ;;; "Set window width to the max width of the current max width and the cached max width from previous lines since the last clear")
+
+              [WINDOWPROP PromptWin 'OldMaxWidth (SETQ MaxWidth (MAX MaxWidth
+                                                                     (OR (WINDOWPROP PromptWin
+                                                                                'OldMaxWidth)
+                                                                         300] 
+
+(* ;;; 
+"Actual width of window is this maxwidth, except that if window is open, don't make it smaller.")
+
+              (SELECTQ NoteCardWinFlg
+                  (NOTECARD-WINDOW 
+                       (SETQ PromptWin (NC.AttachPromptWindow Window
+                                              (if (OPENWP PromptWin)
+                                                  then (MAX MaxWidth (WINDOWPROP PromptWin
+                                                                            'WIDTH))
+                                                else MaxWidth)))
+                       (NC.MoveWindowOntoScreen Window))
+                  (ATTACHED-PROMPT-WINDOW 
+                       (LET ((NEW-HEIGHT 0)
+                             (OVERFLOW-LINES (bind (WINDOW-WIDTH _ (WINDOWPROP PromptWin 'WIDTH))
+                                                for WIDTH in LineMaxes count (GREATERP WIDTH 
+                                                                                    WINDOW-WIDTH)))
+                             [WINDOW-BORDER (ITIMES 2 (WINDOWPROP PromptWin 'BORDER]
+                             OLD-REGION)
+
+                            (* ;; 
+                      "Determine if the Prompt window must be Extended in Height to fit the message.")
+
+                            (AND (GREATERP MaxWidth (+ (WINDOWPROP PromptWin 'WIDTH)
+                                                       WINDOW-BORDER))
+                                 (SETQ LineCount (+ LineCount CR-Count OVERFLOW-LINES))
+                                 (SETQ NEW-HEIGHT (+ (ITIMES LineCount LineHeight)
+                                                     WINDOW-BORDER))
+                                 (LESSP (WINDOWPROP PromptWin 'HEIGHT)
+                                        NEW-HEIGHT)
+                                 (SETQ OLD-REGION (WINDOWPROP PromptWin 'REGION))
+                                 (SHAPEW PromptWin (CREATEREGION (fetch (REGION LEFT) of OLD-REGION)
+                                                          (fetch (REGION BOTTOM) of OLD-REGION)
+                                                          (fetch (REGION WIDTH) of OLD-REGION)
+                                                          NEW-HEIGHT))
+                                 (REDISPLAYW PromptWin))))
+                  NIL) 
+
+(* ;;; "Print the msg.")
+
+              (RESETLST
+                  (OR NoteCardWinFlg (RESETSAVE (TTYDISPLAYSTREAM PromptWin)))
+                  [RESETSAVE NIL `(DSPFONT ,(DSPFONT NC.PrintMsgFont PromptWin)
+                                         ,PromptWin]
+                  (if (ARG Msgs 2)
+                      then (CLEARW PromptWin))
+                  (LINELENGTH 1000 PromptWin)
+                  (if (NULL PromptWin)
+                      then (HELP))
+                  (for Msg from 3 to Msgs collect (PRIN1 (ARG Msgs Msg)
+                                                         PromptWin)))]
+     PromptWin])
 
 (DFIRSTREMOVE
-  (LAMBDA (X L)                                              (* rht%: "27-Apr-85 19:13")
-          
-          (* * Like DREMOVE except only deletes the first occurrence of X in L.
-          Also note that it doesn't rearrange the cons nodes making up the list like 
-          DREMOVE does in the case when X = (CAR L))
+  [LAMBDA (X L)                                              (* rht%: "27-Apr-85 19:13")
+
+         (* * Like DREMOVE except only deletes the first occurrence of X in L.
+         Also note that it doesn't rearrange the cons nodes making up the list like 
+         DREMOVE does in the case when X = (CAR L))
 
     (for RestOfList on L first (if (EQ X (CAR L))
                                    then (RETURN (CDR L))) do (COND
                                                                 ((EQ X (CADR RestOfList))
                                                                  (RPLACD RestOfList (CDDR RestOfList)
                                                                         )
-                                                                 (RETURN L))))))
+                                                                 (RETURN L])
 
 (NC.HoldTTYProcess
-  (LAMBDA NIL                                                (* rht%: "22-May-85 14:58")
-          
-          (* * Grabs the TTY process until it is explicitly placed elsewhere.)
+  [LAMBDA NIL                                                (* rht%: "22-May-85 14:58")
+
+         (* * Grabs the TTY process until it is explicitly placed elsewhere.)
 
     (TTY.PROCESS (ADD.PROCESS '(PROGN (WAIT.FOR.TTY)
-                                      (while (TTY.PROCESSP) do (BLOCK))) 'NAME 'TtyHolder))))
+                                      (while (TTY.PROCESSP) do (BLOCK)))
+                        'NAME
+                        'TtyHolder])
 
 (NC.GetShrunkenWin
-  (LAMBDA (CardOrWindow)                                     (* fgh%: "16-Nov-85 00:15")
-          
-          (* * Return the shrunken icon window for IDOrWindow.
-          Return NIL if no corresponding shrunken window on screen.)
-          
-          (* * rht 10/20/85%: Rewrote to use ICONWINDOW prop of unshrunken window rather 
-          than looking at all windows on the screen.)
+  [LAMBDA (CardOrWindow)                                     (* fgh%: "16-Nov-85 00:15")
 
-    (LET ((Window (COND
+         (* * Return the shrunken icon window for IDOrWindow.
+         Return NIL if no corresponding shrunken window on screen.)
+
+         (* * rht 10/20/85%: Rewrote to use ICONWINDOW prop of unshrunken window rather 
+         than looking at all windows on the screen.)
+
+    (LET [(Window (COND
                      ((WINDOWP CardOrWindow))
                      ((NC.CardP CardOrWindow)
-                      (NC.FetchWindow CardOrWindow)))))
+                      (NC.FetchWindow CardOrWindow]
          (COND
             ((WINDOWP Window)
-             (OPENWP (WINDOWPROP Window 'ICONWINDOW)))))))
+             (OPENWP (WINDOWPROP Window 'ICONWINDOW])
 
 (NC.CoerceToNoteFileStream
-  (LAMBDA (CardOrNoteFileOrStream)                           (* rht%: "23-Jan-86 17:40")
-          
-          (* * Get stream from whatever it is.)
+  [LAMBDA (CardOrNoteFileOrStream)                           (* rht%: "23-Jan-86 17:40")
+
+         (* * Get stream from whatever it is.)
 
     (COND
        ((STREAMP CardOrNoteFileOrStream))
        ((type? NoteFile CardOrNoteFileOrStream)
         (fetch (NoteFile Stream) of CardOrNoteFileOrStream))
        ((type? Card CardOrNoteFileOrStream)
-        (fetch (NoteFile Stream) of (fetch (Card NoteFile) of CardOrNoteFileOrStream))))))
+        (fetch (NoteFile Stream) of (fetch (Card NoteFile) of CardOrNoteFileOrStream])
 
 (NC.DrawInnerBox
   [LAMBDA (Left Bottom Width Height LineWidth Operation ImageStream Dashing SkipLeftEdgeFlg 
-                SkipRightEdgeFlg ScaledIconWidth ScaledIconHeight)
-                                                             (* ; "Edited 27-Jan-88 09:23 by pmi")
-          
-          (* ;; "Draw a box that fits exactly inside the region given.  Omit the left edge if SkipLeftEdgeFlg non-nil.")
-          
-          (* ;; "pmi & rht 2/10/87: Changed to not overwrite corners of the box.")
-          
-          (* ;; "pmi 2/11/87: Updated for Multi-line link icons.  If multi-line, does not draw box edge in upper left corner where bitmap is placed.")
-          
-          (* ;; "rht 10/28/87: Added Dashing argument and passed to calls to DRAWLINE.")
-          
-          (* ;; "pmi 11/3/87: Added SkipRightEdgeFlg for new cross-file link icons (with additional attached bitmap on right side of link icons.)")
-          
-          (* ;; 
-    "pmi 1/27/88: Did some minor tweaking to the lines of the box so that they won't overlap at all.")
+                SkipRightEdgeFlg ScaledIconWidth ScaledIconHeight)
+                                                             (* ; "Edited 27-Jan-88 09:23 by pmi")
+
+    (* ;; "Draw a box that fits exactly inside the region given.  Omit the left edge if SkipLeftEdgeFlg non-nil.")
+
+    (* ;; "pmi & rht 2/10/87: Changed to not overwrite corners of the box.")
+
+    (* ;; "pmi 2/11/87: Updated for Multi-line link icons.  If multi-line, does not draw box edge in upper left corner where bitmap is placed.")
+
+    (* ;; "rht 10/28/87: Added Dashing argument and passed to calls to DRAWLINE.")
+
+    (* ;; "pmi 11/3/87: Added SkipRightEdgeFlg for new cross-file link icons (with additional attached bitmap on right side of link icons.)")
+
+    (* ;; 
+    "pmi 1/27/88: Did some minor tweaking to the lines of the box so that they won't overlap at all.")
 
     (if (AND (GREATERP Width 0)
              (GREATERP Height 0))
@@ -778,7 +911,7 @@
                                  else 0))
                   (SETQ Right (PLUS Left TrueWidth))
                   (SETQ Top (PLUS Bottom TrueHeight))
-                  (LET (CenterLeft CenterRight CenterBottom CenterTop InnerBottom InnerRight InnerTop 
+                  (LET (CenterLeft CenterRight CenterBottom CenterTop InnerBottom InnerRight InnerTop
                               InnerLeft)
                        (SETQ CenterLeft (PLUS Left HalfBorderWidth Offset))
                        (SETQ CenterRight (DIFFERENCE Right HalfBorderWidth))
@@ -790,88 +923,83 @@
                        (SETQ InnerLeft (PLUS Left LineWidth))
                        (if (EVENP LineWidth)
                            then (SETQ CenterBottom (SUB1 CenterBottom)))
-          
-          (* ;; "Draw the bottom line")
 
-                       (DRAWLINE Left CenterBottom Right CenterBottom LineWidth Operation ImageStream 
+                       (* ;; "Draw the bottom line")
+
+                       (DRAWLINE Left CenterBottom Right CenterBottom LineWidth Operation ImageStream
                               NIL Dashing)
-          
-          (* ;; "Draw the right line")
+
+                       (* ;; "Draw the right line")
 
                        (if SkipRightEdgeFlg
                            then (if ScaledIconWidth
                                     then 
-          
-          (* ;; "Leave a break for the attached bitmap")
+                                         (* ;; "Leave a break for the attached bitmap")
 
                                          (DRAWLINE CenterRight InnerBottom CenterRight
                                                 (DIFFERENCE Top ScaledIconHeight)
                                                 LineWidth Operation ImageStream NIL Dashing)
                                          (SETQ InnerRight (DIFFERENCE Right ScaledIconWidth))
                                   else 
-          
-          (* ;; " Skip the right edge altogether")
+                                       (* ;; " Skip the right edge altogether")
 
                                        (SETQ InnerRight Right))
                          else (DRAWLINE CenterRight InnerBottom CenterRight Top LineWidth Operation 
                                      ImageStream NIL Dashing))
-          
-          (* ;; "Draw the left line")
+
+                       (* ;; "Draw the left line")
 
                        (if SkipLeftEdgeFlg
                            then (if ScaledIconWidth
                                     then 
-          
-          (* ;; "Leave a break for the attached bitmap")
+                                         (* ;; "Leave a break for the attached bitmap")
 
                                          (DRAWLINE CenterLeft (DIFFERENCE Top ScaledIconHeight)
                                                 CenterLeft InnerBottom LineWidth Operation 
                                                 ImageStream NIL Dashing)
                                          (SETQ InnerLeft (PLUS Left ScaledIconWidth))
                                   else 
-          
-          (* ;; " Skip the left edge altogether")
+                                       (* ;; " Skip the left edge altogether")
 
                                        (SETQ InnerLeft Left))
                          else (DRAWLINE CenterLeft Top CenterLeft InnerBottom LineWidth Operation 
                                      ImageStream NIL Dashing))
-          
-          (* ;; "Draw the top line")
+
+                       (* ;; "Draw the top line")
 
                        (DRAWLINE InnerLeft CenterTop InnerRight CenterTop LineWidth Operation 
                               ImageStream NIL Dashing])
 
 (NC.UnionListsOfLinks
-  [LAMBDA (LinksList1 LinksList2)                           (* ; "Edited  9-Dec-87 14:22 by Gobbel")
-          
-          (* ;; "Return a list containing links appearing in either LinksList1 and LinksList2.")
+  [LAMBDA (LinksList1 LinksList2)                           (* ; "Edited  9-Dec-87 14:22 by Gobbel")
+
+    (* ;; "Return a list containing links appearing in either LinksList1 and LinksList2.")
 
     (if (GREATERP (LENGTH LinksList2)
                (LENGTH LinksList1))
-        then                                                 (* ; 
-                                                      "Swap in order that first list be the longest.")
-
+        then                                                 (* ; 
+                                                      "Swap in order that first list be the longest.")
              (CL:PSETQ LinksList1 LinksList2 LinksList2 LinksList1))
     (APPEND LinksList2 (for Link1 in LinksList1 unless (for Link2 in LinksList2
                                                           thereis (NC.SameLinkP Link1 Link2))
                           collect Link1])
 
 (NC.ParseString
-  (LAMBDA (String)                                           (* pmi%: " 6-Feb-87 10:47")
-          
-          (* * Parses a sting into words and "white space." Example%: String = "This   is a  test   " 
-          would result in ("This" "   " "is" "  " "test" "    "))
+  [LAMBDA (String)                                           (* pmi%: " 6-Feb-87 10:47")
+
+         (* * Parses a sting into words and "white space." Example%: String = "This   is a  test   "
+    would result in ("This" "   " "is" "  " "test" "    "))
 
     (COND
-       ((STRINGP String)
+       [(STRINGP String)
         (PROG (StringLength SpacesPtr CharsPtr SubString StringList)
               (SETQ StringLength (NCHARS String))
               (SETQ SpacesPtr 1)
               (SETQ CharsPtr 1)
               (while (ILEQ SpacesPtr StringLength)
                  do 
-          
-          (* * Gather up adjacent spaces)
+
+         (* * Gather up adjacent spaces)
 
                     (while (AND (EQ (NTHCHAR String SpacesPtr)
                                     '% )
@@ -879,8 +1007,8 @@
                     (if (SETQ SubString (SUBSTRING String CharsPtr (SUB1 SpacesPtr)))
                         then (SETQ StringList (CONS SubString StringList)))
                     (SETQ CharsPtr SpacesPtr) 
-          
-          (* * Gather up adjacent characters)
+
+         (* * Gather up adjacent characters)
 
                     (while (AND (NEQ (NTHCHAR String CharsPtr)
                                      '% )
@@ -888,33 +1016,33 @@
                     (if (SETQ SubString (SUBSTRING String SpacesPtr (SUB1 CharsPtr)))
                         then (SETQ StringList (CONS SubString StringList)))
                     (SETQ SpacesPtr CharsPtr))
-              (RETURN (REVERSE StringList))))
-       (T String))))
+              (RETURN (REVERSE StringList]
+       (T String])
 
 (NC.AppendStringToStream
-  (LAMBDA (Stream String BoldFlg)                            (* rht%: "26-Jun-85 12:17")
-          
-          (* * Add the String to the end of the tedit Stream.)
-          
-          (* * rht 11/16/84%: Now calls TEDIT.LOOKS in any case, bold or no.)
-          
-          (* * rht 6/26/85%: Took out call to TEDIT.LOOKS and just stuck boldifying into 
-          call to TEDIT.INSERT.)
+  [LAMBDA (Stream String BoldFlg)                            (* rht%: "26-Jun-85 12:17")
 
-    (TEDIT.INSERT Stream String (ADD1 (fetch (TEXTOBJ TEXTLEN) of (TEXTOBJ Stream)))
-           (FONTCOPY (TEXTPROP Stream 'FONT)
+         (* * Add the String to the end of the tedit Stream.)
+
+         (* * rht 11/16/84%: Now calls TEDIT.LOOKS in any case, bold or no.)
+
+         (* * rht 6/26/85%: Took out call to TEDIT.LOOKS and just stuck boldifying into 
+         call to TEDIT.INSERT.)
+
+    (TEDIT.INSERT Stream String (ADD1 (TEDIT.NCHARS Stream))
+           [FONTCOPY (TEXTPROP Stream 'FONT)
                   'FACE
                   (COND
                      (BoldFlg 'BRR)
-                     (T 'MRR)))
-           T)))
+                     (T 'MRR]
+           T])
 
 (NC.CoerceToInterestedWindow
-  [LAMBDA (WinOrCardOrNoteFile)                              (* ; "Edited 26-Feb-88 14:35 by pmi")
+  [LAMBDA (WinOrCardOrNoteFile)                              (* ; "Edited 26-Feb-88 14:35 by pmi")
 
-    (* ;; "Try to return a window that can be used for NC.PrintMsg, NC.AskUser, etc.  If arg is an open win, use that.  If displayed card, then use its window.  If notefile, then use its notefile icon if open.  Last hope is to use the session icon if open.  Returning nil means that main prompt window will have to be used.")
+    (* ;; "Try to return a window that can be used for NC.PrintMsg, NC.AskUser, etc.  If arg is an open win, use that.  If displayed card, then use its window.  If notefile, then use its notefile icon if open.  Last hope is to use the session icon if open.  Returning nil means that main prompt window will have to be used.")
 
-    (* ;; "pmi 2/26/88: Now the session icon may be used even if it is shrunken.  Also now checks that a card is both valid and displayed before returning it.")
+    (* ;; "pmi 2/26/88: Now the session icon may be used even if it is shrunken.  Also now checks that a card is both valid and displayed before returning it.")
 
     (DECLARE (GLOBALVARS NC.NoteCardsIconWindow))
     (LET (Card NoteFile)
@@ -946,7 +1074,7 @@
     (* ;; "rht 8/5/88: Another attempt at fixing above problem.  Now REGION arg is 'LINE.")
 
     (LET ((TextObj (TEXTOBJ TEditWindow)))
-         (fetch (SELECTION CH#) of (TEDIT.SELECT 0 (SUB1 (fetch (TEXTOBJ WTOP) of TextObj))
+         (fetch (SELECTION CH#) of (\TEDIT.SELECT 0 (SUB1 (fetch (TEXTOBJ WTOP) of TextObj))
                                           TextObj
                                           'LINE NIL NIL TEditWindow])
 
@@ -974,32 +1102,30 @@
 (DEFINEQ
 
 (NC.UpdateConfig
-  [LAMBDA (Directory)                                 (* ; "Edited 27-Feb-89 16:02 by krivacic")
+  [LAMBDA (Directory)                                     (* ; "Edited 27-Feb-89 16:02 by krivacic")
 
 (* ;;; "bk 2/27/89: backed out changes.")
 
-    (DECLARE (GLOBALVARS NC.InstallFlg NC.Files NC.AutoloadStubFns NC.NoUpdateFlg 
-                        NOTECARDTYPESTUBS NOTECARDSDIRECTORIES))
+    (DECLARE (GLOBALVARS NC.InstallFlg NC.Files NC.AutoloadStubFns NC.NoUpdateFlg NOTECARDTYPESTUBS 
+                    NOTECARDSDIRECTORIES))
     (if (NOT NC.NoUpdateFlg)
         then (SETQ Directory (OR Directory (DIRECTORYNAME T)))
-              (for File in NC.Files do (for Prop in (GETPROP File 'ConfigProps)
-                                                      when (LISTP Prop)
-                                                      do (PUTPROP File (CAR Prop)
-                                                                    (APPLY* (CADR Prop)
-                                                                           File Directory)))
-                                                  (PRINTOUT T File ": " (GETPROP File 'SourceFile)
-                                                         " "
-                                                         (GETPROP File 'CompiledFile)
-                                                         " "
-                                                         (GETPROP File 'Directories)
-                                                         T))
-              (SETQ NC.AutoloadStubFns (for TypeName in NOTECARDTYPESTUBS bind Fn
-                                          eachtime (SETQ Fn (PACK* 'NCAddStub. TypeName
-                                                                       'Card))
-                                          when (GETD Fn) collect Fn])
+             (for File in NC.Files do (for Prop in (GETPROP File 'ConfigProps)
+                                         when (LISTP Prop) do (PUTPROP File (CAR Prop)
+                                                                     (APPLY* (CADR Prop)
+                                                                            File Directory)))
+                                      (PRINTOUT T File ": " (GETPROP File 'SourceFile)
+                                             " "
+                                             (GETPROP File 'CompiledFile)
+                                             " "
+                                             (GETPROP File 'Directories)
+                                             T))
+             (SETQ NC.AutoloadStubFns (for TypeName in NOTECARDTYPESTUBS bind Fn
+                                         eachtime (SETQ Fn (PACK* 'NCAddStub. TypeName 'Card))
+                                         when (GETD Fn) collect Fn])
 
 (NC.UpdateSingleFile
-  [LAMBDA (File)                                             (* Randy.Gobbel " 2-Sep-87 14:07")
+  [LAMBDA (File)                                             (* Randy.Gobbel " 2-Sep-87 14:07")
     [for Prop in (GETPROP File 'ConfigProps) when (LISTP Prop)
        do (PUTPROP File (CAR Prop)
                  (APPLY* (CADR Prop)
@@ -1013,13 +1139,14 @@
            T])
 
 (NC.SetStandardConfigProps
-  [LAMBDA (File)                                      (* ; "Edited 15-Jan-88 18:08 by Randy.Gobbel")
-          
-          (* ;; "rg 7/8/87 add necessary config props for a standard NoteCards component file")
-          
-          (* ;; "rg 1/15/88 set CDR of FILEDATES to LOADFNS, so source access works right")
-          
-          (* ;; "rg 1/15/88 zapped all but SourceFile and CompiledFile")
+  [LAMBDA (File)                                             (* ; 
+                                                             "Edited 15-Jan-88 18:08 by Randy.Gobbel")
+
+    (* ;; "rg 7/8/87 add necessary config props for a standard NoteCards component file")
+
+    (* ;; "rg 1/15/88 set CDR of FILEDATES to LOADFNS, so source access works right")
+
+    (* ;; "rg 1/15/88 zapped all but SourceFile and CompiledFile")
 
     (PUTPROP File 'ConfigProps '(([SourceFile (LAMBDA (File Directory)
                                                 (FINDFILE (PACKFILENAME 'BODY File)
@@ -1034,7 +1161,7 @@
                                                (LIST Directory])
 
 (MAKECONFIGPROPSCOMS
-  [NLAMBDA Files                                             (* Randy.Gobbel "13-Jul-87 14:18")
+  [NLAMBDA Files                                             (* Randy.Gobbel "13-Jul-87 14:18")
     (LET [(Props (for File in Files join (for Val in (GETPROP File 'ConfigProps)
                                             collect (if (LISTP Val)
                                                         then (CAR Val)
@@ -1056,21 +1183,20 @@
 (ADDTOVAR LAMA NC.PrintMsg)
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (3013 4722 (NC.CoerceToCard 3023 . 4491) (NC.CardFromWindow 4493 . 4720)) (4922 5291 (WW
- 4932 . 5047) (FLASHW 5049 . 5289)) (5445 60241 (GETWREGION 5455 . 6097) (TEDIT.LIST.OF.OBJECTS 6099
- . 6945) (WINDOW.FROM.TEDIT.THING 6947 . 7355) (WINDOW.OF.TEXTSTREAM 7357 . 7635) (NC.AskUserWithMenu 
-7637 . 10643) (NC.AskYesOrNo 10645 . 13823) (NC.YesP 13825 . 14066) (FILDIR-EARLIEST 14068 . 14155) (
-FILDIR-VERSION 14157 . 15884) (GETMOUSEX 15886 . 16026) (GETMOUSEY 16028 . 16168) (LOWERLEFT 16170 . 
-16405) (MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ 16407 . 17706) (NC.AskUser 17708 . 22151) (
-NC.ZapAskUserProcess 22153 . 22525) (NC.AskUserResetWindow 22527 . 23488) (NC.ClearMsg 23490 . 25620) 
-(NC.ClearMsgNow 25622 . 28513) (NC.ClearMsgWaiter 28515 . 29415) (NC.ZapPromptWindowWaiter 29417 . 
-29865) (NC.GreyCard 29867 . 30467) (NC.IDFromNumber 30469 . 30663) (NC.MoveWindowOntoScreen 30665 . 
-34077) (NC.NotDaughterP 34079 . 35342) (NC.MarkerMatchesCardP 35344 . 35783) (NC.PlaceMarkerP 35785 . 
-36013) (NC.ReportError 36015 . 36930) (NC.PrintMsg 36932 . 46781) (DFIRSTREMOVE 46783 . 47608) (
-NC.HoldTTYProcess 47610 . 47967) (NC.GetShrunkenWin 47969 . 48655) (NC.CoerceToNoteFileStream 48657 . 
-49164) (NC.DrawInnerBox 49166 . 53949) (NC.UnionListsOfLinks 53951 . 54752) (NC.ParseString 54754 . 
-56379) (NC.AppendStringToStream 56381 . 57066) (NC.CoerceToInterestedWindow 57068 . 58579) (
-NC.UpperLeftCH# 58581 . 59492) (NC.ScrollToCH# 59494 . 60239)) (60242 64259 (NC.UpdateConfig 60252 . 
-61916) (NC.UpdateSingleFile 61918 . 62436) (NC.SetStandardConfigProps 62438 . 63639) (
-MAKECONFIGPROPSCOMS 63641 . 64257)))))
+  (FILEMAP (NIL (2906 4531 (NC.CoerceToCard 2916 . 4304) (NC.CardFromWindow 4306 . 4529)) (4731 5099 (WW
+ 4741 . 4859) (FLASHW 4861 . 5097)) (5253 58068 (GETWREGION 5263 . 5963) (NC.AskUserWithMenu 5965 . 
+8973) (NC.AskYesOrNo 8975 . 12137) (NC.YesP 12139 . 12376) (FILDIR-EARLIEST 12378 . 12464) (
+FILDIR-VERSION 12466 . 14186) (GETMOUSEX 14188 . 14332) (GETMOUSEY 14334 . 14478) (LOWERLEFT 14480 . 
+14717) (MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ 14719 . 15902) (NC.AskUser 15904 . 20122) (
+NC.ZapAskUserProcess 20124 . 20495) (NC.AskUserResetWindow 20497 . 21458) (NC.ClearMsg 21460 . 23659) 
+(NC.ClearMsgNow 23661 . 26621) (NC.ClearMsgWaiter 26623 . 27592) (NC.ZapPromptWindowWaiter 27594 . 
+28111) (NC.GreyCard 28113 . 28733) (NC.IDFromNumber 28735 . 28932) (NC.MoveWindowOntoScreen 28934 . 
+32337) (NC.NotDaughterP 32339 . 33601) (NC.MarkerMatchesCardP 33603 . 34036) (NC.PlaceMarkerP 34038 . 
+34267) (NC.ReportError 34269 . 35192) (NC.PrintMsg 35194 . 44582) (DFIRSTREMOVE 44584 . 45408) (
+NC.HoldTTYProcess 45410 . 45810) (NC.GetShrunkenWin 45812 . 46485) (NC.CoerceToNoteFileStream 46487 . 
+46987) (NC.DrawInnerBox 46989 . 51830) (NC.UnionListsOfLinks 51832 . 52636) (NC.ParseString 52638 . 
+54238) (NC.AppendStringToStream 54240 . 54876) (NC.CoerceToInterestedWindow 54878 . 56405) (
+NC.UpperLeftCH# 56407 . 57319) (NC.ScrollToCH# 57321 . 58066)) (58069 61923 (NC.UpdateConfig 58079 . 
+59531) (NC.UpdateSingleFile 59533 . 60055) (NC.SetStandardConfigProps 60057 . 61299) (
+MAKECONFIGPROPSCOMS 61301 . 61921)))))
 STOP

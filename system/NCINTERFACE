@@ -1,14 +1,11 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
-(FILECREATED " 8-Oct-2021 13:49:41" {DSK}<home>nc>notecards>system>NCINTERFACE.;7 306744 
 
-      changes to%:  (FNS NC.FileBrowserMenu)
+(FILECREATED " 7-Mar-2024 22:40:22" {DSK}<home>frank>il>notecards>system>NCINTERFACE.;2 306088 
 
-      previous date%: " 7-Oct-2021 17:19:01" {DSK}<home>nc>notecards>system>NCINTERFACE.;4)
+      :CHANGES-TO (FNS NC.MakeTEditReadOnly NC.MakeTEditReadWrite)
 
+      :PREVIOUS-DATE " 8-Oct-2021 13:49:41" {DSK}<home>frank>il>notecards>system>NCINTERFACE.;1)
 
-(* ; "
-Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
-")
 
 (PRETTYCOMPRINT NCINTERFACECOMS)
 
@@ -638,7 +635,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 
 
 (RPAQ? NC.CachedMenus '(NC.NoteCardTypeMenu NC.LinkIconMiddleButtonMenu NC.CardOpsMenu 
-                                  NC.NoteFileOpsMenu NC.OtherOpsMenu))
+                              NC.NoteFileOpsMenu NC.OtherOpsMenu))
 
 (RPAQ? NC.DesiredTypeOrdering '(Text FileBox Sketch Graph BAR Browser Search LinkIndex Document))
 
@@ -714,9 +711,101 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 
 (NC.ReadOnlyTEditSelFn  [LAMBDA (TxtObj Sel SelOp SelWhen)                         (* Randy.Gobbel "29-Oct-87 17:51")                                                             (* AND (EQ SelOp (QUOTE COPYLOOKS))                                                           (fetch HASCARET of                                                           (fetch SEL of TxtObj)))    (if (AND (TEXTPROP TxtObj 'READONLY)                 (EQ SelOp 'DELETE))        then (\SHOWSEL (fetch SEL of TxtObj)                        NIL NIL)              (replace SET of (fetch SEL of TxtObj) with NIL)              'DON'T])
 
-(NC.MakeTEditReadOnly  [LAMBDA (Window AddDangerousItems AddDangerousSubItems)    (* Randy.Gobbel "22-Oct-87 14:39")    (LET*     [(TxtObj (TEXTOBJ Window))      (LeftButtonMenu (WINDOWPROP Window 'TitleBarLeftButtonMenu))      (NewLeftButtonMenu (if LeftButtonMenu                             then (NC.CopyMenu LeftButtonMenu)))      (MiddleButtonMenu (WINDOWPROP Window 'TitleBarMiddleButtonMenu))      (NewMiddleButtonMenu (if MiddleButtonMenu                               then (NC.CopyMenu MiddleButtonMenu]     (LET      ([DangerousItems (APPEND AddDangerousItems '(Get Include Looks Substitute Expanded% Menu]       (DangerousSubItems AddDangerousSubItems)       NewItems SubItems NewSubItems)      (if (NOT (TEXTPROP TxtObj 'READONLY))          then          (TEXTPROP TxtObj 'READONLY T)          (TEXTPROP TxtObj 'SELFN (FUNCTION NC.ReadOnlyTEditSelFn))          (replace (TEXTOBJ TXTREADONLY) of TxtObj with T)          (UNINTERRUPTABLY              (KILL-PROCESS-OF-TEDIT-WINDOW Window)          (* make sure TEdit killer won't                                                            restart process)              (UNMARK-AS-WITHOUT-PROCESS Window))          (for Menu in (LIST NewLeftButtonMenu NewMiddleButtonMenu)             do             (if Menu                 then                 (SETQ NewItems                  (for Item in (fetch (MENU ITEMS) of Menu) bind ItemName                     collect                     (SETQ ItemName (if (LISTP Item)                                        then (CAR Item)                                      else Item))                     (if (MEMB ItemName DangerousItems)                         then [SETQ Item (LIST ItemName '(FUNCTION NC.PrintReadOnlyMsg)                                                   (if (LISTP Item)                                                       then (CADDR Item]                       else                       (SETQ SubItems (APPLY* (OR (fetch SUBITEMFN of Menu)                                                  (FUNCTION DEFAULTSUBITEMFN))                                             Menu Item))                       (if SubItems                           then                           (SETQ NewSubItems                            (for SubItem in SubItems                               collect (SETQ ItemName (if (LISTP SubItem)                                                              then (CAR SubItem)                                                            else SubItem))                                     [if (MEMB ItemName DangerousSubItems)                                         then (SETQ SubItem (LIST ItemName                                                                      '(FUNCTION NC.PrintReadOnlyMsg)                                                                      (if (LISTP SubItem)                                                                          then (CADDR SubItem]                                     SubItem))                           (RPLACD (CAR (NTH Item 4))                                  NewSubItems)))                     Item))                 (replace (MENU ITEMS) of Menu with NewItems)                 [for Item in (fetch (MENU ITEMS) of Menu)                    do                    (if (MEMB (if (LISTP Item)                                      then (CAR Item)                                    else Item)                                  DangerousItems)                        then (SHADEITEM Item Menu GRAYSHADE)                      else                      (SETQ SubItems (APPLY* (OR (fetch SUBITEMFN of Menu)                                                 (FUNCTION DEFAULTSUBITEMFN))                                            Menu Item))                      (if SubItems                          then (for SubItem in SubItems                                      do (if (MEMB (if (LISTP SubItem)                                                               then (CAR SubItem)                                                             else SubItem)                                                           DangerousSubItems)                                                 then (SHADEITEM SubItem Menu GRAYSHADE]                 (replace (MENU IMAGE) of Menu with NIL)))          (WINDOWPROP Window 'SaveLeftButtonMenu LeftButtonMenu)          (WINDOWPROP Window 'SaveMiddleButtonMenu MiddleButtonMenu)          (WINDOWPROP Window 'TitleBarLeftButtonMenu NewLeftButtonMenu)          (WINDOWPROP Window 'TitleBarMiddleButtonMenu NewMiddleButtonMenu])
+(NC.MakeTEditReadOnly
+  [LAMBDA (Window AddDangerousItems AddDangerousSubItems)    (* Randy.Gobbel "22-Oct-87 14:39")
+    (LET*
+     [(TextStream (TEXTSTREAM Window))
+      (LeftButtonMenu (WINDOWPROP Window 'TitleBarLeftButtonMenu))
+      (NewLeftButtonMenu (if LeftButtonMenu
+                             then (NC.CopyMenu LeftButtonMenu)))
+      (MiddleButtonMenu (WINDOWPROP Window 'TitleBarMiddleButtonMenu))
+      (NewMiddleButtonMenu (if MiddleButtonMenu
+                               then (NC.CopyMenu MiddleButtonMenu]
+     (LET
+      ([DangerousItems (APPEND AddDangerousItems '(Get Include Looks Substitute Expanded% Menu]
+       (DangerousSubItems AddDangerousSubItems)
+       NewItems SubItems NewSubItems)
+      (if (NOT (TEXTPROP TextStream 'READONLY))
+          then
+          (TEXTPROP TextStream 'READONLY T)
+          (TEXTPROP TextStream 'SELFN (FUNCTION NC.ReadOnlyTEditSelFn))
+          (TEXTPROP TextStream 'TXTREADONLY T)
+          (UNINTERRUPTABLY
+              (KILL-PROCESS-OF-TEDIT-WINDOW Window)          (* make sure TEdit killer won't 
+                                                             restart process)
+              (UNMARK-AS-WITHOUT-PROCESS Window))
+          (for Menu in (LIST NewLeftButtonMenu NewMiddleButtonMenu)
+             do
+             (if Menu
+                 then
+                 (SETQ NewItems
+                  (for Item in (fetch (MENU ITEMS) of Menu) bind ItemName
+                     collect
+                     (SETQ ItemName (if (LISTP Item)
+                                        then (CAR Item)
+                                      else Item))
+                     (if (MEMB ItemName DangerousItems)
+                         then [SETQ Item (LIST ItemName '(FUNCTION NC.PrintReadOnlyMsg)
+                                               (if (LISTP Item)
+                                                   then (CADDR Item]
+                       else
+                       (SETQ SubItems (APPLY* (OR (fetch SUBITEMFN of Menu)
+                                                  (FUNCTION DEFAULTSUBITEMFN))
+                                             Menu Item))
+                       (if SubItems
+                           then (SETQ NewSubItems
+                                 (for SubItem in SubItems
+                                    collect (SETQ ItemName (if (LISTP SubItem)
+                                                               then (CAR SubItem)
+                                                             else SubItem))
+                                          [if (MEMB ItemName DangerousSubItems)
+                                              then (SETQ SubItem (LIST ItemName
+                                                                       '(FUNCTION NC.PrintReadOnlyMsg
+                                                                         )
+                                                                       (if (LISTP SubItem)
+                                                                           then (CADDR SubItem]
+                                          SubItem))
+                                (RPLACD (CAR (NTH Item 4))
+                                       NewSubItems)))
+                     Item))
+                 (replace (MENU ITEMS) of Menu with NewItems)
+                 [for Item in (fetch (MENU ITEMS) of Menu)
+                    do
+                    (if (MEMB (if (LISTP Item)
+                                  then (CAR Item)
+                                else Item)
+                              DangerousItems)
+                        then (SHADEITEM Item Menu GRAYSHADE)
+                      else (SETQ SubItems (APPLY* (OR (fetch SUBITEMFN of Menu)
+                                                      (FUNCTION DEFAULTSUBITEMFN))
+                                                 Menu Item))
+                           (if SubItems
+                               then (for SubItem in SubItems
+                                       do (if (MEMB (if (LISTP SubItem)
+                                                        then (CAR SubItem)
+                                                      else SubItem)
+                                                    DangerousSubItems)
+                                              then (SHADEITEM SubItem Menu GRAYSHADE]
+                 (replace (MENU IMAGE) of Menu with NIL)))
+          (WINDOWPROP Window 'SaveLeftButtonMenu LeftButtonMenu)
+          (WINDOWPROP Window 'SaveMiddleButtonMenu MiddleButtonMenu)
+          (WINDOWPROP Window 'TitleBarLeftButtonMenu NewLeftButtonMenu)
+          (WINDOWPROP Window 'TitleBarMiddleButtonMenu NewMiddleButtonMenu])
 
-(NC.MakeTEditReadWrite  [LAMBDA (Window)                                           (* Randy.Gobbel "22-Oct-87 14:28")    (LET* ((TxtObj (TEXTOBJ Window))           (Sel (fetch SEL of TxtObj)))          (if (TEXTPROP TxtObj 'READONLY)              then (WINDOWPROP Window 'TitleBarLeftButtonMenu (WINDOWPROP Window                                                                          'SaveLeftButtonMenu))                    (WINDOWPROP Window 'TitleBarMiddleButtonMenu (WINDOWPROP Window                                                                         'SaveMiddleButtonMenu))                    (\SHOWSEL Sel NIL NIL)                    (replace SET of Sel with NIL)                    (replace (TEXTOBJ TXTREADONLY) of TxtObj with NIL)                    (TEXTPROP TxtObj 'READONLY NIL)                    (MARK-AS-WITHOUT-PROCESS Window 'TEDIT])
+(NC.MakeTEditReadWrite
+  [LAMBDA (Window)                                           (* Randy.Gobbel "22-Oct-87 14:28")
+    (LET* ((TextStream (TEXTSTREAM Window))
+           (Sel (TEDIT.GETSEL TextStream)))
+          (if (TEXTPROP TextStream 'READONLY)
+              then (WINDOWPROP Window 'TitleBarLeftButtonMenu (WINDOWPROP Window 'SaveLeftButtonMenu)
+                          )
+                   (WINDOWPROP Window 'TitleBarMiddleButtonMenu (WINDOWPROP Window 
+                                                                       'SaveMiddleButtonMenu))
+                   (\SHOWSEL Sel NIL NIL)
+                   (replace SET of Sel with NIL)
+                   (TEXTPROP TextStream 'TXTREADONLY NIL)
+                   (TEXTPROP TextStream 'READONLY NIL)
+                   (MARK-AS-WITHOUT-PROCESS Window 'TEDIT])
 
 (NC.MakeMenusReadOnly  [LAMBDA (Window AddSafeItems AddSafeSubItems)              (* ;                                                            "Edited 27-Jan-88 16:20 by MacDonald")    (LET*     ((TitleBarReadOnlyLeftMenu (WINDOWPROP Window 'TITLEBARREADONLYLEFTMENU))      (TitleBarReadOnlyMiddleMenu (WINDOWPROP Window 'TITLEBARREADONLYMIDDLEMENU))      (SafeItems AddSafeItems)      (SafeSubItems AddSafeSubItems)      NewItems SubItems NewSubItems)     (* ;; "If Window doesn't have RO AND RW Menus then create them. The RW Menus are just the menus present on Open; the RO Menus are modifications of these.")     [if (NOT (OR TitleBarReadOnlyLeftMenu TitleBarReadOnlyMiddleMenu))         then         [WINDOWPROP Window 'TITLEBARREADWRITELEFTMENU (NC.CopyMenu (WINDOWPROP Window                                                                                                                                                              '                                                                               TitleBarLeftButtonMenu                                                                               ]         [WINDOWPROP Window 'TITLEBARREADWRITEMIDDLEMENU (NC.CopyMenu (WINDOWPROP Window                                                                                                                                                                  '                                                                             TitleBarMiddleButtonMenu                                                                                 ]         (SETQ TitleBarReadOnlyLeftMenu (WINDOWPROP Window 'TitleBarLeftButtonMenu))         (SETQ TitleBarReadOnlyMiddleMenu (WINDOWPROP Window 'TitleBarMiddleButtonMenu))         (for Menu in (LIST TitleBarReadOnlyLeftMenu TitleBarReadOnlyMiddleMenu)            do            (if Menu                then                (SETQ NewItems                 (for Item in (fetch (MENU ITEMS) of Menu) bind ItemName                    collect                    (SETQ ItemName (if (LISTP Item)                                       then (CAR Item)                                     else Item))                    (if (NOT (MEMB ItemName SafeItems))                        then [SETQ Item (LIST ItemName '(FUNCTION NC.PrintReadOnlyMsg)                                                  (if (LISTP Item)                                                      then (CADDR Item]                      else                      (SETQ SubItems (APPLY* (OR (fetch SUBITEMFN of Menu)                                                 (FUNCTION DEFAULTSUBITEMFN))                                            Menu Item))                      (if SubItems                          then (SETQ NewSubItems                                    (for SubItem in SubItems                                       collect                                       (SETQ ItemName (if (LISTP SubItem)                                                          then (CAR SubItem)                                                        else SubItem))                                       [if (NOT (MEMB ItemName SafeSubItems))                                           then (SETQ SubItem                                                     (LIST ItemName '(FUNCTION NC.PrintReadOnlyMsg)                                                           (if (LISTP SubItem)                                                               then (CADDR SubItem]                                       SubItem))                                (RPLACD (CAR (NTH Item 4))                                       NewSubItems)))                    Item))                (replace (MENU ITEMS) of Menu with NewItems)                [for Item in (fetch (MENU ITEMS) of Menu)                   do                   (if (NOT (MEMB (if (LISTP Item)                                          then (CAR Item)                                        else Item)                                      SafeItems))                       then (SHADEITEM Item Menu GRAYSHADE)                     else                     (SETQ SubItems (APPLY* (OR (fetch SUBITEMFN of Menu)                                                (FUNCTION DEFAULTSUBITEMFN))                                           Menu Item))                     (if SubItems                         then (for SubItem in SubItems                                     do (if (NOT (MEMB (if (LISTP SubItem)                                                                   then (CAR SubItem)                                                                 else SubItem)                                                               SafeSubItems))                                                then (SHADEITEM SubItem Menu GRAYSHADE]                (replace (MENU IMAGE) of Menu with NIL]     (WINDOWPROP Window 'TitleBarLeftButtonMenu TitleBarReadOnlyLeftMenu)     (WINDOWPROP Window 'TitleBarMiddleButtonMenu TitleBarReadOnlyMiddleMenu)     (WINDOWPROP Window 'TITLEBARREADONLYLEFTMENU TitleBarReadOnlyLeftMenu)     (WINDOWPROP Window 'TITLEBARREADONLYMIDDLEMENU TitleBarReadOnlyMiddleMenu])
 
@@ -759,7 +848,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 (* ;;; "Fix up Lisp")
 
 
-[LOADINITADVISE NC-ADVICE0127 (LOGOUT (NIL (BEFORE NIL (if (NULL (NC.LogoutAdvice))
+[LOADINITADVISE NC-ADVICE0260 (LOGOUT (NIL (BEFORE NIL (if (NULL (NC.LogoutAdvice))
                                                            then (RETURN]
 
 
@@ -903,13 +992,11 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
           (Rename NIL "Rename this NoteFile")
           (Delete NIL "Deletes this NoteFile."))
 
-(ADDTOVAR NC.NoteFileIconOpenOperations Checkpoint Close Close% Notefile |Close w/o confirm| 
-                                                  Abort)
+(ADDTOVAR NC.NoteFileIconOpenOperations Checkpoint Close Close% Notefile |Close w/o confirm| Abort)
 
 (ADDTOVAR NC.NoteFileIconCloseOperations Open Open% Read/Write Open% Read-only Compact 
-                                                  |Compact To New File| |Compact In Place| 
-                                                  Inspect&Repair From% Links From% Contents Copy 
-                                                  Rename Delete)
+                                              |Compact To New File| |Compact In Place| Inspect&Repair
+                                              From% Links From% Contents Copy Rename Delete)
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS NC.InitialNoteFileIconOperationsMenuItems NC.InitialNoteFileIconOpenOperations 
@@ -961,19 +1048,18 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
                              "Add multiple global links emanating from this card."))))
 
 (RPAQ? NC.GlobalInsertLinkMenuItem '(|Add Global Link| (FUNCTION NC.AddGlobalLinkToCard)
-                                               "Add a global link emanating from this card."
-                                               (SUBITEMS (|Add Global Link| (FUNCTION 
+                                           "Add a global link emanating from this card."
+                                           (SUBITEMS (|Add Global Link| (FUNCTION 
                                                                                NC.AddGlobalLinkToCard
-                                                                                   )
-                                                                
+                                                                               )
+                                                            
                                                         "Add a global link emanating from this card."
-                                                                )
-                                                      (|Add Global Links| (FUNCTION 
-                                                                              NC.AddGlobalLinksToCard
-                                                                                 )
-                                                             
+                                                            )
+                                                  (|Add Global Links| (FUNCTION 
+                                                                             NC.AddGlobalLinksToCard)
+                                                         
                                                 "Add multiple global links emanating from this card."
-                                                             ))))
+                                                         ))))
 
 (RPAQ? NC.DefaultLeftButtonMenuItems
        `[(|Edit Property List| (FUNCTION NC.EditProperties)
@@ -1223,11 +1309,9 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 )
 
 (RPAQ? NC.DefaultNoteFileIconMiddleButtonItems '((|Full File Name| NC.PopUpNoteFileName 
-                                                           "Display full file name of this notefile."
-                                                            )
-                                                     (File% Capacity NC.DisplayFileCapacity 
-                                                            "Display file capacity of this notefile")
-                                                     ))
+                                                        "Display full file name of this notefile.")
+                                                 (File% Capacity NC.DisplayFileCapacity 
+                                                        "Display file capacity of this notefile")))
 
 
 
@@ -1291,21 +1375,20 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 
 (RPAQ? NC.FileBrowserExpungeMenuItem '(Expunge NC.FileBrowserExpunge 
                              "Permanently removes from the file system all files marked for deletion"
-                                                 ))
+                                             ))
 
 (RPAQ? NC.FileBrowserRecomputeMenuItem '(Recompute FB.UPDATECOMMAND 
                                            "Recomputes set of notefiles satisfying selection pattern"
-                                                   (SUBITEMS ("Same Pattern" FB.UPDATECOMMAND 
+                                               (SUBITEMS ("Same Pattern" FB.UPDATECOMMAND 
                                                  "Recomputes set of files satisfying current pattern"
-                                                                    )
-                                                          ("New Pattern" 
-                                                                NC.FileBrowserRecomputeWithNewPattern
-                                                                 
+                                                                )
+                                                      ("New Pattern" 
+                                                             NC.FileBrowserRecomputeWithNewPattern 
                                             "Prompts for a new selection pattern and updates browser"
-                                                                 )
-                                                          ("New Info" FB.NEWINFOCOMMAND 
+                                                             )
+                                                      ("New Info" FB.NEWINFOCOMMAND 
                                                "Change the set of file attributes that are displayed"
-                                                                 ))))
+                                                             ))))
 
 
 
@@ -1332,7 +1415,7 @@ Copyright (c) 1984-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 (RPAQ? NC.FileBrowserPatterns NIL)
 
 (RPAQ? NC.FileBrowserDefaultPatterns '({DSK}/HOME/IL/NOTECARDS/NOTEFILES/*.NOTEFILE;* 
-                                                 {DSK}*.NOTEFILE;*))
+                                             {DSK}*.NOTEFILE;*))
 
 
 
@@ -1370,45 +1453,43 @@ Done, but only ")                                                         (T "d
 (PUTPROPS NCINTERFACE FILETYPE :FAKE-COMPILE-FILE)
 
 (PUTPROPS NCINTERFACE MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
-(PUTPROPS NCINTERFACE COPYRIGHT ("Venue & Xerox Corporation" 1984 1985 1986 1987 1988 1989 1990 1993 
-1994 2020 2021))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (41829 69219 (NoteCards 41839 . 42211) (NC.MakeMainMenu 42213 . 51570) (NC.LogoutAdvice 
-51572 . 53705) (NC.AttachPromptWindow 53707 . 54983) (NC.AttachPromptWindowOffScreen 54985 . 55616) (
-NC.GETPROMPTWINDOW 55618 . 67651) (NC.MaxPromptWindowWidth 67653 . 68827) (NC.PromptWindowOpenP 68829
- . 69217)) (69607 127828 (NC.AskLinkLabel 69617 . 76244) (NC.AskNoteCardType 76246 . 80715) (
-NC.SortCardTypes 80717 . 83098) (NC.ExpandBars 83100 . 84645) (NC.ChooseTopLevelCard 84647 . 88777) (
-NC.RemoveSketchMenuItems 88779 . 89630) (NC.SelectionMenusWhenSelectedFn 89632 . 91408) (
-NC.InstallTitleBarButtonEventFn 91410 . 92084) (NC.InstallTitleBarLeftMenu 92086 . 93098) (
-NC.InstallCopyButtonEventFn 93100 . 93569) (NC.NoteFileTitleLeftWhenSelectedFn 93571 . 98212) (
-NC.MakeNoteFileIconOperationsMenus 98214 . 100695) (NC.ResetCachedMenus 100697 . 101126) (
-NC.CreateNoteFileMenuItems 101128 . 107514) (NC.GetNoteFileMenu 107516 . 108534) (NC.SetNoteFileMenu 
-108536 . 109785) (NC.PrintReadOnlyMsg 109787 . 112898) (NC.CopyMenu 112900 . 113637) (
-NC.ReadOnlyTEditSelFn 113639 . 114312) (NC.MakeTEditReadOnly 114314 . 119233) (NC.MakeTEditReadWrite 
-119235 . 120155) (NC.MakeMenusReadOnly 120157 . 125646) (NC.MakeMenusReadWrite 125648 . 127826)) (
-127956 159161 (NC.SelectNoteCards 127966 . 150198) (NC.BinLoopProcess 150200 . 151424) (
-NC.ZapBinLoopProcess 151426 . 151763) (NC.SelectNoteCardsCopyInsertFn 151765 . 153445) (
-NC.CopyButtonEventFn 153447 . 155972) (NC.ShrukenIconButtonEventFn 155974 . 158754) (NC.CardImageObjP 
-158756 . 158928) (NC.MakeCardImageObject 158930 . 159159)) (170785 185324 (NC.NoteCardsWindowP 170795
- . 171169) (NC.NoteCardsIconWindowP 171171 . 171438) (NC.MakeNoteCardsIcon 171440 . 171922) (
-NC.BringUpNoteCardsIcon 171924 . 172968) (NC.NoteCardsIconAfterMoveFn 172970 . 173591) (
-NC.FileBrowserMenu 173593 . 177236) (NC.ListOfNoteFilesMenu 177238 . 182776) (NC.CheckpointSession 
-182778 . 183702) (NC.CloseSession 183704 . 185322)) (203593 226473 (NC.RedisplayNoteCardsIconWindow 
-203603 . 204559) (NC.NoteCardsIconButtonEventFn 204561 . 207669) (NC.DoNoteFileOp 207671 . 216629) (
-NC.NoteCardsIconCursorEventFn 216631 . 217291) (NC.NoteCardsIconFn 217293 . 217684) (
-NC.ResetNoteCardsIcon 217686 . 218445) (NC.MakeNewStyleNoteCardsIcon 218447 . 222056) (
-NC.MakeOldStyleNoteCardsIcon 222058 . 226471)) (226531 240194 (NC.CloseNoteCards 226541 . 229216) (
-NC.CopyStructure 229218 . 233108) (NC.CloseStructure 233110 . 235938) (NC.DeleteStructure 235940 . 
-238936) (NC.MoveStructure 238938 . 240192)) (240232 274706 (NC.NoteFileMenuWindowP 240242 . 240583) (
-NC.SetUpNoteFileInterface 240585 . 251719) (NC.ResetNoteFileInterface 251721 . 255972) (
-NC.NoteFileIconButtonEventFn 255974 . 263374) (NC.NoteFileOperations 263376 . 265572) (
-NC.NoteFileIconMiddleButtonFn 265574 . 267691) (NC.PopUpNoteFileName 267693 . 269114) (
-NC.DisplayFileCapacity 269116 . 274704)) (275259 281643 (NC.ShowNoteFiles 275269 . 275589) (
-NC.AttachNoteFileName 275591 . 280688) (NC.MakeNoteFileNameIndicator 280690 . 281268) (
-NC.NoteFileIndicatorWinHeight 281270 . 281641)) (287339 305500 (NC.FileBrowserOpen 287349 . 288391) (
-NC.FileBrowserClose 288393 . 289285) (NC.FileBrowserCheckpoint 289287 . 290281) (NC.FileBrowserAbort 
-290283 . 291094) (NC.FileBrowserCompact 291096 . 298651) (NC.FileBrowserInspect&Repair 298653 . 299711
-) (NC.FileBrowserExpunge 299713 . 301986) (NC.GetFileBrowserPattern 301988 . 303427) (
-NC.FileBrowserRecomputeWithNewPattern 303429 . 304688) (NC.FindFileBrowserWinForPattern 304690 . 
-305498)) (305501 306441 (NC.FlashFileBrowserWin 305511 . 306439)))))
+  (FILEMAP (NIL (41776 69166 (NoteCards 41786 . 42158) (NC.MakeMainMenu 42160 . 51517) (NC.LogoutAdvice 
+51519 . 53652) (NC.AttachPromptWindow 53654 . 54930) (NC.AttachPromptWindowOffScreen 54932 . 55563) (
+NC.GETPROMPTWINDOW 55565 . 67598) (NC.MaxPromptWindowWidth 67600 . 68774) (NC.PromptWindowOpenP 68776
+ . 69164)) (69550 127743 (NC.AskLinkLabel 69560 . 76187) (NC.AskNoteCardType 76189 . 80658) (
+NC.SortCardTypes 80660 . 83041) (NC.ExpandBars 83043 . 84588) (NC.ChooseTopLevelCard 84590 . 88720) (
+NC.RemoveSketchMenuItems 88722 . 89573) (NC.SelectionMenusWhenSelectedFn 89575 . 91351) (
+NC.InstallTitleBarButtonEventFn 91353 . 92027) (NC.InstallTitleBarLeftMenu 92029 . 93041) (
+NC.InstallCopyButtonEventFn 93043 . 93512) (NC.NoteFileTitleLeftWhenSelectedFn 93514 . 98155) (
+NC.MakeNoteFileIconOperationsMenus 98157 . 100638) (NC.ResetCachedMenus 100640 . 101069) (
+NC.CreateNoteFileMenuItems 101071 . 107457) (NC.GetNoteFileMenu 107459 . 108477) (NC.SetNoteFileMenu 
+108479 . 109728) (NC.PrintReadOnlyMsg 109730 . 112841) (NC.CopyMenu 112843 . 113580) (
+NC.ReadOnlyTEditSelFn 113582 . 114255) (NC.MakeTEditReadOnly 114257 . 119215) (NC.MakeTEditReadWrite 
+119217 . 120070) (NC.MakeMenusReadOnly 120072 . 125561) (NC.MakeMenusReadWrite 125563 . 127741)) (
+127871 159076 (NC.SelectNoteCards 127881 . 150113) (NC.BinLoopProcess 150115 . 151339) (
+NC.ZapBinLoopProcess 151341 . 151678) (NC.SelectNoteCardsCopyInsertFn 151680 . 153360) (
+NC.CopyButtonEventFn 153362 . 155887) (NC.ShrukenIconButtonEventFn 155889 . 158669) (NC.CardImageObjP 
+158671 . 158843) (NC.MakeCardImageObject 158845 . 159074)) (170700 185239 (NC.NoteCardsWindowP 170710
+ . 171084) (NC.NoteCardsIconWindowP 171086 . 171353) (NC.MakeNoteCardsIcon 171355 . 171837) (
+NC.BringUpNoteCardsIcon 171839 . 172883) (NC.NoteCardsIconAfterMoveFn 172885 . 173506) (
+NC.FileBrowserMenu 173508 . 177151) (NC.ListOfNoteFilesMenu 177153 . 182691) (NC.CheckpointSession 
+182693 . 183617) (NC.CloseSession 183619 . 185237)) (203282 226162 (NC.RedisplayNoteCardsIconWindow 
+203292 . 204248) (NC.NoteCardsIconButtonEventFn 204250 . 207358) (NC.DoNoteFileOp 207360 . 216318) (
+NC.NoteCardsIconCursorEventFn 216320 . 216980) (NC.NoteCardsIconFn 216982 . 217373) (
+NC.ResetNoteCardsIcon 217375 . 218134) (NC.MakeNewStyleNoteCardsIcon 218136 . 221745) (
+NC.MakeOldStyleNoteCardsIcon 221747 . 226160)) (226220 239883 (NC.CloseNoteCards 226230 . 228905) (
+NC.CopyStructure 228907 . 232797) (NC.CloseStructure 232799 . 235627) (NC.DeleteStructure 235629 . 
+238625) (NC.MoveStructure 238627 . 239881)) (239921 274395 (NC.NoteFileMenuWindowP 239931 . 240272) (
+NC.SetUpNoteFileInterface 240274 . 251408) (NC.ResetNoteFileInterface 251410 . 255661) (
+NC.NoteFileIconButtonEventFn 255663 . 263063) (NC.NoteFileOperations 263065 . 265261) (
+NC.NoteFileIconMiddleButtonFn 265263 . 267380) (NC.PopUpNoteFileName 267382 . 268803) (
+NC.DisplayFileCapacity 268805 . 274393)) (274822 281206 (NC.ShowNoteFiles 274832 . 275152) (
+NC.AttachNoteFileName 275154 . 280251) (NC.MakeNoteFileNameIndicator 280253 . 280831) (
+NC.NoteFileIndicatorWinHeight 280833 . 281204)) (286802 304963 (NC.FileBrowserOpen 286812 . 287854) (
+NC.FileBrowserClose 287856 . 288748) (NC.FileBrowserCheckpoint 288750 . 289744) (NC.FileBrowserAbort 
+289746 . 290557) (NC.FileBrowserCompact 290559 . 298114) (NC.FileBrowserInspect&Repair 298116 . 299174
+) (NC.FileBrowserExpunge 299176 . 301449) (NC.GetFileBrowserPattern 301451 . 302890) (
+NC.FileBrowserRecomputeWithNewPattern 302892 . 304151) (NC.FindFileBrowserWinForPattern 304153 . 
+304961)) (304964 305904 (NC.FlashFileBrowserWin 304974 . 305902)))))
 STOP

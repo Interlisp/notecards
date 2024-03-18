@@ -1,4 +1,175 @@
-(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP")(FILECREATED " 5-Nov-2020 20:03:07" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCTABLETOPCARD.;4 82134        previous date%: " 9-Jan-94 20:18:15" {DSK}<users>arunwelch>skydrive>documents>unix>lisp>lde>notecards>system>NCTABLETOPCARD.;3)(* ; "Copyright (c) 1987, 1988, 1989, 1993, 1994, 2020 by Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCTABLETOPCARDCOMS)(RPAQQ NCTABLETOPCARDCOMS       [(DECLARE%: DONTCOPY (PROPS (NCTABLETOPCARD MAKEFILE-ENVIRONMENT)                                   (NCTABLETOPCARD FILETYPE)))        (* ;;; "Table top cards have substances containing card UIDs and screen regions. Following a link to a tabletop brings up its card in the stored regions.")        (GLOBALVARS NCTableTop.LinkIconBitmap NCTableTop.OpenEventsExpr NCTableTop.OldOpenEventsExprs               NCTableTop.MiddleButtonMenuItems)        [INITVARS [NCTableTop.OpenEventsExpr '(PROGN (NC.LoadFileFromDirectories 'NCTABLETOPCARD)                                                     (NCTableTop.NoteFileWhenOpenedFn NoteFile]               [NCTableTop.OldOpenEventsExprs '((PROGN (NC.LoadFileFromDirectories NCTABLETOP)                                                       (NCTableTop.NoteFileWhenOpenedFn NoteFile))                                                (PROGN (FILESLOAD (FROM NOTECARDS)                                                              NCTABLETOP)                                                       (NCTableTop.NoteFileWhenOpenedFn NoteFile]               (NCTableTop.MiddleButtonMenuItems '((Recompute% TableTop                                                    (FUNCTION NCTableTop.RecomputeTableTop)                                                                                    "Recomputes this table top using current configuration of its cards."                                                    (SUBITEMS (New% Cards (FUNCTION                                                            NCTableTop.RemakeTableTopSelectingNewCards                                                                                 )                                                                                                                     "Recompute this table top using a new list of cards."                                                                     )                                                           (|New Cards In Order|                                                            (FUNCTION                                                     NCTableTop.RemakeTableTopSelectingNewCardsInOrder                                                                   )                                                                   "Recompute this table top using a new list of cards, in the order in which they are selected."                                                            )                                                           (With% Template (FUNCTION                                                               NCTableTop.ComputeTableTopUsingTemplate                                                                                  )                                                                                                                 "Recompute this table top using a template table top."                                                                  )))                                                   (|Add cards to TableTop| (FUNCTION                                                                 NCTableTop.AddSelectedCardsToTableTop                                                                                   )                                                          "Add cards to the table top.")                                                   (|Remove cards from TableTop|                                                    (FUNCTION NCTableTop.RemoveSelectedCards)                                                    "Remove cards from the table top.")                                                   (|Show cards in TableTop| (FUNCTION                                                                         NCTableTop.OpenCardInTableTop                                                                                    )                                                                              "Bring up one of the cards in the table top choosing from a menu of card titles."                                                          )                                                   (|Bring up TableTop| (FUNCTION                                                                            NCTableTop.BringUpTableTop                                                                               )                                                                                                               "Bring up the table top cards in proper layout."                                                          )                                                   (|Close down TableTop| (FUNCTION                                                                          NCTableTop.CloseDownTableTop                                                                                 )                                                          "Close all cards in the table top."]        (* ;;; "The following functions are exported, i.e. documented and callable from outside.")        (FNS NCTableTop.BringUpTableTop NCTableTop.OpenCardInTableTop NCTableTop.CloseDownTableTop              NCTableTop.RemakeTableTop NCTableTop.RecomputeTableTop              NCTableTop.RemoveCardsFromTableTop NCTableTop.AddCardsToTableTop)        (FNS NCTableTop.CardsInTableTop NCTableTop.CollectCards)        (FNS NCTableTop.TableTopBasedP)        (* ;;; "The rest are internal.")        (FNS NCTableTop.ComputeTableTop NCTableTop.ComputeTTEntryProps              NCTableTop.ComputeCardsFromTemplate NCTableTop.BringUpCardInTableTop              NCTableTop.ProcessTTEntryProps)        (FNS NCTableTop.RemakeTableTopSelectingNewCards              NCTableTop.RemakeTableTopSelectingNewCardsInOrder              NCTableTop.ComputeTableTopUsingTemplate NCTableTop.RemoveSelectedCards              NCTableTop.AddSelectedCardsToTableTop)        (FNS NCTableTop.AddOpenEventsExpr NCTableTop.NoteFileWhenOpenedFn              NCTableTop.MakeOrUpdateNoteFileTableTop NCTableTop.FixNoteFileOperationsMenus              NCTableTop.CloseNoteFileSavingTableTop NCTableTop.CloseSessionSavingTableTops)        (FNS NCTableTop.MakeFn NCTableTop.EditFn NCTableTop.PutFn NCTableTop.GetFn)        (FNS NCTableTop.ReplaceUIDsFn)        (FNS NCTableTop.AddTableTopCard)        (BITMAPS NCTableTop.LinkIconBitmap)        (RECORDS TableTopEntry NCTableTop.BrowserOverviewSpecs)        (DECLARE%: DONTEVAL@LOAD (P (NCTableTop.AddTableTopCard)                                    (PUTPROP 'TableTop 'ReplaceUIDsFn (FUNCTION                                                                              NCTableTop.ReplaceUIDsFn                                                                             ))                                    (PUTPROP 'TableTop 'ExtraLinkIconMenuItems                                            NCTableTop.MiddleButtonMenuItems)                                    (PUTPROP 'TableTop 'LinkIconMiddleButtonMenu NIL)))        (FNS NCAddStub.TableTopCard)                                                             (* ;                                       "Add a CloseSavingTableTop item to the Close notefile menus.")        (DECLARE%: DONTEVAL@LOAD (P (NCTableTop.FixNoteFileOperationsMenus])(DECLARE%: DONTCOPY (PUTPROPS NCTABLETOPCARD MAKEFILE-ENVIRONMENT (:PACKAGE "INTERLISP" :READTABLE "INTERLISP"))(PUTPROPS NCTABLETOPCARD FILETYPE :FAKE-COMPILE-FILE))(* ;;; "Table top cards have substances containing card UIDs and screen regions. Following a link to a tabletop brings up its card in the stored regions.")(DECLARE%: DOEVAL@COMPILE DONTCOPY(GLOBALVARS NCTableTop.LinkIconBitmap NCTableTop.OpenEventsExpr NCTableTop.OldOpenEventsExprs        NCTableTop.MiddleButtonMenuItems))(RPAQ? NCTableTop.OpenEventsExpr '(PROGN (NC.LoadFileFromDirectories 'NCTABLETOPCARD)                                             (NCTableTop.NoteFileWhenOpenedFn NoteFile)))(RPAQ? NCTableTop.OldOpenEventsExprs '((PROGN (NC.LoadFileFromDirectories NCTABLETOP)                                                  (NCTableTop.NoteFileWhenOpenedFn NoteFile))                                           (PROGN (FILESLOAD (FROM NOTECARDS)                                                         NCTABLETOP)                                                  (NCTableTop.NoteFileWhenOpenedFn NoteFile))))(RPAQ? NCTableTop.MiddleButtonMenuItems       '((Recompute% TableTop (FUNCTION NCTableTop.RecomputeTableTop)                "Recomputes this table top using current configuration of its cards."                (SUBITEMS (New% Cards (FUNCTION NCTableTop.RemakeTableTopSelectingNewCards)                                 "Recompute this table top using a new list of cards.")                       (|New Cards In Order| (FUNCTION                                                     NCTableTop.RemakeTableTopSelectingNewCardsInOrder                                                    )                                     "Recompute this table top using a new list of cards, in the order in which they are selected."                              )                       (With% Template (FUNCTION NCTableTop.ComputeTableTopUsingTemplate)                              "Recompute this table top using a template table top.")))         (|Add cards to TableTop| (FUNCTION NCTableTop.AddSelectedCardsToTableTop)                "Add cards to the table top.")         (|Remove cards from TableTop| (FUNCTION NCTableTop.RemoveSelectedCards)                "Remove cards from the table top.")         (|Show cards in TableTop| (FUNCTION NCTableTop.OpenCardInTableTop)                "Bring up one of the cards in the table top choosing from a menu of card titles.")         (|Bring up TableTop| (FUNCTION NCTableTop.BringUpTableTop)                "Bring up the table top cards in proper layout.")         (|Close down TableTop| (FUNCTION NCTableTop.CloseDownTableTop)                "Close all cards in the table top.")))(* ;;; "The following functions are exported, i.e. documented and callable from outside.")(DEFINEQ(NCTableTop.BringUpTableTop
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+
+(FILECREATED " 7-Mar-2024 22:47:10" {DSK}<home>frank>il>notecards>library>NCTABLETOPCARD.;2 81745  
+
+      :CHANGES-TO (FNS NCTableTop.ComputeCardsFromTemplate)
+
+      :PREVIOUS-DATE " 5-Nov-2020 20:03:07" {DSK}<home>frank>il>notecards>library>NCTABLETOPCARD.;1
+)
+
+
+(PRETTYCOMPRINT NCTABLETOPCARDCOMS)
+
+(RPAQQ NCTABLETOPCARDCOMS
+       [(DECLARE%: DONTCOPY (PROPS (NCTABLETOPCARD MAKEFILE-ENVIRONMENT)
+                                   (NCTABLETOPCARD FILETYPE)))
+        
+
+(* ;;; "Table top cards have substances containing card UIDs and screen regions. Following a link to a tabletop brings up its card in the stored regions.")
+
+        (GLOBALVARS NCTableTop.LinkIconBitmap NCTableTop.OpenEventsExpr NCTableTop.OldOpenEventsExprs
+               NCTableTop.MiddleButtonMenuItems)
+        [INITVARS [NCTableTop.OpenEventsExpr '(PROGN (NC.LoadFileFromDirectories 'NCTABLETOPCARD)
+                                                     (NCTableTop.NoteFileWhenOpenedFn NoteFile]
+               [NCTableTop.OldOpenEventsExprs '((PROGN (NC.LoadFileFromDirectories NCTABLETOP)
+                                                       (NCTableTop.NoteFileWhenOpenedFn NoteFile))
+                                                (PROGN (FILESLOAD (FROM NOTECARDS)
+                                                              NCTABLETOP)
+                                                       (NCTableTop.NoteFileWhenOpenedFn NoteFile]
+               (NCTableTop.MiddleButtonMenuItems '((Recompute% TableTop
+                                                    (FUNCTION NCTableTop.RecomputeTableTop)
+                                                    
+                                "Recomputes this table top using current configuration of its cards."
+                                                    (SUBITEMS (New% Cards (FUNCTION 
+                                                           NCTableTop.RemakeTableTopSelectingNewCards
+                                                                                 )
+                                                                     
+                                                "Recompute this table top using a new list of cards."
+                                                                     )
+                                                           (|New Cards In Order|
+                                                            (FUNCTION 
+                                                    NCTableTop.RemakeTableTopSelectingNewCardsInOrder
+                                                                   )
+                                                            
+       "Recompute this table top using a new list of cards, in the order in which they are selected."
+                                                            )
+                                                           (With% Template (FUNCTION 
+                                                              NCTableTop.ComputeTableTopUsingTemplate
+                                                                                  )
+                                                                  
+                                               "Recompute this table top using a template table top."
+                                                                  )))
+                                                   (|Add cards to TableTop| (FUNCTION 
+                                                                NCTableTop.AddSelectedCardsToTableTop
+                                                                                   )
+                                                          "Add cards to the table top.")
+                                                   (|Remove cards from TableTop|
+                                                    (FUNCTION NCTableTop.RemoveSelectedCards)
+                                                    "Remove cards from the table top.")
+                                                   (|Show cards in TableTop| (FUNCTION 
+                                                                        NCTableTop.OpenCardInTableTop
+                                                                                    )
+                                                          
+                    "Bring up one of the cards in the table top choosing from a menu of card titles."
+                                                          )
+                                                   (|Bring up TableTop| (FUNCTION 
+                                                                           NCTableTop.BringUpTableTop
+                                                                               )
+                                                          
+                                                     "Bring up the table top cards in proper layout."
+                                                          )
+                                                   (|Close down TableTop| (FUNCTION 
+                                                                         NCTableTop.CloseDownTableTop
+                                                                                 )
+                                                          "Close all cards in the table top."]
+        
+
+(* ;;; "The following functions are exported, i.e. documented and callable from outside.")
+
+        (FNS NCTableTop.BringUpTableTop NCTableTop.OpenCardInTableTop NCTableTop.CloseDownTableTop 
+             NCTableTop.RemakeTableTop NCTableTop.RecomputeTableTop 
+             NCTableTop.RemoveCardsFromTableTop NCTableTop.AddCardsToTableTop)
+        (FNS NCTableTop.CardsInTableTop NCTableTop.CollectCards)
+        (FNS NCTableTop.TableTopBasedP)
+        
+
+(* ;;; "The rest are internal.")
+
+        (FNS NCTableTop.ComputeTableTop NCTableTop.ComputeTTEntryProps 
+             NCTableTop.ComputeCardsFromTemplate NCTableTop.BringUpCardInTableTop 
+             NCTableTop.ProcessTTEntryProps)
+        (FNS NCTableTop.RemakeTableTopSelectingNewCards 
+             NCTableTop.RemakeTableTopSelectingNewCardsInOrder 
+             NCTableTop.ComputeTableTopUsingTemplate NCTableTop.RemoveSelectedCards 
+             NCTableTop.AddSelectedCardsToTableTop)
+        (FNS NCTableTop.AddOpenEventsExpr NCTableTop.NoteFileWhenOpenedFn 
+             NCTableTop.MakeOrUpdateNoteFileTableTop NCTableTop.FixNoteFileOperationsMenus 
+             NCTableTop.CloseNoteFileSavingTableTop NCTableTop.CloseSessionSavingTableTops)
+        (FNS NCTableTop.MakeFn NCTableTop.EditFn NCTableTop.PutFn NCTableTop.GetFn)
+        (FNS NCTableTop.ReplaceUIDsFn)
+        (FNS NCTableTop.AddTableTopCard)
+        (BITMAPS NCTableTop.LinkIconBitmap)
+        (RECORDS TableTopEntry NCTableTop.BrowserOverviewSpecs)
+        (DECLARE%: DONTEVAL@LOAD (P (NCTableTop.AddTableTopCard)
+                                    (PUTPROP 'TableTop 'ReplaceUIDsFn (FUNCTION 
+                                                                             NCTableTop.ReplaceUIDsFn
+                                                                             ))
+                                    (PUTPROP 'TableTop 'ExtraLinkIconMenuItems 
+                                           NCTableTop.MiddleButtonMenuItems)
+                                    (PUTPROP 'TableTop 'LinkIconMiddleButtonMenu NIL)))
+        (FNS NCAddStub.TableTopCard)
+                                                             (* ; 
+                                        "Add a CloseSavingTableTop item to the Close notefile menus.")
+        (DECLARE%: DONTEVAL@LOAD (P (NCTableTop.FixNoteFileOperationsMenus])
+(DECLARE%: DONTCOPY 
+
+(PUTPROPS NCTABLETOPCARD MAKEFILE-ENVIRONMENT (:PACKAGE "INTERLISP" :READTABLE "INTERLISP"))
+
+(PUTPROPS NCTABLETOPCARD FILETYPE :FAKE-COMPILE-FILE)
+)
+
+
+
+(* ;;; 
+"Table top cards have substances containing card UIDs and screen regions. Following a link to a tabletop brings up its card in the stored regions."
+)
+
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS NCTableTop.LinkIconBitmap NCTableTop.OpenEventsExpr NCTableTop.OldOpenEventsExprs 
+       NCTableTop.MiddleButtonMenuItems)
+)
+
+(RPAQ? NCTableTop.OpenEventsExpr '(PROGN (NC.LoadFileFromDirectories 'NCTABLETOPCARD)
+                                         (NCTableTop.NoteFileWhenOpenedFn NoteFile)))
+
+(RPAQ? NCTableTop.OldOpenEventsExprs '((PROGN (NC.LoadFileFromDirectories NCTABLETOP)
+                                              (NCTableTop.NoteFileWhenOpenedFn NoteFile))
+                                       (PROGN (FILESLOAD (FROM NOTECARDS)
+                                                     NCTABLETOP)
+                                              (NCTableTop.NoteFileWhenOpenedFn NoteFile))))
+
+(RPAQ? NCTableTop.MiddleButtonMenuItems
+       '((Recompute% TableTop (FUNCTION NCTableTop.RecomputeTableTop)
+                "Recomputes this table top using current configuration of its cards."
+                (SUBITEMS (New% Cards (FUNCTION NCTableTop.RemakeTableTopSelectingNewCards)
+                                 "Recompute this table top using a new list of cards.")
+                       (|New Cards In Order| (FUNCTION 
+                                                    NCTableTop.RemakeTableTopSelectingNewCardsInOrder
+                                                    )
+                              
+       "Recompute this table top using a new list of cards, in the order in which they are selected."
+                              )
+                       (With% Template (FUNCTION NCTableTop.ComputeTableTopUsingTemplate)
+                              "Recompute this table top using a template table top.")))
+         (|Add cards to TableTop| (FUNCTION NCTableTop.AddSelectedCardsToTableTop)
+                "Add cards to the table top.")
+         (|Remove cards from TableTop| (FUNCTION NCTableTop.RemoveSelectedCards)
+                "Remove cards from the table top.")
+         (|Show cards in TableTop| (FUNCTION NCTableTop.OpenCardInTableTop)
+                "Bring up one of the cards in the table top choosing from a menu of card titles.")
+         (|Bring up TableTop| (FUNCTION NCTableTop.BringUpTableTop)
+                "Bring up the table top cards in proper layout.")
+         (|Close down TableTop| (FUNCTION NCTableTop.CloseDownTableTop)
+                "Close all cards in the table top.")))
+
+
+
+(* ;;; "The following functions are exported, i.e. documented and callable from outside.")
+
+(DEFINEQ
+
+(NCTableTop.BringUpTableTop
   [LAMBDA (TableTopCardOrWindow DoNotUnCacheFlg)             (* ; "Edited 22-Sep-88 13:42 by jrc")
 
     (* ;; "Bring up all TableTopCard's cards in their proper positions.")
@@ -20,7 +191,9 @@
                                  collect Card))
          (if (NOT (OR WasCachedFlg DoNotUnCacheFlg (NCP.CardWindow TableTopCard)))
              then (NCP.CloseCards TableTopCard))
-         CardsBroughtUp])(NCTableTop.OpenCardInTableTop
+         CardsBroughtUp])
+
+(NCTableTop.OpenCardInTableTop
   [LAMBDA (TableTopCardOrWindow InterestedWindow)            (* ; "Edited 30-May-88 15:14 by Trigg")
 
 (* ;;; "Open one of the cards in TableTopCard.")
@@ -50,7 +223,9 @@
                 (NC.ClearMsg InterestedWindow T))
          (if (AND (NOT WasCachedFlg)
                   (NOT (NCP.CardWindow TableTopCard)))
-             then (NCP.CloseCards TableTopCard])(NCTableTop.CloseDownTableTop
+             then (NCP.CloseCards TableTopCard])
+
+(NCTableTop.CloseDownTableTop
   [LAMBDA (TableTopCardOrWindow)                         (* ; "Edited  5-Apr-89 15:25 by pmi")
 
     (* ;; "Close all the cards in the table top.")
@@ -65,7 +240,9 @@
                                                                          (fetch (TableTopEntry
                                                                                      Card)
                                                                             of TableTopEntry)))
-                                               do (NCP.CloseCards Card T T])(NCTableTop.RemakeTableTop
+                                               do (NCP.CloseCards Card T T])
+
+(NCTableTop.RemakeTableTop
   [LAMBDA (TableTopCardOrWindow ListOfCards RetainClosedCardsFlg NoToTopOrder)
                                                              (* ; "Edited  4-May-89 10:18 by pmi")
 
@@ -83,7 +260,9 @@
                                                RetainClosedCardsFlg NoToTopOrder))
                       'CANCELLED)
              then (NC.SetSubstance TableTopCard NewTableTop)
-                   (NC.MarkCardDirty TableTopCard])(NCTableTop.RecomputeTableTop
+                   (NC.MarkCardDirty TableTopCard])
+
+(NCTableTop.RecomputeTableTop
   [LAMBDA (TableTopCardOrWindow NoToTopOrder)            (* ; "Edited  4-May-89 10:20 by pmi")
 
     (* ;; "Reusing the cards in the TableTopCard, recompute the substance based on the card's new shapes, positions, and totopw ordering.")
@@ -109,7 +288,9 @@
                                          TableTopCard NIL NoToTopOrder))
                       'CANCELLED)
              then (NC.SetSubstance TableTopCard NewTableTop)
-                   (NC.MarkCardDirty TableTopCard])(NCTableTop.RemoveCardsFromTableTop
+                   (NC.MarkCardDirty TableTopCard])
+
+(NCTableTop.RemoveCardsFromTableTop
   [LAMBDA (TableTopCardOrWindow CardsToRemove)               (* ; "Edited 27-Jun-88 11:26 by Trigg")
           
           (* ;; "Remove the cards in CardsToRemove from the tabletop.")
@@ -134,7 +315,9 @@
 
                   (for TableTopEntry in InitialSubstance bind Card
                      when (FMEMB (SETQ Card (fetch (TableTopEntry Card) of TableTopEntry))
-                                 CardsToRemove) collect Card])(NCTableTop.AddCardsToTableTop
+                                 CardsToRemove) collect Card])
+
+(NCTableTop.AddCardsToTableTop
   [LAMBDA (TableTopCardOrWindow CardsToAdd InterestedWindow) (* ; "Edited 27-Jun-88 11:35 by Trigg")
           
           (* ;; "Add the cards in CardsToAdd to the tabletop.")
@@ -162,7 +345,11 @@
            else (NCP.PrintMsg InterestedWindow T "No new cards specified.")
                 (DISMISS NC.MsgDelay)
                 (NC.ClearMsg InterestedWindow T)
-                NIL]))(DEFINEQ(NCTableTop.CardsInTableTop
+                NIL])
+)
+(DEFINEQ
+
+(NCTableTop.CardsInTableTop
   [LAMBDA (TableTopCard)                                     (* ; "Edited 11-May-88 11:27 by Trigg")
           
           (* ;; "Return the set of cards appearing in this tabletop.")
@@ -172,7 +359,9 @@
                                                                           (fetch (TableTopEntry
                                                                                   Card) of 
                                                                                         TableTopEntry
-                                                                                 ))) collect Card])(NCTableTop.CollectCards
+                                                                                 ))) collect Card])
+
+(NCTableTop.CollectCards
   [LAMBDA (RootTableTopCards LinkTypes MaxDepth FollowCrossFileLinksFlg)
                                                              (* ; "Edited 11-May-88 11:32 by Trigg")
           
@@ -186,7 +375,11 @@
                                              LinkTypes
                                              (SUB1 MaxDepth)
                                              FollowCrossFileLinksFlg))
-      else RootTableTopCards]))(DEFINEQ(NCTableTop.TableTopBasedP
+      else RootTableTopCards])
+)
+(DEFINEQ
+
+(NCTableTop.TableTopBasedP
   [LAMBDA (CardOrCardType)                                   (* ; "Edited 12-Jul-88 18:14 by Trigg")
           
           (* ;; "Return non-nil if CardOrCardType is a subtype of the TableTop card type.  If CardOrCardType is a card, use its card type.")
@@ -194,7 +387,16 @@
     (NCP.IsSubTypeOfP (if (NC.CardP CardOrCardType)
                           then (NCP.CardType CardOrCardType)
                         else CardOrCardType)
-           'TableTop]))(* ;;; "The rest are internal.")(DEFINEQ(NCTableTop.ComputeTableTop
+           'TableTop])
+)
+
+
+
+(* ;;; "The rest are internal.")
+
+(DEFINEQ
+
+(NCTableTop.ComputeTableTop
   [LAMBDA (ListOfCards TableTopCard RetainClosedCardsFlg NoToTopOrder)
                                                              (* ; "Edited 22-Aug-89 19:01 by pmi")
 
@@ -323,7 +525,9 @@
                                                     Region _ (NCP.CardRegion ClosedCard]
                          (if (EQ AdditionalTableTopEntries 'CANCELLED)
                              then 'CANCELLED
-                           else (NCONC AdditionalTableTopEntries NewTableTopEntries])])(NCTableTop.ComputeTTEntryProps
+                           else (NCONC AdditionalTableTopEntries NewTableTopEntries])])
+
+(NCTableTop.ComputeTTEntryProps
   [LAMBDA (Card Window IconFor)                          (* ; "Edited 22-Aug-89 19:01 by pmi")
 
     (* ;; "Extract info from Card and its window about its display.  This includes scrolling info as well as other cardtype-dependent junk.  If Card is shrunken, then Window is the shrunken icon for IconFor window.  Else IconFor should be nil.")
@@ -367,8 +571,10 @@
        ((NCP.SketchBasedP Card)
         `(ScrollingInfo ,(DSPCLIPPINGREGION NIL Window)
                 ,@(if [NOT (OPENWP (WINDOWPROP Window 'SKETCHFIXEDMENU]
-                      then '(ClosedSketchMenuFlg T])(NCTableTop.ComputeCardsFromTemplate
-  [LAMBDA (TableTopCard Window TemplateCard)             (* ; "Edited  3-Apr-89 17:05 by pmi")
+                      then '(ClosedSketchMenuFlg T])
+
+(NCTableTop.ComputeCardsFromTemplate
+  [LAMBDA (TableTopCard Window TemplateCard)                 (* ; "Edited  3-Apr-89 17:05 by pmi")
 
     (* ;; "If TemplateCard is NIL, asks user to pick one from existing table tops.  Then asks user to select cards to persist and cards to copy for the new table top.")
 
@@ -379,77 +585,75 @@
      (OR
       TemplateCard
       (if (EQ (SETQ TemplateCard (NCP.SelectCards InterestedWindow T (FUNCTION NCP.ValidCardP)
-                                            
+                                        
                                 "Select a table top card to use as a template for the new table top."
-                                            T))
-                  'DON'T)
+                                        T))
+              'DON'T)
         else
         (SETQ CardsInTemplate (NCTableTop.CardsInTableTop TemplateCard))
         (NCTableTop.BringUpTableTop TemplateCard)
-        (if (EQ (SETQ PersistentCards (NCP.SelectCards InterestedWindow NIL
-                                                 `[LAMBDA (Card)
-                                                    (MEMB Card CardsInTemplate]
-                                                 "Select cards to persist from this table top." T))
-                    'DON'T)
+        (if (EQ (SETQ PersistentCards (NCP.SelectCards InterestedWindow NIL `[LAMBDA (Card)
+                                                                               (MEMB Card 
+                                                                                     CardsInTemplate]
+                                             "Select cards to persist from this table top." T))
+                'DON'T)
           elseif (EQ (SETQ CardsToBeCopied (NCP.SelectCards InterestedWindow NIL
-                                                      `[LAMBDA (Card)
-                                                         (MEMB Card CardsInTemplate]
-                                                      
-                                                     "Select cards to be copied from this table top."
-                                                      T))
-                         'DON'T)
-          else (PROG1 [for OldCard in CardsInTemplate
-                             bind NewCard NewCardWindow NewCardTextStream NewCardTextLength 
-                                   OldCardIconWindow OldCardIconWindowRegion ShrunkenWinPos
-                             when (OR (FMEMB OldCard PersistentCards)
-                                          (FMEMB OldCard CardsToBeCopied))
-                             collect
-                             (if (FMEMB OldCard PersistentCards)
-                                 then OldCard
-                               else (PROG1 (SETQ NewCard (CAR (NCP.CopyCards OldCard NIL NIL T
+                                                  `[LAMBDA (Card)
+                                                     (MEMB Card CardsInTemplate]
+                                                  "Select cards to be copied from this table top." T)
+                      )
+                     'DON'T)
+          else (PROG1 [for OldCard in CardsInTemplate bind NewCard NewCardWindow NewCardTextStream 
+                                                           NewCardTextLength OldCardIconWindow 
+                                                           OldCardIconWindowRegion ShrunkenWinPos
+                         when (OR (FMEMB OldCard PersistentCards)
+                                  (FMEMB OldCard CardsToBeCopied))
+                         collect (if (FMEMB OldCard PersistentCards)
+                                     then OldCard
+                                   else (PROG1 (SETQ NewCard (CAR (NCP.CopyCards OldCard NIL NIL T
                                                                          'DON'TCOPY InterestedWindow
                                                                          T)))
                                             (SETQ NewCardWindow (NCP.OpenCard NewCard (NCP.CardRegion
                                                                                        OldCard)))
                                             (SETQ NewCardTextStream (TEXTSTREAM NewCardWindow))
-                                            (SETQ NewCardTextLength (fetch (TEXTOBJ TEXTLEN)
-                                                                       of (TEXTOBJ 
-                                                                                    NewCardTextStream
-                                                                                     )))
+                                            (SETQ NewCardTextLength (TEDIT.NCHARS NewCardTextStream))
 
                                             (* ;; 
-                        "Delete any text in the copy, hopefully preserving the looks for new text.")
+                          "Delete any text in the copy, hopefully preserving the looks for new text.")
 
                                             (if (GREATERP NewCardTextLength 0)
                                                 then (TEDIT.DELETE NewCardTextStream 1 
-                                                                NewCardTextLength))
-                                            (if [OPENWP (SETQ OldCardIconWindow
-                                                             (WINDOWPROP (NCP.CardWindow OldCard)
-                                                                    'ICON]
+                                                            NewCardTextLength))
+                                            (if [OPENWP (SETQ OldCardIconWindow (WINDOWPROP
+                                                                                 (NCP.CardWindow
+                                                                                  OldCard)
+                                                                                 'ICON]
                                                 then (SETQ OldCardIconWindowRegion
-                                                          (WINDOWPROP OldCardIconWindow 'REGION))
-                                                      (SETQ ShrunkenWinPos (create
-                                                                            POSITION
-                                                                            XCOORD _
-                                                                            (fetch (REGION LEFT)
-                                                                               of 
+                                                      (WINDOWPROP OldCardIconWindow 'REGION))
+                                                     (SETQ ShrunkenWinPos (create POSITION
+                                                                                 XCOORD _
+                                                                                 (fetch (REGION
+                                                                                         LEFT)
+                                                                                    of 
                                                                               OldCardIconWindowRegion
-                                                                                   )
-                                                                            YCOORD _
-                                                                            (fetch (REGION BOTTOM
-                                                                                              )
-                                                                               of 
+                                                                                        )
+                                                                                 YCOORD _
+                                                                                 (fetch (REGION
+                                                                                         BOTTOM)
+                                                                                    of 
                                                                               OldCardIconWindowRegion
-                                                                                   )))
-                                                      (WINDOWPROP NewCardWindow 'SHRUNKENWINPOS 
-                                                             ShrunkenWinPos)
-                                                      (SHRINKW NewCardWindow NIL ShrunkenWinPos)
-                                                      (WINDOWPROP NewCardWindow 'SHRUNKENWINPOS NIL)))
-                                    ]
-                       (if PersistentCards
-                           then (NCP.CloseCards (LDIFFERENCE CardsInTemplate PersistentCards)
-                                           T)
-                         else (NCP.CloseCards CardsInTemplate T)))])(NCTableTop.BringUpCardInTableTop
+                                                                                        )))
+                                                     (WINDOWPROP NewCardWindow 'SHRUNKENWINPOS 
+                                                            ShrunkenWinPos)
+                                                     (SHRINKW NewCardWindow NIL ShrunkenWinPos)
+                                                     (WINDOWPROP NewCardWindow 'SHRUNKENWINPOS NIL)))
+                                     ]
+                   (if PersistentCards
+                       then (NCP.CloseCards (LDIFFERENCE CardsInTemplate PersistentCards)
+                                   T)
+                     else (NCP.CloseCards CardsInTemplate T)))])
+
+(NCTableTop.BringUpCardInTableTop
   [LAMBDA (TableTopEntry)                                    (* ; "Edited 19-Sep-88 16:30 by jrc")
 
     (* ;; "Bring up particular card in tabletop designated by TableTopEntry.")
@@ -474,7 +678,9 @@
                       then (WINDOWPROP Win 'SHRUNKENWINPOS ShrunkenWinPos)
                            (SHRINKW Win NIL ShrunkenWinPos)
                            (WINDOWPROP Win 'SHRUNKENWINPOS NIL))
-                  Card])(NCTableTop.ProcessTTEntryProps
+                  Card])
+
+(NCTableTop.ProcessTTEntryProps
   [LAMBDA (Card Window Props)                                (* ; "Edited 21-Jul-88 21:07 by Trigg")
 
     (* ;; "Massage Window according to Props including scrolling.")
@@ -548,7 +754,11 @@
              (if (LISTGET Props 'ClosedSketchMenuFlg)
                  then (LET [(SketchMenuWin (WINDOWPROP Window 'SKETCHFIXEDMENU]
                            (AND (OPENWP SketchMenuWin)
-                                (CLOSEW SketchMenuWin]))(DEFINEQ(NCTableTop.RemakeTableTopSelectingNewCards
+                                (CLOSEW SketchMenuWin])
+)
+(DEFINEQ
+
+(NCTableTop.RemakeTableTopSelectingNewCards
   [LAMBDA (TableTopCardOrWindow InterestedWindow NoToTopOrder)
                                                              (* ; "Edited  4-May-89 14:15 by pmi")
 
@@ -569,13 +779,17 @@
                                   "Choose new cards for rebuilding table top." T))
          (if (EQ ListOfCards 'DON'T)
              then NIL
-           else (NCTableTop.RemakeTableTop TableTopCard ListOfCards T NoToTopOrder])(NCTableTop.RemakeTableTopSelectingNewCardsInOrder
+           else (NCTableTop.RemakeTableTop TableTopCard ListOfCards T NoToTopOrder])
+
+(NCTableTop.RemakeTableTopSelectingNewCardsInOrder
   [LAMBDA (TableTopCardOrWindow InterestedWindow)        (* ; "Edited  4-May-89 14:22 by pmi")
 
     (* ;; 
   "Remake the tabletop using the order of selection for the order of the cards in the tabletop.")
 
-    (NCTableTop.RemakeTableTopSelectingNewCards TableTopCardOrWindow InterestedWindow T])(NCTableTop.ComputeTableTopUsingTemplate
+    (NCTableTop.RemakeTableTopSelectingNewCards TableTopCardOrWindow InterestedWindow T])
+
+(NCTableTop.ComputeTableTopUsingTemplate
   [LAMBDA (TableTopCardOrWindow InterestedWindow)        (* ; "Edited  4-May-89 15:19 by pmi")
 
 (* ;;; "Rebuild the substance of TableTopCard using a template card provided by the user.")
@@ -585,7 +799,9 @@
          (SETQ ListOfCards (NCTableTop.ComputeCardsFromTemplate TableTopCard InterestedWindow))
          (if (EQ ListOfCards 'DON'T)
              then NIL
-           else (NCTableTop.RemakeTableTop TableTopCard ListOfCards T])(NCTableTop.RemoveSelectedCards
+           else (NCTableTop.RemakeTableTop TableTopCard ListOfCards T])
+
+(NCTableTop.RemoveSelectedCards
   [LAMBDA (TableTopCardOrWindow InterestedWindow)            (* ; "Edited 27-Jun-88 11:26 by Trigg")
 
 (* ;;; "User selects a set of cards to remove from the tabletop.  User picks cards to remove by successive selections from an ever shrinking menu of card titles.")
@@ -624,7 +840,9 @@
            else (NCP.PrintMsg InterestedWindow T "No cards in this tabletop.")
                 (DISMISS NC.MsgDelay)
                 (NC.ClearMsg InterestedWindow T)
-                NIL])(NCTableTop.AddSelectedCardsToTableTop
+                NIL])
+
+(NCTableTop.AddSelectedCardsToTableTop
   [LAMBDA (TableTopCardOrWindow InterestedWindow)            (* ; "Edited 27-Jun-88 11:35 by Trigg")
 
 (* ;;; "Add some new cards provided by the user to the tabletop.")
@@ -638,7 +856,11 @@
                                  "Choose cards to add to table top." T))
          (if (EQ CardsToAdd 'DON'T)
              then NIL
-           else (NCTableTop.AddCardsToTableTop TableTopCard CardsToAdd InterestedWindow]))(DEFINEQ(NCTableTop.AddOpenEventsExpr
+           else (NCTableTop.AddCardsToTableTop TableTopCard CardsToAdd InterestedWindow])
+)
+(DEFINEQ
+
+(NCTableTop.AddOpenEventsExpr
   (LAMBDA (NoteFile)                                         (* rht%: "16-May-87 20:12")
           
           (* * Add an expression to the open events card for NoteFile, if it's not 
@@ -675,7 +897,9 @@
                       then (NCP.CloseCards OpenEventsCard)))
       else (NCP.ReportError "NCTableTop.AddOpenEventsExpr" (CONCAT 
                                                "Can't add OpenEvents expression to closed notefile: " 
-                                                                  NoteFile)))))(NCTableTop.NoteFileWhenOpenedFn
+                                                                  NoteFile)))))
+
+(NCTableTop.NoteFileWhenOpenedFn
   (LAMBDA (NoteFile)                                         (* rht%: "12-Feb-87 17:43")
           
           (* * Look for the TableTop card left from previous closing.
@@ -690,7 +914,9 @@
           (* Smash substance so this table top won't be brought up next time notefile is 
           opened.)
 
-                  (NCTableTop.RemakeTableTop TableTopCard NIL)))))(NCTableTop.MakeOrUpdateNoteFileTableTop
+                  (NCTableTop.RemakeTableTop TableTopCard NIL)))))
+
+(NCTableTop.MakeOrUpdateNoteFileTableTop
   [LAMBDA (NoteFile NoToTopOrder)                        (* ; "Edited  4-May-89 10:13 by pmi")
 
     (* ;; "Looks for a notefile tabletop card in the registry.  If there is one, then update its contents with new table top based on current open cards.  Else make a new one and register it.")
@@ -712,7 +938,9 @@
                                                 '(Don'tRequireFilingFlg T)
                                                 NIL OpenCards))
                    (AND (NCP.ValidCardP TableTopCard)
-                        (NCP.RegisterCardByName 'NoteFileTableTop TableTopCard])(NCTableTop.FixNoteFileOperationsMenus
+                        (NCP.RegisterCardByName 'NoteFileTableTop TableTopCard])
+
+(NCTableTop.FixNoteFileOperationsMenus
   (LAMBDA NIL                                                (* pmi%: "27-Mar-87 11:00")
           
           (* * Change the CloseNoteFile menu item to have a pull-across for Close saving 
@@ -764,7 +992,9 @@
          (NC.MakeNoteFileIconOperationsMenus)
          (PUTASSOC '| Close | (CDR NoteFileOperationsCloseItem)
                 NC.NoteFileOpsItems)
-         (SETQ NC.NoteFileOpsMenu NIL))))(NCTableTop.CloseNoteFileSavingTableTop
+         (SETQ NC.NoteFileOpsMenu NIL))))
+
+(NCTableTop.CloseNoteFileSavingTableTop
   (LAMBDA (NoteFile NoteFileIconWindow)                      (* rht%: "30-Mar-87 23:31")
           
           (* * Close down the notefile, but save table top first.)
@@ -774,7 +1004,9 @@
 
     (NCTableTop.MakeOrUpdateNoteFileTableTop NoteFile)
     (NCTableTop.AddOpenEventsExpr NoteFile)
-    (NC.CloseNoteFile NoteFile NoteFileIconWindow NIL T)))(NCTableTop.CloseSessionSavingTableTops
+    (NC.CloseNoteFile NoteFile NoteFileIconWindow NIL T)))
+
+(NCTableTop.CloseSessionSavingTableTops
   [LAMBDA NIL                                                (* ; "Edited  8-Mar-88 14:37 by pmi")
           
           (* * Close all open notefiles saving their table tops.)
@@ -785,7 +1017,11 @@
                                                         (NC.NoteFileOpenP Value))
                                                    then (NCTableTop.CloseNoteFileSavingTableTop
                                                          Value]
-    (NC.PrintMsg NIL T "Done closing all NoteFiles."]))(DEFINEQ(NCTableTop.MakeFn
+    (NC.PrintMsg NIL T "Done closing all NoteFiles."])
+)
+(DEFINEQ
+
+(NCTableTop.MakeFn
   [LAMBDA (TableTopCard Title NoDisplayFlg ListOfCards InterestedWindow RegionOrPosition)
                                                              (* ; "Edited 29-Mar-89 16:23 by pmi")
 
@@ -826,7 +1062,9 @@
                                                          TableTopCard T))
                  (if NoDisplayFlg
                      then TableTopCard
-                   else Window])(NCTableTop.EditFn
+                   else Window])
+
+(NCTableTop.EditFn
   [LAMBDA (TableTopCard Substance Region/Position)           (* ; "Edited 30-May-88 15:05 by Trigg")
           
           (* ;; 
@@ -847,7 +1085,9 @@
                                     NIL NIL Region/Position))
                 (NCP.SetUpTitleBar Window (NC.RetrieveType TableTopCard))
                 (WINDOWADDPROP Window 'SHRINKFN (FUNCTION NC.GraphCardShrinkFn)))
-         Window])(NCTableTop.PutFn
+         Window])
+
+(NCTableTop.PutFn
   [LAMBDA (TableTopCard Stream)                              (* ; "Edited 22-Jul-88 00:06 by Trigg")
 
 (* ;;; "Write the table top substance down to the stream.  The format is number of pairs, followed by pairs of uid and region.")
@@ -899,7 +1139,9 @@
          (NC.WritePtr Stream NumRecords 3)                   (* ; "Leave file ptr at eof.")
          (SETFILEPTR Stream -1)                              (* ; 
                                            "Return 3 to indicate this is version 3 substance format.")
-         3])(NCTableTop.GetFn
+         3])
+
+(NCTableTop.GetFn
   [LAMBDA (TableTopCard Length Stream VersionNum)            (* ; "Edited 22-Jul-88 00:07 by Trigg")
 
 (* ;;; "Read in the TableTop card/region pairs.  Expect a length field first.")
@@ -992,7 +1234,11 @@
                                                 ShrunkenFlg _ (EQ ShrunkenIndicator 1)
                                                 Props _ Props])
              (NCP.ReportError "NCTableTop.GetFn" (CONCAT "Improper substance version num: " 
-                                                        VersionNum]))(DEFINEQ(NCTableTop.ReplaceUIDsFn
+                                                        VersionNum])
+)
+(DEFINEQ
+
+(NCTableTop.ReplaceUIDsFn
   [LAMBDA (TableTopCard HashArray)                           (* ; "Edited 21-Jul-88 22:53 by Trigg")
 
     (* ;; "Called under NC.CopyCards, this translates TableTopEntry's Cards according to HashArray.")
@@ -1000,7 +1246,11 @@
     (for TableTopEntry in (NCP.CardSubstance TableTopCard)
        do (replace (TableTopEntry Card) of TableTopEntry with (GETHASH (fetch (TableTopEntry Card)
                                                                           of TableTopEntry)
-                                                                     HashArray]))(DEFINEQ(NCTableTop.AddTableTopCard
+                                                                     HashArray])
+)
+(DEFINEQ
+
+(NCTableTop.AddTableTopCard
   [LAMBDA NIL                                            (* ; "Edited 29-Mar-89 08:34 by pmi")
 
 (* ;;; "Define the table top card type.")
@@ -1032,7 +1282,31 @@
                                                               'Insert% Link)
                                                       then NC.GlobalInsertLinkMenuItem
                                                     else Item]
-             (MiddleButtonMenuItems ,NCTableTop.MiddleButtonMenuItems]))(RPAQQ NCTableTop.LinkIconBitmap #*(21 18)OOOOOH@@H@@@@H@@HCOONH@@HFGLNH@@HNFDNH@@IINGJH@@KIOOBH@@KOONBH@@JB@BBH@@JB@BBH@@JB@BBH@@JB@BBH@@J@@B@H@@J@@B@H@@J@@B@H@@J@@B@H@@H@@@@H@@OOOOOH@@)(DECLARE%: EVAL@COMPILE(RECORD TableTopEntry (Card Region ShrunkenWinPos ShrunkenFlg Props))(RECORD NCTableTop.BrowserOverviewSpecs (OverviewWinWidth OverviewWinHeight                                                    WHERETOATTACHOVERVIEWWIN OVERVIEWWINMODE)))(DECLARE%: DONTEVAL@LOAD (NCTableTop.AddTableTopCard)(PUTPROP 'TableTop 'ReplaceUIDsFn (FUNCTION NCTableTop.ReplaceUIDsFn))(PUTPROP 'TableTop 'ExtraLinkIconMenuItems NCTableTop.MiddleButtonMenuItems)(PUTPROP 'TableTop 'LinkIconMiddleButtonMenu NIL))(DEFINEQ(NCAddStub.TableTopCard
+             (MiddleButtonMenuItems ,NCTableTop.MiddleButtonMenuItems])
+)
+
+(RPAQQ NCTableTop.LinkIconBitmap #*(21 18)OOOOOH@@H@@@@H@@HCOONH@@HFGLNH@@HNFDNH@@IINGJH@@KIOOBH@@KOONBH@@JB@BBH@@JB@BBH@@JB@BBH@@JB@BBH@@J@@B@H@@J@@B@H@@J@@B@H@@J@@B@H@@H@@@@H@@OOOOOH@@
+)
+(DECLARE%: EVAL@COMPILE
+
+(RECORD TableTopEntry (Card Region ShrunkenWinPos ShrunkenFlg Props))
+
+(RECORD NCTableTop.BrowserOverviewSpecs (OverviewWinWidth OverviewWinHeight WHERETOATTACHOVERVIEWWIN
+                                               OVERVIEWWINMODE))
+)
+(DECLARE%: DONTEVAL@LOAD 
+
+(NCTableTop.AddTableTopCard)
+
+(PUTPROP 'TableTop 'ReplaceUIDsFn (FUNCTION NCTableTop.ReplaceUIDsFn))
+
+(PUTPROP 'TableTop 'ExtraLinkIconMenuItems NCTableTop.MiddleButtonMenuItems)
+
+(PUTPROP 'TableTop 'LinkIconMiddleButtonMenu NIL)
+)
+(DEFINEQ
+
+(NCAddStub.TableTopCard
   (LAMBDA NIL                                                (* ; "Edited  5-Dec-87 20:02 by rht:")
           
           (* * Add the tabletop card type stub.)
@@ -1040,4 +1314,35 @@
     (DECLARE (GLOBALVARS NCTableTop.LinkIconBitmap))
     (NC.AddCardTypeStub 'TableTop 'NoteCard 'NCTABLETOP NIL `((DisplayedInMenuFlg T)
                                                               (LinkIconAttachedBitMap ,
-                                                                     NCTableTop.LinkIconBitmap))))))(* ; "Add a CloseSavingTableTop item to the Close notefile menus.")(DECLARE%: DONTEVAL@LOAD (NCTableTop.FixNoteFileOperationsMenus))(PUTPROPS NCTABLETOPCARD COPYRIGHT ("Xerox Corporation" 1987 1988 1989 1993 1994 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (10710 21293 (NCTableTop.BringUpTableTop 10720 . 12103) (NCTableTop.OpenCardInTableTop 12105 . 14041) (NCTableTop.CloseDownTableTop 14043 . 15188) (NCTableTop.RemakeTableTop 15190 . 16378) (NCTableTop.RecomputeTableTop 16380 . 18238) (NCTableTop.RemoveCardsFromTableTop 18240 . 19773) (NCTableTop.AddCardsToTableTop 19775 . 21291)) (21294 23086 (NCTableTop.CardsInTableTop 21304 . 22127) (NCTableTop.CollectCards 22129 . 23084)) (23087 23588 (NCTableTop.TableTopBasedP 23097 . 23586)) (23630 48559 (NCTableTop.ComputeTableTop 23640 . 33482) (NCTableTop.ComputeTTEntryProps 33484 . 36631) (NCTableTop.ComputeCardsFromTemplate 36633 . 42714) (NCTableTop.BringUpCardInTableTop 42716 . 44175) (NCTableTop.ProcessTTEntryProps 44177 . 48557)) (48560 54520 (NCTableTop.RemakeTableTopSelectingNewCards 48570 . 49930) (NCTableTop.RemakeTableTopSelectingNewCardsInOrder 49932 . 50302) (NCTableTop.ComputeTableTopUsingTemplate 50304 . 50884) (NCTableTop.RemoveSelectedCards 50886 . 53738) (NCTableTop.AddSelectedCardsToTableTop 53740 . 54518)) (54521 64516 (NCTableTop.AddOpenEventsExpr 54531 . 56857) (NCTableTop.NoteFileWhenOpenedFn 56859 . 57601) (NCTableTop.MakeOrUpdateNoteFileTableTop 57603 . 59288) (NCTableTop.FixNoteFileOperationsMenus 59290 . 63277) (NCTableTop.CloseNoteFileSavingTableTop 63279 . 63770) (NCTableTop.CloseSessionSavingTableTops 63772 . 64514)) (64517 78114 (NCTableTop.MakeFn 64527 . 67209) (NCTableTop.EditFn 67211 . 68447) (NCTableTop.PutFn 68449 . 71712) (NCTableTop.GetFn 71714 . 78112)) (78115 78736 (NCTableTop.ReplaceUIDsFn 78125 . 78734)) (78737 80609 (NCTableTop.AddTableTopCard 78747 . 80607)) (81344 81874 (NCAddStub.TableTopCard 81354 . 81872)))))STOP
+                                                                     NCTableTop.LinkIconBitmap)))))
+)
+
+
+
+(* ; "Add a CloseSavingTableTop item to the Close notefile menus.")
+
+(DECLARE%: DONTEVAL@LOAD 
+
+(NCTableTop.FixNoteFileOperationsMenus)
+)
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (10591 21174 (NCTableTop.BringUpTableTop 10601 . 11984) (NCTableTop.OpenCardInTableTop 
+11986 . 13922) (NCTableTop.CloseDownTableTop 13924 . 15069) (NCTableTop.RemakeTableTop 15071 . 16259) 
+(NCTableTop.RecomputeTableTop 16261 . 18119) (NCTableTop.RemoveCardsFromTableTop 18121 . 19654) (
+NCTableTop.AddCardsToTableTop 19656 . 21172)) (21175 22967 (NCTableTop.CardsInTableTop 21185 . 22008) 
+(NCTableTop.CollectCards 22010 . 22965)) (22968 23469 (NCTableTop.TableTopBasedP 22978 . 23467)) (
+23511 48263 (NCTableTop.ComputeTableTop 23521 . 33363) (NCTableTop.ComputeTTEntryProps 33365 . 36512) 
+(NCTableTop.ComputeCardsFromTemplate 36514 . 42418) (NCTableTop.BringUpCardInTableTop 42420 . 43879) (
+NCTableTop.ProcessTTEntryProps 43881 . 48261)) (48264 54224 (
+NCTableTop.RemakeTableTopSelectingNewCards 48274 . 49634) (
+NCTableTop.RemakeTableTopSelectingNewCardsInOrder 49636 . 50006) (
+NCTableTop.ComputeTableTopUsingTemplate 50008 . 50588) (NCTableTop.RemoveSelectedCards 50590 . 53442) 
+(NCTableTop.AddSelectedCardsToTableTop 53444 . 54222)) (54225 64220 (NCTableTop.AddOpenEventsExpr 
+54235 . 56561) (NCTableTop.NoteFileWhenOpenedFn 56563 . 57305) (
+NCTableTop.MakeOrUpdateNoteFileTableTop 57307 . 58992) (NCTableTop.FixNoteFileOperationsMenus 58994 . 
+62981) (NCTableTop.CloseNoteFileSavingTableTop 62983 . 63474) (NCTableTop.CloseSessionSavingTableTops 
+63476 . 64218)) (64221 77818 (NCTableTop.MakeFn 64231 . 66913) (NCTableTop.EditFn 66915 . 68151) (
+NCTableTop.PutFn 68153 . 71416) (NCTableTop.GetFn 71418 . 77816)) (77819 78440 (
+NCTableTop.ReplaceUIDsFn 77829 . 78438)) (78441 80313 (NCTableTop.AddTableTopCard 78451 . 80311)) (
+81043 81573 (NCAddStub.TableTopCard 81053 . 81571)))))
+STOP
