@@ -1,14 +1,9 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
-(FILECREATED " 7-Oct-2021 23:46:25" {DSK}<home>medley>notecards>system>NCCONFIG.;5 12483  
 
-      changes to%:  (VARS NCCONFIGCOMS)
+(FILECREATED "11-Mar-2024 15:52:56" {DSK}<home>frank>il>notecards>system>NCCONFIG.;6 11761  
 
-      previous date%: " 7-Oct-2021 17:32:49" {DSK}<home>medley>notecards>system>NCCONFIG.;4)
+      :PREVIOUS-DATE "11-Mar-2024 13:35:33" {DSK}<home>frank>il>notecards>system>NCCONFIG.;5)
 
-
-(* ; "
-Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
-")
 
 (PRETTYCOMPRINT NCCONFIGCOMS)
 
@@ -31,16 +26,16 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
                (NC.ModernizeTITLEPROPORTION 0.25))
         [INITVARS (NC.CoreFiles '(NCDECLS NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE 
                                         NCLOCALDEVICE NCCARDS NCLINKS NCTYPESMECH NCPROGINT 
-                                        NCCROSSFILELINKS MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES 
-                                        MEDLEYROOMSPATCHES MODERNIZEPATCHES NC2021PATCHES))
+                                        NCCROSSFILELINKS MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES 
+                                        MODERNIZEPATCHES NC2021PATCHES))
                (NC.Files '(NOTECARDS NCDECLS NCCONFIG NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE
                                  NCLOCALDEVICE NCCOMPACT NCREPAIR NCCARDS NCLINKS NCTYPESMECH 
                                  NCPROGINT NCCROSSFILELINKS NCHASHCARD NCTEXTCARD NCSKETCHCARD 
                                  NCGRAPHCARD NCFILEBOXCARD NCBROWSERCARD NCSEARCHCARD NCDOCUMENTCARD
                                  NCTABLETOPCARD NCLINKINDEXCARD NCLISTCARD NCCONVERTVERSION2TO3 
-                                 NCGESTURES MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES
-                                 POSTRELEASEPATCHES MODERNIZEPATCHES NC2021PATCHES GRAPHERPATCH 
-                                 NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH]
+                                 NCGESTURES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES POSTRELEASEPATCHES
+                                 MODERNIZEPATCHES NC2021PATCHES GRAPHERPATCH NCMAPS NCHACKS 
+                                 NCFILECARD NEWSHADEITEM NOTECARDS.HASH]
         (DECLARE%: DONTEVAL@LOAD (IFPROP ConfigProps * NC.Files)
                (CONFIGPROPS * NC.Files)
                (IFPROP File * NC.AutoloadableFns))
@@ -84,19 +79,17 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 
 (RPAQ? NC.ModernizeTITLEPROPORTION 0.25)
 
-(RPAQ? NC.CoreFiles '(NCDECLS NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE NCLOCALDEVICE 
-                                NCCARDS NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS 
-                                MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES 
-                                MODERNIZEPATCHES NC2021PATCHES))
+(RPAQ? NC.CoreFiles '(NCDECLS NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE NCLOCALDEVICE NCCARDS 
+                            NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS MEDLEYSYSTEMPATCHES 
+                            MEDLEYROOMSPATCHES MODERNIZEPATCHES NC2021PATCHES))
 
 (RPAQ? NC.Files
        '(NOTECARDS NCDECLS NCCONFIG NCUTILITIES NCPARAMETERS NCINTERFACE NCDATABASE NCLOCALDEVICE 
                NCCOMPACT NCREPAIR NCCARDS NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS NCHASHCARD 
                NCTEXTCARD NCSKETCHCARD NCGRAPHCARD NCFILEBOXCARD NCBROWSERCARD NCSEARCHCARD 
                NCDOCUMENTCARD NCTABLETOPCARD NCLINKINDEXCARD NCLISTCARD NCCONVERTVERSION2TO3 
-               NCGESTURES MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES 
-               POSTRELEASEPATCHES MODERNIZEPATCHES NC2021PATCHES GRAPHERPATCH NCMAPS NCHACKS 
-               NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
+               NCGESTURES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES POSTRELEASEPATCHES MODERNIZEPATCHES
+               NC2021PATCHES GRAPHERPATCH NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
 (DECLARE%: DONTEVAL@LOAD 
 
 (RPAQQ NC.Files
@@ -104,8 +97,8 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
               NCCOMPACT NCREPAIR NCCARDS NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS NCHASHCARD 
               NCTEXTCARD NCSKETCHCARD NCGRAPHCARD NCFILEBOXCARD NCBROWSERCARD NCSEARCHCARD 
               NCDOCUMENTCARD NCTABLETOPCARD NCLINKINDEXCARD NCLISTCARD NCCONVERTVERSION2TO3 
-              NCGESTURES MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES POSTRELEASEPATCHES
-              GRAPHERPATCH NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
+              NCGESTURES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES POSTRELEASEPATCHES GRAPHERPATCH 
+              NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
 
 
 (RPAQQ NC.Files
@@ -113,13 +106,12 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
               NCCOMPACT NCREPAIR NCCARDS NCLINKS NCTYPESMECH NCPROGINT NCCROSSFILELINKS NCHASHCARD 
               NCTEXTCARD NCSKETCHCARD NCGRAPHCARD NCFILEBOXCARD NCBROWSERCARD NCSEARCHCARD 
               NCDOCUMENTCARD NCTABLETOPCARD NCLINKINDEXCARD NCLISTCARD NCCONVERTVERSION2TO3 
-              NCGESTURES MEDLEYTEDITPATCHES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES POSTRELEASEPATCHES
-              GRAPHERPATCH NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
+              NCGESTURES MEDLEYSYSTEMPATCHES MEDLEYROOMSPATCHES POSTRELEASEPATCHES GRAPHERPATCH 
+              NCMAPS NCHACKS NCFILECARD NEWSHADEITEM NOTECARDS.HASH))
 
 
-(RPAQQ NC.AutoloadableFns (NC.CompactNoteFileToTarget NC.CompactNoteFileInPlace 
-                                     NC.ScavengerPhase1 NC.FindNextCardPart 
-                                     NC.ConvertNoteFileVersion2To3))
+(RPAQQ NC.AutoloadableFns (NC.CompactNoteFileToTarget NC.CompactNoteFileInPlace NC.ScavengerPhase1 
+                                 NC.FindNextCardPart NC.ConvertNoteFileVersion2To3))
 
 (PUTPROPS NC.CompactNoteFileToTarget File NCCOMPACT)
 
@@ -133,21 +125,73 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 )
 
 (RPAQQ NC.AutoloadStubFns (NCAddStub.SketchCard NCAddStub.GraphCard NCAddStub.BrowserCard 
-                                     NCAddStub.SearchCard NCAddStub.DocumentCard 
-                                     NCAddStub.LinkIndexCard))
+                                 NCAddStub.SearchCard NCAddStub.DocumentCard NCAddStub.LinkIndexCard))
 (DEFINEQ
 
-(NCAddStub.SketchCard  [LAMBDA NIL                                                (* ; "Edited  3-Dec-87 18:58 by rht:")         (* * kirk 18Jun86 Add the Sketch card stub)         (* * rht 11/7/86%: Fixed typo, changing a QUOTE to BQUOTE.)    (DECLARE (GLOBALVARS NC.SketchCardIcon))    (NC.AddCardTypeStub 'Sketch 'NoteCard 'NCSKETCHCARD NIL `((DisplayedInMenuFlg T)                                                              (LinkIconAttachedBitMap                                                                      ,NC.SketchCardIcon])
+(NCAddStub.SketchCard
+  [LAMBDA NIL                                                (* ; "Edited  3-Dec-87 18:58 by rht:")
 
-(NCAddStub.GraphCard  [LAMBDA NIL                                                (* ; "Edited  3-Dec-87 18:58 by rht:")         (* * kirk 18Jun86 Add the Graph card stub)         (* * rht 11/7/86%: Fixed typo, changing a QUOTE to BQUOTE.)    (DECLARE (GLOBALVARS NC.GraphCardIcon))    (NC.AddCardTypeStub 'Graph 'NoteCard 'NCGRAPHCARD NIL `((DisplayedInMenuFlg T)                                                            (LinkIconAttachedBitMap                                                                    ,NC.GraphCardIcon])
+         (* * kirk 18Jun86 Add the Sketch card stub)
 
-(NCAddStub.BrowserCard  [LAMBDA NIL                                                (* ;                                                            "Edited  6-Dec-88 12:22 by krivacic")(* ;;; "kirk 18Jun86 Add the Browser card stub")(* ;;; "rht 11/7/86: Now passes down a \\FILLME// field.")    (NC.AddCardTypeStub 'Browser 'Graph 'NCBROWSERCARD NIL `((DisplayedInMenuFlg T)                                                             (LinkIconAttachedBitMap                                                                     ,NC.BrowserCardIcon])
+         (* * rht 11/7/86%: Fixed typo, changing a QUOTE to BQUOTE.)
 
-(NCAddStub.SearchCard  [LAMBDA NIL                                                (* ;                                                            "Edited  6-Dec-88 12:25 by krivacic")(* ;;; "kirk 18Jun86 Add the Search card stub")(* ;;; "rht 11/7/86: Now passes down a \\FILLME// field.")    (NC.AddCardTypeStub 'Search 'Text 'NCSEARCHCARD NIL `((DisplayedInMenuFlg T)                                                          (LinkIconAttachedBitMap ,NC.SearchCardIcon])
+    (DECLARE (GLOBALVARS NC.SketchCardIcon))
+    (NC.AddCardTypeStub 'Sketch 'NoteCard 'NCSKETCHCARD NIL `((DisplayedInMenuFlg T)
+                                                              (LinkIconAttachedBitMap 
+                                                                     ,NC.SketchCardIcon])
 
-(NCAddStub.DocumentCard  [LAMBDA NIL                                                (* ;                                                            "Edited  6-Dec-88 12:21 by krivacic")(* ;;; "kirk 18Jun86 Add the FileBox card stub")    (NC.AddCardTypeStub 'Document 'Text 'NCDOCUMENTCARD NIL `((DisplayedInMenuFlg . T)                                                              (LinkIconAttachedBitMap                                                                      ,NC.DocumentCardIcon])
+(NCAddStub.GraphCard
+  [LAMBDA NIL                                                (* ; "Edited  3-Dec-87 18:58 by rht:")
 
-(NCAddStub.LinkIndexCard  [LAMBDA NIL                                                (* ;                                                            "Edited  6-Dec-88 12:25 by krivacic")(* ;;; "kirk 18Jun86 Add the LinkIndex card stub")(* ;;; "rht 11/7/86: Now passes down a \\FILLME// field.")    (NC.AddCardTypeStub 'LinkIndex 'Text 'NCLINKINDEXCARD NIL `((DisplayedInMenuFlg T)                                                                (LinkIconAttachedBitMap                                                                        ,NC.LinkIndexCardIcon])
+         (* * kirk 18Jun86 Add the Graph card stub)
+
+         (* * rht 11/7/86%: Fixed typo, changing a QUOTE to BQUOTE.)
+
+    (DECLARE (GLOBALVARS NC.GraphCardIcon))
+    (NC.AddCardTypeStub 'Graph 'NoteCard 'NCGRAPHCARD NIL `((DisplayedInMenuFlg T)
+                                                            (LinkIconAttachedBitMap 
+                                                                   ,NC.GraphCardIcon])
+
+(NCAddStub.BrowserCard
+  [LAMBDA NIL                                             (* ; "Edited  6-Dec-88 12:22 by krivacic")
+
+(* ;;; "kirk 18Jun86 Add the Browser card stub")
+
+(* ;;; "rht 11/7/86: Now passes down a \\FILLME// field.")
+
+    (NC.AddCardTypeStub 'Browser 'Graph 'NCBROWSERCARD NIL `((DisplayedInMenuFlg T)
+                                                             (LinkIconAttachedBitMap 
+                                                                    ,NC.BrowserCardIcon])
+
+(NCAddStub.SearchCard
+  [LAMBDA NIL                                             (* ; "Edited  6-Dec-88 12:25 by krivacic")
+
+(* ;;; "kirk 18Jun86 Add the Search card stub")
+
+(* ;;; "rht 11/7/86: Now passes down a \\FILLME// field.")
+
+    (NC.AddCardTypeStub 'Search 'Text 'NCSEARCHCARD NIL `((DisplayedInMenuFlg T)
+                                                          (LinkIconAttachedBitMap ,NC.SearchCardIcon])
+
+(NCAddStub.DocumentCard
+  [LAMBDA NIL                                             (* ; "Edited  6-Dec-88 12:21 by krivacic")
+
+(* ;;; "kirk 18Jun86 Add the FileBox card stub")
+
+    (NC.AddCardTypeStub 'Document 'Text 'NCDOCUMENTCARD NIL `((DisplayedInMenuFlg . T)
+                                                              (LinkIconAttachedBitMap 
+                                                                     ,NC.DocumentCardIcon])
+
+(NCAddStub.LinkIndexCard
+  [LAMBDA NIL                                             (* ; "Edited  6-Dec-88 12:25 by krivacic")
+
+(* ;;; "kirk 18Jun86 Add the LinkIndex card stub")
+
+(* ;;; "rht 11/7/86: Now passes down a \\FILLME// field.")
+
+    (NC.AddCardTypeStub 'LinkIndex 'Text 'NCLINKINDEXCARD NIL `((DisplayedInMenuFlg T)
+                                                                (LinkIconAttachedBitMap 
+                                                                       ,NC.LinkIndexCardIcon])
 )
 (PUTDEF (QUOTE CONFIGPROPS) (QUOTE FILEPKGCOMS) '[(COM MACRO (X (COMS * (MAKECONFIGPROPSCOMS . X])
 
@@ -183,9 +227,8 @@ Copyright (c) 1987-1990, 1993-1994, 2020-2021 by Venue & Xerox Corporation.
 
 (ADDTOVAR LAMA )
 )
-(PUTPROPS NCCONFIG COPYRIGHT ("Venue & Xerox Corporation" 1987 1988 1989 1990 1993 1994 2020 2021))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (7316 10662 (NCAddStub.SketchCard 7326 . 7899) (NCAddStub.GraphCard 7901 . 8464) (
-NCAddStub.BrowserCard 8466 . 9043) (NCAddStub.SearchCard 9045 . 9544) (NCAddStub.DocumentCard 9546 . 
-10066) (NCAddStub.LinkIndexCard 10068 . 10660)))))
+  (FILEMAP (NIL (6938 10040 (NCAddStub.SketchCard 6948 . 7525) (NCAddStub.GraphCard 7527 . 8094) (
+NCAddStub.BrowserCard 8096 . 8610) (NCAddStub.SearchCard 8612 . 9048) (NCAddStub.DocumentCard 9050 . 
+9507) (NCAddStub.LinkIndexCard 9509 . 10038)))))
 STOP

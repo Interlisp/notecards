@@ -1,4 +1,62 @@
-(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)(FILECREATED " 6-Nov-2020 22:20:34" {DSK}<USERS>ARUNWELCH>SKYDRIVE>DOCUMENTS>UNIX>LISP>LDE>NOTECARDS>SYSTEM>NCHACKS.;2 30722        previous date%: "25-Nov-93 16:29:01" {DSK}<USERS>ARUNWELCH>SKYDRIVE>DOCUMENTS>UNIX>LISP>LDE>NOTECARDS>SYSTEM>NCHACKS.;1)(* ; "Copyright (c) 1985, 1986, 1987, 1988, 1989, 1993, 2020 by Xerox Corporation.  All rights reserved.")(PRETTYCOMPRINT NCHACKSCOMS)(RPAQQ NCHACKSCOMS       ((* ;;; "global text search and global text replace.")        (FNS NCHACKS.GlobalTextReplace NCHACKS.TextSearch NCHACKS.GlobalTextReplaceInCard              NCHACKS.TextSearchInCard)        (* ;;; "remove deleted icons from text cards.")        (FNS NCHACKS.RemoveDeletedIconsFromTextCards NCHACKS.RemoveDeletedIconsFromTextCard)        (* ;;; "sort link icons in text cards.")        (FNS NCHACKS.ReorderLinkIconsInTextCards NCHACKS.ReorderLinkIconsInTextCard)        (* ;;; "search for card parts with dates in a specified range.")        (FNS NCHACKS.DateSearch NCHACKS.DateSearchInCard)        (* ;;; "search for cards which have been modified/created within given time periods.")        (FNS NCHACKS.CardsModifiedBetweenDates)        (* ;;; "make a chain linking cards using a given link type.")        (FNS NCHACKS.MakeChain)        (* ;;; "Make link icons invisible in text cards.")        (FNS NCHACKS.MakeLinkIconsInvisible NCHACKS.MakeLinkIconsInvisibleInTextCard              NCHACKS.MakeLinkIconForLinkInvisible NCHACKS.MakeTEditCharInvisible)        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)              NCHACKS)))(* ;;; "global text search and global text replace.")(DEFINEQ(NCHACKS.GlobalTextReplace
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+
+(FILECREATED "10-Mar-2024 23:35:48" {DSK}<home>frank>il>notecards>library>NCHACKS.;3 30809  
+
+      :CHANGES-TO (FNS NCHACKS.RemoveDeletedIconsFromTextCard NCHACKS.ReorderLinkIconsInTextCard)
+
+      :PREVIOUS-DATE " 8-Mar-2024 12:42:57" {DSK}<home>frank>il>notecards>library>NCHACKS.;2)
+
+
+(PRETTYCOMPRINT NCHACKSCOMS)
+
+(RPAQQ NCHACKSCOMS
+       (
+
+(* ;;; "global text search and global text replace.")
+
+        (FNS NCHACKS.GlobalTextReplace NCHACKS.TextSearch NCHACKS.GlobalTextReplaceInCard 
+             NCHACKS.TextSearchInCard)
+        
+
+(* ;;; "remove deleted icons from text cards.")
+
+        (FNS NCHACKS.RemoveDeletedIconsFromTextCards NCHACKS.RemoveDeletedIconsFromTextCard)
+        
+
+(* ;;; "sort link icons in text cards.")
+
+        (FNS NCHACKS.ReorderLinkIconsInTextCards NCHACKS.ReorderLinkIconsInTextCard)
+        
+
+(* ;;; "search for card parts with dates in a specified range.")
+
+        (FNS NCHACKS.DateSearch NCHACKS.DateSearchInCard)
+        
+
+(* ;;; "search for cards which have been modified/created within given time periods.")
+
+        (FNS NCHACKS.CardsModifiedBetweenDates)
+        
+
+(* ;;; "make a chain linking cards using a given link type.")
+
+        (FNS NCHACKS.MakeChain)
+        
+
+(* ;;; "Make link icons invisible in text cards.")
+
+        (FNS NCHACKS.MakeLinkIconsInvisible NCHACKS.MakeLinkIconsInvisibleInTextCard 
+             NCHACKS.MakeLinkIconForLinkInvisible NCHACKS.MakeTEditCharInvisible)
+        (PROP (FILETYPE MAKEFILE-ENVIRONMENT)
+              NCHACKS)))
+
+
+
+(* ;;; "global text search and global text replace.")
+
+(DEFINEQ
+
+(NCHACKS.GlobalTextReplace
   (LAMBDA (String1 String2 WildCards? CardsOrNoteFile)       (* rht%: "28-Apr-87 11:12")
           
           (* * CardsOrNoteFile should be either a single card, a list of cards, or an 
@@ -16,7 +74,9 @@
                                                        (NCHACKS.GlobalTextReplaceInCard String1 
                                                               String2 WildCards? Card))))
       else (for Card in (MKLIST CardsOrNoteFile) when (NCP.ValidCardP Card)
-              do (NCHACKS.GlobalTextReplaceInCard String1 String2 WildCards? Card)))))(NCHACKS.TextSearch
+              do (NCHACKS.GlobalTextReplaceInCard String1 String2 WildCards? Card)))))
+
+(NCHACKS.TextSearch
   (LAMBDA (String WildCards? CardsOrNoteFile ReturnLocsFlg)  (* rht%: "28-Apr-87 11:16")
           
           (* * CardsOrNoteFile should be either a single card, a list of cards, or an 
@@ -44,7 +104,9 @@
                     (FUNCTION (LAMBDA (X)
                                 X)))
       else (for Card in (MKLIST CardsOrNoteFile) when (NCP.ValidCardP Card)
-              join (NCHACKS.TextSearchInCard String WildCards? Card ReturnLocsFlg)))))(NCHACKS.GlobalTextReplaceInCard
+              join (NCHACKS.TextSearchInCard String WildCards? Card ReturnLocsFlg)))))
+
+(NCHACKS.GlobalTextReplaceInCard
   (LAMBDA (String1 String2 WildCards? Card)                  (* rht%: "17-Jul-86 18:01")
           
           (* * Replaces every occurrence of text string String1 by String2 in contents of 
@@ -69,7 +131,9 @@
                         (TEDIT.DELETE TextStream Loc Length)
                         (TEDIT.INSERT TextStream String2 Loc))
                   (if (NOT WasActiveFlg)
-                      then (NCP.UncacheCards Card))))))(NCHACKS.TextSearchInCard
+                      then (NCP.UncacheCards Card))))))
+
+(NCHACKS.TextSearchInCard
   (LAMBDA (String WildCards? Card ReturnLocsFlg)             (* rht%: " 5-May-87 17:22")
           
           (* * This goes through Card looking for occurrences of text string String.
@@ -105,7 +169,16 @@
                       else (if (TEDIT.FIND TextStream String 1 NIL WildCards?)
                                then (LIST Card)))
                     (if (NOT WasActiveFlg)
-                        then (NCP.UncacheCards Card))))))))(* ;;; "remove deleted icons from text cards.")(DEFINEQ(NCHACKS.RemoveDeletedIconsFromTextCards
+                        then (NCP.UncacheCards Card)))))))
+)
+
+
+
+(* ;;; "remove deleted icons from text cards.")
+
+(DEFINEQ
+
+(NCHACKS.RemoveDeletedIconsFromTextCards
   (LAMBDA (CardsOrNoteFile)                                  (* rht%: "17-Jul-86 18:13")
           
           (* * For cards in Cards of substance type TEXT, remove all deleted link icons 
@@ -117,26 +190,36 @@
                                             ))
       else (for Card in (MKLIST CardsOrNoteFile) when (NCP.ValidCardP Card) do (
                                                                NCHACKS.RemoveDeletedIconsFromTextCard
-                                                                                Card)))))(NCHACKS.RemoveDeletedIconsFromTextCard
-  (LAMBDA (Card)                                             (* rht%: "18-Jul-86 14:34")
-          
-          (* * Remove all deleted link icons from Card's substance.)
+                                                                                Card)))))
+
+(NCHACKS.RemoveDeletedIconsFromTextCard
+  [LAMBDA (Card)                                             (* rht%: "18-Jul-86 14:34")
+
+         (* * Remove all deleted link icons from Card's substance.)
 
     (if (NCP.TextBasedP Card)
         then (LET ((WasActiveFlg (NCP.CardCachedP Card))
                    TextStream)
                   (if (NOT WasActiveFlg)
                       then (NCP.CacheCards Card))
-                  (SETQ TextStream (NCP.CardSubstance Card))
-          
-          (* Need to reverse list so that we delete the last icon first.)
-
-                  (for IconPair in (REVERSE (TEDIT.LIST.OF.OBJECTS (TEXTOBJ TextStream)
-                                                   (FUNCTION NC.DeletedLinkImageObjP)))
+                  (SETQ TextStream (NCP.CardSubstance Card)) (* Need to reverse list so that we 
+                                                             delete the last icon first.)
+                  (for IconPair in (REVERSE (NC.TEditCollectObjects TextStream (FUNCTION 
+                                                                              NC.DeletedLinkImageObjP
+                                                                                )))
                      do (TEDIT.DELETE TextStream (CADR IconPair)
                                1))
                   (if (NOT WasActiveFlg)
-                      then (NCP.UncacheCards Card)))))))(* ;;; "sort link icons in text cards.")(DEFINEQ(NCHACKS.ReorderLinkIconsInTextCards
+                      then (NCP.UncacheCards Card])
+)
+
+
+
+(* ;;; "sort link icons in text cards.")
+
+(DEFINEQ
+
+(NCHACKS.ReorderLinkIconsInTextCards
   (LAMBDA (CardsOrNoteFile OrderingFn QuietFlg)              (* rht%: "28-Apr-87 11:13")
           
           (* * Resort the link icons occuring in Cards according to OrderingFn.
@@ -155,71 +238,83 @@
                                                               OrderingFn QuietFlg))))
       else (for Card in (MKLIST CardsOrNoteFile) when (NCP.ValidCardP Card)
               do (NCHACKS.ReorderLinkIconsInTextCard Card OrderingFn QuietFlg)))
-    (OR QuietFlg (NCP.PrintMsg NIL T "Done."))))(NCHACKS.ReorderLinkIconsInTextCard
-  (LAMBDA (Card OrderingFn QuietFlg)                         (* rht%: "18-Jul-86 15:34")
-          
-          (* * Resort the link icons occuring in Card according to OrderingFn.
-          If the latter is NIL, then use the OrderingFn prop of the card, or 
-          NC.IDAlphOrder if none such.)
+    (OR QuietFlg (NCP.PrintMsg NIL T "Done."))))
+
+(NCHACKS.ReorderLinkIconsInTextCard
+  [LAMBDA (Card OrderingFn QuietFlg)                         (* rht%: "18-Jul-86 15:34")
+
+         (* * Resort the link icons occuring in Card according to OrderingFn.
+         If the latter is NIL, then use the OrderingFn prop of the card, or NC.IDAlphOrder 
+         if none such.)
 
     (if (NCP.TextBasedP Card)
         then (OR QuietFlg (NCP.PrintMsg NIL T "Sorting link icons in " Card " ..."))
              (LET ((WasActiveFlg (NCP.CardCachedP Card))
-                   TextStream OrderingFnToUse TextObj LinkIconsAndLocs SortedCardsAndLocs)
+                   TextStream OrderingFnToUse LinkIconsAndLocs SortedCardsAndLocs)
                   (if (NOT WasActiveFlg)
                       then (NCP.CacheCards Card))
-                  (if (SETQ OrderingFnToUse (OR OrderingFn (NCP.CardProp Card 'OrderingFn)
+                  [if (SETQ OrderingFnToUse (OR OrderingFn (NCP.CardProp Card 'OrderingFn)
                                                 (FUNCTION NC.IDAlphOrder)))
                       then (SETQ TextStream (NCP.CardSubstance Card))
-                           (SETQ TextObj (TEXTOBJ TextStream))
-                           (SETQ LinkIconsAndLocs (TEDIT.LIST.OF.OBJECTS TextObj
+                           (SETQ LinkIconsAndLocs (NC.TEditCollectObjects TextStream
                                                          (FUNCTION NC.LinkIconImageObjP)))
-                           (SETQ SortedCardsAndLocs
+                           [SETQ SortedCardsAndLocs
                             (SORT (for LinkIconAndLoc in LinkIconsAndLocs as i from 0
                                      eachtime (BLOCK) collect (LIST (NC.FetchLinkFromLinkIcon
                                                                      (CAR LinkIconAndLoc))
                                                                     (CADR LinkIconAndLoc)))
                                   (FUNCTION (LAMBDA (CardAndLoc1 CardAndLoc2)
                                               (APPLY* OrderingFnToUse (CAR CardAndLoc1)
-                                                     (CAR CardAndLoc2))))))
+                                                     (CAR CardAndLoc2]
                            (for RestOfSortedCardsAndLocs on SortedCardsAndLocs as LinkIconAndLoc
                               in LinkIconsAndLocs eachtime (BLOCK) bind Loc FromLoc ToLoc Sel1 Sel2
                               do 
-          
-          (* * Location to move FROM is taken from next pair in sorted list.)
 
-                                 (TEDIT.SETSEL TextObj (SETQ FromLoc (CADAR RestOfSortedCardsAndLocs)
-                                                        )
+         (* * Location to move FROM is taken from next pair in sorted list.)
+
+                                 (TEDIT.SETSEL TextStream (SETQ FromLoc (CADAR 
+                                                                             RestOfSortedCardsAndLocs
+                                                                               ))
                                         1
                                         'LEFT)
                                  (SETQ Sel1 (TEDIT.GETSEL TextStream)) 
-          
-          (* * Location to move TO is just next pair on unsorted list, except that there 
-          may be intervening guys that will later move out of the way.)
 
-                                 (TEDIT.SETSEL TextObj (SETQ ToLoc
-                                                        (PLUS (SETQ Loc (CADR LinkIconAndLoc))
-                                                              (for CardAndLoc
-                                                                 in (CDR RestOfSortedCardsAndLocs)
-                                                                 eachtime (BLOCK)
-                                                                 when (LESSP (CADR CardAndLoc)
-                                                                             Loc) count CardAndLoc)))
+         (* * Location to move TO is just next pair on unsorted list, except that there 
+         may be intervening guys that will later move out of the way.)
+
+                                 (TEDIT.SETSEL TextStream (SETQ ToLoc
+                                                           (PLUS (SETQ Loc (CADR LinkIconAndLoc))
+                                                                 (for CardAndLoc
+                                                                    in (CDR RestOfSortedCardsAndLocs)
+                                                                    eachtime (BLOCK)
+                                                                    when (LESSP (CADR CardAndLoc)
+                                                                                Loc) count CardAndLoc
+                                                                      )))
                                         0
                                         'LEFT)
                                  (SETQ Sel2 (TEDIT.GETSEL TextStream))
                                  (TEDIT.MOVE Sel1 Sel2) 
-          
-          (* * Now increment any locs of pairs whose location has changed by virtue of 
-          this move.)
+
+         (* * Now increment any locs of pairs whose location has changed by virtue of this 
+         move.)
 
                                  (for CardAndLoc in (CDR RestOfSortedCardsAndLocs) bind Loc
                                     eachtime (BLOCK) when (AND (LESSP (SETQ Loc (CADR CardAndLoc))
                                                                       FromLoc)
                                                                (LEQ ToLoc Loc))
                                     do (RPLACA (CDR CardAndLoc)
-                                              (ADD1 Loc)))))
+                                              (ADD1 Loc]
                   (if (NOT WasActiveFlg)
-                      then (NCP.UncacheCards Card)))))))(* ;;; "search for card parts with dates in a specified range.")(DEFINEQ(NCHACKS.DateSearch
+                      then (NCP.UncacheCards Card])
+)
+
+
+
+(* ;;; "search for card parts with dates in a specified range.")
+
+(DEFINEQ
+
+(NCHACKS.DateSearch
   (LAMBDA (DateString1 DateString2 CardsOrNoteFile)          (* rht%: "28-Apr-87 11:15")
           
           (* * There should be an open notefile. This goes through the Cards list looking 
@@ -241,7 +336,9 @@
                          (FUNCTION (LAMBDA (X)
                                      X)))
            else (for Card in (MKLIST CardsOrNoteFile) when (NCP.ValidCardP Card)
-                   join (NCHACKS.DateSearchInCard IDate1 IDate2 Card))))))(NCHACKS.DateSearchInCard
+                   join (NCHACKS.DateSearchInCard IDate1 IDate2 Card))))))
+
+(NCHACKS.DateSearchInCard
   (LAMBDA (IDate1 IDate2 Card)                               (* rht%: "17-Jul-86 17:56")
           
           (* * This goes through Card's card parts looking for those modified between the 
@@ -285,7 +382,16 @@
                     then (LIST (CONS Card Hits))
                   else NIL)
                 (if (NOT WasActiveFlg)
-                    then (NCP.UncacheCards Card)))))))(* ;;; "search for cards which have been modified/created within given time periods.")(DEFINEQ(NCHACKS.CardsModifiedBetweenDates
+                    then (NCP.UncacheCards Card))))))
+)
+
+
+
+(* ;;; "search for cards which have been modified/created within given time periods.")
+
+(DEFINEQ
+
+(NCHACKS.CardsModifiedBetweenDates
   (LAMBDA (CardsOrNoteFile CardTypes ModifiedRange LastModifiedRange CreatedRange)
                                                              (* pmi%: "18-Aug-87 11:14")
           
@@ -349,7 +455,16 @@
                                         (ILEQ CardDate LaterCreateDate))
                                    then T
                                  else NIL)
-                        else T)) collect Card)))))(* ;;; "make a chain linking cards using a given link type.")(DEFINEQ(NCHACKS.MakeChain
+                        else T)) collect Card))))
+)
+
+
+
+(* ;;; "make a chain linking cards using a given link type.")
+
+(DEFINEQ
+
+(NCHACKS.MakeChain
   (LAMBDA (LinkType Cards Position AddCRFlg)                 (* rht%: "17-Jul-86 18:05")
           
           (* * Create links between successive cards in Cards each of type LinkType 
@@ -366,7 +481,16 @@
                  (CADR RestOfCards)
                  LinkType)
           (if (AND AddCRFlg (EQ Position 'START))
-              then (NCP.CardAddText Card (CHARACTER 13)))))))(* ;;; "Make link icons invisible in text cards.")(DEFINEQ(NCHACKS.MakeLinkIconsInvisible
+              then (NCP.CardAddText Card (CHARACTER 13))))))
+)
+
+
+
+(* ;;; "Make link icons invisible in text cards.")
+
+(DEFINEQ
+
+(NCHACKS.MakeLinkIconsInvisible
   (LAMBDA (CardsOrLinksOrNoteFile Invisibility)              (* rht%: "28-Apr-87 11:16")
           
           (* * CardsOrLinksOrNoteFile should be one of%: a card, a link, a list of cards 
@@ -388,7 +512,9 @@
                                                                     ((NCP.ValidLinkP CardOrLink)
                                                                      (
                                                                  NCHACKS.MakeLinkIconForLinkInvisible
-                                                                      CardOrLink Invisibility)))))))(NCHACKS.MakeLinkIconsInvisibleInTextCard
+                                                                      CardOrLink Invisibility)))))))
+
+(NCHACKS.MakeLinkIconsInvisibleInTextCard
   (LAMBDA (Card Invisibility)                                (* rht%: "18-Jul-86 21:54")
           
           (* * Make any link icons appearing in Card invisible or visible according to 
@@ -404,7 +530,9 @@
                      do (NCHACKS.MakeTEditCharInvisible TextStream (CDR LinkPair)
                                Invisibility))
                   (if (NOT WasActiveFlg)
-                      then (NCP.UncacheCards Card))))))(NCHACKS.MakeLinkIconForLinkInvisible
+                      then (NCP.UncacheCards Card))))))
+
+(NCHACKS.MakeLinkIconForLinkInvisible
   (LAMBDA (Link Invisibility)                                (* rht%: "18-Jul-86 21:54")
           
           (* * Make any link icons appearing in Card invisible or visible according to 
@@ -423,10 +551,28 @@
                                                                       (CDR LinkPair)
                                                                       Invisibility))
                        (if (NOT WasActiveFlg)
-                           then (NCP.UncacheCards Card)))))))(NCHACKS.MakeTEditCharInvisible
+                           then (NCP.UncacheCards Card)))))))
+
+(NCHACKS.MakeTEditCharInvisible
   [LAMBDA (TextStream Loc Invisibility)                      (* ; "Edited  4-Dec-87 10:26 by rht:")
           
           (* * Make whatever char is at Loc be invisible or visible according to whether 
           Invisibility is ON or OFF.)
 
-    (TEDIT.LOOKS TextStream `(INVISIBLE ,Invisibility) (TEDIT.SETSEL TextStream Loc 1 'LEFT]))(PUTPROPS NCHACKS FILETYPE :TCOMPL)(PUTPROPS NCHACKS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))(PUTPROPS NCHACKS COPYRIGHT ("Xerox Corporation" 1985 1986 1987 1988 1989 1993 2020))(DECLARE%: DONTCOPY  (FILEMAP (NIL (1753 8569 (NCHACKS.GlobalTextReplace 1763 . 3031) (NCHACKS.TextSearch 3033 . 4959) (NCHACKS.GlobalTextReplaceInCard 4961 . 6413) (NCHACKS.TextSearchInCard 6415 . 8567)) (8626 10459 (NCHACKS.RemoveDeletedIconsFromTextCards 8636 . 9477) (NCHACKS.RemoveDeletedIconsFromTextCard 9479 . 10457)) (10509 16010 (NCHACKS.ReorderLinkIconsInTextCards 10519 . 11713) (NCHACKS.ReorderLinkIconsInTextCard 11715 . 16008)) (16084 20775 (NCHACKS.DateSearch 16094 . 17496) (NCHACKS.DateSearchInCard 17498 . 20773)) (20871 25175 (NCHACKS.CardsModifiedBetweenDates 20881 . 25173)) (25246 26235 (NCHACKS.MakeChain 25256 . 26233)) (26295 30471 (NCHACKS.MakeLinkIconsInvisible 26305 . 27970) (NCHACKS.MakeLinkIconsInvisibleInTextCard 27972 . 28878) (NCHACKS.MakeLinkIconForLinkInvisible 28880 . 30098) (NCHACKS.MakeTEditCharInvisible 30100 . 30469)))))STOP
+    (TEDIT.LOOKS TextStream `(INVISIBLE ,Invisibility) (TEDIT.SETSEL TextStream Loc 1 'LEFT])
+)
+
+(PUTPROPS NCHACKS FILETYPE :TCOMPL)
+
+(PUTPROPS NCHACKS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (1681 8497 (NCHACKS.GlobalTextReplace 1691 . 2959) (NCHACKS.TextSearch 2961 . 4887) (
+NCHACKS.GlobalTextReplaceInCard 4889 . 6341) (NCHACKS.TextSearchInCard 6343 . 8495)) (8554 10528 (
+NCHACKS.RemoveDeletedIconsFromTextCards 8564 . 9405) (NCHACKS.RemoveDeletedIconsFromTextCard 9407 . 
+10526)) (10578 16183 (NCHACKS.ReorderLinkIconsInTextCards 10588 . 11782) (
+NCHACKS.ReorderLinkIconsInTextCard 11784 . 16181)) (16257 20948 (NCHACKS.DateSearch 16267 . 17669) (
+NCHACKS.DateSearchInCard 17671 . 20946)) (21044 25348 (NCHACKS.CardsModifiedBetweenDates 21054 . 25346
+)) (25419 26408 (NCHACKS.MakeChain 25429 . 26406)) (26468 30644 (NCHACKS.MakeLinkIconsInvisible 26478
+ . 28143) (NCHACKS.MakeLinkIconsInvisibleInTextCard 28145 . 29051) (
+NCHACKS.MakeLinkIconForLinkInvisible 29053 . 30271) (NCHACKS.MakeTEditCharInvisible 30273 . 30642)))))
+STOP

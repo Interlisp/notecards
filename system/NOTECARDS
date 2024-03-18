@@ -1,15 +1,11 @@
-(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
-(FILECREATED "10-Jun-2021 14:39:04" {DSK}<home>pi>il>notecards>system>NOTECARDS.;14 27703  
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-      changes to%:  (VARS NOTECARDSCOMS)
-                    (FNS NC.PostGreet)
+(FILECREATED "11-Mar-2024 13:26:20" {DSK}<home>frank>il>notecards>system>NOTECARDS.;5 25997  
 
-      previous date%: "10-Jun-2021 14:19:29" {DSK}<home>pi>il>notecards>system>NOTECARDS.;13)
+      :CHANGES-TO (FNS NC.LoadPatches)
 
+      :PREVIOUS-DATE "11-Mar-2024 13:07:36" {DSK}<home>frank>il>notecards>system>NOTECARDS.;4)
 
-(* ; "
-Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
-")
 
 (PRETTYCOMPRINT NOTECARDSCOMS)
 
@@ -21,7 +17,7 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
         (VARS (*NC.ReleaseIdentifier* "2.0"))
         
 
-(* ;;; "Set up the NoteCards directories globalvars")
+(* ;;; "Set up the NoteCards directories globalvars")
 
         (FNS NC.SetUpNOTECARDSDIRECTORIES)
         (DECLARE%: DONTEVAL@LOAD DOCOPY (P (NC.SetUpNOTECARDSDIRECTORIES)))
@@ -32,13 +28,13 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
                                           "WINDOW-HIDDEN?"]
         
 
-(* ;;; " Load a few LIBRARYFILES")
+(* ;;; " Load a few LIBRARYFILES")
 
         (DECLARE%: DONTEVAL@LOAD DOCOPY (FILES (SYSLOAD)
                                                FILEBROWSER TEDIT HRULE GRAPHER))
         
 
-(* ;;; "card types and library packages")
+(* ;;; "card types and library packages")
 
         (GLOBALVARS NOTECARDTYPESTUBS NOTECARDTYPES *NC.LibraryFiles* *NC.LispUsersFiles*)
         (ADDVARS (NOTECARDTYPESTUBS Sketch Graph Browser Search Document LinkIndex))
@@ -47,7 +43,7 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
         (ADDVARS (*NC.LispUsersFiles* SCALEBITMAP STYLESHEET))
         
 
-(* ;;; "Load the Library Files")
+(* ;;; "Load the Library Files")
 
         (DECLARE%: DONTEVAL@LOAD DOCOPY (FILES (SYSLOAD FROM VALUEOF NOTECARDSDIRECTORIES)
                                                NCHACKS NEWSHADEITEM TEDIT-PROCESS-KILLER)
@@ -55,12 +51,12 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
                       STYLESHEET))
         
 
-(* ;;; "code module lists")
+(* ;;; "code module lists")
 
         (GLOBALVARS NC.CoreFiles NC.Files)
         
 
-(* ;;; "global params")
+(* ;;; "global params")
 
         (GLOBALVARS NC.DeletedLinkImageObject NC.DeletedLinkImageFns NC.InvisibleLinkImageObject 
                NC.InvisibleLinkImageFns NC.LinkIconImageFns NC.NoDeleteImageFns NC.SystemDate 
@@ -68,17 +64,17 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
         (INITVARS NCINITIALGLOBALPARAMS)
         
 
-(* ;;; "Load the NoteCards files")
+(* ;;; "Load the NoteCards files")
 
         (FNS NC.FindFile NC.LoadFileFromDirectories NC.LookupAutoloadFnFile NC.StoreAutoloadFnFile 
              SIMPLE-FILENAME SIMPLE-LOADEDFILELST)
         [DECLARE%: DONTEVAL@LOAD DOCOPY (FILES (SYSLOAD FROM VALUEOF NOTECARDSDIRECTORIES)
                                                NCCONFIG)
-                                                             (* ; "(P (ADVISE 'WHEREIS 'BEFORE NIL '(if (GETPROP 'NOTECARDS 'FILEDATES) then (NC.FixFileDates 'NOTECARDS) (UNADVISE 'WHEREIS))))")
+                                                             (* ; "(P (ADVISE 'WHEREIS 'BEFORE NIL '(if (GETPROP 'NOTECARDS 'FILEDATES) then (NC.FixFileDates 'NOTECARDS) (UNADVISE 'WHEREIS))))")
                (P (for File in NC.CoreFiles do (NC.LoadFileFromDirectories File]
         
 
-(* ;;; "Initialization functions")
+(* ;;; "Initialization functions")
 
         (FNS NC.PostGreet NC.LoadPatches)
         (ADDVARS (POSTGREETFORMS (NC.PostGreet)))
@@ -86,23 +82,23 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
                                            (NC.LoadPatches)))
         
 
-(* ;;; "Set up Lafite Bug Report Forms")
+(* ;;; "Set up Lafite Bug Report Forms")
 
         (FNS NC.MakeLafiteForm)
         (ADDVARS (LAFITESPECIALFORMS ("NoteCards Report" (FUNCTION NC.MakeLafiteForm)
                                             "Report bug or request new feature for NoteCards.")))
         (VARS (LAFITEFORMSMENU NIL))
-                                                             (* ; "force menu to be recomputed")
+                                                             (* ; "force menu to be recomputed")
         
 
-(* ;;; "INITIALIZE NoteCards")
+(* ;;; "INITIALIZE NoteCards")
 
         (FNS NC.Setup)
         (DECLARE%: DONTEVAL@LOAD DOCOPY (P (NC.Setup)))
         (ADDVARS (BackgroundMenuCommands (NoteCards (NC.BringUpNoteCardsIcon)
                                                 "Bring up the NoteCards control icon.")))
         (VARS (BackgroundMenu NIL))
-                                                             (* ; "force menu to be recomputed")
+                                                             (* ; "force menu to be recomputed")
         (FNS NC.SetSystemDate)
         (DECLARE%: DONTEVAL@LOAD DOCOPY (P (NC.SetSystemDate)))
         (PROP (FILETYPE MAKEFILE-ENVIRONMENT)
@@ -127,16 +123,16 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
 
 (NC.SetUpNOTECARDSDIRECTORIES
   [LAMBDA (BaseDirectory ReleaseIdentifier)
-    (DECLARE (GLOBALVARS NOTECARDSDIRECTORIES \NC.SourceAccessFlg *NC.ReleaseIdentifier*))
-                                                             (* ; "Edited 19-May-2021 17:04 by pi")
+    (DECLARE (GLOBALVARS NOTECARDSDIRECTORIES \NC.SourceAccessFlg *NC.ReleaseIdentifier*))
+                                                             (* ; "Edited 19-May-2021 17:04 by pi")
 
-    (* ;; "Starting from the directory this file is being loaded from, set up NOTECARDSDIRECTORIES with the right list of directories for loading NoteCards files from.  NB that this function must be run from a loading file to work properly, as it uses (INPUT) to decide what directory to use.")
+    (* ;; "Starting from the directory this file is being loaded from, set up NOTECARDSDIRECTORIES with the right list of directories for loading NoteCards files from.  NB that this function must be run from a loading file to work properly, as it uses (INPUT) to decide what directory to use.")
 
     (SETQ NOTECARDSDIRECTORIES
      (LET [NoteCardsBaseDirectory StrPtr NoteCardsLoadDirectory (NoteCardsSubDirectories
                                                                  '(system library lispusers patches]
 
-          (* ;; "Get the directory for the file now being loaded")
+          (* ;; "Get the directory for the file now being loaded")
 
           [COND
              ((SETQ NoteCardsBaseDirectory BaseDirectory))
@@ -147,34 +143,17 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
                                                     (FILENAMEFIELD (FULLNAME (INPUT))
                                                            'DIRECTORY]
 
-                (* ;; "Find the directory path up to the first subdirectory called NoteCards")
+                (* ;; "Find the directory path up to the first subdirectory called NoteCards")
 
                 (COND
                    ((SETQ StrPtr (STRPOS "NOTECARDS" (U-CASE NoteCardsLoadDirectory)
                                         NIL NIL NIL T NIL T))
                     (SETQ NoteCardsBaseDirectory (SUBATOM NoteCardsLoadDirectory 1 StrPtr]
 
-          (* ;; "Create the directory search list based on the NoteCardsBaseDirectory")
+          (* ;; "Create the directory search list based on the NoteCardsBaseDirectory")
 
           (COND
              [NoteCardsBaseDirectory (APPEND (LIST NoteCardsLoadDirectory)
-
-                                            (* ;; ".../NOTECARDS/LIBRARY ... and so forth")
-
-                                            [MAPCAR NoteCardsSubDirectories
-                                                   #'(LAMBDA (SUBDIR)
-                                                       (PACKFILENAME.STRING
-                                                        'HOST
-                                                        (FILENAMEFIELD NoteCardsBaseDirectory
-                                                               'HOST)
-                                                        'DIRECTORY
-                                                        (CONCAT (FILENAMEFIELD NoteCardsBaseDirectory
-                                                                       'DIRECTORY)
-                                                               ">" SUBDIR]
-
-                                            (* ;; 
-                                          "...>NOTECARDS>%"RELEASE%">LIBRARY> .... and so forth")
-
                                             (MAPCAR NoteCardsSubDirectories
                                                    #'(LAMBDA (SUBDIR)
                                                        (PACKFILENAME.STRING
@@ -184,7 +163,7 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
                                                         'DIRECTORY
                                                         (CONCAT (FILENAMEFIELD NoteCardsBaseDirectory
                                                                        'DIRECTORY)
-                                                               ">" *NC.ReleaseIdentifier* ">" SUBDIR]
+                                                               ">" SUBDIR]
              (T (LIST NoteCardsLoadDirectory])
 )
 (DECLARE%: DONTEVAL@LOAD DOCOPY 
@@ -194,8 +173,8 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
 
 (IF (NOT (CL:FIND-PACKAGE "ROOMS"))
     THEN (DEFPACKAGE "ROOMS" (:EXPORT "INTERACTIVE-CLOSE-WINDOW" "ALL-WINDOWS" "*CURRENT-ROOM*" 
-                                        "*ROOMS-SYSTEM-DATE*" "HIDE-WINDOW" "UN-HIDE-WINDOW" 
-                                        "WINDOW-HIDDEN?")))
+                                    "*ROOMS-SYSTEM-DATE*" "HIDE-WINDOW" "UN-HIDE-WINDOW" 
+                                    "WINDOW-HIDDEN?")))
 
 
 
@@ -356,18 +335,13 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
     (NCP.NoteCardsParameters NCINITIALGLOBALPARAMS])
 
 (NC.LoadPatches
-  [LAMBDA NIL                                            (* ; "Edited 19-May-2021 17:12 by pi")
-    (DECLARE (GLOBALVARS NOTECARDSDIRECTORIES *NC.ReleaseIdentifier*))
+  [LAMBDA NIL                                                (* ; "Edited 19-May-2021 17:12 by pi")
+    (DECLARE (GLOBALVARS NOTECARDSDIRECTORIES))
 
-    (* ;; "Load the POSTRELEASEPATCHES File, which will get thelatest patches.")
+    (* ;; "Load the POSTRELEASEPATCHES File, which will get the latest patches.")
 
-    (LET [(CHECK-DIRECTORIES '(APPEND (LIST "{DSK}/usr/local/lde/Notecards/patches"
-                                            (CONCAT "{DSK}/usr/local/lde/Notecards/" 
-                                                   *NC.ReleaseIdentifier* "/patches/"))
-                                     NOTECARDSDIRECTORIES]
-         (if (NC.FindFile 'POSTRELEASEPATCHES NIL NIL NIL CHECK-DIRECTORIES)
-             then (NC.LoadFileFromDirectories 'POSTRELEASEPATCHES CHECK-DIRECTORIES NIL NIL T
-                             ])
+    (if (NC.FindFile 'POSTRELEASEPATCHES)
+        then (NC.LoadFileFromDirectories 'POSTRELEASEPATCHES NIL NIL NIL T])
 )
 
 (ADDTOVAR POSTGREETFORMS (NC.PostGreet))
@@ -388,7 +362,7 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
 )
 
 (ADDTOVAR LAFITESPECIALFORMS ("NoteCards Report" (FUNCTION NC.MakeLafiteForm)
-                                        "Report bug or request new feature for NoteCards."))
+                                    "Report bug or request new feature for NoteCards."))
 
 (RPAQQ LAFITEFORMSMENU NIL)
 
@@ -411,7 +385,7 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
 )
 
 (ADDTOVAR BackgroundMenuCommands (NoteCards (NC.BringUpNoteCardsIcon)
-                                            "Bring up the NoteCards control icon."))
+                                        "Bring up the NoteCards control icon."))
 
 (RPAQQ BackgroundMenu NIL)
 
@@ -431,12 +405,11 @@ Copyright (c) 1986-1991, 1993-1994, 2020-2021 by Xerox Corporation.
 (PUTPROPS NOTECARDS FILETYPE :FAKE-COMPILE-FILE)
 
 (PUTPROPS NOTECARDS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
-(PUTPROPS NOTECARDS COPYRIGHT ("Xerox Corporation" 1986 1987 1988 1989 1990 1991 1993 1994 2020 2021))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (4905 8794 (NC.SetUpNOTECARDSDIRECTORIES 4915 . 8792)) (10486 17608 (NC.FindFile 10496
- . 12018) (NC.LoadFileFromDirectories 12020 . 16033) (NC.LookupAutoloadFnFile 16035 . 16479) (
-NC.StoreAutoloadFnFile 16481 . 16897) (SIMPLE-FILENAME 16899 . 17324) (SIMPLE-LOADEDFILELST 17326 . 
-17606)) (17842 21144 (NC.PostGreet 17852 . 20319) (NC.LoadPatches 20321 . 21142)) (21317 21875 (
-NC.MakeLafiteForm 21327 . 21873)) (22168 26233 (NC.Setup 22178 . 26231)) (26521 27361 (
-NC.SetSystemDate 26531 . 27359)))))
+  (FILEMAP (NIL (4796 7626 (NC.SetUpNOTECARDSDIRECTORIES 4806 . 7624)) (9310 16432 (NC.FindFile 9320 . 
+10842) (NC.LoadFileFromDirectories 10844 . 14857) (NC.LookupAutoloadFnFile 14859 . 15303) (
+NC.StoreAutoloadFnFile 15305 . 15721) (SIMPLE-FILENAME 15723 . 16148) (SIMPLE-LOADEDFILELST 16150 . 
+16430)) (16666 19549 (NC.PostGreet 16676 . 19143) (NC.LoadPatches 19145 . 19547)) (19722 20280 (
+NC.MakeLafiteForm 19732 . 20278)) (20569 24634 (NC.Setup 20579 . 24632)) (24918 25758 (
+NC.SetSystemDate 24928 . 25756)))))
 STOP
