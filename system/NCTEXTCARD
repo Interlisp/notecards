@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "18-Mar-2024 00:12:54" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;38 63386  
+(FILECREATED "18-Mar-2024 15:22:26" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;40 63421  
 
       :CHANGES-TO (FNS NC.PutTextSubstance)
 
-      :PREVIOUS-DATE " 8-Mar-2024 15:42:18" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;36)
+      :PREVIOUS-DATE "18-Mar-2024 00:12:54" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;39)
 
 
 (PRETTYCOMPRINT NCTEXTCARDCOMS)
@@ -438,10 +438,8 @@
          down by TEDIT.PUT.PCTB.)
 
     (LET [(Substance (NC.FetchSubstance Card))
-          (TmpStrm (OPENSTREAM '{NODIRCORE} 'BOTH]
-         (if (EQ (TEDIT.NCHARS Substance)
-                 0)
-             then (TEDIT.INSERT Substance " " 1))
+          (TmpStrm (OPENSTREAM '{NODIRCORE} 'BOTH]           (* if (EQ (TEDIT.NCHARS Substance) 0) 
+                                                             then (TEDIT.INSERT Substance " " 1))
          (TEDIT.PUT.STREAM Substance TmpStrm NIL NIL T)
          (SETFILEPTR TmpStrm 0)
          (COPYBYTES TmpStrm Stream)
@@ -780,7 +778,7 @@
 (RPAQQ NC.TextCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@OOOOOH@@
 )
 
-[LOADINITADVISE NC-ADVICE0182 [TEDIT.ADD.MENUITEM
+[LOADINITADVISE NC-ADVICE0178 [TEDIT.ADD.MENUITEM
                                (NIL (AFTER NIL (if (EQ MENU TEDIT.DEFAULT.MENU)
                                                    then (NCP.ChangeCardTypeFields
                                                          'Text NIL `((MiddleButtonMenuItems
@@ -802,19 +800,19 @@
 
 (PUTPROPS NCTEXTCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (3681 3951 (NCAddStub.TextCard 3691 . 3949)) (4394 48106 (NC.MakeTEditCard 4404 . 7973) 
+  (FILEMAP (NIL (3681 3951 (NCAddStub.TextCard 3691 . 3949)) (4394 48141 (NC.MakeTEditCard 4404 . 7973) 
 (NC.BringUpTEditCard 7975 . 13322) (NC.MakeTextCardReadOnly 13324 . 15250) (NC.MakeTextCardReadWrite 
 15252 . 16903) (NC.RevertTextCard 16905 . 17858) (NC.CollectReferencesInText 17860 . 23623) (
 NC.InstallTextTitleBarMiddleMenu 23625 . 24823) (NC.MarkTextDirty 24825 . 25218) (NC.ResetTEdit 25220
  . 25626) (NC.ResetTEditProcess 25628 . 27266) (NC.TEditBasedP 27268 . 27963) (NC.TEditCloseFn 27965
  . 29482) (NC.TEditMenuFn 29484 . 30551) (NC.TEditQuitFn 30553 . 32168) (NC.TextCopySubstance 32170 . 
 32789) (NC.TextDirtyP 32791 . 33098) (NC.TextCardShrinkFn 33100 . 38216) (NC.PutTextSubstance 38218 . 
-39816) (NC.GetTextSubstance 39818 . 41506) (NC.UpdateLinkImagesInText 41508 . 43922) (
-NC.CharPosFromTextStream 43924 . 44158) (NC.DelReferencesToCardFromText 44160 . 46613) (NC.TEditWindow
- 46615 . 47255) (NC.TEditCollectObjects 47257 . 48104)) (48358 49531 (
-NC.TranslateWindowPositionToTEditPosition 48368 . 49069) (NC.InsertLinkInTextWindow 49071 . 49529)) (
-49640 58701 (NC.CardFromTextStream 49650 . 49942) (NC.TEditPutFn 49944 . 53703) (
-NC.TEditPutFnAuxiliary 53705 . 54709) (NC.TEditGetFn 54711 . 55872) (NC.MakeTEditPropsList 55874 . 
-57751) (NC.TEditPropsListQuitFn 57753 . 58088) (NC.DelTEditProcesses 58090 . 58699)) (58767 61886 (
-NC.AddTextCard 58777 . 60912) (NC.ComputeTextCardMiddleButtonMenuItems 60914 . 61884)))))
+39851) (NC.GetTextSubstance 39853 . 41541) (NC.UpdateLinkImagesInText 41543 . 43957) (
+NC.CharPosFromTextStream 43959 . 44193) (NC.DelReferencesToCardFromText 44195 . 46648) (NC.TEditWindow
+ 46650 . 47290) (NC.TEditCollectObjects 47292 . 48139)) (48393 49566 (
+NC.TranslateWindowPositionToTEditPosition 48403 . 49104) (NC.InsertLinkInTextWindow 49106 . 49564)) (
+49675 58736 (NC.CardFromTextStream 49685 . 49977) (NC.TEditPutFn 49979 . 53738) (
+NC.TEditPutFnAuxiliary 53740 . 54744) (NC.TEditGetFn 54746 . 55907) (NC.MakeTEditPropsList 55909 . 
+57786) (NC.TEditPropsListQuitFn 57788 . 58123) (NC.DelTEditProcesses 58125 . 58734)) (58802 61921 (
+NC.AddTextCard 58812 . 60947) (NC.ComputeTextCardMiddleButtonMenuItems 60949 . 61919)))))
 STOP
