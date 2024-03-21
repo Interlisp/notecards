@@ -1,10 +1,13 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "11-Mar-2024 13:26:20" {DSK}<home>frank>il>notecards>system>NOTECARDS.;5 25997  
+(FILECREATED "20-Mar-2024 17:07:35" {DSK}<home>frank>il>notecards>system>NOTECARDS.;14 26490  
 
-      :CHANGES-TO (FNS NC.LoadPatches)
+      :EDIT-BY "frank"
 
-      :PREVIOUS-DATE "11-Mar-2024 13:07:36" {DSK}<home>frank>il>notecards>system>NOTECARDS.;4)
+      :CHANGES-TO (FNS NC.SetUpNOTECARDSDIRECTORIES)
+                  (VARS NOTECARDSCOMS)
+
+      :PREVIOUS-DATE "20-Mar-2024 17:02:38" {DSK}<home>frank>il>notecards>system>NOTECARDS.;13)
 
 
 (PRETTYCOMPRINT NOTECARDSCOMS)
@@ -19,6 +22,8 @@
 
 (* ;;; "Set up the NoteCards directories globalvars")
 
+        (FILES (SYSLOAD)
+               PSEUDOHOSTS)
         (FNS NC.SetUpNOTECARDSDIRECTORIES)
         (DECLARE%: DONTEVAL@LOAD DOCOPY (P (NC.SetUpNOTECARDSDIRECTORIES)))
         [P (IF (NOT (CL:FIND-PACKAGE "ROOMS"))
@@ -119,11 +124,15 @@
 
 (* ;;; "Set up the NoteCards directories globalvars")
 
+
+(FILESLOAD (SYSLOAD)
+       PSEUDOHOSTS)
 (DEFINEQ
 
 (NC.SetUpNOTECARDSDIRECTORIES
   [LAMBDA (BaseDirectory ReleaseIdentifier)
     (DECLARE (GLOBALVARS NOTECARDSDIRECTORIES \NC.SourceAccessFlg *NC.ReleaseIdentifier*))
+                                                           (* ; "Edited 20-Mar-2024 17:07 by frank")
                                                              (* ; "Edited 19-May-2021 17:04 by pi")
 
     (* ;; "Starting from the directory this file is being loaded from, set up NOTECARDSDIRECTORIES with the right list of directories for loading NoteCards files from.  NB that this function must be run from a loading file to work properly, as it uses (INPUT) to decide what directory to use.")
@@ -135,13 +144,13 @@
           (* ;; "Get the directory for the file now being loaded")
 
           [COND
-             ((SETQ NoteCardsBaseDirectory BaseDirectory))
-             (T [SETQ NoteCardsLoadDirectory (PACKFILENAME.STRING 'HOST (FILENAMEFIELD (FULLNAME
-                                                                                        (INPUT))
-                                                                               'HOST)
-                                                    'DIRECTORY
-                                                    (FILENAMEFIELD (FULLNAME (INPUT))
-                                                           'DIRECTORY]
+             (BaseDirectory (SETQ NoteCardsBaseDirectory (TRUEFILENAME BaseDirectory)))
+             (T [SETQ NoteCardsLoadDirectory (TRUEFILENAME (PACKFILENAME.STRING 'HOST
+                                                                  (FILENAMEFIELD (FULLNAME (INPUT))
+                                                                         'HOST)
+                                                                  'DIRECTORY
+                                                                  (FILENAMEFIELD (FULLNAME (INPUT))
+                                                                         'DIRECTORY]
 
                 (* ;; "Find the directory path up to the first subdirectory called NoteCards")
 
@@ -153,7 +162,9 @@
           (* ;; "Create the directory search list based on the NoteCardsBaseDirectory")
 
           (COND
-             [NoteCardsBaseDirectory (APPEND (LIST NoteCardsLoadDirectory)
+             [NoteCardsBaseDirectory (APPEND (if NoteCardsLoadDirectory
+                                                 then (LIST NoteCardsLoadDirectory)
+                                               else (LIST))
                                             (MAPCAR NoteCardsSubDirectories
                                                    #'(LAMBDA (SUBDIR)
                                                        (PACKFILENAME.STRING
@@ -406,10 +417,10 @@
 
 (PUTPROPS NOTECARDS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (4796 7626 (NC.SetUpNOTECARDSDIRECTORIES 4806 . 7624)) (9310 16432 (NC.FindFile 9320 . 
-10842) (NC.LoadFileFromDirectories 10844 . 14857) (NC.LookupAutoloadFnFile 14859 . 15303) (
-NC.StoreAutoloadFnFile 15305 . 15721) (SIMPLE-FILENAME 15723 . 16148) (SIMPLE-LOADEDFILELST 16150 . 
-16430)) (16666 19549 (NC.PostGreet 16676 . 19143) (NC.LoadPatches 19145 . 19547)) (19722 20280 (
-NC.MakeLafiteForm 19732 . 20278)) (20569 24634 (NC.Setup 20579 . 24632)) (24918 25758 (
-NC.SetSystemDate 24928 . 25756)))))
+  (FILEMAP (NIL (4970 8119 (NC.SetUpNOTECARDSDIRECTORIES 4980 . 8117)) (9803 16925 (NC.FindFile 9813 . 
+11335) (NC.LoadFileFromDirectories 11337 . 15350) (NC.LookupAutoloadFnFile 15352 . 15796) (
+NC.StoreAutoloadFnFile 15798 . 16214) (SIMPLE-FILENAME 16216 . 16641) (SIMPLE-LOADEDFILELST 16643 . 
+16923)) (17159 20042 (NC.PostGreet 17169 . 19636) (NC.LoadPatches 19638 . 20040)) (20215 20773 (
+NC.MakeLafiteForm 20225 . 20771)) (21062 25127 (NC.Setup 21072 . 25125)) (25411 26251 (
+NC.SetSystemDate 25421 . 26249)))))
 STOP
