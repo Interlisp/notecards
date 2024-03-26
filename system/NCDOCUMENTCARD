@@ -1,11 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 8-Mar-2024 12:41:19" {DSK}<home>frank>il>notecards>system>NCDOCUMENTCARD.;3 49253  
+(FILECREATED "25-Mar-2024 12:52:41" {DSK}<home>frank>il>notecards>system>NCDOCUMENTCARD.;5 49100  
 
-      :CHANGES-TO (FNS NC.DumpNoteCardToDoc NC.FetchToLinksInOrder NC.DumpFileBoxToDoc 
-                       NC.AddCRIfNeeded NC.ChangeParaLeading NC.DumpExportableCardToDoc)
+      :CHANGES-TO (FNS NC.ChangeParaLeading)
 
-      :PREVIOUS-DATE " 5-Nov-2020 19:29:04" {DSK}<home>frank>il>notecards>system>NCDOCUMENTCARD.;1)
+      :PREVIOUS-DATE " 8-Mar-2024 12:41:19" {DSK}<home>frank>il>notecards>system>NCDOCUMENTCARD.;4)
 
 
 (PRETTYCOMPRINT NCDOCUMENTCARDCOMS)
@@ -620,8 +619,7 @@
 
          (* * Change the para leading on the text stream Stream using default value.)
 
-    (TEDIT.PARALOOKS (TEXTOBJ Stream)
-           (LIST 'PARALEADING NC.DocTitleParaLeading)
+    (TEDIT.PARALOOKS Stream (LIST 'PARALEADING NC.DocTitleParaLeading)
            (TEDIT.NCHARS Stream)
            1])
 
@@ -805,10 +803,10 @@
 
 (PUTPROPS NCDOCUMENTCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (3062 3527 (NCAddStub.DocumentCard 3072 . 3525)) (4227 47561 (NC.MakeDocument 4237 . 
-13375) (NC.DumpCardToDoc 13377 . 15914) (NC.DumpFileBoxToDoc 15916 . 20594) (NC.DumpNoteCardToDoc 
-20596 . 28908) (NC.FetchToLinksInOrder 28910 . 29493) (NC.BuildMakeDocInspector 29495 . 33549) (
-NC.MakeDocInspectorSelectionFn 33551 . 37231) (NC.AddCRIfNeeded 37233 . 37679) (NC.ChangeParaLeading 
-37681 . 38031) (NC.DumpExportableCardToDoc 38033 . 47559)) (48343 48821 (NC.AddDocumentCard 48353 . 
-48819)))))
+  (FILEMAP (NIL (2930 3395 (NCAddStub.DocumentCard 2940 . 3393)) (4095 47408 (NC.MakeDocument 4105 . 
+13243) (NC.DumpCardToDoc 13245 . 15782) (NC.DumpFileBoxToDoc 15784 . 20462) (NC.DumpNoteCardToDoc 
+20464 . 28776) (NC.FetchToLinksInOrder 28778 . 29361) (NC.BuildMakeDocInspector 29363 . 33417) (
+NC.MakeDocInspectorSelectionFn 33419 . 37099) (NC.AddCRIfNeeded 37101 . 37547) (NC.ChangeParaLeading 
+37549 . 37878) (NC.DumpExportableCardToDoc 37880 . 47406)) (48190 48668 (NC.AddDocumentCard 48200 . 
+48666)))))
 STOP
