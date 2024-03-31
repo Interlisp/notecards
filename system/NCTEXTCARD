@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "18-Mar-2024 15:22:26" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;40 63421  
+(FILECREATED "31-Mar-2024 15:26:59" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;47 63300  
 
-      :CHANGES-TO (FNS NC.PutTextSubstance)
+      :CHANGES-TO (FNS NC.MakeTEditCard NC.PutTextSubstance)
 
-      :PREVIOUS-DATE "18-Mar-2024 00:12:54" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;39)
+      :PREVIOUS-DATE "18-Mar-2024 15:22:26" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;46)
 
 
 (PRETTYCOMPRINT NCTEXTCARDCOMS)
@@ -128,15 +128,14 @@
 
     (* ;; "rht 6/9/88: Added RegionOrPosition arg and passed to NC.MakeNewCardWindow.  Also InterestedWindow arg.")
 
-    (LET (TextStream Window Type)
+    (LET (EmptyStream TextStream Window Type)
          (COND
-            (NoDisplayFlg [SETQ TextStream (OPENTEXTSTREAM "" NIL NIL NIL (NC.MakeTEditPropsList
-                                                                           NIL
-                                                                           (LISTGET ParamList
-                                                                                  
-                                                                                  '
+            (NoDisplayFlg (SETQ EmptyStream (OPENSTREAM '{NODIRCORE} 'BOTH 'NEW))
+                   [SETQ TextStream (OPENTEXTSTREAM EmptyStream NIL NIL NIL
+                                           (NC.MakeTEditPropsList NIL (LISTGET ParamList 
+                                                                             '
                                                                      Don'tAttachUserSpecifiedPropsFlg
-                                                                                  ]
+                                                                             ]
                    (NC.SetSubstance Card TextStream)
                    (NC.SetTitle Card Title)
                    (STREAMPROP TextStream 'NoteCardObject Card)
@@ -438,8 +437,10 @@
          down by TEDIT.PUT.PCTB.)
 
     (LET [(Substance (NC.FetchSubstance Card))
-          (TmpStrm (OPENSTREAM '{NODIRCORE} 'BOTH]           (* if (EQ (TEDIT.NCHARS Substance) 0) 
-                                                             then (TEDIT.INSERT Substance " " 1))
+          (TmpStrm (OPENSTREAM '{NODIRCORE} 'BOTH]
+         (if (EQ (TEDIT.NCHARS Substance)
+                 0)
+             then (TEDIT.INSERT Substance " " 1))
          (TEDIT.PUT.STREAM Substance TmpStrm NIL NIL T)
          (SETFILEPTR TmpStrm 0)
          (COPYBYTES TmpStrm Stream)
@@ -778,7 +779,7 @@
 (RPAQQ NC.TextCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@OOOOOH@@
 )
 
-[LOADINITADVISE NC-ADVICE0178 [TEDIT.ADD.MENUITEM
+[LOADINITADVISE NC-ADVICE0193 [TEDIT.ADD.MENUITEM
                                (NIL (AFTER NIL (if (EQ MENU TEDIT.DEFAULT.MENU)
                                                    then (NCP.ChangeCardTypeFields
                                                          'Text NIL `((MiddleButtonMenuItems
@@ -800,19 +801,19 @@
 
 (PUTPROPS NCTEXTCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (3681 3951 (NCAddStub.TextCard 3691 . 3949)) (4394 48141 (NC.MakeTEditCard 4404 . 7973) 
-(NC.BringUpTEditCard 7975 . 13322) (NC.MakeTextCardReadOnly 13324 . 15250) (NC.MakeTextCardReadWrite 
-15252 . 16903) (NC.RevertTextCard 16905 . 17858) (NC.CollectReferencesInText 17860 . 23623) (
-NC.InstallTextTitleBarMiddleMenu 23625 . 24823) (NC.MarkTextDirty 24825 . 25218) (NC.ResetTEdit 25220
- . 25626) (NC.ResetTEditProcess 25628 . 27266) (NC.TEditBasedP 27268 . 27963) (NC.TEditCloseFn 27965
- . 29482) (NC.TEditMenuFn 29484 . 30551) (NC.TEditQuitFn 30553 . 32168) (NC.TextCopySubstance 32170 . 
-32789) (NC.TextDirtyP 32791 . 33098) (NC.TextCardShrinkFn 33100 . 38216) (NC.PutTextSubstance 38218 . 
-39851) (NC.GetTextSubstance 39853 . 41541) (NC.UpdateLinkImagesInText 41543 . 43957) (
-NC.CharPosFromTextStream 43959 . 44193) (NC.DelReferencesToCardFromText 44195 . 46648) (NC.TEditWindow
- 46650 . 47290) (NC.TEditCollectObjects 47292 . 48139)) (48393 49566 (
-NC.TranslateWindowPositionToTEditPosition 48403 . 49104) (NC.InsertLinkInTextWindow 49106 . 49564)) (
-49675 58736 (NC.CardFromTextStream 49685 . 49977) (NC.TEditPutFn 49979 . 53738) (
-NC.TEditPutFnAuxiliary 53740 . 54744) (NC.TEditGetFn 54746 . 55907) (NC.MakeTEditPropsList 55909 . 
-57786) (NC.TEditPropsListQuitFn 57788 . 58123) (NC.DelTEditProcesses 58125 . 58734)) (58802 61921 (
-NC.AddTextCard 58812 . 60947) (NC.ComputeTextCardMiddleButtonMenuItems 60949 . 61919)))))
+  (FILEMAP (NIL (3698 3968 (NCAddStub.TextCard 3708 . 3966)) (4411 48020 (NC.MakeTEditCard 4421 . 7887) 
+(NC.BringUpTEditCard 7889 . 13236) (NC.MakeTextCardReadOnly 13238 . 15164) (NC.MakeTextCardReadWrite 
+15166 . 16817) (NC.RevertTextCard 16819 . 17772) (NC.CollectReferencesInText 17774 . 23537) (
+NC.InstallTextTitleBarMiddleMenu 23539 . 24737) (NC.MarkTextDirty 24739 . 25132) (NC.ResetTEdit 25134
+ . 25540) (NC.ResetTEditProcess 25542 . 27180) (NC.TEditBasedP 27182 . 27877) (NC.TEditCloseFn 27879
+ . 29396) (NC.TEditMenuFn 29398 . 30465) (NC.TEditQuitFn 30467 . 32082) (NC.TextCopySubstance 32084 . 
+32703) (NC.TextDirtyP 32705 . 33012) (NC.TextCardShrinkFn 33014 . 38130) (NC.PutTextSubstance 38132 . 
+39730) (NC.GetTextSubstance 39732 . 41420) (NC.UpdateLinkImagesInText 41422 . 43836) (
+NC.CharPosFromTextStream 43838 . 44072) (NC.DelReferencesToCardFromText 44074 . 46527) (NC.TEditWindow
+ 46529 . 47169) (NC.TEditCollectObjects 47171 . 48018)) (48272 49445 (
+NC.TranslateWindowPositionToTEditPosition 48282 . 48983) (NC.InsertLinkInTextWindow 48985 . 49443)) (
+49554 58615 (NC.CardFromTextStream 49564 . 49856) (NC.TEditPutFn 49858 . 53617) (
+NC.TEditPutFnAuxiliary 53619 . 54623) (NC.TEditGetFn 54625 . 55786) (NC.MakeTEditPropsList 55788 . 
+57665) (NC.TEditPropsListQuitFn 57667 . 58002) (NC.DelTEditProcesses 58004 . 58613)) (58681 61800 (
+NC.AddTextCard 58691 . 60826) (NC.ComputeTextCardMiddleButtonMenuItems 60828 . 61798)))))
 STOP
