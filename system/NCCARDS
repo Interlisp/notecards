@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "10-Mar-2024 23:36:16" {DSK}<home>frank>il>notecards>system>NCCARDS.;14 210257 
+(FILECREATED "25-Mar-2024 12:53:03" {DSK}<home>frank>il>notecards>system>NCCARDS.;16 210260 
 
       :CHANGES-TO (FNS NC.EditPropList)
 
-      :PREVIOUS-DATE " 8-Mar-2024 15:44:15" {DSK}<home>frank>il>notecards>system>NCCARDS.;13)
+      :PREVIOUS-DATE "10-Mar-2024 23:36:16" {DSK}<home>frank>il>notecards>system>NCCARDS.;15)
 
 
 (PRETTYCOMPRINT NCCARDSCOMS)
@@ -3190,7 +3190,7 @@
           (WINDOWPROP editW 'PROPERTYLIST.PROPNAMES (for Item in propList collect (CAR Item)))
                                                              (* ; 
                         "Set the right margin to very-far-away.  Prevents stuff from wrapping around")
-          (TEDIT.PARALOOKS textObj '(RIGHTMARGIN 1000 TABS (50 (80 . LEFT)))
+          (TEDIT.PARALOOKS menuStream '(RIGHTMARGIN 1000 TABS (50 (80 . LEFT)))
                  1
                  (GETFILEINFO menuStream 'LENGTH))           (* ; 
                                              "Set the first tab so the fields will line up correctly")
@@ -4028,22 +4028,22 @@ NC.UnfileNoteCard 124110 . 127234) (NC.UpdateUpdateList 127236 . 128078) (NC.Col
  . 129519) (NC.CardSaveFn 129521 . 138318) (NC.DetermineDisplayRegion 138320 . 144299) (NC.AbortCard 
 144301 . 144833) (NC.CardNeedsFilingP 144835 . 146303) (NC.TopLevelCardP 146305 . 146635) (
 NC.MakeDummyRegion 146637 . 147128) (NC.ValidCardP 147130 . 147601) (NC.TitleBarButtonEventFn 147603
- . 148656) (NC.InstallTitleBarMiddleMenu 148658 . 149707)) (149745 194931 (NC.AddPropToPropList 149755
+ . 148656) (NC.InstallTitleBarMiddleMenu 148658 . 149707)) (149745 194934 (NC.AddPropToPropList 149755
  . 154020) (NC.CloseAllPropListEditors 154022 . 154886) (NC.ClosePropListEditor 154888 . 158690) (
 NC.DelPropFromList 158692 . 160785) (NC.EditPropButtonFN 160787 . 161092) (NC.EditProperties 161094 . 
-163491) (NC.EditPropList 163493 . 171312) (NC.ExtractPropList 171314 . 176651) (NC.OpenPropListEditor 
-176653 . 182506) (NC.ProcessEditedPropList 182508 . 184252) (NC.PropListEditorOpenP 184254 . 185346) (
-NC.SelectProperty 185348 . 186384) (NC.ShowLinks 186386 . 192504) (NC.StringIsListP 192506 . 193618) (
-NC.PutProp 193620 . 194291) (NC.GetProp 194293 . 194648) (NC.RemProp 194650 . 194929)) (194968 197433 
-(NC.FetchBeingDeletedFlg 194978 . 195401) (NC.SetBeingDeletedFlg 195403 . 195837) (
-NC.RemoveDELETEMEImageObjsFromCard 195839 . 196997) (NC.InsureIntegerDate 196999 . 197431)) (197478 
-200276 (NC.PlaceMarkerCopyFn 197488 . 197672) (NC.PlaceMarkerDisplayFn 197674 . 198269) (
-NC.PlaceMarkerGetFn 198271 . 198435) (NC.PlaceMarkerImageBoxFn 198437 . 199333) (NC.PlaceMarkerPutFn 
-199335 . 199571) (NC.MakePlaceMarker 199573 . 200274)) (200325 208217 (NC.FetchTitleDate 200335 . 
-200933) (NC.FetchItemDate 200935 . 201530) (NC.FetchPropListDate 201532 . 202140) (NC.FetchLinksDate 
-202142 . 202740) (NC.FetchLinkIconAttachedBitMap 202742 . 207086) (NC.FetchLinkDisplayMode 207088 . 
-207388) (NC.FetchDefaultWidth 207390 . 207672) (NC.FetchDefaultHeight 207674 . 207955) (
-NC.FetchLinkAnchorModesSupported 207957 . 208215)) (208218 210081 (NC.SetTitleDate 208228 . 208690) (
-NC.SetItemDate 208692 . 209146) (NC.SetPropListDate 209148 . 209615) (NC.SetLinksDate 209617 . 210079)
+163491) (NC.EditPropList 163493 . 171315) (NC.ExtractPropList 171317 . 176654) (NC.OpenPropListEditor 
+176656 . 182509) (NC.ProcessEditedPropList 182511 . 184255) (NC.PropListEditorOpenP 184257 . 185349) (
+NC.SelectProperty 185351 . 186387) (NC.ShowLinks 186389 . 192507) (NC.StringIsListP 192509 . 193621) (
+NC.PutProp 193623 . 194294) (NC.GetProp 194296 . 194651) (NC.RemProp 194653 . 194932)) (194971 197436 
+(NC.FetchBeingDeletedFlg 194981 . 195404) (NC.SetBeingDeletedFlg 195406 . 195840) (
+NC.RemoveDELETEMEImageObjsFromCard 195842 . 197000) (NC.InsureIntegerDate 197002 . 197434)) (197481 
+200279 (NC.PlaceMarkerCopyFn 197491 . 197675) (NC.PlaceMarkerDisplayFn 197677 . 198272) (
+NC.PlaceMarkerGetFn 198274 . 198438) (NC.PlaceMarkerImageBoxFn 198440 . 199336) (NC.PlaceMarkerPutFn 
+199338 . 199574) (NC.MakePlaceMarker 199576 . 200277)) (200328 208220 (NC.FetchTitleDate 200338 . 
+200936) (NC.FetchItemDate 200938 . 201533) (NC.FetchPropListDate 201535 . 202143) (NC.FetchLinksDate 
+202145 . 202743) (NC.FetchLinkIconAttachedBitMap 202745 . 207089) (NC.FetchLinkDisplayMode 207091 . 
+207391) (NC.FetchDefaultWidth 207393 . 207675) (NC.FetchDefaultHeight 207677 . 207958) (
+NC.FetchLinkAnchorModesSupported 207960 . 208218)) (208221 210084 (NC.SetTitleDate 208231 . 208693) (
+NC.SetItemDate 208695 . 209149) (NC.SetPropListDate 209151 . 209618) (NC.SetLinksDate 209620 . 210082)
 ))))
 STOP
