@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "25-Mar-2024 17:49:05" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;45 63321  
+(FILECREATED " 1-Apr-2024 12:13:15" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;51 61097  
 
       :CHANGES-TO (FNS NC.TEditPutFn)
 
-      :PREVIOUS-DATE "25-Mar-2024 13:16:53" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;43)
+      :PREVIOUS-DATE "31-Mar-2024 23:09:40" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;49)
 
 
 (PRETTYCOMPRINT NCTEXTCARDCOMS)
@@ -79,7 +79,12 @@
 (FILESLOAD NCTYPESMECH TEDIT)
 (DEFINEQ
 
-(NCAddStub.TextCard  [LAMBDA NIL                                                (* kirk%: "19-Jun-86 20:52")         (* * kirk 18Jun86 Add the text card stub)    (NC.AddCardTypeStub 'Text 'NoteCard 'NCTEXTCARD NIL '((DisplayedInMenuFlg . T])
+(NCAddStub.TextCard
+  [LAMBDA NIL                                                (* kirk%: "19-Jun-86 20:52")
+
+         (* * kirk 18Jun86 Add the text card stub)
+
+    (NC.AddCardTypeStub 'Text 'NoteCard 'NCTEXTCARD NIL '((DisplayedInMenuFlg . T])
 )
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
@@ -128,15 +133,14 @@
 
     (* ;; "rht 6/9/88: Added RegionOrPosition arg and passed to NC.MakeNewCardWindow.  Also InterestedWindow arg.")
 
-    (LET (TextStream Window Type)
+    (LET (EmptyStream TextStream Window Type)
          (COND
-            (NoDisplayFlg [SETQ TextStream (OPENTEXTSTREAM "" NIL NIL NIL (NC.MakeTEditPropsList
-                                                                           NIL
-                                                                           (LISTGET ParamList
-                                                                                  
-                                                                                  '
+            (NoDisplayFlg (SETQ EmptyStream (OPENSTREAM '{NODIRCORE} 'BOTH 'NEW))
+                   [SETQ TextStream (OPENTEXTSTREAM EmptyStream NIL NIL NIL
+                                           (NC.MakeTEditPropsList NIL (LISTGET ParamList 
+                                                                             '
                                                                      Don'tAttachUserSpecifiedPropsFlg
-                                                                                  ]
+                                                                             ]
                    (NC.SetSubstance Card TextStream)
                    (NC.SetTitle Card Title)
                    (STREAMPROP TextStream 'NoteCardObject Card)
@@ -249,11 +253,68 @@
                     then (NC.MarkCardDirty Card)))
          TEditWindow])
 
-(NC.MakeTextCardReadOnly  [LAMBDA (Card)                                             (* Randy.Gobbel " 2-Dec-87 18:13")    (DECLARE (GLOBALVARS NC.ShowPropListMenu))    (LET ((Window (NC.FetchWindow Card))          PropListEditor)         (NC.ProtectedCardOperation Card "Make Read-Only" Window                (if (NC.CardSomehowDirtyP Card)                    then (ALLOW.BUTTON.EVENTS)                          (if (MENU (create MENU                                               TITLE _ "Card has been edited"                                               ITEMS _ '(("Save Changes" T                                                             "Save edited version of card in NoteFile"                                                                )                                                         ("Revert" NIL                                                  "Discard edits, refetch card contents from NoteFile"                                                                ))                                               CENTERFLG _ T))                              then (NC.CardSaveFn Card NIL Window)                            else (NC.RevertTextCard Card)))                (NC.SetUserDataProp Card 'ReadOnly T)                (if (WINDOWP (SETQ PropListEditor (NC.PropListEditorOpenP Window)))                    then (NC.MakeTEditReadOnly PropListEditor)                          (WINDOWPROP PropListEditor 'TEDIT.MENU NC.ShowPropListMenu))                (if (WINDOWP (SETQ PropListEditor (NC.PropListEditorOpenP Window T)))                    then (NC.MakeTEditReadOnly PropListEditor))                (NC.MakeTEditReadOnly Window '(Assign% Title Title/FileBoxes |Add Global Link|                                                      Insert% Link |Put Cards Here| Restart% Editor)                       '(Delete% Card])
+(NC.MakeTextCardReadOnly
+  [LAMBDA (Card)                                             (* Randy.Gobbel " 2-Dec-87 18:13")
+    (DECLARE (GLOBALVARS NC.ShowPropListMenu))
+    (LET ((Window (NC.FetchWindow Card))
+          PropListEditor)
+         (NC.ProtectedCardOperation Card "Make Read-Only" Window
+                (if (NC.CardSomehowDirtyP Card)
+                    then (ALLOW.BUTTON.EVENTS)
+                         (if (MENU (create MENU
+                                          TITLE _ "Card has been edited"
+                                          ITEMS _ '(("Save Changes" T 
+                                                           "Save edited version of card in NoteFile")
+                                                    ("Revert" NIL 
+                                                 "Discard edits, refetch card contents from NoteFile"
+                                                           ))
+                                          CENTERFLG _ T))
+                             then (NC.CardSaveFn Card NIL Window)
+                           else (NC.RevertTextCard Card)))
+                (NC.SetUserDataProp Card 'ReadOnly T)
+                (if (WINDOWP (SETQ PropListEditor (NC.PropListEditorOpenP Window)))
+                    then (NC.MakeTEditReadOnly PropListEditor)
+                         (WINDOWPROP PropListEditor 'TEDIT.MENU NC.ShowPropListMenu))
+                (if (WINDOWP (SETQ PropListEditor (NC.PropListEditorOpenP Window T)))
+                    then (NC.MakeTEditReadOnly PropListEditor))
+                (NC.MakeTEditReadOnly Window '(Assign% Title Title/FileBoxes |Add Global Link| 
+                                                     Insert% Link |Put Cards Here| Restart% Editor)
+                       '(Delete% Card])
 
-(NC.MakeTextCardReadWrite  [LAMBDA (Card)                                             (* Randy.Gobbel "23-Nov-87 14:11")    (DECLARE (GLOBALVARS NC.EditPropListMenu))    (LET ((Window (NC.FetchWindow Card))          PropListEditor)         (NC.ProtectedCardOperation Card "Make Read-Write" Window (if (WINDOWP (SETQ                                                                                     PropListEditor                                                                                    (                                                                               NC.PropListEditorOpenP                                                                                     Window)))                                                                      then (NC.MakeTEditReadWrite                                                                                PropListEditor)                                                                            (WINDOWPROP                                                                                    PropListEditor                                                                                   'TEDIT.MENU                                                                                   NC.EditPropListMenu                                                                                   ))                (if (WINDOWP (SETQ PropListEditor (NC.PropListEditorOpenP Window T)))                    then (NC.MakeTEditReadWrite PropListEditor))                (NC.MakeTEditReadWrite Window)                (NC.SetUserDataProp Card 'ReadOnly NIL])
+(NC.MakeTextCardReadWrite
+  [LAMBDA (Card)                                             (* Randy.Gobbel "23-Nov-87 14:11")
+    (DECLARE (GLOBALVARS NC.EditPropListMenu))
+    (LET ((Window (NC.FetchWindow Card))
+          PropListEditor)
+         (NC.ProtectedCardOperation Card "Make Read-Write" Window (if (WINDOWP (SETQ PropListEditor
+                                                                                (
+                                                                               NC.PropListEditorOpenP
+                                                                                 Window)))
+                                                                      then (NC.MakeTEditReadWrite
+                                                                            PropListEditor)
+                                                                           (WINDOWPROP PropListEditor
+                                                                                  'TEDIT.MENU 
+                                                                                  NC.EditPropListMenu
+                                                                                  ))
+                (if (WINDOWP (SETQ PropListEditor (NC.PropListEditorOpenP Window T)))
+                    then (NC.MakeTEditReadWrite PropListEditor))
+                (NC.MakeTEditReadWrite Window)
+                (NC.SetUserDataProp Card 'ReadOnly NIL])
 
-(NC.RevertTextCard  [LAMBDA (Card)                                             (* Randy.Gobbel " 7-Dec-87 12:04")    (NC.GetNoteCard Card)    (LET (TEditProcess (Window (NC.FetchWindow Card)))         (UNINTERRUPTABLY             (KILL-PROCESS-OF-TEDIT-WINDOW Window)             (UNMARK-AS-WITHOUT-PROCESS Window))         [SETQ TEditProcess (TEDIT (NC.FetchSubstance Card)                                   Window NIL (NC.MakeTEditPropsList Window (NC.FileBoxP Card T)                                                     (fetch (Card NoteFile) of Card]         (until (TEDIT-PROCESS-P TEditProcess) do (BLOCK)))                                                             (* wait for process to establish                                                            itself so TEdit killer doesn't get                                                            confused)    (NC.MarkCardDirty Card T])
+(NC.RevertTextCard
+  [LAMBDA (Card)                                             (* Randy.Gobbel " 7-Dec-87 12:04")
+    (NC.GetNoteCard Card)
+    (LET (TEditProcess (Window (NC.FetchWindow Card)))
+         (UNINTERRUPTABLY
+             (KILL-PROCESS-OF-TEDIT-WINDOW Window)
+             (UNMARK-AS-WITHOUT-PROCESS Window))
+         [SETQ TEditProcess (TEDIT (NC.FetchSubstance Card)
+                                   Window NIL (NC.MakeTEditPropsList Window (NC.FileBoxP Card T)
+                                                     (fetch (Card NoteFile) of Card]
+         (until (TEDIT-PROCESS-P TEditProcess) do (BLOCK)))  (* wait for process to establish 
+                                                             itself so TEdit killer doesn't get 
+                                                             confused)
+    (NC.MarkCardDirty Card T])
 
 (NC.CollectReferencesInText
   [LAMBDA (Card CheckAndDeleteFlg ReturnLinkIconsFlg ReturnLocationsFlg)
@@ -328,11 +389,47 @@
                                                              (T ActualLink]
           (RETURN (CONS Links DirtyFlg])
 
-(NC.InstallTextTitleBarMiddleMenu  [LAMBDA (Window CardType)                                  (* pmi%: " 2-Apr-87 10:23")         (* * Make a text card middle button title bar menu and install.)         (* * pmi 4/1/87%: Changed to replace MENUFONT with NC.MenuFont)    (DECLARE (GLOBALVARS NC.MenuFont))    (LET (Menu)         [WINDOWPROP Window 'TitleBarMiddleButtonMenu (SETQ Menu (\TEDIT.CREATEMENU (                                                                                  NC.GetCardTypeField                                                                                                                                                                     MiddleButtonMenuItems                                                                                     CardType]         (replace (MENU MENUFONT) of Menu with NC.MenuFont)         (replace (MENU ITEMHEIGHT) of Menu with (IPLUS (FONTPROP NC.MenuFont                                                                           'HEIGHT)                                                                    1))         (replace (MENU IMAGE) of Menu with NIL])
+(NC.InstallTextTitleBarMiddleMenu
+  [LAMBDA (Window CardType)                                  (* pmi%: " 2-Apr-87 10:23")
 
-(NC.MarkTextDirty  [LAMBDA (Card ResetFlg)                                    (* fgh%: "13-Nov-85 23:19")         (* * Mark or unmark TextStream as being changed.)         (* * rht 2/1/85%: Updated to use the documented function.)         (* * fgh |11/13/85| Updated to use Card)    (TEDIT.STREAMCHANGEDP (TEXTSTREAM (NC.FetchSubstance Card))           ResetFlg])
+         (* * Make a text card middle button title bar menu and install.)
 
-(NC.ResetTEdit  [LAMBDA (TextStream)                                       (* NoteCards% User "17-Jun-84 01:58")         (* * Kill the Tedit process running on TextStream and the restart a new one.       Goal is to clean up display if TEdit goea awary.)    (ADD.PROCESS (LIST (FUNCTION NC.ResetTEditProcess)                       TextStream)           'NAME           'ResetTEdit])
+         (* * pmi 4/1/87%: Changed to replace MENUFONT with NC.MenuFont)
+
+    (DECLARE (GLOBALVARS NC.MenuFont))
+    (LET (Menu)
+         [WINDOWPROP Window 'TitleBarMiddleButtonMenu (SETQ Menu (\TEDIT.CREATEMENU (
+                                                                                  NC.GetCardTypeField
+                                                                                     
+                                                                                MiddleButtonMenuItems
+                                                                                     CardType]
+         (replace (MENU MENUFONT) of Menu with NC.MenuFont)
+         (replace (MENU ITEMHEIGHT) of Menu with (IPLUS (FONTPROP NC.MenuFont 'HEIGHT)
+                                                        1))
+         (replace (MENU IMAGE) of Menu with NIL])
+
+(NC.MarkTextDirty
+  [LAMBDA (Card ResetFlg)                                    (* fgh%: "13-Nov-85 23:19")
+
+         (* * Mark or unmark TextStream as being changed.)
+
+         (* * rht 2/1/85%: Updated to use the documented function.)
+
+         (* * fgh |11/13/85| Updated to use Card)
+
+    (TEDIT.STREAMCHANGEDP (TEXTSTREAM (NC.FetchSubstance Card))
+           ResetFlg])
+
+(NC.ResetTEdit
+  [LAMBDA (TextStream)                                       (* NoteCards% User "17-Jun-84 01:58")
+
+         (* * Kill the Tedit process running on TextStream and the restart a new one.
+         Goal is to clean up display if TEdit goea awary.)
+
+    (ADD.PROCESS (LIST (FUNCTION NC.ResetTEditProcess)
+                       TextStream)
+           'NAME
+           'ResetTEdit])
 
 (NC.ResetTEditProcess
   [LAMBDA (TextStream)                                       (* fgh%: " 7-Jun-86 19:16")
@@ -369,7 +466,22 @@
              (WINDOWADDPROP Window 'CLOSEFN (FUNCTION NC.QuitCard)
                     T])
 
-(NC.TEditBasedP  [LAMBDA (CardOrTypeName)                                   (* fgh%: "17-Nov-85 19:21")         (* * Returns T if Type is a note card type that is based on TEdit or else an ID        of such a note card. NIL otherise.)         (* * rht 11/8/84%: Hacked to reflect notecards typing mechanism.       Seems gross to have to search the types list to get the record.)         (* * fgh |11/13/85| Updated to handle Card object.)    (LET [(TypeName (COND                       ((NC.CardP CardOrTypeName)                        (NC.RetrieveType CardOrTypeName))                       (T CardOrTypeName]         (NC.IsSubTypeOfP TypeName 'Text])
+(NC.TEditBasedP
+  [LAMBDA (CardOrTypeName)                                   (* fgh%: "17-Nov-85 19:21")
+
+         (* * Returns T if Type is a note card type that is based on TEdit or else an ID 
+         of such a note card. NIL otherise.)
+
+         (* * rht 11/8/84%: Hacked to reflect notecards typing mechanism.
+         Seems gross to have to search the types list to get the record.)
+
+         (* * fgh |11/13/85| Updated to handle Card object.)
+
+    (LET [(TypeName (COND
+                       ((NC.CardP CardOrTypeName)
+                        (NC.RetrieveType CardOrTypeName))
+                       (T CardOrTypeName]
+         (NC.IsSubTypeOfP TypeName 'Text])
 
 (NC.TEditCloseFn
   [LAMBDA (CardIdentifier)                                   (* ; "Edited 30-Mar-88 17:45 by Trigg")
@@ -403,15 +515,148 @@
          (SETQ PREVPREVPC NIL)
          (SETPROPLIST 'PREVPREVPC NIL])
 
-(NC.TEditMenuFn  [LAMBDA (Window)                                           (* Randy.Gobbel "23-Apr-87 15:32")         (* * Gets called from LEFT or MIDDLE button press in title bar of TEdit window.       If LEFT press bring up the Notecards Manipulation Window.       IF MIDDLE press bring up the TEdit specific NoteCard operations menu.       Bring up menus using TEDIT.DEFAULT.MENUFN)         (* * rht 4/11/86%: No only calls TEDIT.DEFAULT.MENUFN for middle button press.       On left button press, works like graph and sketch cards.)         (* * rg |4/23/87| added contention lock)    (if (LASTMOUSESTATE LEFT)        then (APPLY* (OR (MENU (WINDOWPROP Window 'TitleBarLeftButtonMenu))                             (FUNCTION NILL))                        Window)      else (WINDOWPROP Window 'TEDIT.MENU (WINDOWPROP Window 'TitleBarMiddleButtonMenu))            (NC.ProtectedCardOperation (NC.CoerceToCard Window)                   "Perform TEdit Operation" Window (TEDIT.DEFAULT.MENUFN Window])
+(NC.TEditMenuFn
+  [LAMBDA (Window)                                           (* Randy.Gobbel "23-Apr-87 15:32")
 
-(NC.TEditQuitFn  [LAMBDA (CardIdentifier)                                   (* rht%: "14-Jul-86 00:09")         (* Called by TEdit when quitting out of a TEdit-based note card.       Close up attached windows,)         (* * fgh |11/13/85| Updated to handle Card objects.)         (* * fgh |5/2/86| Removed assumption that there is a window when looking for        the prompt window)         (* * rht 7/14/86%: No longer calls NC.DeactivateCard.)    (LET ((Card (NC.CoerceToCard CardIdentifier))          PromptWindow Window)         (SETQ Window (NC.FetchWindow Card))         (SETQ PromptWindow (GETPROMPTWINDOW Window NIL NIL T))         [AND Window (for AttachedWindow in (ALLATTACHEDWINDOWS Window)                        unless (EQ AttachedWindow PromptWindow)                        do (DETACHWINDOW AttachedWindow)                              (CLOSEW AttachedWindow)                              (until (NULL (OPENWP AttachedWindow)) do (BLOCK]         (* * Obsolete (* MAke sure TEdit won't close the database file)       (replace (TEXTOBJ TXTFILE) of (TEXTOBJ TextStream) with NIL)       (TEDIT.MAPPIECES (TEXTOBJ TextStream) (FUNCTION       (LAMBDA (CH# PC PC# OBL) (replace (PIECE PFILE) of PC with NIL)))))         (* * Setting the PromptWindow PROCESS to NIL is to break a circularity caused        by TEXTOBJ -> PROMPTWINDOW -> PROCESS -> TEXTSTREAM -> TEXTOBJ)         (AND Window PromptWindow (WINDOWPROP PromptWindow 'PROCESS NIL)              (REMOVEPROMPTWINDOW Window))         T])
+         (* * Gets called from LEFT or MIDDLE button press in title bar of TEdit window.
+         If LEFT press bring up the Notecards Manipulation Window.
+         IF MIDDLE press bring up the TEdit specific NoteCard operations menu.
+         Bring up menus using TEDIT.DEFAULT.MENUFN)
 
-(NC.TextCopySubstance  [LAMBDA (Card FromStream ToStream Length)                  (* fgh%: "21-Nov-85 21:26")         (* * Copy a text substance from FromStream to ToStream.)         (* * fgh |11/20/85| NoteCards now passes the Start and End pointers of the        FromStream as args and properly sets the pointers on the ToStream)         (* * fgh |11/21/85| Now passed Length instead of start and end ptrs.)    (LET* ((FromStartPtr (GETFILEPTR FromStream))           (FromEndPtr (PLUS Length FromStartPtr)))          (COPYBYTES FromStream ToStream FromStartPtr FromEndPtr))    T])
+         (* * rht 4/11/86%: No only calls TEDIT.DEFAULT.MENUFN for middle button press.
+         On left button press, works like graph and sketch cards.)
 
-(NC.TextDirtyP  [LAMBDA (Card)                                             (* fgh%: "13-Nov-85 23:19")         (* * Return T is TextSubstance has been changed.)         (* * fgh |11/13/85| Updated to handle Card objects.)    (TEDIT.STREAMCHANGEDP (TEXTSTREAM (NC.FetchSubstance Card])
+         (* * rg |4/23/87| added contention lock)
 
-(NC.TextCardShrinkFn  [LAMBDA (W)                                                (* ;                                                            "Edited  2-Dec-88 15:48 by krivacic")(* ;;; "This is in order to get the right title on the TEdit icon.  This is a kludgy finesse around TEdit's shrunken icon title facility.")    (* ;; "rht 4/30/86: Now optionally kills TEdit process at shrink time.")    (* ;; "fgh 6/5/86 Fixed to KLUDGE around problem that TEdit will call GETBOXPOSITION even when SHRINKW is called with a position argument.  Kludge involves looking up the stack for the position being specified in SHRINKW since its not passed down to here.")    (* ;; "rg 11/18/86 Added GLOBALVARS")    (* ;; "rht 1/30/87: Changed NC.DelTEditProcessAtShrinkFlg stuff to use Bagley's package via KILL-PROCESS-OF-TEDIT-WINDOW.")    (* ;; "rht 4/24/88: Now trashes TEDIT.ICON.TITLE prop to be NIL rather than %"%" to prevent \TEDIT.SHRINK.ICONCREATE from undoing our work.")    (DECLARE (GLOBALVARS TEDIT.ICON.FONT TEDIT.TITLED.ICON.TEMPLATE NC.DelTEditProcessAtShrinkFlg                        NC.IconProps))                       (* LET ((OldIconTitle                                                           (WINDOWPROP W (QUOTE                                                            NoteCardsIconTitle)))                                                           (Icon (WINDOWPROP W                                                           (QUOTE ICON))) (Card                                                           (NC.CoerceToCard W)) IconTitle)                                                           (if (NULL Icon) then                                                           (WINDOWPROP W (QUOTE                                                            TEDIT.ICON.TITLE) NIL)                                                           (WINDOWPROP W (QUOTE ICON)                                                           (OR (LET ((CARD-ICON-INFO                                                           (LISTGET NC.IconProps                                                           (fetch (CardObject Type) of                                                           (WINDOWPROP W (QUOTE NoteCardObject))))))                                                           (AND CARD-ICON-INFO                                                           (TITLEDICONW CARD-ICON-INFO ""                                                            NC.IconFont (LET (                                                           (StkPos (STKPOS (QUOTE SHRINKW))))                                                           (if StkPos then (PROG1                                                           (STKARG (QUOTE ICONPOSITION) StkPos)                                                           (RELSTK StkPos)) else NIL)) T T NIL)))                                                           (TITLEDICONW                                                            TEDIT.TITLED.ICON.TEMPLATE ""                                                            TEDIT.ICON.FONT (LET                                                           ((StkPos (STKPOS (QUOTE SHRINKW))))                                                           (if StkPos then (PROG1                                                           (STKARG (QUOTE ICONPOSITION) StkPos)                                                           (RELSTK StkPos)) else NIL)) T T NIL)))                                                           (APPLY* (WINDOWPROP W                                                           (QUOTE ICONFN)) W)                                                           (SETQ Icon (WINDOWPROP W                                                           (QUOTE ICON)))) (if                                                           (NOT (EQUAL OldIconTitle                                                           (SETQ IconTitle (CONCAT "NC: "                                                           (NC.RetrieveTitle Card))))) then                                                           (ICONTITLE IconTitle NIL NIL Icon)                                                           (WINDOWPROP W (QUOTE                                                            NoteCardsIconTitle) IconTitle))                                                           (* ;;                                                            " Kill tedit process if desired.")                                                           (if NC.DelTEditProcessAtShrinkFlg                                                            then (KILL-PROCESS-OF-TEDIT-WINDOW W)))    (* ;; "Generic Window Shrink")    (NC.ShrinkIcon W)    (* ;; " Kill tedit process if desired.")    (if NC.DelTEditProcessAtShrinkFlg        then (KILL-PROCESS-OF-TEDIT-WINDOW W])
+    (if (LASTMOUSESTATE LEFT)
+        then (APPLY* (OR (MENU (WINDOWPROP Window 'TitleBarLeftButtonMenu))
+                         (FUNCTION NILL))
+                    Window)
+      else (WINDOWPROP Window 'TEDIT.MENU (WINDOWPROP Window 'TitleBarMiddleButtonMenu))
+           (NC.ProtectedCardOperation (NC.CoerceToCard Window)
+                  "Perform TEdit Operation" Window (TEDIT.DEFAULT.MENUFN Window])
+
+(NC.TEditQuitFn
+  [LAMBDA (CardIdentifier)                                   (* rht%: "14-Jul-86 00:09")
+
+         (* Called by TEdit when quitting out of a TEdit-based note card.
+         Close up attached windows,)
+
+         (* * fgh |11/13/85| Updated to handle Card objects.)
+
+         (* * fgh |5/2/86| Removed assumption that there is a window when looking for the 
+         prompt window)
+
+         (* * rht 7/14/86%: No longer calls NC.DeactivateCard.)
+
+    (LET ((Card (NC.CoerceToCard CardIdentifier))
+          PromptWindow Window)
+         (SETQ Window (NC.FetchWindow Card))
+         (SETQ PromptWindow (GETPROMPTWINDOW Window NIL NIL T))
+         [AND Window (for AttachedWindow in (ALLATTACHEDWINDOWS Window) unless (EQ AttachedWindow 
+                                                                                   PromptWindow)
+                        do (DETACHWINDOW AttachedWindow)
+                           (CLOSEW AttachedWindow)
+                           (until (NULL (OPENWP AttachedWindow)) do (BLOCK]
+
+         (* * Obsolete (* MAke sure TEdit won't close the database file)
+         (replace (TEXTOBJ TXTFILE) of (TEXTOBJ TextStream) with NIL)
+         (TEDIT.MAPPIECES (TEXTOBJ TextStream) (FUNCTION
+         (LAMBDA (CH# PC PC# OBL) (replace (PIECE PFILE) of PC with NIL)))))
+
+         (* * Setting the PromptWindow PROCESS to NIL is to break a circularity caused by 
+         TEXTOBJ -> PROMPTWINDOW -> PROCESS -> TEXTSTREAM -> TEXTOBJ)
+
+         (AND Window PromptWindow (WINDOWPROP PromptWindow 'PROCESS NIL)
+              (REMOVEPROMPTWINDOW Window))
+         T])
+
+(NC.TextCopySubstance
+  [LAMBDA (Card FromStream ToStream Length)                  (* fgh%: "21-Nov-85 21:26")
+
+         (* * Copy a text substance from FromStream to ToStream.)
+
+         (* * fgh |11/20/85| NoteCards now passes the Start and End pointers of the 
+         FromStream as args and properly sets the pointers on the ToStream)
+
+         (* * fgh |11/21/85| Now passed Length instead of start and end ptrs.)
+
+    (LET* ((FromStartPtr (GETFILEPTR FromStream))
+           (FromEndPtr (PLUS Length FromStartPtr)))
+          (COPYBYTES FromStream ToStream FromStartPtr FromEndPtr))
+    T])
+
+(NC.TextDirtyP
+  [LAMBDA (Card)                                             (* fgh%: "13-Nov-85 23:19")
+
+         (* * Return T is TextSubstance has been changed.)
+
+         (* * fgh |11/13/85| Updated to handle Card objects.)
+
+    (TEDIT.STREAMCHANGEDP (TEXTSTREAM (NC.FetchSubstance Card])
+
+(NC.TextCardShrinkFn
+  [LAMBDA (W)                                             (* ; "Edited  2-Dec-88 15:48 by krivacic")
+
+(* ;;; "This is in order to get the right title on the TEdit icon.  This is a kludgy finesse around TEdit's shrunken icon title facility.")
+
+    (* ;; "rht 4/30/86: Now optionally kills TEdit process at shrink time.")
+
+    (* ;; "fgh 6/5/86 Fixed to KLUDGE around problem that TEdit will call GETBOXPOSITION even when SHRINKW is called with a position argument.  Kludge involves looking up the stack for the position being specified in SHRINKW since its not passed down to here.")
+
+    (* ;; "rg 11/18/86 Added GLOBALVARS")
+
+    (* ;; "rht 1/30/87: Changed NC.DelTEditProcessAtShrinkFlg stuff to use Bagley's package via KILL-PROCESS-OF-TEDIT-WINDOW.")
+
+    (* ;; "rht 4/24/88: Now trashes TEDIT.ICON.TITLE prop to be NIL rather than %"%" to prevent \TEDIT.SHRINK.ICONCREATE from undoing our work.")
+
+    (DECLARE (GLOBALVARS TEDIT.ICON.FONT TEDIT.TITLED.ICON.TEMPLATE NC.DelTEditProcessAtShrinkFlg 
+                    NC.IconProps))                           (* LET ((OldIconTitle
+                                                             (WINDOWPROP W (QUOTE 
+                                                             NoteCardsIconTitle)))
+                                                             (Icon (WINDOWPROP W (QUOTE ICON)))
+                                                             (Card (NC.CoerceToCard W)) IconTitle)
+                                                             (if (NULL Icon) then
+                                                             (WINDOWPROP W (QUOTE TEDIT.ICON.TITLE) 
+                                                             NIL) (WINDOWPROP W (QUOTE ICON)
+                                                             (OR (LET ((CARD-ICON-INFO
+                                                             (LISTGET NC.IconProps
+                                                             (fetch (CardObject Type) of
+                                                             (WINDOWPROP W (QUOTE NoteCardObject))))))
+                                                             (AND CARD-ICON-INFO (TITLEDICONW 
+                                                             CARD-ICON-INFO "" NC.IconFont
+                                                             (LET ((StkPos (STKPOS
+                                                             (QUOTE SHRINKW)))) (if StkPos then
+                                                             (PROG1 (STKARG (QUOTE ICONPOSITION) 
+                                                             StkPos) (RELSTK StkPos)) else NIL)) T 
+                                                             T NIL))) (TITLEDICONW 
+                                                             TEDIT.TITLED.ICON.TEMPLATE "" 
+                                                             TEDIT.ICON.FONT (LET
+                                                             ((StkPos (STKPOS (QUOTE SHRINKW))))
+                                                             (if StkPos then (PROG1
+                                                             (STKARG (QUOTE ICONPOSITION) StkPos)
+                                                             (RELSTK StkPos)) else NIL)) T T NIL)))
+                                                             (APPLY* (WINDOWPROP W
+                                                             (QUOTE ICONFN)) W) (SETQ Icon
+                                                             (WINDOWPROP W (QUOTE ICON))))
+                                                             (if (NOT (EQUAL OldIconTitle
+                                                             (SETQ IconTitle (CONCAT "NC: "
+                                                             (NC.RetrieveTitle Card))))) then
+                                                             (ICONTITLE IconTitle NIL NIL Icon)
+                                                             (WINDOWPROP W (QUOTE 
+                                                             NoteCardsIconTitle) IconTitle))
+                                                             (* ;; " Kill tedit process if desired.")
+                                                             (if NC.DelTEditProcessAtShrinkFlg then
+                                                             (KILL-PROCESS-OF-TEDIT-WINDOW W)))
+
+    (* ;; "Generic Window Shrink")
+
+    (NC.ShrinkIcon W)
+
+    (* ;; " Kill tedit process if desired.")
+
+    (if NC.DelTEditProcessAtShrinkFlg
+        then (KILL-PROCESS-OF-TEDIT-WINDOW W])
 
 (NC.PutTextSubstance
   [LAMBDA (Card Stream)                                      (* fgh |1/22/2024| Updated for 2023-24 
@@ -448,7 +693,39 @@
          (SETFILEPTR Stream -1)
          0])
 
-(NC.GetTextSubstance  [LAMBDA (Card Length Stream)                               (* rht%: " 2-Feb-87 17:51")                                                             (* Get a text stream from the                                                            database file)         (* * fgh |11/13/85| Updated to handle Card objects.)         (* * fgh |11/20/85| NoteCards now passes down start and end pointer as args.)         (* * fgh |11/21/85| Now passed Length instead of start and end ptrs.)         (* * rht 1/23/86%: Now takes Stream as arg instead of computing from Card.)         (* * rht 2/2/87%: Fixed bug in the way NC.MakeTEditPropsList was being called.)    (LET ((TempStream (OPENSTREAM '{NODIRCORE} 'BOTH 'NEW))          TextStream StartPtr)         (* * Copy text stream to a NODIRCORE file from the current location.       Number of bytes copied should be Length minus the 4 bytes already read for        OriginalLocation)         (COPYBYTES Stream TempStream (SETQ StartPtr (GETFILEPTR Stream))                (PLUS StartPtr Length))         (* * return an open textstream on the temp file)         [SETQ TextStream (OPENTEXTSTREAM TempStream NIL NIL NIL (NC.MakeTEditPropsList                                                                  NIL                                                                  (NC.FileBoxP Card T)                                                                  (fetch (Card NoteFile)                                                                     of Card]         (STREAMPROP TextStream 'NoteCardObject Card)         TextStream])
+(NC.GetTextSubstance
+  [LAMBDA (Card Length Stream)                               (* rht%: " 2-Feb-87 17:51")
+                                                             (* Get a text stream from the database 
+                                                             file)
+
+         (* * fgh |11/13/85| Updated to handle Card objects.)
+
+         (* * fgh |11/20/85| NoteCards now passes down start and end pointer as args.)
+
+         (* * fgh |11/21/85| Now passed Length instead of start and end ptrs.)
+
+         (* * rht 1/23/86%: Now takes Stream as arg instead of computing from Card.)
+
+         (* * rht 2/2/87%: Fixed bug in the way NC.MakeTEditPropsList was being called.)
+
+    (LET ((TempStream (OPENSTREAM '{NODIRCORE} 'BOTH 'NEW))
+          TextStream StartPtr)
+
+         (* * Copy text stream to a NODIRCORE file from the current location.
+         Number of bytes copied should be Length minus the 4 bytes already read for 
+         OriginalLocation)
+
+         (COPYBYTES Stream TempStream (SETQ StartPtr (GETFILEPTR Stream))
+                (PLUS StartPtr Length))
+
+         (* * return an open textstream on the temp file)
+
+         [SETQ TextStream (OPENTEXTSTREAM TempStream NIL NIL NIL (NC.MakeTEditPropsList
+                                                                  NIL
+                                                                  (NC.FileBoxP Card T)
+                                                                  (fetch (Card NoteFile) of Card]
+         (STREAMPROP TextStream 'NoteCardObject Card)
+         TextStream])
 
 (NC.UpdateLinkImagesInText
   [LAMBDA (SourceCardOrWindow DestinationCard)               (* rht%: "28-Oct-87 18:47")
@@ -588,11 +865,25 @@
 
          (* * fgh |2/6/86| Added Card argument.)
 
-         (* * fgh 2024-03-25 Updated to use new public API TEDIT.XYTOCH)
+    (PROG (TextObj)
+          (COND
+             ([AND (WINDOWP Window)
+                   (type? TEXTOBJ (SETQ TextObj (WINDOWPROP Window 'TEXTOBJ]
+              (RETURN (fetch (SELECTION CH#) of (\TEDIT.SELECT WindowPositionX WindowPositionY 
+                                                       TextObj (fetch (TEXTOBJ MOUSEREGION)
+                                                                  of TextObj)
+                                                       NIL NIL Window])
 
-    (TEDIT.XYTOCH WindowPositionX WindowPositionY Window])
+(NC.InsertLinkInTextWindow
+  [LAMBDA (Card TextWindow LinkOrLinkLabel CharacterPosition)(* fgh%: " 6-Feb-86 22:12")
 
-(NC.InsertLinkInTextWindow  [LAMBDA (Card TextWindow LinkOrLinkLabel CharacterPosition)(* fgh%: " 6-Feb-86 22:12")         (* * Given a Window and a Link, insert the Link at CharacterPosition in the        TextStream of Window)         (* * fgh |2/6/86| Added Card argument)    (PROG [(TextStream (WINDOWPROP TextWindow 'TEXTSTREAM]          (RETURN (NC.InsertLinkInText TextStream LinkOrLinkLabel NIL NIL NIL CharacterPosition])
+         (* * Given a Window and a Link, insert the Link at CharacterPosition in the 
+         TextStream of Window)
+
+         (* * fgh |2/6/86| Added Card argument)
+
+    (PROG [(TextStream (WINDOWPROP TextWindow 'TEXTSTREAM]
+          (RETURN (NC.InsertLinkInText TextStream LinkOrLinkLabel NIL NIL NIL CharacterPosition])
 )
 
 
@@ -605,10 +896,19 @@
 )
 (DEFINEQ
 
-(NC.CardFromTextStream  [LAMBDA (TextStream)                                       (* fgh%: "13-Nov-85 23:34")         (* * Return the NoteCards ID for a TextStream)         (* * fgh |11/13/85| Updated to handle Card object.)    (STREAMPROP TextStream 'NoteCardObject])
+(NC.CardFromTextStream
+  [LAMBDA (TextStream)                                       (* fgh%: "13-Nov-85 23:34")
+
+         (* * Return the NoteCards ID for a TextStream)
+
+         (* * fgh |11/13/85| Updated to handle Card object.)
+
+    (STREAMPROP TextStream 'NoteCardObject])
 
 (NC.TEditPutFn
   [LAMBDA (TextStream FileName When?)                        (* ; "Edited  6-Jan-89 18:33 by rtk")
+
+(* ;;; "")
 
 (* ;;; "This function designed to be attached to the PUTFN Tedit property of NC textstreams.")
 
@@ -620,71 +920,57 @@
 
 (* ;;; "")
 
-(* ;;; " fgh 2024-03-25 TEDIT may pass us down a TEXTOBJ rather than a TEXTSTREAM.  Convert it.")
+(* ;;; " FGH 2024-03-31 Major rework of this function to accomodate changes in TEDIT.PUT in TEdit %"4th round%"")
 
-(* ;;; " fgh 2024-03-25 Adapt to new function signature of TEDIT.PUT")
+(* ;;; "                                 Note that this function depends on TEDIT.PUT wrapping the call to this function inside a RESETLST.")
 
 (* ;;; "")
 
-    (DECLARE (SPECVARS FORCENEW UNFORMATTED? FORMAT))
-    (SETQ TextStream (TEXTSTREAM TextStream))
-    (SELECTQ When?
-        (BEFORE (PROG (LinkIcons)
+    (if (EQ When? 'BEFORE)
+        then 
+             (* ;; " In some cases, TEDIT passes in a TEXTOBJ instead of a TEXTSTREAM; convert it")
 
-                 (* ;; 
-   "Kludge to get around bug in TEDIT.PUT described in AR #5621.  Note the OFILE is called freely!!!")
+             (SETQ TextStream (TEXTSTREAM TextStream)) 
 
-                      [SETQ FileName (COND
-                                        (FileName (FULLNAME (PACKFILENAME 'VERSION NIL 'BODY FileName
-                                                                   'VERSION NIL)
-                                                         'NEW))
-                                        (T (FULLNAME OFILE 'NEW]
+             (* ;; "first Mark the card dirty NoteCards style, if necessary")
 
-                 (* ;; "first Mark the card dirty NoteCards style, if necessary")
+             [COND
+                ((TEDIT.STREAMCHANGEDP TextStream)
+                 (NC.MarkCardDirty (NC.CardFromTextStream (TEXTSTREAM TextStream] 
 
-                      [COND
-                         ((TEDIT.STREAMCHANGEDP TextStream)
-                          (NC.MarkCardDirty (NC.CardFromTextStream (TEXTSTREAM TextStream]
-                      (RESETLST
+             (* ;; 
+ "Collect all the link icons in the TextStream and temporarily set them to be ExternalPut link icons")
 
-                          (* ;; "Remove this PUTFN from the TEXTSTREAM temporarily")
+             [LET [(LinkIcons (NC.TEditCollectObjects TextStream (FUNCTION NC.LinkIconImageObjP]
+                  (RESETSAVE (NC.TEditPutFnAuxiliary LinkIcons NC.ExternalPutLinkIconImageFns 
+                                    NC.ExternalBitMapPutLinkIconImageFns)
+                         `(NC.TEditPutFnAuxiliary ,LinkIcons ,NC.LinkIconImageFns] 
 
-                          [RESETSAVE (TEXTPROP TextStream 'PUTFN NIL)
-                                 `(TEXTPROP ,TextStream PUTFN ,(TEXTPROP TextStream 'PUTFN]
+             (* ;; "Fix up the title on the way out")
 
-                          (* ;; "Collect all the link icons in the TextStream")
+             [RESETSAVE NIL `(AND ,(NC.TEditWindow TextStream)
+                                  (WINDOWPROP ,(NC.TEditWindow TextStream)
+                                         'TITLE
+                                         ,(NC.RetrieveTitle (NC.CardFromTextStream TextStream] 
+                                                             (* ; "")
+             T
+      else NIL])
 
-                          (SETQ LinkIcons (NC.TEditCollectObjects TextStream (FUNCTION 
-                                                                              NC.LinkIconImageObjP)))
+(NC.TEditPutFnAuxiliary
+  [LAMBDA (LinkIcons NewImageFns BitMapGetImageFns)          (* ; "Edited  6-Jan-89 16:19 by rtk")
 
-                          (* ;; "Temporarily set them to be ExternalPut link icons")
+(* ;;; "BK 1/6/89 Test for A Bitmap & Set to Alternage BitMapGetImageFns & TextStream")
 
-                          [RESETSAVE (NC.TEditPutFnAuxiliary LinkIcons NC.ExternalPutLinkIconImageFns
-                                            NC.ExternalBitMapPutLinkIconImageFns)
-                                 `(NC.TEditPutFnAuxiliary ,LinkIcons ,NC.LinkIconImageFns]
+(* ;;; "For a list of link icons as returned by TEDIT.LIST.OF.OBJECTS, replace all the IMAGEFNS of the objects with NewImageFns")
 
-                          (* ;; "Fix up the title on the way out")
-
-                          [RESETSAVE NIL `(AND ,(NC.TEditWindow TextStream)
-                                               (WINDOWPROP ,(NC.TEditWindow TextStream)
-                                                      'TITLE
-                                                      ,(NC.RetrieveTitle (NC.CardFromTextStream
-                                                                          TextStream]
-
-                          (* ;; 
-       "Temporarily set TEdit to think this is CAHCEd so that the piece table doesn't get messed up.")
-
-                          [RESETSAVE (TEXTPROP TextStream 'CACHE T)
-                                 `(TEXTPROP ,TextStream CACHE ,(TEXTPROP TextStream 'CACHE]
-
-                          (* ;; 
-                       "Put the file as usual.  NOTE: FORCENEW UNFORMATTED?  FORMAT  used freely!!!!")
-
-                          (TEDIT.PUT TextStream FileName FORCENEW UNFORMATTED? FORMAT))
-                      (RETURN 'DON'T)))
-        NIL])
-
-(NC.TEditPutFnAuxiliary  [LAMBDA (LinkIcons NewImageFns BitMapGetImageFns)          (* ; "Edited  6-Jan-89 16:19 by rtk")(* ;;; "BK 1/6/89 Test for A Bitmap & Set to Alternage BitMapGetImageFns & TextStream")(* ;;; "For a list of link icons as returned by TEDIT.LIST.OF.OBJECTS, replace all the IMAGEFNS of the objects with NewImageFns")    (for LinkIconPair in LinkIcons       do (LET ((IMAGE-OBJECT (CAR LinkIconPair)))                   (replace (IMAGEOBJ IMAGEOBJFNS) of IMAGE-OBJECT                      with (if [AND BitMapGetImageFns (OR T (NC.SetBitMap&Box                                                                     IMAGE-OBJECT                                                                     (IMAGEOBJPROP IMAGE-OBJECT                                                                            'IMAGEBITMAP]                                   then BitMapGetImageFns                                 else NewImageFns])
+    (for LinkIconPair in LinkIcons
+       do (LET ((IMAGE-OBJECT (CAR LinkIconPair)))
+               (replace (IMAGEOBJ IMAGEOBJFNS) of IMAGE-OBJECT
+                  with (if [AND BitMapGetImageFns (OR T (NC.SetBitMap&Box IMAGE-OBJECT
+                                                               (IMAGEOBJPROP IMAGE-OBJECT
+                                                                      'IMAGEBITMAP]
+                           then BitMapGetImageFns
+                         else NewImageFns])
 
 (NC.TEditGetFn
   [LAMBDA (TextStream FileName When?)                        (* fgh%: "19-May-86 13:09")
@@ -768,7 +1054,16 @@
         (NC.QuitCard Window T))
        (T T])
 
-(NC.DelTEditProcesses  [LAMBDA (Window)                                           (* rht%: "30-Apr-86 20:13")         (* * Kill any TEdit processes running on Window and its attached windows.       Notice recursive call to handle attached windows of attached windows.)    (LET (Process)         (if [PROCESSP (SETQ Process (WINDOWPROP Window 'PROCESS]             then (DEL.PROCESS Process))         (for AttachedWin in (ATTACHEDWINDOWS Window) do (NC.DelTEditProcesses                                                                             AttachedWin])
+(NC.DelTEditProcesses
+  [LAMBDA (Window)                                           (* rht%: "30-Apr-86 20:13")
+
+         (* * Kill any TEdit processes running on Window and its attached windows.
+         Notice recursive call to handle attached windows of attached windows.)
+
+    (LET (Process)
+         (if [PROCESSP (SETQ Process (WINDOWPROP Window 'PROCESS]
+             then (DEL.PROCESS Process))
+         (for AttachedWin in (ATTACHEDWINDOWS Window) do (NC.DelTEditProcesses AttachedWin])
 )
 
 
@@ -777,15 +1072,61 @@
 
 (DEFINEQ
 
-(NC.AddTextCard  [LAMBDA NIL                                                (* ; "Edited  3-Dec-87 19:01 by rht:")         (* * fgh |2/17/86| Added attached bit map field.)         (* * rht 4/7/86%: Now you get all TEdit menu items on middle button as well as        Restart% Editor.)         (* * rg |11/20/87| added MakeReadOnlyFn & MakeReadWriteFn)    (NC.AddCardType 'Text 'NoteCard `[(MakeFn ,(FUNCTION NC.MakeTEditCard))                                      (EditFn ,(FUNCTION NC.BringUpTEditCard))                                      (QuitFn ,(FUNCTION NC.TEditCloseFn))                                      (MakeReadOnlyFn ,(FUNCTION NC.MakeTextCardReadOnly))                                      (MakeReadWriteFn ,(FUNCTION NC.MakeTextCardReadWrite))                                      (GetFn ,(FUNCTION NC.GetTextSubstance))                                      (PutFn ,(FUNCTION NC.PutTextSubstance))                                      (CopyFn ,(FUNCTION NC.TextCopySubstance))                                      (MarkDirtyFn ,(FUNCTION NC.MarkTextDirty))                                      (DirtyPFn ,(FUNCTION NC.TextDirtyP))                                      (CollectLinksFn ,(FUNCTION NC.CollectReferencesInText))                                      (DeleteLinksFn ,(FUNCTION NC.DelReferencesToCardFromText))                                      (UpdateLinkIconsFn ,(FUNCTION NC.UpdateLinkImagesInText))                                      (InsertLinkFn ,(FUNCTION NC.InsertLinkInTextWindow))                                      (TranslateWindowPositionFn ,(FUNCTION                                                             NC.TranslateWindowPositionToTEditPosition                                                                   ]           `((LinkDisplayMode Title)             (DisplayedInMenuFlg T)             (DefaultWidth 300)             (DefaultHeight 200)             (LinkAnchorModesSupported T)             (LinkIconAttachedBitMap ,NC.TextCardIcon)             (MiddleButtonMenuItems ,(NC.ComputeTextCardMiddleButtonMenuItems])
+(NC.AddTextCard
+  [LAMBDA NIL                                                (* ; "Edited  3-Dec-87 19:01 by rht:")
 
-(NC.ComputeTextCardMiddleButtonMenuItems  [LAMBDA NIL                                                (* ;                                                            "Edited 15-Dec-88 11:04 by krivacic")         (* * Using TEDIT.DEFAULT.MENU, build the list of middle button menu items for        Text cards.)    (DECLARE (GLOBALVARS TEDIT.DEFAULT.MENU))    (APPEND (for Item in (fetch (MENU ITEMS) of TEDIT.DEFAULT.MENU)               collect (if (EQ Item 'Quit)                               then '(Quit (FUNCTION NC.QuitCard)                                                                                             "Close this note card after saving it in the NoteFile."                                               )                             else Item))           '(BAR (Restart% Editor (FUNCTION NC.ResetTEdit)                        "Resets and restarts the editor for this Card/Box."])
+         (* * fgh |2/17/86| Added attached bit map field.)
+
+         (* * rht 4/7/86%: Now you get all TEdit menu items on middle button as well as 
+         Restart% Editor.)
+
+         (* * rg |11/20/87| added MakeReadOnlyFn & MakeReadWriteFn)
+
+    (NC.AddCardType 'Text 'NoteCard `[(MakeFn ,(FUNCTION NC.MakeTEditCard))
+                                      (EditFn ,(FUNCTION NC.BringUpTEditCard))
+                                      (QuitFn ,(FUNCTION NC.TEditCloseFn))
+                                      (MakeReadOnlyFn ,(FUNCTION NC.MakeTextCardReadOnly))
+                                      (MakeReadWriteFn ,(FUNCTION NC.MakeTextCardReadWrite))
+                                      (GetFn ,(FUNCTION NC.GetTextSubstance))
+                                      (PutFn ,(FUNCTION NC.PutTextSubstance))
+                                      (CopyFn ,(FUNCTION NC.TextCopySubstance))
+                                      (MarkDirtyFn ,(FUNCTION NC.MarkTextDirty))
+                                      (DirtyPFn ,(FUNCTION NC.TextDirtyP))
+                                      (CollectLinksFn ,(FUNCTION NC.CollectReferencesInText))
+                                      (DeleteLinksFn ,(FUNCTION NC.DelReferencesToCardFromText))
+                                      (UpdateLinkIconsFn ,(FUNCTION NC.UpdateLinkImagesInText))
+                                      (InsertLinkFn ,(FUNCTION NC.InsertLinkInTextWindow))
+                                      (TranslateWindowPositionFn ,(FUNCTION 
+                                                            NC.TranslateWindowPositionToTEditPosition
+                                                                   ]
+           `((LinkDisplayMode Title)
+             (DisplayedInMenuFlg T)
+             (DefaultWidth 300)
+             (DefaultHeight 200)
+             (LinkAnchorModesSupported T)
+             (LinkIconAttachedBitMap ,NC.TextCardIcon)
+             (MiddleButtonMenuItems ,(NC.ComputeTextCardMiddleButtonMenuItems])
+
+(NC.ComputeTextCardMiddleButtonMenuItems
+  [LAMBDA NIL                                             (* ; "Edited 15-Dec-88 11:04 by krivacic")
+
+         (* * Using TEDIT.DEFAULT.MENU, build the list of middle button menu items for 
+         Text cards.)
+
+    (DECLARE (GLOBALVARS TEDIT.DEFAULT.MENU))
+    (APPEND (for Item in (fetch (MENU ITEMS) of TEDIT.DEFAULT.MENU)
+               collect (if (EQ Item 'Quit)
+                           then '(Quit (FUNCTION NC.QuitCard)
+                                       "Close this note card after saving it in the NoteFile.")
+                         else Item))
+           '(BAR (Restart% Editor (FUNCTION NC.ResetTEdit)
+                        "Resets and restarts the editor for this Card/Box."])
 )
 
 (RPAQQ NC.TextCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@OOOOOH@@
 )
 
-[LOADINITADVISE NC-ADVICE0194 [TEDIT.ADD.MENUITEM
+[LOADINITADVISE NC-ADVICE0186 [TEDIT.ADD.MENUITEM
                                (NIL (AFTER NIL (if (EQ MENU TEDIT.DEFAULT.MENU)
                                                    then (NCP.ChangeCardTypeFields
                                                          'Text NIL `((MiddleButtonMenuItems
@@ -807,19 +1148,19 @@
 
 (PUTPROPS NCTEXTCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (3675 3945 (NCAddStub.TextCard 3685 . 3943)) (4388 48100 (NC.MakeTEditCard 4398 . 7967) 
-(NC.BringUpTEditCard 7969 . 13316) (NC.MakeTextCardReadOnly 13318 . 15244) (NC.MakeTextCardReadWrite 
-15246 . 16897) (NC.RevertTextCard 16899 . 17852) (NC.CollectReferencesInText 17854 . 23617) (
-NC.InstallTextTitleBarMiddleMenu 23619 . 24817) (NC.MarkTextDirty 24819 . 25212) (NC.ResetTEdit 25214
- . 25620) (NC.ResetTEditProcess 25622 . 27260) (NC.TEditBasedP 27262 . 27957) (NC.TEditCloseFn 27959
- . 29476) (NC.TEditMenuFn 29478 . 30545) (NC.TEditQuitFn 30547 . 32162) (NC.TextCopySubstance 32164 . 
-32783) (NC.TextDirtyP 32785 . 33092) (NC.TextCardShrinkFn 33094 . 38210) (NC.PutTextSubstance 38212 . 
-39810) (NC.GetTextSubstance 39812 . 41500) (NC.UpdateLinkImagesInText 41502 . 43916) (
-NC.CharPosFromTextStream 43918 . 44152) (NC.DelReferencesToCardFromText 44154 . 46607) (NC.TEditWindow
- 46609 . 47249) (NC.TEditCollectObjects 47251 . 48098)) (48352 49155 (
-NC.TranslateWindowPositionToTEditPosition 48362 . 48693) (NC.InsertLinkInTextWindow 48695 . 49153)) (
-49264 58636 (NC.CardFromTextStream 49274 . 49566) (NC.TEditPutFn 49568 . 53638) (
-NC.TEditPutFnAuxiliary 53640 . 54644) (NC.TEditGetFn 54646 . 55807) (NC.MakeTEditPropsList 55809 . 
-57686) (NC.TEditPropsListQuitFn 57688 . 58023) (NC.DelTEditProcesses 58025 . 58634)) (58702 61821 (
-NC.AddTextCard 58712 . 60847) (NC.ComputeTextCardMiddleButtonMenuItems 60849 . 61819)))))
+  (FILEMAP (NIL (3675 3945 (NCAddStub.TextCard 3685 . 3943)) (4388 47278 (NC.MakeTEditCard 4398 . 7864) 
+(NC.BringUpTEditCard 7866 . 13213) (NC.MakeTextCardReadOnly 13215 . 15046) (NC.MakeTextCardReadWrite 
+15048 . 16515) (NC.RevertTextCard 16517 . 17414) (NC.CollectReferencesInText 17416 . 23179) (
+NC.InstallTextTitleBarMiddleMenu 23181 . 24292) (NC.MarkTextDirty 24294 . 24687) (NC.ResetTEdit 24689
+ . 25097) (NC.ResetTEditProcess 25099 . 26737) (NC.TEditBasedP 26739 . 27438) (NC.TEditCloseFn 27440
+ . 28957) (NC.TEditMenuFn 28959 . 30024) (NC.TEditQuitFn 30026 . 31707) (NC.TextCopySubstance 31709 . 
+32330) (NC.TextDirtyP 32332 . 32639) (NC.TextCardShrinkFn 32641 . 37451) (NC.PutTextSubstance 37453 . 
+39051) (NC.GetTextSubstance 39053 . 40678) (NC.UpdateLinkImagesInText 40680 . 43094) (
+NC.CharPosFromTextStream 43096 . 43330) (NC.DelReferencesToCardFromText 43332 . 45785) (NC.TEditWindow
+ 45787 . 46427) (NC.TEditCollectObjects 46429 . 47276)) (47530 48705 (
+NC.TranslateWindowPositionToTEditPosition 47540 . 48241) (NC.InsertLinkInTextWindow 48243 . 48703)) (
+48814 56578 (NC.CardFromTextStream 48824 . 49116) (NC.TEditPutFn 49118 . 51756) (
+NC.TEditPutFnAuxiliary 51758 . 52661) (NC.TEditGetFn 52663 . 53824) (NC.MakeTEditPropsList 53826 . 
+55703) (NC.TEditPropsListQuitFn 55705 . 56040) (NC.DelTEditProcesses 56042 . 56576)) (56644 59597 (
+NC.AddTextCard 56654 . 58795) (NC.ComputeTextCardMiddleButtonMenuItems 58797 . 59595)))))
 STOP
