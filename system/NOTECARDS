@@ -1,13 +1,11 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "20-Mar-2024 17:07:35" {DSK}<home>frank>il>notecards>system>NOTECARDS.;14 26490  
+(FILECREATED "23-Sep-2024 12:16:42" {DSK}<home>frank>il>notecards>system>NOTECARDS.;17 26459  
 
-      :EDIT-BY "frank"
+      :CHANGES-TO (VARS NOTECARDSCOMS)
+                  (FNS NC.Setup)
 
-      :CHANGES-TO (FNS NC.SetUpNOTECARDSDIRECTORIES)
-                  (VARS NOTECARDSCOMS)
-
-      :PREVIOUS-DATE "20-Mar-2024 17:02:38" {DSK}<home>frank>il>notecards>system>NOTECARDS.;13)
+      :PREVIOUS-DATE "20-Mar-2024 17:07:35" {DSK}<home>frank>il>notecards>system>NOTECARDS.;15)
 
 
 (PRETTYCOMPRINT NOTECARDSCOMS)
@@ -388,7 +386,71 @@
 
 (DEFINEQ
 
-(NC.Setup  [LAMBDA NIL                                                (* Randy.Gobbel " 5-Nov-86 15:45")         (* * rht 11/17/84%: Added definition of NC.InvisibleLinkImageObj.)         (* * rht 4/11/86%: Deleted short window menu stuff.       Also dumped INTERCALC stuff and prompt window stuff.)    (DECLARE (GLOBALVARS UseMapWithPoliticalBoundaries AFTERLOGOUTFORMS))    (NC.InitializeUID)    (SETQ AFTERLOGOUTFORMS (CONS '(NC.InitializeUID)                                 AFTERLOGOUTFORMS))    (SETQ UseMapWithPoliticalBoundaries T)    (SETQ TEDIT.INPUT.FORMATS NIL)    (NC.MakeMainMenu)    (SETQ NC.LinkIconImageFns (IMAGEFNSCREATE (FUNCTION NC.LinkIconDisplayFn)                                     (FUNCTION NC.LinkIconImageBoxFn)                                     (FUNCTION NC.LinkIconPutFn)                                     (FUNCTION NC.LinkIconGetFn)                                     (FUNCTION NC.LinkIconCopyFn)                                     (FUNCTION NC.LinkIconButtonEventInFn)                                     (FUNCTION NILL)                                     (FUNCTION NC.LinkIconWhenMovedFn)                                     (FUNCTION NC.LinkIconWhenInsertedFn)                                     (FUNCTION NC.LinkIconWhenDeletedFn)                                     (FUNCTION NC.LinkIconWhenCopiedFn)                                     (FUNCTION NILL)                                     (FUNCTION NILL)))    [SETQ NC.NoDeleteImageFns (PROG ((ImageObj (NC.MakeLinkIcon NIL)))                                    (replace (IMAGEOBJ IMAGEOBJFNS) of ImageObj                                       with (create IMAGEFNS using (fetch                                                                                (IMAGEOBJ IMAGEOBJFNS                                                                                       ) of                                                                                         ImageObj)))                                    (IMAGEOBJPROP ImageObj 'WHENDELETEDFN (FUNCTION NILL))                                    (RETURN (fetch (IMAGEOBJ IMAGEOBJFNS) of ImageObj]    (SETQ NC.DeletedLinkImageFns (IMAGEFNSCREATE (FUNCTION NC.DeletedLinkDisplayFn)                                        (FUNCTION NC.DeletedLinkImageBoxFn)                                        (FUNCTION NC.DeletedLinkPutFn)                                        (FUNCTION NC.DeletedLinkGetFn)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)                                        (FUNCTION NILL)))    (SETQ NC.DeletedLinkImageObject (IMAGEOBJCREATE "DeletedLink" NC.DeletedLinkImageFns))    (SETQ NC.InvisibleLinkImageFns (IMAGEFNSCREATE (FUNCTION NILL)                                          (FUNCTION NC.InvisibleLinkImageBoxFn)                                          (FUNCTION NC.InvisibleLinkPutFn)                                          (FUNCTION NC.InvisibleLinkGetFn)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)                                          (FUNCTION NILL)))    (SETQ NC.InvisibleLinkImageObject (IMAGEOBJCREATE "InvisibleLink" NC.InvisibleLinkImageFns])
+(NC.Setup
+  [LAMBDA NIL
+
+         (* fgh 2024-09-23 Commented out (SETQ TEDIT.INPUT.FORMATS NIL) because it was 
+         interfering with normal TEdit operations in apps.sysout.)
+                                                             (* Randy.Gobbel " 5-Nov-86 15:45")
+
+         (* * rht 11/17/84%: Added definition of NC.InvisibleLinkImageObj.)
+
+         (* * rht 4/11/86%: Deleted short window menu stuff.
+         Also dumped INTERCALC stuff and prompt window stuff.)
+
+    (DECLARE (GLOBALVARS UseMapWithPoliticalBoundaries AFTERLOGOUTFORMS))
+    (NC.InitializeUID)
+    (SETQ AFTERLOGOUTFORMS (CONS '(NC.InitializeUID)
+                                 AFTERLOGOUTFORMS))
+    (SETQ UseMapWithPoliticalBoundaries T)                   (* SETQ TEDIT.INPUT.FORMATS NIL)
+    (NC.MakeMainMenu)
+    (SETQ NC.LinkIconImageFns (IMAGEFNSCREATE (FUNCTION NC.LinkIconDisplayFn)
+                                     (FUNCTION NC.LinkIconImageBoxFn)
+                                     (FUNCTION NC.LinkIconPutFn)
+                                     (FUNCTION NC.LinkIconGetFn)
+                                     (FUNCTION NC.LinkIconCopyFn)
+                                     (FUNCTION NC.LinkIconButtonEventInFn)
+                                     (FUNCTION NILL)
+                                     (FUNCTION NC.LinkIconWhenMovedFn)
+                                     (FUNCTION NC.LinkIconWhenInsertedFn)
+                                     (FUNCTION NC.LinkIconWhenDeletedFn)
+                                     (FUNCTION NC.LinkIconWhenCopiedFn)
+                                     (FUNCTION NILL)
+                                     (FUNCTION NILL)))
+    [SETQ NC.NoDeleteImageFns (PROG ((ImageObj (NC.MakeLinkIcon NIL)))
+                                    (replace (IMAGEOBJ IMAGEOBJFNS) of ImageObj
+                                       with (create IMAGEFNS using (fetch (IMAGEOBJ IMAGEOBJFNS)
+                                                                      of ImageObj)))
+                                    (IMAGEOBJPROP ImageObj 'WHENDELETEDFN (FUNCTION NILL))
+                                    (RETURN (fetch (IMAGEOBJ IMAGEOBJFNS) of ImageObj]
+    (SETQ NC.DeletedLinkImageFns (IMAGEFNSCREATE (FUNCTION NC.DeletedLinkDisplayFn)
+                                        (FUNCTION NC.DeletedLinkImageBoxFn)
+                                        (FUNCTION NC.DeletedLinkPutFn)
+                                        (FUNCTION NC.DeletedLinkGetFn)
+                                        (FUNCTION NILL)
+                                        (FUNCTION NILL)
+                                        (FUNCTION NILL)
+                                        (FUNCTION NILL)
+                                        (FUNCTION NILL)
+                                        (FUNCTION NILL)
+                                        (FUNCTION NILL)
+                                        (FUNCTION NILL)
+                                        (FUNCTION NILL)))
+    (SETQ NC.DeletedLinkImageObject (IMAGEOBJCREATE "DeletedLink" NC.DeletedLinkImageFns))
+    (SETQ NC.InvisibleLinkImageFns (IMAGEFNSCREATE (FUNCTION NILL)
+                                          (FUNCTION NC.InvisibleLinkImageBoxFn)
+                                          (FUNCTION NC.InvisibleLinkPutFn)
+                                          (FUNCTION NC.InvisibleLinkGetFn)
+                                          (FUNCTION NILL)
+                                          (FUNCTION NILL)
+                                          (FUNCTION NILL)
+                                          (FUNCTION NILL)
+                                          (FUNCTION NILL)
+                                          (FUNCTION NILL)
+                                          (FUNCTION NILL)
+                                          (FUNCTION NILL)
+                                          (FUNCTION NILL)))
+    (SETQ NC.InvisibleLinkImageObject (IMAGEOBJCREATE "InvisibleLink" NC.InvisibleLinkImageFns])
 )
 (DECLARE%: DONTEVAL@LOAD DOCOPY 
 
@@ -417,10 +479,10 @@
 
 (PUTPROPS NOTECARDS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (4970 8119 (NC.SetUpNOTECARDSDIRECTORIES 4980 . 8117)) (9803 16925 (NC.FindFile 9813 . 
-11335) (NC.LoadFileFromDirectories 11337 . 15350) (NC.LookupAutoloadFnFile 15352 . 15796) (
-NC.StoreAutoloadFnFile 15798 . 16214) (SIMPLE-FILENAME 16216 . 16641) (SIMPLE-LOADEDFILELST 16643 . 
-16923)) (17159 20042 (NC.PostGreet 17169 . 19636) (NC.LoadPatches 19638 . 20040)) (20215 20773 (
-NC.MakeLafiteForm 20225 . 20771)) (21062 25127 (NC.Setup 21072 . 25125)) (25411 26251 (
-NC.SetSystemDate 25421 . 26249)))))
+  (FILEMAP (NIL (4926 8075 (NC.SetUpNOTECARDSDIRECTORIES 4936 . 8073)) (9759 16881 (NC.FindFile 9769 . 
+11291) (NC.LoadFileFromDirectories 11293 . 15306) (NC.LookupAutoloadFnFile 15308 . 15752) (
+NC.StoreAutoloadFnFile 15754 . 16170) (SIMPLE-FILENAME 16172 . 16597) (SIMPLE-LOADEDFILELST 16599 . 
+16879)) (17115 19998 (NC.PostGreet 17125 . 19592) (NC.LoadPatches 19594 . 19996)) (20171 20729 (
+NC.MakeLafiteForm 20181 . 20727)) (21018 25096 (NC.Setup 21028 . 25094)) (25380 26220 (
+NC.SetSystemDate 25390 . 26218)))))
 STOP
