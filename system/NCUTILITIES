@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "25-Mar-2024 12:53:34" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;9 62124  
+(FILECREATED "24-Nov-2024 19:20:16" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;3 62206  
 
-      :CHANGES-TO (FNS NC.UpperLeftCH# NC.ScrollToCH#)
+      :CHANGES-TO (FNS NC.AskUser)
 
-      :PREVIOUS-DATE " 8-Mar-2024 15:43:51" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;8)
+      :PREVIOUS-DATE "25-Mar-2024 12:53:34" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;1)
 
 
 (PRETTYCOMPRINT NCUTILITIESCOMS)
@@ -352,7 +352,11 @@
 
 (* ;;; "rg 8/11/87 reset interrupts before calling TTYIN")
 
-    (LET (AskWindow TextObj)
+(* ;;; "fgh 11/24/2024 Change all TEXTOBJECTS to TEXTSTREAMS to accomodate recent changes to TEdit")
+
+(* ;;; "fgh 11/24/2024 Using TTYINREADMACROS, ensure that CR is treated like CTRL-X so that a CR in the middle of a response string does not truncate the response")
+
+    (LET (AskWindow TextStream)
          (RESETLST
 
 (* ;;; "If MainWindow is a TEdit window, make sur we can shift select into the prompt window.")
@@ -364,20 +368,13 @@
                                     ,DontCloseAtEndFlg]
              (RESETSAVE (TTY.PROCESS (THIS.PROCESS)))
 
-             (* ;; "KEEP old code to reset & save the copy of TEDIT formatting info")
-                                                             (* if (SETQ TextObj (WINDOWPROP 
-                                                             MainWindow (QUOTE TEXTOBJ))) then
-                                                             (RESETSAVE (TEXTPROP TextObj
-                                                             (QUOTE COPYBYBKSYSBUF) T)
-                                                             (BQUOTE (TEXTPROP (\, TextObj) 
-                                                             COPYBYBKSYSBUF (\, (TEXTPROP TextObj
-                                                             (QUOTE COPYBYBKSYSBUF)))))))
-
              (* ;; "Disable Formatting on text only")
 
-             [if (SETQ TextObj (WINDOWPROP AskWindow 'TEXTOBJ))
-                 then (RESETSAVE (TEXTPROP TextObj 'COPYBYBKSYSBUF T)
-                             `(TEXTPROP ,TextObj COPYBYBKSYSBUF ,(TEXTPROP TextObj 'COPYBYBKSYSBUF]
+             [if (SETQ TextStream (AND (TEDITWINDOWP AskWindow)
+                                       (TEXTSTREAM AskWindow)))
+                 then (RESETSAVE (TEXTPROP TextStream 'COPYBYBKSYSBUF T)
+                             `(TEXTPROP ,TextStream COPYBYBKSYSBUF ,(TEXTPROP TextStream 
+                                                                           'COPYBYBKSYSBUF]
 
 (* ;;; "Go ahead and ask")
 
@@ -395,6 +392,12 @@
                                (RESETSAVE (TTYDISPLAYSTREAM AskWindow))
                                (RESETSAVE (RESET.INTERRUPTS (LISPINTERRUPTS)
                                                  T))
+
+                               (* ;; "Make sure CR in middle of the line is treated as a CTRL-X.  Otherwise, a CR in middle of the line will cause TTYIN to return a truncated line.")
+
+                               (RESETSAVE TTYINREADMACROS (CONS (CONS (CHARCODE CR)
+                                                                      (CHARCODE ^X))
+                                                                TTYINREADMACROS))
                                (CAR (OR [NLSETQ (TTYIN (MKLIST (OR Prompt ""))
                                                        NIL NIL '(STRING NORAISE)
                                                        NIL NIL (AND FirstTry (LIST FirstTry]
@@ -1185,20 +1188,20 @@
 (ADDTOVAR LAMA NC.PrintMsg)
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (2926 4551 (NC.CoerceToCard 2936 . 4324) (NC.CardFromWindow 4326 . 4549)) (4751 5119 (WW
- 4761 . 4879) (FLASHW 4881 . 5117)) (5273 57922 (GETWREGION 5283 . 5983) (NC.AskUserWithMenu 5985 . 
-8993) (NC.AskYesOrNo 8995 . 12157) (NC.YesP 12159 . 12396) (FILDIR-EARLIEST 12398 . 12484) (
-FILDIR-VERSION 12486 . 14206) (GETMOUSEX 14208 . 14352) (GETMOUSEY 14354 . 14498) (LOWERLEFT 14500 . 
-14737) (MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ 14739 . 15922) (NC.AskUser 15924 . 20142) (
-NC.ZapAskUserProcess 20144 . 20515) (NC.AskUserResetWindow 20517 . 21478) (NC.ClearMsg 21480 . 23679) 
-(NC.ClearMsgNow 23681 . 26641) (NC.ClearMsgWaiter 26643 . 27612) (NC.ZapPromptWindowWaiter 27614 . 
-28131) (NC.GreyCard 28133 . 28753) (NC.IDFromNumber 28755 . 28952) (NC.MoveWindowOntoScreen 28954 . 
-32357) (NC.NotDaughterP 32359 . 33621) (NC.MarkerMatchesCardP 33623 . 34056) (NC.PlaceMarkerP 34058 . 
-34287) (NC.ReportError 34289 . 35212) (NC.PrintMsg 35214 . 44602) (DFIRSTREMOVE 44604 . 45428) (
-NC.HoldTTYProcess 45430 . 45830) (NC.GetShrunkenWin 45832 . 46505) (NC.CoerceToNoteFileStream 46507 . 
-47007) (NC.DrawInnerBox 47009 . 51850) (NC.UnionListsOfLinks 51852 . 52656) (NC.ParseString 52658 . 
-54258) (NC.AppendStringToStream 54260 . 54896) (NC.CoerceToInterestedWindow 54898 . 56425) (
-NC.UpperLeftCH# 56427 . 57224) (NC.ScrollToCH# 57226 . 57920)) (57923 61777 (NC.UpdateConfig 57933 . 
-59385) (NC.UpdateSingleFile 59387 . 59909) (NC.SetStandardConfigProps 59911 . 61153) (
-MAKECONFIGPROPSCOMS 61155 . 61775)))))
+  (FILEMAP (NIL (2906 4531 (NC.CoerceToCard 2916 . 4304) (NC.CardFromWindow 4306 . 4529)) (4731 5099 (WW
+ 4741 . 4859) (FLASHW 4861 . 5097)) (5253 58004 (GETWREGION 5263 . 5963) (NC.AskUserWithMenu 5965 . 
+8973) (NC.AskYesOrNo 8975 . 12137) (NC.YesP 12139 . 12376) (FILDIR-EARLIEST 12378 . 12464) (
+FILDIR-VERSION 12466 . 14186) (GETMOUSEX 14188 . 14332) (GETMOUSEY 14334 . 14478) (LOWERLEFT 14480 . 
+14717) (MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ 14719 . 15902) (NC.AskUser 15904 . 20224) (
+NC.ZapAskUserProcess 20226 . 20597) (NC.AskUserResetWindow 20599 . 21560) (NC.ClearMsg 21562 . 23761) 
+(NC.ClearMsgNow 23763 . 26723) (NC.ClearMsgWaiter 26725 . 27694) (NC.ZapPromptWindowWaiter 27696 . 
+28213) (NC.GreyCard 28215 . 28835) (NC.IDFromNumber 28837 . 29034) (NC.MoveWindowOntoScreen 29036 . 
+32439) (NC.NotDaughterP 32441 . 33703) (NC.MarkerMatchesCardP 33705 . 34138) (NC.PlaceMarkerP 34140 . 
+34369) (NC.ReportError 34371 . 35294) (NC.PrintMsg 35296 . 44684) (DFIRSTREMOVE 44686 . 45510) (
+NC.HoldTTYProcess 45512 . 45912) (NC.GetShrunkenWin 45914 . 46587) (NC.CoerceToNoteFileStream 46589 . 
+47089) (NC.DrawInnerBox 47091 . 51932) (NC.UnionListsOfLinks 51934 . 52738) (NC.ParseString 52740 . 
+54340) (NC.AppendStringToStream 54342 . 54978) (NC.CoerceToInterestedWindow 54980 . 56507) (
+NC.UpperLeftCH# 56509 . 57306) (NC.ScrollToCH# 57308 . 58002)) (58005 61859 (NC.UpdateConfig 58015 . 
+59467) (NC.UpdateSingleFile 59469 . 59991) (NC.SetStandardConfigProps 59993 . 61235) (
+MAKECONFIGPROPSCOMS 61237 . 61857)))))
 STOP
