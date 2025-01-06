@@ -1,10 +1,11 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "24-Nov-2024 19:20:16" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;3 62206  
+(FILECREATED "26-Nov-2024 20:28:51" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;5 62937  
 
-      :CHANGES-TO (FNS NC.AskUser)
+      :CHANGES-TO (VARS NCUTILITIESCOMS)
+                  (FNS NC.WaitForTEditToFinish)
 
-      :PREVIOUS-DATE "25-Mar-2024 12:53:34" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;1)
+      :PREVIOUS-DATE "24-Nov-2024 19:20:16" {DSK}<home>frank>il>notecards>system>NCUTILITIES.;4)
 
 
 (PRETTYCOMPRINT NCUTILITIESCOMS)
@@ -21,7 +22,7 @@
 
 (* ;;; "Coercing functions")
 
-        (FNS NC.CoerceToCard NC.CardFromWindow)
+        (FNS NC.CoerceToCard NC.WaitForTEditToFinish NC.CardFromWindow)
         [DECLARE%: DONTEVAL@LOAD DOCOPY (P (NC.StoreAutoloadFnFile (FUNCTION 
                                                                         NC.ConvertNoteFileVersion2To3
                                                                           )
@@ -98,6 +99,21 @@
                                 (T (NC.ReportError "NC.CoerceToCard " (CONCAT 
                                                            "Arg not Window or TextStream or Card:   "
                                                                              CardIdentifier])
+
+(NC.WaitForTEditToFinish
+  [LAMBDA (TextStream NOERROR)
+
+         (* * BLOCK until the TEdit process associated with TextStream finishes.
+         ERROR is TextStream cannot be coerced to a TEXTOBJ, unless NOERROR is T, in which 
+         case return immediately.)
+
+    (LET ((TextObj (TEXTOBJ TextStream)))
+         (if TextObj
+             then (until (fetch (TEXTOBJ EDITFINISHEDFLG) of TextObj) do (BLOCK))
+           else (AND (NOT NOERROR)
+                     (ERROR 
+                           "TextStream argument is not a TEXTSTREAM and it cannot be coerced to one."
+                            ])
 
 (NC.CardFromWindow
   [LAMBDA (Window)                                           (* fgh%: "14-Nov-85 00:07")
@@ -1188,20 +1204,20 @@
 (ADDTOVAR LAMA NC.PrintMsg)
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (2906 4531 (NC.CoerceToCard 2916 . 4304) (NC.CardFromWindow 4306 . 4529)) (4731 5099 (WW
- 4741 . 4859) (FLASHW 4861 . 5097)) (5253 58004 (GETWREGION 5263 . 5963) (NC.AskUserWithMenu 5965 . 
-8973) (NC.AskYesOrNo 8975 . 12137) (NC.YesP 12139 . 12376) (FILDIR-EARLIEST 12378 . 12464) (
-FILDIR-VERSION 12466 . 14186) (GETMOUSEX 14188 . 14332) (GETMOUSEY 14334 . 14478) (LOWERLEFT 14480 . 
-14717) (MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ 14719 . 15902) (NC.AskUser 15904 . 20224) (
-NC.ZapAskUserProcess 20226 . 20597) (NC.AskUserResetWindow 20599 . 21560) (NC.ClearMsg 21562 . 23761) 
-(NC.ClearMsgNow 23763 . 26723) (NC.ClearMsgWaiter 26725 . 27694) (NC.ZapPromptWindowWaiter 27696 . 
-28213) (NC.GreyCard 28215 . 28835) (NC.IDFromNumber 28837 . 29034) (NC.MoveWindowOntoScreen 29036 . 
-32439) (NC.NotDaughterP 32441 . 33703) (NC.MarkerMatchesCardP 33705 . 34138) (NC.PlaceMarkerP 34140 . 
-34369) (NC.ReportError 34371 . 35294) (NC.PrintMsg 35296 . 44684) (DFIRSTREMOVE 44686 . 45510) (
-NC.HoldTTYProcess 45512 . 45912) (NC.GetShrunkenWin 45914 . 46587) (NC.CoerceToNoteFileStream 46589 . 
-47089) (NC.DrawInnerBox 47091 . 51932) (NC.UnionListsOfLinks 51934 . 52738) (NC.ParseString 52740 . 
-54340) (NC.AppendStringToStream 54342 . 54978) (NC.CoerceToInterestedWindow 54980 . 56507) (
-NC.UpperLeftCH# 56509 . 57306) (NC.ScrollToCH# 57308 . 58002)) (58005 61859 (NC.UpdateConfig 58015 . 
-59467) (NC.UpdateSingleFile 59469 . 59991) (NC.SetStandardConfigProps 59993 . 61235) (
-MAKECONFIGPROPSCOMS 61237 . 61857)))))
+  (FILEMAP (NIL (2984 5262 (NC.CoerceToCard 2994 . 4382) (NC.WaitForTEditToFinish 4384 . 5035) (
+NC.CardFromWindow 5037 . 5260)) (5462 5830 (WW 5472 . 5590) (FLASHW 5592 . 5828)) (5984 58735 (
+GETWREGION 5994 . 6694) (NC.AskUserWithMenu 6696 . 9704) (NC.AskYesOrNo 9706 . 12868) (NC.YesP 12870
+ . 13107) (FILDIR-EARLIEST 13109 . 13195) (FILDIR-VERSION 13197 . 14917) (GETMOUSEX 14919 . 15063) (
+GETMOUSEY 15065 . 15209) (LOWERLEFT 15211 . 15448) (MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ 15450 . 
+16633) (NC.AskUser 16635 . 20955) (NC.ZapAskUserProcess 20957 . 21328) (NC.AskUserResetWindow 21330 . 
+22291) (NC.ClearMsg 22293 . 24492) (NC.ClearMsgNow 24494 . 27454) (NC.ClearMsgWaiter 27456 . 28425) (
+NC.ZapPromptWindowWaiter 28427 . 28944) (NC.GreyCard 28946 . 29566) (NC.IDFromNumber 29568 . 29765) (
+NC.MoveWindowOntoScreen 29767 . 33170) (NC.NotDaughterP 33172 . 34434) (NC.MarkerMatchesCardP 34436 . 
+34869) (NC.PlaceMarkerP 34871 . 35100) (NC.ReportError 35102 . 36025) (NC.PrintMsg 36027 . 45415) (
+DFIRSTREMOVE 45417 . 46241) (NC.HoldTTYProcess 46243 . 46643) (NC.GetShrunkenWin 46645 . 47318) (
+NC.CoerceToNoteFileStream 47320 . 47820) (NC.DrawInnerBox 47822 . 52663) (NC.UnionListsOfLinks 52665
+ . 53469) (NC.ParseString 53471 . 55071) (NC.AppendStringToStream 55073 . 55709) (
+NC.CoerceToInterestedWindow 55711 . 57238) (NC.UpperLeftCH# 57240 . 58037) (NC.ScrollToCH# 58039 . 
+58733)) (58736 62590 (NC.UpdateConfig 58746 . 60198) (NC.UpdateSingleFile 60200 . 60722) (
+NC.SetStandardConfigProps 60724 . 61966) (MAKECONFIGPROPSCOMS 61968 . 62588)))))
 STOP
