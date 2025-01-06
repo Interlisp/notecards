@@ -1,18 +1,15 @@
-(DEFINE-FILE-INFO PACKAGE "IL" READTABLE "INTERLISP" BASE 10)
-(FILECREATED "16-Jul-2021 12:34:27" {DSK}<home>frank>il>notecards>system>NCDATABASE.;2 355430 
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-      changes to%:  (FNS NC.ReadLink)
+(FILECREATED " 6-Jan-2025 14:20:47" {DSK}<home>frank>il>notecards>system>NCDATABASE.;2 355644 
 
-      previous date%: "20-May-2021 18:20:36" {DSK}<home>frank>il>notecards>system>NCDATABASE.;1)
+      :CHANGES-TO (FNS NC.InitializeUID)
 
+      :PREVIOUS-DATE "16-Jul-2021 12:34:27" {DSK}<home>frank>il>notecards>system>NCDATABASE.;1)
 
-(* ; "
-Copyright (c) 1984-1990, 1993-1994, 2021 by Venue & Xerox Corporation.
-")
 
 (PRETTYCOMPRINT NCDATABASECOMS)
 
-(RPAQQ NCDATABASECOMS
+(RPAQQ NCDATABASECOMS 
        [
 
 (* ;;; "Internal variables")
@@ -265,7 +262,7 @@ Copyright (c) 1984-1990, 1993-1994, 2021 by Venue & Xerox Corporation.
 (RPAQ? NC.PropsIdentifier '%###PROPS#)
 
 (RPAQ? NC.IdentifierAtoms (LIST NC.LinksIdentifier NC.ItemIdentifier NC.TitlesIdentifier 
-                                    NC.PropsIdentifier))
+                                NC.PropsIdentifier))
 
 (RPAQ? NC.LastNoteFileOpened NIL)
 
@@ -4779,8 +4776,9 @@ Copyright (c) 1984-1990, 1993-1994, 2021 by Venue & Xerox Corporation.
 (* ;;; "The version object.")
 
 
-(RPAQ? NC.NoteFileVersionsList (LIST (create NoteFileVersion Version _ 3 NumberOfReservedCards _
-                                                20 NoteFileIndexWidth _ 28 NoteFileHeaderSize _ 30)))
+(RPAQ? NC.NoteFileVersionsList 
+       (LIST (create NoteFileVersion Version _ 3 NumberOfReservedCards _ 20 NoteFileIndexWidth _ 28 
+                    NoteFileHeaderSize _ 30)))
 (DEFINEQ
 
 (NC.FetchCurrentVersionObject
@@ -5856,17 +5854,16 @@ Copyright (c) 1984-1990, 1993-1994, 2021 by Venue & Xerox Corporation.
 (GLOBALVARS NC.TraversalSpecsStylesheet)
 )
 
-(RPAQ? NC.TraversalSpecsStylesheet
-       (CREATE.STYLE 'ITEMS (LIST (create MENU ITEMS _ T))
-              'SELECTIONS
-              '(T)
-              'ITEM.TITLES
-              '(Forward% Links Backward% Links Depth)
-              'ITEM.TITLE.FONT
-              (FONTCOPY MENUFONT 'WEIGHT 'BOLD)
-              'NEED.NOT.FILL.IN
-              '(MULTI MULTI NIL)
-              'TITLE "Include cards at:"))
+(RPAQ? NC.TraversalSpecsStylesheet (CREATE.STYLE 'ITEMS (LIST (create MENU ITEMS _ T))
+                                          'SELECTIONS
+                                          '(T)
+                                          'ITEM.TITLES
+                                          '(Forward% Links Backward% Links Depth)
+                                          'ITEM.TITLE.FONT
+                                          (FONTCOPY MENUFONT 'WEIGHT 'BOLD)
+                                          'NEED.NOT.FILL.IN
+                                          '(MULTI MULTI NIL)
+                                          'TITLE "Include cards at:"))
 (DEFINEQ
 
 (NC.AskTraversalSpecs
@@ -5976,23 +5973,26 @@ Copyright (c) 1984-1990, 1993-1994, 2021 by Venue & Xerox Corporation.
            UID])
 
 (NC.InitializeUID
-  (LAMBDA NIL                                                (* Randy.Gobbel " 5-Nov-86 16:30")
-          
-          (* * Initialize the UID mechanism)
+  [LAMBDA NIL                                                (* Randy.Gobbel " 5-Nov-86 16:30")
+
+         (* * Initialize the UID mechanism)
 
     (DECLARE (GLOBALVARS \MY.NSHOSTNUMBER NC.UIDBasis))
     (LET ((IDate (IDATE)))
          (SETQ NC.UIDCtr 1)
          (SETQ NC.UIDBasis (create UID
-                                  UID0 _ (CADR \MY.NSHOSTNUMBER)
-                                  UID1 _ (CADDR \MY.NSHOSTNUMBER)
-                                  UID2 _ (CADDDR \MY.NSHOSTNUMBER)
-                                  UID3 _ (LOGAND (LRSH IDate 16)
-                                                (CONSTANT (SUB1 (EXPT 2 16))))
-                                  UID4 _ (LOGAND IDate (CONSTANT (SUB1 (EXPT 2 16))))
+                                  UID0 _ (OR (CADR \MY.NSHOSTNUMBER)
+                                             (RAND 0 65534))
+                                  UID1 _ (OR (CADDR \MY.NSHOSTNUMBER)
+                                             (RAND 0 65534))
+                                  UID2 _ (OR (CADDDR \MY.NSHOSTNUMBER)
+                                             (RAND 0 65534))
+                                  UID3 _ [LOGAND (LRSH IDate 16)
+                                                (CONSTANT (SUB1 (EXPT 2 16]
+                                  UID4 _ [LOGAND IDate (CONSTANT (SUB1 (EXPT 2 16]
                                   UID5 _ 0
                                   UID6 _ 0))
-         (ADDTOVAR \SYSTEMCACHEVARS NC.UIDBasis NC.UIDCtr))))
+         (ADDTOVAR \SYSTEMCACHEVARS NC.UIDBasis NC.UIDCtr])
 
 (NC.SameUIDP
   (LAMBDA (UID1 UID2)                                        (* fgh%: "20-Nov-85 18:51")
@@ -6667,9 +6667,9 @@ Copyright (c) 1984-1990, 1993-1994, 2021 by Venue & Xerox Corporation.
        'NOTECARDSDIRECTORIES)
 )
 
-(PUTPROPS NCDATABASE FILETYPE :FAKE-COMPILE-FILE)
+(PUTPROPS NCDATABASE FILETYPE :FAKE-COMPILE-FILE)
 
-(PUTPROPS NCDATABASE MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
+(PUTPROPS NCDATABASE MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTEVAL@LOAD DOEVAL@COMPILE DONTCOPY COMPILERVARS 
 
 (ADDTOVAR NLAMA )
@@ -6678,74 +6678,72 @@ Copyright (c) 1984-1990, 1993-1994, 2021 by Venue & Xerox Corporation.
 
 (ADDTOVAR LAMA NC.NoteFileProp)
 )
-(PUTPROPS NCDATABASE COPYRIGHT ("Venue & Xerox Corporation" 1984 1985 1986 1987 1988 1989 1990 1993 
-1994 2021))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (12745 26881 (NC.CompactNoteFile 12755 . 19945) (NC.RemoteHostP 19947 . 20732) (
-NC.DeviceVectorForHost 20734 . 21670) (NC.InspectAndRepairNoteFile 21672 . 25675) (
-NC.InstallDeviceVectorInNoteFile 25677 . 26879)) (27147 41990 (NC.CreateDatabaseFile 27157 . 29407) (
-NC.CreateNoteFile 29409 . 39608) (NC.InitializeSpecialCards 39610 . 41523) (NC.InitializeSpecialCard 
-41525 . 41988)) (42028 92420 (NC.NoteFileOpenP 42038 . 42950) (NC.OpenDatabaseFile 42952 . 43958) (
-NC.OpenNoteFile 43960 . 70412) (NC.CacheTypesAndTitles 70414 . 71374) (NC.AskUserAboutTruncation 71376
- . 72686) (NC.InstallCriticalUIDsInNoteFile 72688 . 76104) (NC.ProcessInspectAndRepairRequest 76106 . 
-78303) (NC.ProcessNoteFileNotFoundError 78305 . 81709) (NC.ProcessTruncationRequest 81711 . 84013) (
-NC.ProcessNoteFileNeedsConversionError 84015 . 88133) (NC.ProcessNoteFileNeedsTruncationError 88135 . 
-92418)) (92619 96101 (NC.RunOpenEvents 92629 . 93515) (NC.RunCloseEvents 93517 . 96099)) (96245 115285
- (NC.CloseDatabaseFile 96255 . 96413) (NC.CloseNoteFile 96415 . 112784) (NC.CloseListOfActiveCards 
-112786 . 114588) (NC.CleanupCardObjects 114590 . 115283)) (115426 125397 (NC.CheckpointDatabase 115436
- . 116890) (NC.CheckpointNoteFile 116892 . 123504) (NC.SaveDirtyCards 123506 . 125395)) (125442 136994
- (NC.AbortSession 125452 . 134245) (NC.ForceDatabaseClose 134247 . 136992)) (137050 138343 (
-NC.ReadOnlyNoteFileP 137060 . 137422) (NC.CheckForNotReadOnly 137424 . 138341)) (138424 155622 (
-NC.DeleteDatabaseFile 138434 . 145249) (NC.CopyNoteFile 145251 . 149822) (NC.RenameNoteFile 149824 . 
-154578) (NC.RemoveAccessToNoteFile 154580 . 155620)) (155745 171923 (NC.GetNoteCard 155755 . 156554) (
-NC.GetMainCardData 156556 . 159733) (NC.GetLinks 159735 . 162917) (NC.GetTitle 162919 . 165754) (
-NC.GetPropList 165756 . 168747) (NC.GetType 168749 . 171030) (NC.GetSpecialCards 171032 . 171921)) (
-171924 172428 (NC.FetchSpecialCards 171934 . 172426)) (172550 202111 (NC.PutNoteCard 172560 . 173050) 
-(NC.PutMainCardData 173052 . 180809) (NC.PutLinks 180811 . 185891) (NC.PutFromLinks 185893 . 188693) (
-NC.PutRegion 188695 . 190016) (NC.PutTitle 190018 . 194483) (NC.PutPropList 194485 . 199348) (
-NC.PutNoteFileHeader 199350 . 201496) (NC.PutCheckptPtr 201498 . 202109)) (202216 213108 (
-NC.ReadCardPartHeader 202226 . 204026) (NC.ReadIdentifier 204028 . 205712) (NC.ReadRegion 205714 . 
-206215) (NC.ReadListOfLinks 206217 . 207060) (NC.ReadUID 207062 . 208132) (NC.ReadDate 208134 . 209450
-) (NC.ReadCardType 209452 . 210009) (NC.ReadTitle 210011 . 210462) (NC.ReadPropList 210464 . 210922) (
-NC.ReadLink 210924 . 213106)) (213212 220847 (NC.WriteCardPartHeader 213222 . 214024) (
-NC.WriteIdentifier 214026 . 214916) (NC.WriteRegion 214918 . 215933) (NC.WriteListOfLinks 215935 . 
-216642) (NC.WriteUID 216644 . 217595) (NC.WriteDate 217597 . 218133) (NC.WriteCardType 218135 . 218610
-) (NC.WriteTitle 218612 . 219073) (NC.WritePropList 219075 . 219546) (NC.WriteLink 219548 . 220845)) (
-220936 229886 (NC.NoteFileFromNoteFileUID 220946 . 221492) (NC.FetchTopLevelCards 221494 . 221879) (
-NC.StoreNoteFileInHashArray 221881 . 223974) (NC.RemoveNoteFile 223976 . 225352) (NC.TotalIndexSize 
-225354 . 225981) (NC.NoteFileLocFromIndexNum 225983 . 226616) (NC.FetchMonitor 226618 . 227295) (
-NC.SetMonitor 227297 . 227562) (NC.SameNoteFileP 227564 . 227755) (NC.ListOfNoteFiles 227757 . 228355)
- (NC.NoteFileFromFileName 228357 . 229884)) (229887 244341 (NC.RemoveNoteFileFromHashArray 229897 . 
-230421) (NC.RemoveNoteFileName 230423 . 231801) (NC.NoticeNoteFile 231803 . 232310) (
-NC.NoticeNoteFileName 232312 . 236067) (NC.NoticedNoteFileNamesMenu 236069 . 243387) (
-NC.NoteFileNoticedP 243389 . 244339)) (244399 245612 (NC.InstallCardInNoteFile 244409 . 245206) (
-NC.CardFromUID 245208 . 245610)) (245613 246441 (NC.MakeHashKey 245623 . 246229) (
-NC.CreateUIDHashArray 246231 . 246439)) (246578 248124 (NC.SetStatus 246588 . 246884) (NC.SetMainLoc 
-246886 . 247189) (NC.SetLinksLoc 247191 . 247498) (NC.SetTitleLoc 247500 . 247804) (NC.SetPropListLoc 
-247806 . 248122)) (248367 248941 (NC.FetchCurrentVersionObject 248377 . 248939)) (249030 268609 (
-NC.CopyCards 249040 . 264446) (NC.MoveCards 264448 . 266259) (NC.PutNoteCardToStream 266261 . 267423) 
-(NC.GetNoteCardFromStream 267425 . 268362) (NC.MakeHashKeyFromCard 268364 . 268607)) (268610 295368 (
-NC.CopyCardPart 268620 . 271245) (NC.ExpandIndexInPlace 271247 . 277929) (NC.CheckForExpandIndex 
-277931 . 285262) (NC.FindNextCardPart 285264 . 288214) (NC.SearchFor### 288216 . 288908) (
-NC.RobustReadItemIdentifier 288910 . 289680) (NC.RobustReadDate 289682 . 290484) (NC.RobustReadUID 
-290486 . 291031) (NC.RobustReadChar 291033 . 291439) (NC.RobustReadByte 291441 . 291839) (
-NC.RobustRead 291841 . 292374) (NC.CopyCardPartInPlaceToEOF 292376 . 293607) (
-NC.UpdateIndexLocIfNeeded 293609 . 295366)) (295369 315467 (NC.FixUpLinksInCardCopy 295379 . 307954) (
-NC.FixUpCrossFileLinksInCardCopies 307956 . 310165) (NC.FixUpBrowserCardCopy 310167 . 314558) (
-NC.BrowserCopyConvertGraphNodeID 314560 . 315465)) (316030 319439 (NC.AskTraversalSpecs 316040 . 
-319437)) (319577 322756 (NC.MakeUID 319587 . 320280) (NC.LookUpUIDInHashArray 320282 . 320900) (
-NC.InitializeUID 320902 . 321812) (NC.SameUIDP 321814 . 322754)) (322757 324319 (NC.UIDPutProp 322767
- . 323089) (NC.UIDGetProp 323091 . 323268) (NC.UIDSetPropList 323270 . 323445) (NC.UIDGetPropList 
-323447 . 323665) (NC.UIDAddProp 323667 . 324169) (NC.UIDRemProp 324171 . 324317)) (324564 325168 (
-NC.BuildVerticalBarREADTABLE 324574 . 325166)) (325237 327510 (NC.ReassembleUID 325247 . 325988) (
-NC.DisassembleUID 325990 . 327508)) (327629 329839 (NC.NoteFileProp 327639 . 328464) (
-NC.NoteFileAddProp 328466 . 329039) (NC.NoteFileDelProp 329041 . 329837)) (329840 350358 (
-NC.PrintOperationInProgressMsg 329850 . 333002) (NC.CardOperationsInProgress 333004 . 335185) (
-NC.OperationInProgress 335187 . 335840) (NC.CardCheckOpInProgress 335842 . 338109) (
-NC.NoteFileCheckOpInProgress 338111 . 340442) (NC.SessionCheckOpInProgress 340444 . 342381) (
-NC.SessionToNoteFileLock 342383 . 343881) (NC.LockListOfCards 343883 . 349273) (
-NC.ResetCardProcessInProgress 349275 . 349687) (NC.SwitchNoteFileLock 349689 . 350356)) (350392 353856
- (NC.GetNewCard 350402 . 351422) (NC.DatabaseFileName 351424 . 353184) (NC.WriteStatus 353186 . 353404
-) (NC.TotalCardsInNoteFile 353406 . 353854)) (353926 354856 (WRITE.FONTDESCRIPTOR 353936 . 354543) (
-READ.FONTINTODESCRIPTOR 354545 . 354854)))))
+  (FILEMAP (NIL (12670 26806 (NC.CompactNoteFile 12680 . 19870) (NC.RemoteHostP 19872 . 20657) (
+NC.DeviceVectorForHost 20659 . 21595) (NC.InspectAndRepairNoteFile 21597 . 25600) (
+NC.InstallDeviceVectorInNoteFile 25602 . 26804)) (27072 41915 (NC.CreateDatabaseFile 27082 . 29332) (
+NC.CreateNoteFile 29334 . 39533) (NC.InitializeSpecialCards 39535 . 41448) (NC.InitializeSpecialCard 
+41450 . 41913)) (41953 92345 (NC.NoteFileOpenP 41963 . 42875) (NC.OpenDatabaseFile 42877 . 43883) (
+NC.OpenNoteFile 43885 . 70337) (NC.CacheTypesAndTitles 70339 . 71299) (NC.AskUserAboutTruncation 71301
+ . 72611) (NC.InstallCriticalUIDsInNoteFile 72613 . 76029) (NC.ProcessInspectAndRepairRequest 76031 . 
+78228) (NC.ProcessNoteFileNotFoundError 78230 . 81634) (NC.ProcessTruncationRequest 81636 . 83938) (
+NC.ProcessNoteFileNeedsConversionError 83940 . 88058) (NC.ProcessNoteFileNeedsTruncationError 88060 . 
+92343)) (92544 96026 (NC.RunOpenEvents 92554 . 93440) (NC.RunCloseEvents 93442 . 96024)) (96170 115210
+ (NC.CloseDatabaseFile 96180 . 96338) (NC.CloseNoteFile 96340 . 112709) (NC.CloseListOfActiveCards 
+112711 . 114513) (NC.CleanupCardObjects 114515 . 115208)) (115351 125322 (NC.CheckpointDatabase 115361
+ . 116815) (NC.CheckpointNoteFile 116817 . 123429) (NC.SaveDirtyCards 123431 . 125320)) (125367 136919
+ (NC.AbortSession 125377 . 134170) (NC.ForceDatabaseClose 134172 . 136917)) (136975 138268 (
+NC.ReadOnlyNoteFileP 136985 . 137347) (NC.CheckForNotReadOnly 137349 . 138266)) (138349 155547 (
+NC.DeleteDatabaseFile 138359 . 145174) (NC.CopyNoteFile 145176 . 149747) (NC.RenameNoteFile 149749 . 
+154503) (NC.RemoveAccessToNoteFile 154505 . 155545)) (155670 171848 (NC.GetNoteCard 155680 . 156479) (
+NC.GetMainCardData 156481 . 159658) (NC.GetLinks 159660 . 162842) (NC.GetTitle 162844 . 165679) (
+NC.GetPropList 165681 . 168672) (NC.GetType 168674 . 170955) (NC.GetSpecialCards 170957 . 171846)) (
+171849 172353 (NC.FetchSpecialCards 171859 . 172351)) (172475 202036 (NC.PutNoteCard 172485 . 172975) 
+(NC.PutMainCardData 172977 . 180734) (NC.PutLinks 180736 . 185816) (NC.PutFromLinks 185818 . 188618) (
+NC.PutRegion 188620 . 189941) (NC.PutTitle 189943 . 194408) (NC.PutPropList 194410 . 199273) (
+NC.PutNoteFileHeader 199275 . 201421) (NC.PutCheckptPtr 201423 . 202034)) (202141 213033 (
+NC.ReadCardPartHeader 202151 . 203951) (NC.ReadIdentifier 203953 . 205637) (NC.ReadRegion 205639 . 
+206140) (NC.ReadListOfLinks 206142 . 206985) (NC.ReadUID 206987 . 208057) (NC.ReadDate 208059 . 209375
+) (NC.ReadCardType 209377 . 209934) (NC.ReadTitle 209936 . 210387) (NC.ReadPropList 210389 . 210847) (
+NC.ReadLink 210849 . 213031)) (213137 220772 (NC.WriteCardPartHeader 213147 . 213949) (
+NC.WriteIdentifier 213951 . 214841) (NC.WriteRegion 214843 . 215858) (NC.WriteListOfLinks 215860 . 
+216567) (NC.WriteUID 216569 . 217520) (NC.WriteDate 217522 . 218058) (NC.WriteCardType 218060 . 218535
+) (NC.WriteTitle 218537 . 218998) (NC.WritePropList 219000 . 219471) (NC.WriteLink 219473 . 220770)) (
+220861 229811 (NC.NoteFileFromNoteFileUID 220871 . 221417) (NC.FetchTopLevelCards 221419 . 221804) (
+NC.StoreNoteFileInHashArray 221806 . 223899) (NC.RemoveNoteFile 223901 . 225277) (NC.TotalIndexSize 
+225279 . 225906) (NC.NoteFileLocFromIndexNum 225908 . 226541) (NC.FetchMonitor 226543 . 227220) (
+NC.SetMonitor 227222 . 227487) (NC.SameNoteFileP 227489 . 227680) (NC.ListOfNoteFiles 227682 . 228280)
+ (NC.NoteFileFromFileName 228282 . 229809)) (229812 244266 (NC.RemoveNoteFileFromHashArray 229822 . 
+230346) (NC.RemoveNoteFileName 230348 . 231726) (NC.NoticeNoteFile 231728 . 232235) (
+NC.NoticeNoteFileName 232237 . 235992) (NC.NoticedNoteFileNamesMenu 235994 . 243312) (
+NC.NoteFileNoticedP 243314 . 244264)) (244324 245537 (NC.InstallCardInNoteFile 244334 . 245131) (
+NC.CardFromUID 245133 . 245535)) (245538 246366 (NC.MakeHashKey 245548 . 246154) (
+NC.CreateUIDHashArray 246156 . 246364)) (246503 248049 (NC.SetStatus 246513 . 246809) (NC.SetMainLoc 
+246811 . 247114) (NC.SetLinksLoc 247116 . 247423) (NC.SetTitleLoc 247425 . 247729) (NC.SetPropListLoc 
+247731 . 248047)) (248273 248847 (NC.FetchCurrentVersionObject 248283 . 248845)) (248936 268515 (
+NC.CopyCards 248946 . 264352) (NC.MoveCards 264354 . 266165) (NC.PutNoteCardToStream 266167 . 267329) 
+(NC.GetNoteCardFromStream 267331 . 268268) (NC.MakeHashKeyFromCard 268270 . 268513)) (268516 295274 (
+NC.CopyCardPart 268526 . 271151) (NC.ExpandIndexInPlace 271153 . 277835) (NC.CheckForExpandIndex 
+277837 . 285168) (NC.FindNextCardPart 285170 . 288120) (NC.SearchFor### 288122 . 288814) (
+NC.RobustReadItemIdentifier 288816 . 289586) (NC.RobustReadDate 289588 . 290390) (NC.RobustReadUID 
+290392 . 290937) (NC.RobustReadChar 290939 . 291345) (NC.RobustReadByte 291347 . 291745) (
+NC.RobustRead 291747 . 292280) (NC.CopyCardPartInPlaceToEOF 292282 . 293513) (
+NC.UpdateIndexLocIfNeeded 293515 . 295272)) (295275 315373 (NC.FixUpLinksInCardCopy 295285 . 307860) (
+NC.FixUpCrossFileLinksInCardCopies 307862 . 310071) (NC.FixUpBrowserCardCopy 310073 . 314464) (
+NC.BrowserCopyConvertGraphNodeID 314466 . 315371)) (316181 319590 (NC.AskTraversalSpecs 316191 . 
+319588)) (319728 323091 (NC.MakeUID 319738 . 320431) (NC.LookUpUIDInHashArray 320433 . 321051) (
+NC.InitializeUID 321053 . 322147) (NC.SameUIDP 322149 . 323089)) (323092 324654 (NC.UIDPutProp 323102
+ . 323424) (NC.UIDGetProp 323426 . 323603) (NC.UIDSetPropList 323605 . 323780) (NC.UIDGetPropList 
+323782 . 324000) (NC.UIDAddProp 324002 . 324504) (NC.UIDRemProp 324506 . 324652)) (324899 325503 (
+NC.BuildVerticalBarREADTABLE 324909 . 325501)) (325572 327845 (NC.ReassembleUID 325582 . 326323) (
+NC.DisassembleUID 326325 . 327843)) (327964 330174 (NC.NoteFileProp 327974 . 328799) (
+NC.NoteFileAddProp 328801 . 329374) (NC.NoteFileDelProp 329376 . 330172)) (330175 350693 (
+NC.PrintOperationInProgressMsg 330185 . 333337) (NC.CardOperationsInProgress 333339 . 335520) (
+NC.OperationInProgress 335522 . 336175) (NC.CardCheckOpInProgress 336177 . 338444) (
+NC.NoteFileCheckOpInProgress 338446 . 340777) (NC.SessionCheckOpInProgress 340779 . 342716) (
+NC.SessionToNoteFileLock 342718 . 344216) (NC.LockListOfCards 344218 . 349608) (
+NC.ResetCardProcessInProgress 349610 . 350022) (NC.SwitchNoteFileLock 350024 . 350691)) (350727 354191
+ (NC.GetNewCard 350737 . 351757) (NC.DatabaseFileName 351759 . 353519) (NC.WriteStatus 353521 . 353739
+) (NC.TotalCardsInNoteFile 353741 . 354189)) (354261 355191 (WRITE.FONTDESCRIPTOR 354271 . 354878) (
+READ.FONTINTODESCRIPTOR 354880 . 355189)))))
 STOP
