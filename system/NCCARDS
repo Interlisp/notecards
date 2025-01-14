@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "25-Mar-2024 12:53:03" {DSK}<home>frank>il>notecards>system>NCCARDS.;16 210260 
+(FILECREATED "14-Jan-2025 14:16:00" {DSK}<home>frank>il>notecards>system>NCCARDS.;23 205606 
 
-      :CHANGES-TO (FNS NC.EditPropList)
+      :CHANGES-TO (FNS NC.ClosePropListEditor)
 
-      :PREVIOUS-DATE "10-Mar-2024 23:36:16" {DSK}<home>frank>il>notecards>system>NCCARDS.;15)
+      :PREVIOUS-DATE "14-Jan-2025 13:43:17" {DSK}<home>frank>il>notecards>system>NCCARDS.;22)
 
 
 (PRETTYCOMPRINT NCCARDSCOMS)
@@ -93,9 +93,10 @@
 (* ;;; "Prop List Editor")
 
         (FNS NC.AddPropToPropList NC.CloseAllPropListEditors NC.ClosePropListEditor 
-             NC.DelPropFromList NC.EditPropButtonFN NC.EditProperties NC.EditPropList 
-             NC.ExtractPropList NC.OpenPropListEditor NC.ProcessEditedPropList NC.PropListEditorOpenP
-             NC.SelectProperty NC.ShowLinks NC.StringIsListP NC.PutProp NC.GetProp NC.RemProp)
+             NC.DelPropFromList NC.EditProperties NC.EditPropList NC.ExtractPropList 
+             NC.OpenPropListEditor NC.ProcessEditedPropList NC.PropListEditorOpenP NC.SelectProperty
+             NC.SelectPropertyButtonFn NC.ShowLinks NC.StringIsListP NC.PutProp NC.GetProp NC.RemProp
+             NC.MenuDescFromPropListItem)
         
 
 (* ;;; "Unknown ?????????")
@@ -2863,64 +2864,62 @@
          (* * rht 1/16/87%: Now uses prop names on windowprop rather than number of props.
          Makes sure that propname doesn't already exist and that it's not system-reserved.)
 
-    (PROG [(promptWindow (GETPROMPTWINDOW editW 5 NIL NIL))
-           selectedObject propName propValue insertPtr insertChars beginPtr (textStream (TEXTSTREAM
-                                                                                         editW))
-           (PropNames (WINDOWPROP editW 'PROPERTYLIST.PROPNAMES]
-          (SETQ propName (MKATOM (NC.AskUser "New Property Name is = " NIL NIL T promptWindow)))
-          (COND
-             ((FMEMB propName PropNames)
-              (NC.PrintMsg promptWindow T (CONCAT "'" propName "' property already exists."
-                                                 (CHARACTER 13)))
-              (RETURN))
-             ((FMEMB propName NC.SystemCardPropNames)
-              (NC.PrintMsg promptWindow T (CONCAT "'" propName 
-                                                 "' is a system-reserved property name." (CHARACTER
-                                                                                          13)))
-              (RETURN)))
-          (SETQ propValue (NC.AskUser (CONCAT "Value for " propName " property = ")
-                                 NIL NIL T promptWindow))    (* Insert these values into the editW)
-          (if PropNames
-              then                                           (* Position just before selected 
-                                                             button)
-                   (NC.PrintMsg promptWindow T 
-                          "Please select a property before which to insert this new property."
-                          (CHARACTER 13))
-                   (SETQ selectedObject (NC.SelectProperty editW))
-                   (NC.ClearMsg promptWindow T)
-                   (AND (NULL selectedObject)
-                        (RETURN NIL))
-                   (SETQ insertPtr (TEDIT.FIND.OBJECT textStream selectedObject))
-            else                                             (* No properties to insert before.)
-                 (SETQ insertPtr 1))
-          (SETQ beginPtr insertPtr)                          (* Insert a button with this property 
-                                                             name)
-          (TEDIT.INSERT.OBJECT (MBUTTON.CREATE propName (FUNCTION NC.EditPropButtonFN)
-                                      (FONTCREATE 'HELVETICA 10 'BOLD))
-                 textStream insertPtr)                       (* Spacer between Prop and Value)
-          (add insertPtr 1)
-          (TEDIT.INSERT textStream (CHARACTER 9)
-                 insertPtr)
-          (TEDIT.LOOKS textStream '(PROTECTED ON)
-                 insertPtr 1)
-          (add insertPtr 1)                                  (* Create a new field
-                                                             (Copied from JBS's 
-                                                             \TEXTMENU.DOC.CREATE))
-          (TEDIT.INSERT textStream (CONCAT "  {}" (CHARACTER 13))
-                 insertPtr)
-          (TEDIT.LOOKS textStream '(PROTECTED ON)
-                 insertPtr 5)
-          (TEDIT.LOOKS textStream '(PROTECTED ON SELECTPOINT ON)
-                 (IPLUS insertPtr 2)
-                 1)
-          (TEDIT.INSERT textStream (MKSTRING propValue)
-                 (IPLUS insertPtr 3))
-          (TEDIT.LOOKS textStream '(PROTECTED OFF SELECTPOINT OFF)
-                 (IPLUS insertPtr 3)
-                 (NCHARS (MKSTRING propValue)))
-          (add insertPtr (NCHARS (MKSTRING propValue)))
-          (add insertPtr 5)
-          (WINDOWADDPROP editW 'PROPERTYLIST.PROPNAMES propName])
+         (* * fgh 2024-12-30 Update to use new TEdit menu API that comes with TEdit Round 
+         5)
+
+    (SETQ editW (TEDITWINDOWP editW))
+    (PROG* ((promptWindow (GETPROMPTWINDOW editW 5 NIL NIL))
+            (propList (WINDOWPROP editW 'PROPERTYLIST.BEING.EDITED))
+            (propNames (for item in propList collect (fetch (PropListItem PropertyName) of item)))
+            (menuStream (TEXTSTREAM editW))
+            selectedProperty newPropName newValue insertPtr newPropItem)
+           (SETQ newPropName (MKATOM (NC.AskUser "New Property Name is = " NIL NIL T promptWindow)))
+           (COND
+              ((FMEMB newPropName propNames)
+               (NC.PrintMsg promptWindow T (CONCAT "'" newPropName "' property already exists."
+                                                  (CHARACTER 13)))
+               (RETURN))
+              ((FMEMB newPropName NC.SystemCardPropNames)
+               (NC.PrintMsg promptWindow T (CONCAT "'" newPropName 
+                                                  "' is a system-reserved property name."
+                                                  (CHARACTER 13)))
+               (RETURN)))
+           (SETQ newValue (NC.AskUser (CONCAT "Value for " newPropName " property = ")
+                                 NIL NIL T promptWindow))
+           (if propNames
+               then (NC.PrintMsg promptWindow T 
+                           "Please select a property before which to insert this new property."
+                           (CHARACTER 13))
+                    (SETQ selectedProperty (NC.SelectProperty editW))
+                    (NC.ClearMsg promptWindow T)
+                    (AND (NULL selectedProperty)
+                         (RETURN NIL))
+                    (SETQ insertPtr (MB.GET selectedProperty menuStream 'STARTCHNO))
+             else                                            (* No properties to insert before.)
+                  (SETQ insertPtr 1))
+
+     (* ;; " Create a propListItem and add it to the propList in the right place")
+
+           (SETQ newPropItem (create PropListItem
+                                    PropertyName _ newPropName
+                                    Value _ newValue))
+           (SETQ propList (if propList
+                              then (bind p for item on propList
+                                      do [if (EQ selectedProperty (fetch (PropListItem PropertyName)
+                                                                     of (CAR item)))
+                                             then (if p
+                                                      then (RPLACD p (CONS newPropItem item))
+                                                           (RETURN propList)
+                                                    else (RETURN (CONS newPropItem item]
+                                         (SETQ p item) finally (SHOULDNT))
+                            else (LIST newPropItem)))
+           (WINDOWPROP editW 'PROPERTYLIST.BEING.EDITED propList)
+
+     (* ;; "Add the new prop to the Tedit Menu")
+
+           (MB.ADD `(,(NC.MenuDescFromPropListItem newPropItem)
+                     EOL)
+                  menuStream insertPtr])
 
 (NC.CloseAllPropListEditors
   [LAMBDA (Card)                                             (* rht%: "11-Aug-86 19:11")
@@ -2971,27 +2970,30 @@
          (* * rg |11/20/87| now makes window read-write so TEDIT.QUIT will work -
          UGH!!)
 
-    (DECLARE (GLOBALVARS NC.SavePropEditMenu))
-    (PROG (TextObj Answered OldPropList NewPropList MainWindow Card)
+         (* * fgh |12/31/2024| Update to use new TEdit Menu API that comes with TEdit 
+         Round 5)
+
+    (DECLARE (GLOBALVARS NC.SavePropEditMenu TEDIT-PROCESSES))
+    (SETQ Window (TEDITWINDOWP Window))
+    (PROG (TextStream Answered propList MainWindow Card process)
           (SETQ Card (WINDOWPROP Window 'SavedCardObject))
           (SETQ MainWindow (MAINWINDOW Window))
           (DETACHWINDOW Window)
-          [SETQ TextObj (CAR (NLSETQ (TEXTOBJ Window]
-          (SETQ OldPropList (WINDOWPROP Window 'PROPERTYLIST.BEING.EDITED))
-          [AND TextObj (COND
-                          ((EQ SaveFlg 'NoSave))
-                          ((EQ (WINDOWPROP Window 'PropListEditor)
-                               'ShowOnly))
-                          ((OR (EQ SaveFlg 'Save)
-                               (TEDIT.STREAMCHANGEDP TextObj))
-                           (SETQ NewPropList (NC.ExtractPropList Window))
-                           (NC.ProcessEditedPropList NewPropList OldPropList Card]
+          (SETQ TextStream (TEXTSTREAM Window T))
+          (SETQ propList (WINDOWPROP Window 'PROPERTYLIST.BEING.EDITED))
+          [AND TextStream (COND
+                             ((EQ SaveFlg 'NoSave))
+                             ((EQ (WINDOWPROP Window 'PropListEditor)
+                                  'ShowOnly))
+                             ((OR (EQ SaveFlg 'Save)
+                                  (TEDIT.STREAMCHANGEDP TextStream))
+                              (NC.ExtractPropList Window)
+                              (NC.ProcessEditedPropList propList Card]
           (WINDOWPROP Window 'TEDIT.MENU NIL)
           (WINDOWPROP Window 'TEDIT.PROPS NIL)
           (WINDOWPROP Window 'PropListEditor NIL)
           (WINDOWPROP Window 'SavedCardObject NIL)
           (WINDOWPROP Window 'PROPERTYLIST.BEING.EDITED NIL)
-          (WINDOWPROP Window 'PROPERTYLIST.PROPNAMES NIL)
           (WINDOWDELPROP Window 'CLOSEFN (FUNCTION NC.ClosePropListEditor))
           (COND
              ((AND (WINDOWPROP Window 'ReleaseWritePermissionP)
@@ -2999,13 +3001,23 @@
               (NC.ApplyFn ReleaseWritePermissionFn Card 'PROPLIST)
               (WINDOWPROP Window 'ReleaseWritePermissionP NIL)))
           [COND
-             (TextObj [if (NULL (WINDOWPROP Window 'PROCESS))
-                          then (NC.MakeTEditReadWrite Window)
-                               (LET ((Process (MAKE-NEW-TEDIT-PROCESS Window)))
-                                    (SETQ TEDIT-PROCESSES (CONS Process TEDIT-PROCESSES]
-                    (replace (TEXTOBJ \DIRTY) of TextObj with NIL)
-                    [\TEDIT.QUIT (CAR (MKLIST (fetch (TEXTOBJ \WINDOW) of TextObj]
-                    (until (fetch (TEXTOBJ EDITFINISHEDFLG) of TextObj) do (BLOCK]
+             (TextStream (if [NULL (SETQ process (WINDOWPROP Window 'PROCESS]
+                             then (NC.MakeTEditReadWrite Window)
+                                  (SETQ TEDIT-PROCESSES (CONS (SETQ process (MAKE-NEW-TEDIT-PROCESS
+                                                                             Window))
+                                                              TEDIT-PROCESSES)))
+                    (TEXTPROP TextStream 'DIRTY NIL)
+
+                    (* ;; "fgh 2025-01-14 Except for the TEDIT.QUIT itself, the following is needed to get around a race condition in TEDIT.QUIT")
+
+                    (* ;; " when TEDIT.QUIT is called from under TEDIT.DEFAULT.MENUFN.  Can get rid of if and when this race condition is fixed.")
+
+                    (RESETLST
+                        (RESETSAVE (TTY.PROCESS process))
+                        (TEDIT.QUIT (TEDITWINDOWP TextStream))
+                        (BLOCK)
+                        (BLOCK)
+                        (BLOCK))]
           (ADD.PROCESS `(PROGN (until (NULL (OPENWP ,Window)) do (BLOCK))
                                (REPOSITIONATTACHEDWINDOWS ,MainWindow])
 
@@ -3016,42 +3028,47 @@
 
          (* * rht 1/16/87%: Now uses prop names on windowprop rather than number of props.)
 
+         (* * fgh 2024-12-30 Update to use new TEdit Menus API from TEdit Round 5)
+
+    (SETQ editW (TEDITWINDOWP editW))
     (PROG ((promptWindow (GETPROMPTWINDOW editW 5 NIL NIL))
-           (tobj (WINDOWPROP editW 'TEXTOBJ))
-           (stream (WINDOWPROP editW 'TEXTSTREAM))
-           selectedObject CH#)
-          (if (NULL (WINDOWPROP editW 'PROPERTYLIST.PROPNAMES))
+           (menuStream (TEXTSTREAM editW T))
+           (propList (WINDOWPROP editW 'PROPERTYLIST.BEING.EDITED))
+           selectedProperty prefixObj)
+          (if (NULL propList)
               then (NC.PrintMsg promptWindow T "No properties to delete.")
                    (RETURN))
           (NC.PrintMsg promptWindow T "Please select property to be deleted.")
-          (SETQ selectedObject (NC.SelectProperty editW))
+          (SETQ selectedProperty (NC.SelectProperty editW))
           (NC.ClearMsg promptWindow T)
-          (if (IMAGEOBJPROP selectedObject 'EditPropListNoDelete)
+          (if (for item in propList when (EQ selectedProperty (fetch (PropListItem PropertyName)
+                                                                 of item))
+                 do (RETURN (fetch (PropListItem AllowSelectFlg) of item)) finally (SHOULDNT))
               then (NC.PrintMsg promptWindow T "Selected property:value pair cannot be deleted."
                           (CHARACTER 13))
-            else (SETQ CH# (TEDIT.FIND.OBJECT tobj selectedObject))
-                 (MBUTTON.FIND.NEXT.FIELD tobj CH#)          (* Delete everything between the 
-                                                             imageobj and the end-of-line.)
-                 (TEDIT.LOOKS tobj '(PROTECTED OFF)
-                        CH#
-                        (IPLUS 2 (IDIFFERENCE (fetch CHLIM of (fetch SCRATCHSEL of tobj))
-                                        CH#)))
-                 (TEDIT.DELETE stream CH# (IPLUS 2 (IDIFFERENCE (fetch CHLIM
-                                                                   of (fetch SCRATCHSEL of tobj))
-                                                          CH#)))
-                 (TEDIT.SETSEL stream (GETEOFPTR stream)
-                        0
-                        'RIGHT)
-                 (WINDOWDELPROP editW 'PROPERTYLIST.PROPNAMES (IMAGEOBJPROP selectedObject
-                                                                     'MBTEXT])
+                   (RETURN))
 
-(NC.EditPropButtonFN
-  [LAMBDA (imageObject sel window)                           (* fgh%: "20-Apr-84 21:17")
+     (* ;; "Delete the EOL following the selected field")
 
-         (* This is the default function called whenever the user selects a button in the 
-         NC.EditPropList window.)
+          (TEDIT.DELETE menuStream (ADD1 (MB.GET selectedProperty menuStream 'ENDCHNO))
+                 1)
 
-    (WINDOWPROP window 'SelectedObject imageObject])
+     (* ;; " Need to set the DELETABLE T property for the prefix and suffix imageobjects for the selectedProperty field so can delete it")
+
+          (SETQ prefixObj (MB.GET selectedProperty menuStream 'OBJECT))
+          (IMAGEOBJPROP prefixObj 'DELETABLE T)
+          (IMAGEOBJPROP (IMAGEOBJPROP prefixObj 'SUFFIXOBJ)
+                 'DELETABLE T)
+          (MB.DELETE selectedProperty menuStream)
+          (SETQ propList (bind p for item on propList
+                            do [if (EQ selectedProperty (fetch (PropListItem PropertyName)
+                                                           of (CAR item)))
+                                   then (if p
+                                            then (RPLACD p (CDR item))
+                                                 (RETURN propList)
+                                          else (RETURN (CDR item]
+                               (SETQ p item) finally (SHOULDNT)))
+          (WINDOWPROP editW 'PROPERTYLIST.BEING.EDITED propList])
 
 (NC.EditProperties
   [LAMBDA (TextStreamOrWindow)                               (* Randy.Gobbel " 2-Dec-87 18:15")
@@ -3125,103 +3142,55 @@
     (* ;; "bk 2/7/89: Add back the NC.ShowPropListMenu when |showOnlyFlg| |showLinksFlg| (lost in the TEDIT-PROCESS-P changes.")
 
     (DECLARE (GLOBALVARS NC.MenuFont NC.ShowPropListMenu NC.EditPropListMenu))
-    (PROG (menuStream textObj editW button editProcess (font (FONTCREATE 'HELVETICA 8))
-                 (CH# 1)
-                 (ENDCH# 1))                                 (* ; 
-                                                             "Init the editList and the propFnsList")
-                                                             (* ; 
-                                     "Create a TEDITMenu that reflects the structure of the proplist")
-          [SETQ menuStream
-           (\TEXTMENU.DOC.CREATE
-            (for X in propList
-               join (NCONC [LIST (LIST 'MB.BUTTON (MKSTRING (fetch (PropListItem PropertyName)
-                                                               of X))
-                                       (OR (fetch (PropListItem ButtonFn) of X)
-                                           (FUNCTION NC.EditPropButtonFN]
-                           (COND
-                              [(NOT (IMAGEOBJP (fetch (PropListItem Value) of X)))
-                               (COND
-                                  ((fetch (PropListItem AllowEditFlg) of X)
-                                   (LIST (LIST 'MB.TEXT (CONCAT (CHARACTER 9)
-                                                               "  ["
-                                                               (MKSTRING (fetch (PropListItem Value)
-                                                                            of X))
-                                                               "]"
-                                                               (CHARACTER 13))
-                                               font)))
-                                  (T (LIST (LIST 'MB.TEXT (CHARACTER 9)
-                                                 font)
-                                           (LIST 'MB.INSERT (MKSTRING (fetch (PropListItem Value)
-                                                                         of X)))
-                                           (LIST 'MB.TEXT (CHARACTER 13)
-                                                 font]
-                              (T (LIST (LIST 'MB.TEXT (CHARACTER 9)
-                                             font)
-                                       (LIST 'MB.INSERT)
-                                       (LIST 'MB.TEXT (CHARACTER 13)
-                                             font]
-          (SETQ textObj (TEXTOBJ menuStream))                (* ; 
-                                       "Go back and insert the ImageObjects into their value fields.")
-          (SETQ CH# 0)
-          [for prop in propList when (OR (IMAGEOBJP (fetch (PropListItem Value) of prop))
-                                         (NULL (fetch (PropListItem AllowEditFlg) of prop)))
-             do (MBUTTON.FIND.NEXT.FIELD textObj (SETQ CH# (ADD1 CH#)))
-                (SETQ CH# (fetch CH# of (fetch SCRATCHSEL of textObj)))
-                (COND
-                   ((IMAGEOBJP (CADR prop))
-                    (TEDIT.INSERT.OBJECT (fetch (PropListItem Value) of prop)
-                           menuStream CH#]
-          (SETQ CH# 0)
-          (for prop in propList do (SETQ button (MBUTTON.FIND.NEXT.BUTTON textObj (ADD1 CH#)))
-                                   (SETQ CH# (CDR button))   (* ; 
-                                                "If the buttonProtect flag is on, protect the button")
-                                   (AND (fetch (PropListItem AllowSelectFlg) of prop)
-                                        (IMAGEOBJPROP (CAR button)
-                                               'EditPropListNoDelete T)))
-                                                             (* ; "Set up window and window title")
-          [SETQ editW (COND
-                         (window window)
-                         (T (CREATEW (GETREGION)
-                                   "Edit Property List"]
+    (PROG* ([editW (COND
+                      (window window)
+                      (T (CREATEW (GETREGION)
+                                "Edit Property List"]
+            (oldTextStream (TEXTSTREAM editW T))
+            (menuStream (OPENTEXTSTREAM))
+            (font (FONTCREATE 'HELVETICA 8)))
 
-     (* ;; "Point to the proplist being edited so we can update it when this menu is closed.  (See NC.CloseEditPropListWindow)")
+     (* ;; " Kill any existing Textstream in editW")
 
-          (WINDOWPROP editW 'PROPERTYLIST.BEING.EDITED propList)
-          (WINDOWPROP editW 'PROPERTYLIST.PROPNAMES (for Item in propList collect (CAR Item)))
-                                                             (* ; 
-                        "Set the right margin to very-far-away.  Prevents stuff from wrapping around")
-          (TEDIT.PARALOOKS menuStream '(RIGHTMARGIN 1000 TABS (50 (80 . LEFT)))
-                 1
-                 (GETFILEINFO menuStream 'LENGTH))           (* ; 
-                                             "Set the first tab so the fields will line up correctly")
-                                                             (* ; 
-                                                    "Set selection to the top -- make it look pretty")
-          (replace (SELECTION SET) of (fetch (TEXTOBJ SEL) of textObj) with NIL)
+           (if oldTextStream
+               then (TEDIT.KILL oldTextStream))
 
-     (* ;; "Kill any existing tedit process.  Notice we have to do WINDOWPROP because calling TEXTSTREAM breaks if window doesn't have one.")
+     (* ;; "Set the right margin to very-far-away.  Prevents stuff from wrapping around")
 
-          (LET [(OldTextStream (WINDOWPROP editW 'TEXTSTREAM]
-               (if (TEXTSTREAMP OldTextStream)
-                   then (TEDIT.KILL OldTextStream)))
-          (LET ((OLD-TTY-PROCESS (TTY.PROCESS)))
+     (* ;; "Set the first tab so the fields will line up correctly")
 
-               (* ;; "Start the TEdit with the TTY so TEDIT-PROCESS-P will work")
+           (TEDIT.PARALOOKS menuStream '(RIGHTMARGIN 1000 TABS (50 (80 . LEFT)))
+                  1
+                  (GETFILEINFO menuStream 'LENGTH))
 
-               [SETQ editProcess (TEDIT menuStream editW NIL (if (OR showOnlyFlg showLinksFlg)
-                                                                 then `(MENU ,NC.ShowPropListMenu 
-                                                                             NOTSPLITTABLE T)
-                                                               else `(MENU ,NC.EditPropListMenu 
-                                                                           NOTSPLITTABLE T]
-               (until (TEDIT-PROCESS-P editProcess) do (BLOCK))
+     (* ;; " Create the TEdit menu based on the propList handed in")
 
-               (* ;; "Give Back the TTY if necessary")
+           (MB.ADD (for item in propList join (LIST (NC.MenuDescFromPropListItem item)
+                                                    'EOL))
+                  menuStream 1)
 
-               (if (OR showOnlyFlg showLinksFlg)
-                   then (TTY.PROCESS OLD-TTY-PROCESS)))
-          (if showOnlyFlg
-              then (NC.MakeTEditReadOnly editW))
-          (WINDOWADDPROP editW 'CLOSEFN (FUNCTION NC.ClosePropListEditor)
-                 T])
+     (* ;; "Start TEdit on menuStream in editW")
+
+           (LET [(oldTTY (TTY.PROCESS))
+                 (editProcess (TEDIT menuStream editW NIL (if (OR showOnlyFlg showLinksFlg)
+                                                              then `(MENU ,NC.ShowPropListMenu 
+                                                                          NOTSPLITTABLE T)
+                                                            else `(MENU ,NC.EditPropListMenu 
+                                                                        NOTSPLITTABLE T]
+                (until (TEDIT-PROCESS-P editProcess) do (BLOCK))
+
+                (* ;; "Give Back the TTY if necessary")
+
+                (if (OR showOnlyFlg showLinksFlg)
+                    then (TTY.PROCESS oldTTY)))
+
+     (* ;; "Point to the proplist being edited so we can update it as we go")
+
+           (WINDOWPROP editW 'PROPERTYLIST.BEING.EDITED propList)
+           (if showOnlyFlg
+               then (NC.MakeTEditReadOnly editW))
+           (WINDOWADDPROP editW 'CLOSEFN (FUNCTION NC.ClosePropListEditor)
+                  T])
 
 (NC.ExtractPropList
   [LAMBDA (editW)                                            (* rht%: "16-Jan-87 12:29")
@@ -3232,68 +3201,36 @@
          (* * rht 1/16/87%: Now makes sure menuStream isn't empty before searching for 
          items.)
 
+         (* * fgh |12/31/2024| Update to use new TEdit Menu API that comes with TEdit 
+         Round 5)
+
     (LET [(menuStream (TEXTSTREAM editW))
-          button propName (propValue T)
-          EOL
-          (CH# 1)
           (propList (WINDOWPROP editW 'PROPERTYLIST.BEING.EDITED]
-                                                             (* Move through each field/value pair 
-                                                             in menu. Update each PROP in the list.)
-
-         (* For each property in the list, move to the next field, and drop its value into 
-         the field slot.)
-                                                             (* for each button in the menu do)
-         (AND (GREATERP (TEDIT.NCHARS menuStream)
-                     1)
-              (while (SETQ button (MBUTTON.FIND.NEXT.BUTTON (TEXTOBJ menuStream)
-                                         CH#)) collect       (* Convert the name of the button into 
-                                                             the property name)
-
-         (* Set up the looks of the fields so that MBUTTON.NEXT.FIELD will work correctly 
-         -- Real kludge to get around limitations in TEditMenu stuff)
-
-                                                     (TEDIT.LOOKS menuStream
-                                                            '(PROTECTED ON SELECTPOINT ON)
-                                                            (IPLUS 4 (CDR button))
-                                                            1)
-                                                     [COND
-                                                        ([SETQ EOL (MBUTTON.FIND.NEXT.BUTTON
-                                                                    (TEXTOBJ menuStream)
-                                                                    (IPLUS 4 (CDR button]
-                                                         (SETQ EOL (IDIFFERENCE (CDR EOL)
-                                                                          2)))
-                                                        (T (SETQ EOL (SUB1 (TEDIT.FIND menuStream
-                                                                                  (CHARACTER 13)
-                                                                                  (CDR button]
-                                                     [TEDIT.LOOKS menuStream '(PROTECTED OFF)
-                                                            (IPLUS 4 (CDR button))
-                                                            (IDIFFERENCE EOL (IPLUS 4 (CDR button] 
-                                                             (* Get the name of the property from 
-                                                             the butrton)
-                                                     (SETQ propName (IMAGEOBJPROP (CAR button)
-                                                                           'MBTEXT)) 
-                                                             (* Now get its value by reading the 
-                                                             next field)
-                                                     (SETQ propValue (
-                                                               MBUTTON.NEXT.FIELD.AS.TEXT.OR.IMAGEOBJ
-                                                                      menuStream
-                                                                      (CDR button)))
-                                                     [COND
-                                                        [(NULL propValue)
-                                                         (SETQ propValue (fetch (PropListItem Value)
-                                                                            of (FASSOC propName 
-                                                                                      propList]
-                                                        ((IMAGEOBJP propValue))
-                                                        ((NC.StringIsListP propValue 0)
-                                                             (* This string should really be 
+         (bind propName propValue for item in propList
+            do (SETQ propName (fetch (PropListItem PropertyName) of item))
+               [SETQ propValue (LET* [(SEL (MB.GET propName menuStream 'STATE))
+                                      [START (SUB1 (TEDIT.SELPROP SEL 'CH#]
+                                      [END (SUB1 (TEDIT.SELPROP SEL 'CHLAST]
+                                      (IMAGEOBJ (AND (IGREATERP END START)
+                                                     (bind OBJ first (SETFILEPTR menuStream START)
+                                                        for ctr from START to END
+                                                        do (SETQ OBJ (BIN menuStream))
+                                                           (if (IMAGEOBJP OBJ)
+                                                               then (RETURN OBJ))
+                                                        finally (RETURN NIL]
+                                     (if (IMAGEOBJP IMAGEOBJ)
+                                         then IMAGEOBJ
+                                       else (TEDIT.SEL.AS.STRING menuStream SEL]
+               [COND
+                  ((NULL propValue)
+                   (SETQ propValue (fetch (PropListItem Value) of item)))
+                  ((IMAGEOBJP propValue))
+                  ((NC.StringIsListP propValue 0)            (* This string should really be 
                                                              interpreted as a LIST)
-                                                         (SETQ propValue (READ propValue)))
-                                                        (T   (* This really is a string)
-                                                           (SETQ propValue (MKATOM propValue] 
-                                                             (* Keep track of where that property 
-                                                             was in the menu stream)
-                                                     (SETQ CH# (ADD1 (CDR button)))
-                                                     (LIST propName propValue])
+                   (SETQ propValue (READ propValue)))
+                  (T                                         (* This really is a string)
+                     (SETQ propValue (MKATOM propValue]
+               (replace (PropListItem Value) of item with propValue])
 
 (NC.OpenPropListEditor
   [LAMBDA (WindowOrTextStream PropList Title ShowOnlyFlg MakeImageObjFlg ShowLinksFlg)
@@ -3393,7 +3330,7 @@
           (RETURN EditWindow])
 
 (NC.ProcessEditedPropList
-  [LAMBDA (EditedPropList OldPropList Card)                  (* rht%: "16-Jan-87 13:28")
+  [LAMBDA (EditedPropList Card)                              (* rht%: "16-Jan-87 13:28")
 
          (* Take an edited prop list and set the prop list of the card as required.)
 
@@ -3405,6 +3342,8 @@
 
          (* * rht 1/16/87%: Revised wholesale to fix bugs with prop ordering and prop 
          deletion.)
+
+         (* * fgh 2025-01-02 Update to use new TEdit Menus API from TEdit Round 5)
 
     (DECLARE (GLOBALVARS NC.SystemCardPropNames))
     (LET ((CurPropList (NC.FetchPropList Card)))
@@ -3418,7 +3357,7 @@
                                                     then NIL
                                                   else (CADR Item]
                                      (LIST Prop (if (fetch (PropListItem OriginalListFlg)
-                                                       of (FASSOC Prop OldPropList))
+                                                       of Item)
                                                     then (LIST NewValue)
                                                   else NewValue]
          (NC.SetPropListDirtyFlg Card T])
@@ -3448,8 +3387,9 @@
                                                              (* Select one of the properties in 
                                                              prop list editor window Window)
     (PROG ((ClippingRegion (DSPCLIPPINGREGION NIL Window)))
-          (WINDOWPROP Window 'SelectedObject NIL)
-          [until (WINDOWPROP Window 'SelectedObject)
+          (WINDOWPROP Window 'SELECT.PROPERTY T)
+          (WINDOWPROP Window 'SelectedProperty NIL)
+          [until (WINDOWPROP Window 'SelectedProperty)
              do (until (AND (MOUSESTATE LEFT)
                             (EQ (WHICHW LASTMOUSEX LASTMOUSEY)
                                 Window)))
@@ -3458,9 +3398,21 @@
                            (LASTMOUSEY Window))
                     (APPLY* (WINDOWPROP Window 'BUTTONEVENTFN)
                            Window]
-          (AND (EQ TEDIT.SELPENDING (WINDOWPROP Window 'TEXTOBJ))
-               (SETQ TEDIT.SELPENDING))
-          (RETURN (WINDOWPROP Window 'SelectedObject NIL])
+          (RETURN (WINDOWPROP Window 'SelectedProperty NIL])
+
+(NC.SelectPropertyButtonFn
+  [LAMBDA (OBJ STREAM SEL RELX RELY SELWINDOW TEXTSTREAM BUTTON ISPREFIX)
+
+         (* This is the CUSTOMBUTTONEVENTFN for the TEdit MB.FIELD object used for 
+         showing/editing properties in the Notecards property list editor)
+
+    (LET ((W (TEDITWINDOWP TEXTSTREAM)))
+         (if (AND (WINDOWP W)
+                  (WINDOWPROP W 'SELECT.PROPERTY))
+             then (WINDOWPROP W 'SelectedProperty (IMAGEOBJPROP OBJ 'IDENTIFIER))
+                  (WINDOWPROP W 'SELECT.PROPERTY NIL)
+                  'DON'T
+           else NIL])
 
 (NC.ShowLinks
   [LAMBDA (CardIdentifier)                                   (* Randy.Gobbel "23-Nov-87 14:11")
@@ -3617,6 +3569,30 @@
          Someday maybe this could be smarter and save space.)
 
     (NC.PutProp Card Prop NIL])
+
+(NC.MenuDescFromPropListItem
+  [LAMBDA (propListItem)
+
+         (* * fgh 2025-01-03 Create a MENUDESC item for the TEdit Menu API -
+         TEdit 5th Round -
+         from a Notecards prop list item)
+
+    (LET* ((value (fetch (PropListItem Value) of propListItem))
+           (objvaluep (IMAGEOBJP value)))
+          `(FIELD [FIELDTYPE ,(if objvaluep
+                                  then 'IMAGEOBJ
+                                else 'SELECTION]
+                  (IDENTIFIER ,(fetch (PropListItem PropertyName) of propListItem))
+                  (PRELABEL ,(fetch (PropListItem PropertyName) of propListItem))
+                  (INITSTATE ,(if objvaluep
+                                  then value
+                                elseif value
+                                  then (MKSTRING value)
+                                else NIL))
+                  (DELETABLE NIL)
+                  (CUSTOMBUTTONEVENTFN ,(FUNCTION NC.SelectPropertyButtonFn))
+                  [LABELFONT ,(FONTCREATE '(HELVETICA 10 BOLD]
+                  (FIELDFONT ,(FONTCREATE '(HELVETICA 10])
 )
 
 
@@ -3992,58 +3968,59 @@
 
 (PUTPROPS NCCARDS MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (9240 10014 (NC.AddCardIconToIconProps 9250 . 10012)) (10050 22178 (
-NC.CardOrCardHolderFromUID 10060 . 10861) (NC.CardP 10863 . 11061) (NC.DeleteNoteCard 11063 . 14518) (
-NC.DeleteNoteCardInternal 14520 . 21986) (NC.SameCardP 21988 . 22176)) (22234 45777 (NC.FetchStatus 
-22244 . 22468) (NC.SetNewCardFlg 22470 . 22939) (NC.FetchNewCardFlg 22941 . 23467) (NC.FetchNewCardPos
- 23469 . 23928) (NC.ActivateCard 23930 . 24219) (NC.ActiveCardP 24221 . 24736) (NC.DeactivateCard 
-24738 . 26432) (NC.FetchFromLinks 26434 . 26834) (NC.FetchGlobalLinks 26836 . 27127) (
-NC.FetchLinksDirtyFlg 27129 . 27545) (NC.FetchPropList 27547 . 27948) (NC.FetchRegion 27950 . 28343) (
-NC.FetchSavedRegion 28345 . 28754) (NC.FetchRegionViewed 28756 . 29137) (NC.FetchScale 29139 . 29476) 
-(NC.FetchSlotNum 29478 . 30275) (NC.FetchSubstance 30277 . 30675) (NC.FetchTitle 30677 . 31067) (
-NC.FetchToLinks 31069 . 31467) (NC.FetchType 31469 . 31866) (NC.FetchWindow 31868 . 33591) (NC.IDP 
-33593 . 33885) (NC.MarkCardDirty 33887 . 34436) (NC.CardDirtyP 34438 . 34881) (NC.SetFromLinks 34883
- . 35293) (NC.SetGlobalLinks 35295 . 35716) (NC.SetLinksDirtyFlg 35718 . 36157) (NC.SetPropList 36159
- . 36568) (NC.SetRegion 36570 . 36970) (NC.SetSavedRegion 36972 . 37511) (NC.SetRegionViewed 37513 . 
-37957) (NC.SetScale 37959 . 38358) (NC.SetSubstance 38360 . 38798) (NC.SetTitle 38800 . 39202) (
-NC.SetToLinks 39204 . 39613) (NC.SetType 39615 . 39896) (NC.FetchTitleDirtyFlg 39898 . 40307) (
-NC.SetTitleDirtyFlg 40309 . 40733) (NC.FetchPropListDirtyFlg 40735 . 41159) (NC.SetPropListDirtyFlg 
-41161 . 41591) (NC.SetSubstanceDirtyFlg 41593 . 42025) (NC.FetchSubstanceDirtyFlg 42027 . 42447) (
-NC.TurnOffDirtyFlgs 42449 . 42879) (NC.FetchUserDataProp 42881 . 43196) (NC.SetUserDataProp 43198 . 
-43630) (NC.SetUserDataPropList 43632 . 43879) (NC.MakeTypeIconBitMapSet 43881 . 44398) (
-NC.MakeNewCardWindow 44400 . 44915) (NC.FlashHiddenWindow 44917 . 45632) (NC.OpenWindows 45634 . 45775
-)) (45845 48419 (NC.ObtainEditPermission 45855 . 48144) (NC.CardPartBusy 48146 . 48417)) (48475 49404 
-(NC.ReadOnlyCardP 48485 . 48786) (NC.CardSomehowDirtyP 48788 . 49195) (NC.CardReadOnlyOpenP 49197 . 
-49402)) (49447 62553 (NC.RetrieveFromLinks 49457 . 50536) (NC.RetrieveLinkLabels 50538 . 51642) (
-NC.StoreLinkLabels 51644 . 52425) (NC.RetrievePropList 52427 . 52960) (NC.RetrieveTitle 52962 . 53534)
- (NC.NameOfCardorNodeorImageObj 53536 . 54258) (NC.RetrieveToLinks 54260 . 55263) (
-NC.RetrieveGlobalLinks 55265 . 56153) (NC.RetrieveType 56155 . 56654) (NC.RetrieveTypeAndTitle 56656
- . 57830) (NC.LinksCachedP 57832 . 58220) (NC.ShowInfo 58222 . 62551)) (62604 149709 (NC.AddParents 
-62614 . 65660) (NC.SeverExternalLinks 65662 . 76575) (NC.AssignTitle 76577 . 82941) (
-NC.DeleteNoteCards 82943 . 92120) (NC.CardsToDelete 92122 . 92881) (NC.EditNoteCard 92883 . 97024) (
-NC.MakeNoteCard 97026 . 101519) (NC.QuitCard 101521 . 109268) (NC.CloseW 109270 . 109684) (
-NC.CheckFiling 109686 . 113347) (NC.CheckTitle 113349 . 115006) (NC.ForceFilingForCardTypeP 115008 . 
-115343) (NC.InsureProperFiling 115345 . 116367) (NC.QuitWithoutSaving 116369 . 124108) (
-NC.UnfileNoteCard 124110 . 127234) (NC.UpdateUpdateList 127236 . 128078) (NC.CollectReferences 128080
- . 129519) (NC.CardSaveFn 129521 . 138318) (NC.DetermineDisplayRegion 138320 . 144299) (NC.AbortCard 
-144301 . 144833) (NC.CardNeedsFilingP 144835 . 146303) (NC.TopLevelCardP 146305 . 146635) (
-NC.MakeDummyRegion 146637 . 147128) (NC.ValidCardP 147130 . 147601) (NC.TitleBarButtonEventFn 147603
- . 148656) (NC.InstallTitleBarMiddleMenu 148658 . 149707)) (149745 194934 (NC.AddPropToPropList 149755
- . 154020) (NC.CloseAllPropListEditors 154022 . 154886) (NC.ClosePropListEditor 154888 . 158690) (
-NC.DelPropFromList 158692 . 160785) (NC.EditPropButtonFN 160787 . 161092) (NC.EditProperties 161094 . 
-163491) (NC.EditPropList 163493 . 171315) (NC.ExtractPropList 171317 . 176654) (NC.OpenPropListEditor 
-176656 . 182509) (NC.ProcessEditedPropList 182511 . 184255) (NC.PropListEditorOpenP 184257 . 185349) (
-NC.SelectProperty 185351 . 186387) (NC.ShowLinks 186389 . 192507) (NC.StringIsListP 192509 . 193621) (
-NC.PutProp 193623 . 194294) (NC.GetProp 194296 . 194651) (NC.RemProp 194653 . 194932)) (194971 197436 
-(NC.FetchBeingDeletedFlg 194981 . 195404) (NC.SetBeingDeletedFlg 195406 . 195840) (
-NC.RemoveDELETEMEImageObjsFromCard 195842 . 197000) (NC.InsureIntegerDate 197002 . 197434)) (197481 
-200279 (NC.PlaceMarkerCopyFn 197491 . 197675) (NC.PlaceMarkerDisplayFn 197677 . 198272) (
-NC.PlaceMarkerGetFn 198274 . 198438) (NC.PlaceMarkerImageBoxFn 198440 . 199336) (NC.PlaceMarkerPutFn 
-199338 . 199574) (NC.MakePlaceMarker 199576 . 200277)) (200328 208220 (NC.FetchTitleDate 200338 . 
-200936) (NC.FetchItemDate 200938 . 201533) (NC.FetchPropListDate 201535 . 202143) (NC.FetchLinksDate 
-202145 . 202743) (NC.FetchLinkIconAttachedBitMap 202745 . 207089) (NC.FetchLinkDisplayMode 207091 . 
-207391) (NC.FetchDefaultWidth 207393 . 207675) (NC.FetchDefaultHeight 207677 . 207958) (
-NC.FetchLinkAnchorModesSupported 207960 . 208218)) (208221 210084 (NC.SetTitleDate 208231 . 208693) (
-NC.SetItemDate 208695 . 209149) (NC.SetPropListDate 209151 . 209618) (NC.SetLinksDate 209620 . 210082)
+  (FILEMAP (NIL (9294 10068 (NC.AddCardIconToIconProps 9304 . 10066)) (10104 22232 (
+NC.CardOrCardHolderFromUID 10114 . 10915) (NC.CardP 10917 . 11115) (NC.DeleteNoteCard 11117 . 14572) (
+NC.DeleteNoteCardInternal 14574 . 22040) (NC.SameCardP 22042 . 22230)) (22288 45831 (NC.FetchStatus 
+22298 . 22522) (NC.SetNewCardFlg 22524 . 22993) (NC.FetchNewCardFlg 22995 . 23521) (NC.FetchNewCardPos
+ 23523 . 23982) (NC.ActivateCard 23984 . 24273) (NC.ActiveCardP 24275 . 24790) (NC.DeactivateCard 
+24792 . 26486) (NC.FetchFromLinks 26488 . 26888) (NC.FetchGlobalLinks 26890 . 27181) (
+NC.FetchLinksDirtyFlg 27183 . 27599) (NC.FetchPropList 27601 . 28002) (NC.FetchRegion 28004 . 28397) (
+NC.FetchSavedRegion 28399 . 28808) (NC.FetchRegionViewed 28810 . 29191) (NC.FetchScale 29193 . 29530) 
+(NC.FetchSlotNum 29532 . 30329) (NC.FetchSubstance 30331 . 30729) (NC.FetchTitle 30731 . 31121) (
+NC.FetchToLinks 31123 . 31521) (NC.FetchType 31523 . 31920) (NC.FetchWindow 31922 . 33645) (NC.IDP 
+33647 . 33939) (NC.MarkCardDirty 33941 . 34490) (NC.CardDirtyP 34492 . 34935) (NC.SetFromLinks 34937
+ . 35347) (NC.SetGlobalLinks 35349 . 35770) (NC.SetLinksDirtyFlg 35772 . 36211) (NC.SetPropList 36213
+ . 36622) (NC.SetRegion 36624 . 37024) (NC.SetSavedRegion 37026 . 37565) (NC.SetRegionViewed 37567 . 
+38011) (NC.SetScale 38013 . 38412) (NC.SetSubstance 38414 . 38852) (NC.SetTitle 38854 . 39256) (
+NC.SetToLinks 39258 . 39667) (NC.SetType 39669 . 39950) (NC.FetchTitleDirtyFlg 39952 . 40361) (
+NC.SetTitleDirtyFlg 40363 . 40787) (NC.FetchPropListDirtyFlg 40789 . 41213) (NC.SetPropListDirtyFlg 
+41215 . 41645) (NC.SetSubstanceDirtyFlg 41647 . 42079) (NC.FetchSubstanceDirtyFlg 42081 . 42501) (
+NC.TurnOffDirtyFlgs 42503 . 42933) (NC.FetchUserDataProp 42935 . 43250) (NC.SetUserDataProp 43252 . 
+43684) (NC.SetUserDataPropList 43686 . 43933) (NC.MakeTypeIconBitMapSet 43935 . 44452) (
+NC.MakeNewCardWindow 44454 . 44969) (NC.FlashHiddenWindow 44971 . 45686) (NC.OpenWindows 45688 . 45829
+)) (45899 48473 (NC.ObtainEditPermission 45909 . 48198) (NC.CardPartBusy 48200 . 48471)) (48529 49458 
+(NC.ReadOnlyCardP 48539 . 48840) (NC.CardSomehowDirtyP 48842 . 49249) (NC.CardReadOnlyOpenP 49251 . 
+49456)) (49501 62607 (NC.RetrieveFromLinks 49511 . 50590) (NC.RetrieveLinkLabels 50592 . 51696) (
+NC.StoreLinkLabels 51698 . 52479) (NC.RetrievePropList 52481 . 53014) (NC.RetrieveTitle 53016 . 53588)
+ (NC.NameOfCardorNodeorImageObj 53590 . 54312) (NC.RetrieveToLinks 54314 . 55317) (
+NC.RetrieveGlobalLinks 55319 . 56207) (NC.RetrieveType 56209 . 56708) (NC.RetrieveTypeAndTitle 56710
+ . 57884) (NC.LinksCachedP 57886 . 58274) (NC.ShowInfo 58276 . 62605)) (62658 149763 (NC.AddParents 
+62668 . 65714) (NC.SeverExternalLinks 65716 . 76629) (NC.AssignTitle 76631 . 82995) (
+NC.DeleteNoteCards 82997 . 92174) (NC.CardsToDelete 92176 . 92935) (NC.EditNoteCard 92937 . 97078) (
+NC.MakeNoteCard 97080 . 101573) (NC.QuitCard 101575 . 109322) (NC.CloseW 109324 . 109738) (
+NC.CheckFiling 109740 . 113401) (NC.CheckTitle 113403 . 115060) (NC.ForceFilingForCardTypeP 115062 . 
+115397) (NC.InsureProperFiling 115399 . 116421) (NC.QuitWithoutSaving 116423 . 124162) (
+NC.UnfileNoteCard 124164 . 127288) (NC.UpdateUpdateList 127290 . 128132) (NC.CollectReferences 128134
+ . 129573) (NC.CardSaveFn 129575 . 138372) (NC.DetermineDisplayRegion 138374 . 144353) (NC.AbortCard 
+144355 . 144887) (NC.CardNeedsFilingP 144889 . 146357) (NC.TopLevelCardP 146359 . 146689) (
+NC.MakeDummyRegion 146691 . 147182) (NC.ValidCardP 147184 . 147655) (NC.TitleBarButtonEventFn 147657
+ . 148710) (NC.InstallTitleBarMiddleMenu 148712 . 149761)) (149799 190280 (NC.AddPropToPropList 149809
+ . 153779) (NC.CloseAllPropListEditors 153781 . 154645) (NC.ClosePropListEditor 154647 . 158998) (
+NC.DelPropFromList 159000 . 161664) (NC.EditProperties 161666 . 164063) (NC.EditPropList 164065 . 
+167634) (NC.ExtractPropList 167636 . 170236) (NC.OpenPropListEditor 170238 . 176091) (
+NC.ProcessEditedPropList 176093 . 177904) (NC.PropListEditorOpenP 177906 . 178998) (NC.SelectProperty 
+179000 . 179985) (NC.SelectPropertyButtonFn 179987 . 180577) (NC.ShowLinks 180579 . 186697) (
+NC.StringIsListP 186699 . 187811) (NC.PutProp 187813 . 188484) (NC.GetProp 188486 . 188841) (
+NC.RemProp 188843 . 189122) (NC.MenuDescFromPropListItem 189124 . 190278)) (190317 192782 (
+NC.FetchBeingDeletedFlg 190327 . 190750) (NC.SetBeingDeletedFlg 190752 . 191186) (
+NC.RemoveDELETEMEImageObjsFromCard 191188 . 192346) (NC.InsureIntegerDate 192348 . 192780)) (192827 
+195625 (NC.PlaceMarkerCopyFn 192837 . 193021) (NC.PlaceMarkerDisplayFn 193023 . 193618) (
+NC.PlaceMarkerGetFn 193620 . 193784) (NC.PlaceMarkerImageBoxFn 193786 . 194682) (NC.PlaceMarkerPutFn 
+194684 . 194920) (NC.MakePlaceMarker 194922 . 195623)) (195674 203566 (NC.FetchTitleDate 195684 . 
+196282) (NC.FetchItemDate 196284 . 196879) (NC.FetchPropListDate 196881 . 197489) (NC.FetchLinksDate 
+197491 . 198089) (NC.FetchLinkIconAttachedBitMap 198091 . 202435) (NC.FetchLinkDisplayMode 202437 . 
+202737) (NC.FetchDefaultWidth 202739 . 203021) (NC.FetchDefaultHeight 203023 . 203304) (
+NC.FetchLinkAnchorModesSupported 203306 . 203564)) (203567 205430 (NC.SetTitleDate 203577 . 204039) (
+NC.SetItemDate 204041 . 204495) (NC.SetPropListDate 204497 . 204964) (NC.SetLinksDate 204966 . 205428)
 ))))
 STOP

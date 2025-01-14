@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "23-Nov-2024 23:40:51" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;2 61110  
+(FILECREATED "13-Jan-2025 22:47:13" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;4 60786  
 
-      :CHANGES-TO (FNS NC.UpdateLinkImagesInText)
+      :CHANGES-TO (FNS NC.TranslateWindowPositionToTEditPosition)
 
-      :PREVIOUS-DATE " 1-Apr-2024 12:13:15" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;1)
+      :PREVIOUS-DATE "23-Nov-2024 23:40:51" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;3)
 
 
 (PRETTYCOMPRINT NCTEXTCARDCOMS)
@@ -865,14 +865,9 @@
 
          (* * fgh |2/6/86| Added Card argument.)
 
-    (PROG (TextObj)
-          (COND
-             ([AND (WINDOWP Window)
-                   (type? TEXTOBJ (SETQ TextObj (WINDOWPROP Window 'TEXTOBJ]
-              (RETURN (fetch (SELECTION CH#) of (\TEDIT.SELECT WindowPositionX WindowPositionY 
-                                                       TextObj (fetch (TEXTOBJ MOUSEREGION)
-                                                                  of TextObj)
-                                                       NIL NIL Window])
+         (* * fgh 2025-01-13 Updated to use new TEDIT.XYTOCH puplic API from TEdit Round 4)
+
+    (TEDIT.XYTOCH WindowPositionX WindowPositionYTEditWindow Window])
 
 (NC.InsertLinkInTextWindow
   [LAMBDA (Card TextWindow LinkOrLinkLabel CharacterPosition)(* fgh%: " 6-Feb-86 22:12")
@@ -1126,7 +1121,7 @@
 (RPAQQ NC.TextCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@OOOOOH@@
 )
 
-[LOADINITADVISE NC-ADVICE0099 [TEDIT.ADD.MENUITEM
+[LOADINITADVISE NC-ADVICE0117 [TEDIT.ADD.MENUITEM
                                (NIL (AFTER NIL (if (EQ MENU TEDIT.DEFAULT.MENU)
                                                    then (NCP.ChangeCardTypeFields
                                                          'Text NIL `((MiddleButtonMenuItems
@@ -1148,19 +1143,19 @@
 
 (PUTPROPS NCTEXTCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (3685 3955 (NCAddStub.TextCard 3695 . 3953)) (4398 47291 (NC.MakeTEditCard 4408 . 7874) 
-(NC.BringUpTEditCard 7876 . 13223) (NC.MakeTextCardReadOnly 13225 . 15056) (NC.MakeTextCardReadWrite 
-15058 . 16525) (NC.RevertTextCard 16527 . 17424) (NC.CollectReferencesInText 17426 . 23189) (
-NC.InstallTextTitleBarMiddleMenu 23191 . 24302) (NC.MarkTextDirty 24304 . 24697) (NC.ResetTEdit 24699
- . 25107) (NC.ResetTEditProcess 25109 . 26747) (NC.TEditBasedP 26749 . 27448) (NC.TEditCloseFn 27450
- . 28967) (NC.TEditMenuFn 28969 . 30034) (NC.TEditQuitFn 30036 . 31717) (NC.TextCopySubstance 31719 . 
-32340) (NC.TextDirtyP 32342 . 32649) (NC.TextCardShrinkFn 32651 . 37461) (NC.PutTextSubstance 37463 . 
-39061) (NC.GetTextSubstance 39063 . 40688) (NC.UpdateLinkImagesInText 40690 . 43107) (
-NC.CharPosFromTextStream 43109 . 43343) (NC.DelReferencesToCardFromText 43345 . 45798) (NC.TEditWindow
- 45800 . 46440) (NC.TEditCollectObjects 46442 . 47289)) (47543 48718 (
-NC.TranslateWindowPositionToTEditPosition 47553 . 48254) (NC.InsertLinkInTextWindow 48256 . 48716)) (
-48827 56591 (NC.CardFromTextStream 48837 . 49129) (NC.TEditPutFn 49131 . 51769) (
-NC.TEditPutFnAuxiliary 51771 . 52674) (NC.TEditGetFn 52676 . 53837) (NC.MakeTEditPropsList 53839 . 
-55716) (NC.TEditPropsListQuitFn 55718 . 56053) (NC.DelTEditProcesses 56055 . 56589)) (56657 59610 (
-NC.AddTextCard 56667 . 58808) (NC.ComputeTextCardMiddleButtonMenuItems 58810 . 59608)))))
+  (FILEMAP (NIL (3701 3971 (NCAddStub.TextCard 3711 . 3969)) (4414 47307 (NC.MakeTEditCard 4424 . 7890) 
+(NC.BringUpTEditCard 7892 . 13239) (NC.MakeTextCardReadOnly 13241 . 15072) (NC.MakeTextCardReadWrite 
+15074 . 16541) (NC.RevertTextCard 16543 . 17440) (NC.CollectReferencesInText 17442 . 23205) (
+NC.InstallTextTitleBarMiddleMenu 23207 . 24318) (NC.MarkTextDirty 24320 . 24713) (NC.ResetTEdit 24715
+ . 25123) (NC.ResetTEditProcess 25125 . 26763) (NC.TEditBasedP 26765 . 27464) (NC.TEditCloseFn 27466
+ . 28983) (NC.TEditMenuFn 28985 . 30050) (NC.TEditQuitFn 30052 . 31733) (NC.TextCopySubstance 31735 . 
+32356) (NC.TextDirtyP 32358 . 32665) (NC.TextCardShrinkFn 32667 . 37477) (NC.PutTextSubstance 37479 . 
+39077) (NC.GetTextSubstance 39079 . 40704) (NC.UpdateLinkImagesInText 40706 . 43123) (
+NC.CharPosFromTextStream 43125 . 43359) (NC.DelReferencesToCardFromText 43361 . 45814) (NC.TEditWindow
+ 45816 . 46456) (NC.TEditCollectObjects 46458 . 47305)) (47559 48394 (
+NC.TranslateWindowPositionToTEditPosition 47569 . 47930) (NC.InsertLinkInTextWindow 47932 . 48392)) (
+48503 56267 (NC.CardFromTextStream 48513 . 48805) (NC.TEditPutFn 48807 . 51445) (
+NC.TEditPutFnAuxiliary 51447 . 52350) (NC.TEditGetFn 52352 . 53513) (NC.MakeTEditPropsList 53515 . 
+55392) (NC.TEditPropsListQuitFn 55394 . 55729) (NC.DelTEditProcesses 55731 . 56265)) (56333 59286 (
+NC.AddTextCard 56343 . 58484) (NC.ComputeTextCardMiddleButtonMenuItems 58486 . 59284)))))
 STOP
