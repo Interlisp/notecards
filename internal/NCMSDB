@@ -1,0 +1,35 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+
+(FILECREATED "13-Jan-2025 13:17:00" {DSK}<home>frank>il>notecards>internal>NCMSDB.;3 1293   
+
+      :CHANGES-TO (FNS NC.CreateMSDB)
+                  (VARS NCMSDBCOMS)
+
+      :PREVIOUS-DATE "13-Jan-2025 11:01:09" {DSK}<home>frank>il>notecards>internal>NCMSDB.;1)
+
+
+(PRETTYCOMPRINT NCMSDBCOMS)
+
+(RPAQQ NCMSDBCOMS ((FNS NC.CreateMSDB)))
+(DEFINEQ
+
+(NC.CreateMSDB
+  [LAMBDA NIL
+    (DECLARE (GLOBALVARS NC.Files DIRECTORIES LOGINDIR))
+    (SETQ DIRECTORIES (APPEND (LIST (CONCAT LOGINDIR "notecards/system")
+                                    (CONCAT LOGINDIR "notecards/library")
+                                    (CONCAT LOGINDIR "notecards/patches"))
+                             DIRECTORIES))
+    (BKSYSBUF "   ")
+    (DRIBBLE (CONCAT LOGINDIR "notecards/internal/ncmsdb.dribble"))
+    (for file in NC.Files when (NEQ file 'NOTECARDS.HASH) do (LOAD file 'PROP))
+    [for file in NC.Files when [NOT (FMEMB file '(MEDLEYROOMSPATCHES NOTECARDS.HASH]
+       do (PRINT '-)
+          (PRINT file)
+          (MASTERSCOPE `(ANALYZE ALL ON ,file]
+    (DUMPDATABASE NIL (MKATOM (CONCAT LOGINDIR "notecards/internal/notecards.database")))
+    (DRIBBLE])
+)
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (418 1270 (NC.CreateMSDB 428 . 1268)))))
+STOP
