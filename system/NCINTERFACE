@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 3-Jan-2025 20:05:34" {DSK}<home>frank>il>notecards>system>NCINTERFACE.;8 306735 
+(FILECREATED "10-Jan-2025 15:27:35" {DSK}<home>frank>il>notecards>system>NCINTERFACE.;10 307068 
 
       :CHANGES-TO (VARS NCINTERFACECOMS)
 
-      :PREVIOUS-DATE "31-Dec-2024 13:48:03" {DSK}<home>frank>il>notecards>system>NCINTERFACE.;7)
+      :PREVIOUS-DATE " 3-Jan-2025 20:05:34" {DSK}<home>frank>il>notecards>system>NCINTERFACE.;9)
 
 
 (PRETTYCOMPRINT NCINTERFACECOMS)
@@ -151,10 +151,12 @@
                (NC.InitialNoteFileIconOpenOperations NC.NoteFileIconOpenOperations)
                (NC.InitialNoteFileIconCloseOperations NC.NoteFileIconCloseOperations))
         [INITVARS (NC.DefaultMiddleButtonMenuItems NIL)
-               (NC.ShowPropListMenu (create MENU ITEMS _ '(("Quit" (NC.ClosePropListEditor
-                                                                    W
-                                                                    'NoSave)
-                                                                  "Quit from pointer list display."))
+               (NC.ShowPropListMenu (create MENU ITEMS _
+                                           '(("Quit" [LIST (FUNCTION (LAMBDA (tstream)
+                                                                            (NC.ClosePropListEditor
+                                                                             tstream
+                                                                             'NoSave]
+                                                    "Quit from pointer list display."))
                                            CENTERFLG _ T MENUFONT _ NC.MenuFont ITEMHEIGHT _
                                            (IPLUS (FONTPROP NC.MenuFont 'HEIGHT)
                                                   1)))
@@ -849,7 +851,7 @@
 (* ;;; "Fix up Lisp")
 
 
-[LOADINITADVISE NC-ADVICE0239 (LOGOUT (NIL (BEFORE NIL (if (NULL (NC.LogoutAdvice))
+[LOADINITADVISE NC-ADVICE0099 (LOGOUT (NIL (BEFORE NIL (if (NULL (NC.LogoutAdvice))
                                                            then (RETURN]
 
 
@@ -1013,7 +1015,9 @@
 (RPAQ? NC.DefaultMiddleButtonMenuItems NIL)
 
 (RPAQ? NC.ShowPropListMenu
-       (create MENU ITEMS _ '(("Quit" (NC.ClosePropListEditor W 'NoSave)
+       (create MENU ITEMS _ '(("Quit" [LIST (FUNCTION (LAMBDA (tstream)
+                                                             (NC.ClosePropListEditor tstream
+                                                                    'NoSave]
                                      "Quit from pointer list display."))
               CENTERFLG _ T MENUFONT _ NC.MenuFont ITEMHEIGHT _ (IPLUS (FONTPROP NC.MenuFont
                                                                               'HEIGHT)
@@ -1484,42 +1488,42 @@ Done, but only ")                                                         (T "d
 
 (PUTPROPS NCINTERFACE MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (41800 69190 (NoteCards 41810 . 42182) (NC.MakeMainMenu 42184 . 51541) (NC.LogoutAdvice 
-51543 . 53676) (NC.AttachPromptWindow 53678 . 54954) (NC.AttachPromptWindowOffScreen 54956 . 55587) (
-NC.GETPROMPTWINDOW 55589 . 67622) (NC.MaxPromptWindowWidth 67624 . 68798) (NC.PromptWindowOpenP 68800
- . 69188)) (69574 127767 (NC.AskLinkLabel 69584 . 76211) (NC.AskNoteCardType 76213 . 80682) (
-NC.SortCardTypes 80684 . 83065) (NC.ExpandBars 83067 . 84612) (NC.ChooseTopLevelCard 84614 . 88744) (
-NC.RemoveSketchMenuItems 88746 . 89597) (NC.SelectionMenusWhenSelectedFn 89599 . 91375) (
-NC.InstallTitleBarButtonEventFn 91377 . 92051) (NC.InstallTitleBarLeftMenu 92053 . 93065) (
-NC.InstallCopyButtonEventFn 93067 . 93536) (NC.NoteFileTitleLeftWhenSelectedFn 93538 . 98179) (
-NC.MakeNoteFileIconOperationsMenus 98181 . 100662) (NC.ResetCachedMenus 100664 . 101093) (
-NC.CreateNoteFileMenuItems 101095 . 107481) (NC.GetNoteFileMenu 107483 . 108501) (NC.SetNoteFileMenu 
-108503 . 109752) (NC.PrintReadOnlyMsg 109754 . 112865) (NC.CopyMenu 112867 . 113604) (
-NC.ReadOnlyTEditSelFn 113606 . 114279) (NC.MakeTEditReadOnly 114281 . 119239) (NC.MakeTEditReadWrite 
-119241 . 120094) (NC.MakeMenusReadOnly 120096 . 125585) (NC.MakeMenusReadWrite 125587 . 127765)) (
-127895 159100 (NC.SelectNoteCards 127905 . 150137) (NC.BinLoopProcess 150139 . 151363) (
-NC.ZapBinLoopProcess 151365 . 151702) (NC.SelectNoteCardsCopyInsertFn 151704 . 153384) (
-NC.CopyButtonEventFn 153386 . 155911) (NC.ShrukenIconButtonEventFn 155913 . 158693) (NC.CardImageObjP 
-158695 . 158867) (NC.MakeCardImageObject 158869 . 159098)) (170724 185263 (NC.NoteCardsWindowP 170734
- . 171108) (NC.NoteCardsIconWindowP 171110 . 171377) (NC.MakeNoteCardsIcon 171379 . 171861) (
-NC.BringUpNoteCardsIcon 171863 . 172907) (NC.NoteCardsIconAfterMoveFn 172909 . 173530) (
-NC.FileBrowserMenu 173532 . 177175) (NC.ListOfNoteFilesMenu 177177 . 182715) (NC.CheckpointSession 
-182717 . 183641) (NC.CloseSession 183643 . 185261)) (203942 226822 (NC.RedisplayNoteCardsIconWindow 
-203952 . 204908) (NC.NoteCardsIconButtonEventFn 204910 . 208018) (NC.DoNoteFileOp 208020 . 216978) (
-NC.NoteCardsIconCursorEventFn 216980 . 217640) (NC.NoteCardsIconFn 217642 . 218033) (
-NC.ResetNoteCardsIcon 218035 . 218794) (NC.MakeNewStyleNoteCardsIcon 218796 . 222405) (
-NC.MakeOldStyleNoteCardsIcon 222407 . 226820)) (226880 240543 (NC.CloseNoteCards 226890 . 229565) (
-NC.CopyStructure 229567 . 233457) (NC.CloseStructure 233459 . 236287) (NC.DeleteStructure 236289 . 
-239285) (NC.MoveStructure 239287 . 240541)) (240581 275055 (NC.NoteFileMenuWindowP 240591 . 240932) (
-NC.SetUpNoteFileInterface 240934 . 252068) (NC.ResetNoteFileInterface 252070 . 256321) (
-NC.NoteFileIconButtonEventFn 256323 . 263723) (NC.NoteFileOperations 263725 . 265921) (
-NC.NoteFileIconMiddleButtonFn 265923 . 268040) (NC.PopUpNoteFileName 268042 . 269463) (
-NC.DisplayFileCapacity 269465 . 275053)) (275482 281866 (NC.ShowNoteFiles 275492 . 275812) (
-NC.AttachNoteFileName 275814 . 280911) (NC.MakeNoteFileNameIndicator 280913 . 281491) (
-NC.NoteFileIndicatorWinHeight 281493 . 281864)) (287462 305610 (NC.FileBrowserOpen 287472 . 288514) (
-NC.FileBrowserClose 288516 . 289408) (NC.FileBrowserCheckpoint 289410 . 290404) (NC.FileBrowserAbort 
-290406 . 291217) (NC.FileBrowserCompact 291219 . 298774) (NC.FileBrowserInspect&Repair 298776 . 299834
-) (NC.FileBrowserExpunge 299836 . 302109) (NC.GetFileBrowserPattern 302111 . 303537) (
-NC.FileBrowserRecomputeWithNewPattern 303539 . 304798) (NC.FindFileBrowserWinForPattern 304800 . 
-305608)) (305611 306551 (NC.FlashFileBrowserWin 305621 . 306549)))))
+  (FILEMAP (NIL (41964 69354 (NoteCards 41974 . 42346) (NC.MakeMainMenu 42348 . 51705) (NC.LogoutAdvice 
+51707 . 53840) (NC.AttachPromptWindow 53842 . 55118) (NC.AttachPromptWindowOffScreen 55120 . 55751) (
+NC.GETPROMPTWINDOW 55753 . 67786) (NC.MaxPromptWindowWidth 67788 . 68962) (NC.PromptWindowOpenP 68964
+ . 69352)) (69738 127931 (NC.AskLinkLabel 69748 . 76375) (NC.AskNoteCardType 76377 . 80846) (
+NC.SortCardTypes 80848 . 83229) (NC.ExpandBars 83231 . 84776) (NC.ChooseTopLevelCard 84778 . 88908) (
+NC.RemoveSketchMenuItems 88910 . 89761) (NC.SelectionMenusWhenSelectedFn 89763 . 91539) (
+NC.InstallTitleBarButtonEventFn 91541 . 92215) (NC.InstallTitleBarLeftMenu 92217 . 93229) (
+NC.InstallCopyButtonEventFn 93231 . 93700) (NC.NoteFileTitleLeftWhenSelectedFn 93702 . 98343) (
+NC.MakeNoteFileIconOperationsMenus 98345 . 100826) (NC.ResetCachedMenus 100828 . 101257) (
+NC.CreateNoteFileMenuItems 101259 . 107645) (NC.GetNoteFileMenu 107647 . 108665) (NC.SetNoteFileMenu 
+108667 . 109916) (NC.PrintReadOnlyMsg 109918 . 113029) (NC.CopyMenu 113031 . 113768) (
+NC.ReadOnlyTEditSelFn 113770 . 114443) (NC.MakeTEditReadOnly 114445 . 119403) (NC.MakeTEditReadWrite 
+119405 . 120258) (NC.MakeMenusReadOnly 120260 . 125749) (NC.MakeMenusReadWrite 125751 . 127929)) (
+128059 159264 (NC.SelectNoteCards 128069 . 150301) (NC.BinLoopProcess 150303 . 151527) (
+NC.ZapBinLoopProcess 151529 . 151866) (NC.SelectNoteCardsCopyInsertFn 151868 . 153548) (
+NC.CopyButtonEventFn 153550 . 156075) (NC.ShrukenIconButtonEventFn 156077 . 158857) (NC.CardImageObjP 
+158859 . 159031) (NC.MakeCardImageObject 159033 . 159262)) (170888 185427 (NC.NoteCardsWindowP 170898
+ . 171272) (NC.NoteCardsIconWindowP 171274 . 171541) (NC.MakeNoteCardsIcon 171543 . 172025) (
+NC.BringUpNoteCardsIcon 172027 . 173071) (NC.NoteCardsIconAfterMoveFn 173073 . 173694) (
+NC.FileBrowserMenu 173696 . 177339) (NC.ListOfNoteFilesMenu 177341 . 182879) (NC.CheckpointSession 
+182881 . 183805) (NC.CloseSession 183807 . 185425)) (204275 227155 (NC.RedisplayNoteCardsIconWindow 
+204285 . 205241) (NC.NoteCardsIconButtonEventFn 205243 . 208351) (NC.DoNoteFileOp 208353 . 217311) (
+NC.NoteCardsIconCursorEventFn 217313 . 217973) (NC.NoteCardsIconFn 217975 . 218366) (
+NC.ResetNoteCardsIcon 218368 . 219127) (NC.MakeNewStyleNoteCardsIcon 219129 . 222738) (
+NC.MakeOldStyleNoteCardsIcon 222740 . 227153)) (227213 240876 (NC.CloseNoteCards 227223 . 229898) (
+NC.CopyStructure 229900 . 233790) (NC.CloseStructure 233792 . 236620) (NC.DeleteStructure 236622 . 
+239618) (NC.MoveStructure 239620 . 240874)) (240914 275388 (NC.NoteFileMenuWindowP 240924 . 241265) (
+NC.SetUpNoteFileInterface 241267 . 252401) (NC.ResetNoteFileInterface 252403 . 256654) (
+NC.NoteFileIconButtonEventFn 256656 . 264056) (NC.NoteFileOperations 264058 . 266254) (
+NC.NoteFileIconMiddleButtonFn 266256 . 268373) (NC.PopUpNoteFileName 268375 . 269796) (
+NC.DisplayFileCapacity 269798 . 275386)) (275815 282199 (NC.ShowNoteFiles 275825 . 276145) (
+NC.AttachNoteFileName 276147 . 281244) (NC.MakeNoteFileNameIndicator 281246 . 281824) (
+NC.NoteFileIndicatorWinHeight 281826 . 282197)) (287795 305943 (NC.FileBrowserOpen 287805 . 288847) (
+NC.FileBrowserClose 288849 . 289741) (NC.FileBrowserCheckpoint 289743 . 290737) (NC.FileBrowserAbort 
+290739 . 291550) (NC.FileBrowserCompact 291552 . 299107) (NC.FileBrowserInspect&Repair 299109 . 300167
+) (NC.FileBrowserExpunge 300169 . 302442) (NC.GetFileBrowserPattern 302444 . 303870) (
+NC.FileBrowserRecomputeWithNewPattern 303872 . 305131) (NC.FindFileBrowserWinForPattern 305133 . 
+305941)) (305944 306884 (NC.FlashFileBrowserWin 305954 . 306882)))))
 STOP
