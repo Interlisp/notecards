@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "13-Jan-2025 22:47:13" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;4 60786  
+(FILECREATED "14-Jan-2025 21:29:29" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;6 61218  
 
-      :CHANGES-TO (FNS NC.TranslateWindowPositionToTEditPosition)
+      :CHANGES-TO (FNS NC.InstallTextTitleBarMiddleMenu)
 
-      :PREVIOUS-DATE "23-Nov-2024 23:40:51" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;3)
+      :PREVIOUS-DATE "13-Jan-2025 22:47:13" {DSK}<home>frank>il>notecards>system>NCTEXTCARD.;5)
 
 
 (PRETTYCOMPRINT NCTEXTCARDCOMS)
@@ -397,16 +397,20 @@
          (* * pmi 4/1/87%: Changed to replace MENUFONT with NC.MenuFont)
 
     (DECLARE (GLOBALVARS NC.MenuFont))
-    (LET (Menu)
-         [WINDOWPROP Window 'TitleBarMiddleButtonMenu (SETQ Menu (\TEDIT.CREATEMENU (
-                                                                                  NC.GetCardTypeField
-                                                                                     
-                                                                                MiddleButtonMenuItems
-                                                                                     CardType]
-         (replace (MENU MENUFONT) of Menu with NC.MenuFont)
-         (replace (MENU ITEMHEIGHT) of Menu with (IPLUS (FONTPROP NC.MenuFont 'HEIGHT)
-                                                        1))
-         (replace (MENU IMAGE) of Menu with NIL])
+    (WINDOWPROP Window 'TitleBarMiddleButtonMenu (create MENU
+                                                        ITEMS _ (NC.GetCardTypeField 
+                                                                       MiddleButtonMenuItems CardType
+                                                                       )
+                                                        MENUFONT _ NC.MenuFont
+                                                        ITEMHEIGHT _ (IPLUS (FONTPROP NC.MenuFont
+                                                                                   'HEIGHT)
+                                                                            1)
+                                                        WHENHELDFN _ (fetch (MENU WHENHELDFN)
+                                                                        of TEDIT.DEFAULT.MENU)
+                                                        WHENSELECTEDFN _ (fetch (MENU WHENSELECTEDFN)
+                                                                            of TEDIT.DEFAULT.MENU)
+                                                        CENTERFLG _ T
+                                                        IMAGE _ NIL])
 
 (NC.MarkTextDirty
   [LAMBDA (Card ResetFlg)                                    (* fgh%: "13-Nov-85 23:19")
@@ -1121,7 +1125,7 @@
 (RPAQQ NC.TextCardIcon #*(21 18)OOOOOH@@OOOOOH@@OOOOOH@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@H@@@@H@@OOOOOH@@
 )
 
-[LOADINITADVISE NC-ADVICE0117 [TEDIT.ADD.MENUITEM
+[LOADINITADVISE NC-ADVICE0114 [TEDIT.ADD.MENUITEM
                                (NIL (AFTER NIL (if (EQ MENU TEDIT.DEFAULT.MENU)
                                                    then (NCP.ChangeCardTypeFields
                                                          'Text NIL `((MiddleButtonMenuItems
@@ -1143,19 +1147,19 @@
 
 (PUTPROPS NCTEXTCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (3701 3971 (NCAddStub.TextCard 3711 . 3969)) (4414 47307 (NC.MakeTEditCard 4424 . 7890) 
-(NC.BringUpTEditCard 7892 . 13239) (NC.MakeTextCardReadOnly 13241 . 15072) (NC.MakeTextCardReadWrite 
-15074 . 16541) (NC.RevertTextCard 16543 . 17440) (NC.CollectReferencesInText 17442 . 23205) (
-NC.InstallTextTitleBarMiddleMenu 23207 . 24318) (NC.MarkTextDirty 24320 . 24713) (NC.ResetTEdit 24715
- . 25123) (NC.ResetTEditProcess 25125 . 26763) (NC.TEditBasedP 26765 . 27464) (NC.TEditCloseFn 27466
- . 28983) (NC.TEditMenuFn 28985 . 30050) (NC.TEditQuitFn 30052 . 31733) (NC.TextCopySubstance 31735 . 
-32356) (NC.TextDirtyP 32358 . 32665) (NC.TextCardShrinkFn 32667 . 37477) (NC.PutTextSubstance 37479 . 
-39077) (NC.GetTextSubstance 39079 . 40704) (NC.UpdateLinkImagesInText 40706 . 43123) (
-NC.CharPosFromTextStream 43125 . 43359) (NC.DelReferencesToCardFromText 43361 . 45814) (NC.TEditWindow
- 45816 . 46456) (NC.TEditCollectObjects 46458 . 47305)) (47559 48394 (
-NC.TranslateWindowPositionToTEditPosition 47569 . 47930) (NC.InsertLinkInTextWindow 47932 . 48392)) (
-48503 56267 (NC.CardFromTextStream 48513 . 48805) (NC.TEditPutFn 48807 . 51445) (
-NC.TEditPutFnAuxiliary 51447 . 52350) (NC.TEditGetFn 52352 . 53513) (NC.MakeTEditPropsList 53515 . 
-55392) (NC.TEditPropsListQuitFn 55394 . 55729) (NC.DelTEditProcesses 55731 . 56265)) (56333 59286 (
-NC.AddTextCard 56343 . 58484) (NC.ComputeTextCardMiddleButtonMenuItems 58486 . 59284)))))
+  (FILEMAP (NIL (3692 3962 (NCAddStub.TextCard 3702 . 3960)) (4405 47739 (NC.MakeTEditCard 4415 . 7881) 
+(NC.BringUpTEditCard 7883 . 13230) (NC.MakeTextCardReadOnly 13232 . 15063) (NC.MakeTextCardReadWrite 
+15065 . 16532) (NC.RevertTextCard 16534 . 17431) (NC.CollectReferencesInText 17433 . 23196) (
+NC.InstallTextTitleBarMiddleMenu 23198 . 24750) (NC.MarkTextDirty 24752 . 25145) (NC.ResetTEdit 25147
+ . 25555) (NC.ResetTEditProcess 25557 . 27195) (NC.TEditBasedP 27197 . 27896) (NC.TEditCloseFn 27898
+ . 29415) (NC.TEditMenuFn 29417 . 30482) (NC.TEditQuitFn 30484 . 32165) (NC.TextCopySubstance 32167 . 
+32788) (NC.TextDirtyP 32790 . 33097) (NC.TextCardShrinkFn 33099 . 37909) (NC.PutTextSubstance 37911 . 
+39509) (NC.GetTextSubstance 39511 . 41136) (NC.UpdateLinkImagesInText 41138 . 43555) (
+NC.CharPosFromTextStream 43557 . 43791) (NC.DelReferencesToCardFromText 43793 . 46246) (NC.TEditWindow
+ 46248 . 46888) (NC.TEditCollectObjects 46890 . 47737)) (47991 48826 (
+NC.TranslateWindowPositionToTEditPosition 48001 . 48362) (NC.InsertLinkInTextWindow 48364 . 48824)) (
+48935 56699 (NC.CardFromTextStream 48945 . 49237) (NC.TEditPutFn 49239 . 51877) (
+NC.TEditPutFnAuxiliary 51879 . 52782) (NC.TEditGetFn 52784 . 53945) (NC.MakeTEditPropsList 53947 . 
+55824) (NC.TEditPropsListQuitFn 55826 . 56161) (NC.DelTEditProcesses 56163 . 56697)) (56765 59718 (
+NC.AddTextCard 56775 . 58916) (NC.ComputeTextCardMiddleButtonMenuItems 58918 . 59716)))))
 STOP
