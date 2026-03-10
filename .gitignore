@@ -1,7 +1,25 @@
-*.~*~
-*.SYSOUT
-*.sysout
-.c9
-/sysouts
+# .gitignore for submodules   medley/notecards
 
+*.pdf
+index.html
+
+# manual cross-reference files
+*.IMPTR
+
+# older versions
+*~
+
+# accidental sysouts
+*.sysout
+*.SYSOUT
+
+.c9
+sysouts
+
+# emacs detritus
+*\#
+\.\#*
+
+# Mac OS detritus
 .DS_Store
+
