@@ -1,3 +1,20 @@
-*.notefile -crlf
-*.NOTEFILE -crlf
+# Denote all files that are truly binary and should not be modified.
+*.tedit binary
+*.TEDIT binary
+*.TEdit binary
+*.Tedit binary
+*.ted binary
+*.TED binary
 
+*.sketch binary
+*.SKETCH binary
+
+*.lcom binary
+*.LCOM binary
+*.dfasl binary
+*.DFASL binary
+
+*.notefile binary
+*.NOTEFILE binary
+*.Notefile binary
+*.NoteFile binary
