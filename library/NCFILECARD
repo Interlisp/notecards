@@ -1,10 +1,13 @@
-(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+(DEFINE-FILE-INFO :PACKAGE "INTERLISP" :READTABLE "INTERLISP" :BASE 10)
 
-(FILECREATED "13-Jan-2025 22:27:39" {DSK}<home>frank>il>notecards>library>NCFILECARD.;4 18561  
+(FILECREATED " 2-Sep-2026 14:22:30" {DSK}<home>frank>il>medley>notecards>library>NCFILECARD.;7 19002  
 
-      :CHANGES-TO (FNS NC.MarkFileSubstanceDirty NC.FileCardFileVersionNumber)
+      :EDIT-BY "FGH"
 
-      :PREVIOUS-DATE "13-Jan-2025 13:16:12" {DSK}<home>frank>il>notecards>library>NCFILECARD.;3)
+      :CHANGES-TO (FNS NC.GetFileFromUser NC.MarkFileSubstanceDirty)
+
+      :PREVIOUS-DATE " 2-Sep-2026 11:06:54" {DSK}<home>frank>il>medley>notecards>library>NCFILECARD.;6
+)
 
 
 (PRETTYCOMPRINT NCFILECARDCOMS)
@@ -172,7 +175,8 @@
     (READ Stream])
 
 (NC.MarkFileSubstanceDirty
-  [LAMBDA (Card ResetFlg)                                    (* fgh%: "17-Dec-85 18:24")
+  [LAMBDA (Card ResetFlg)                                    (* ; "Edited  2-Sep-2026 10:36 by FGH")
+                                                             (* fgh%: "17-Dec-85 18:24")
 
          (* * Mark or unmark TextStream of File being changed.)
 
@@ -183,9 +187,9 @@
 
     (LET* ((Window (NC.FetchWindow Card))
            (TextStream (TEXTSTREAM Window T)))
-          (AND Window TextStream (TEXTPROP TexStream 'DIRTY (COND
-                                                               (ResetFlg NIL)
-                                                               (T T])
+          (AND Window TextStream (TEXTPROP TextStream 'DIRTY (COND
+                                                                (ResetFlg NIL)
+                                                                (T T])
 
 (NC.PutFileSubstance
   [LAMBDA (Card Stream)                                      (* fgh%: " 3-Jun-86 15:45")
@@ -283,17 +287,23 @@
     (NC.FetchUserDataProp Card 'NoteCardTextStream])
 
 (NC.GetFileFromUser
-  [LAMBDA (Window DontClearPromptFlg FirstTry)               (* rht%: "29-Apr-87 15:00")
+  [LAMBDA (Window DontClearPromptFlg FirstTry)               (* ; "Edited  2-Sep-2026 14:21 by FGH")
 
          (* * Create a file designator)
+
+         (* * fgh 2026-09-02 SHIFT-COPY from filebrowser adds double-quote characrters at 
+         the beginning/end of the filename. Added CL:REMOVE to fix this.)
+
+         (* * rht%: "29-Apr-87 15:00")
 
          (* * rht 3/25/87%: Changed to call NC.AskYesOrNo.)
 
          (* * rht 4/29/87%: Removed call to NC.YesP.)
 
     (LET (FileName FullFileName)
-         (SETQ FileName (NC.AskUser "Enter file name" ":  " FirstTry (NULL DontClearPromptFlg)
-                               Window T NIL T))
+         (SETQ FileName (CL:REMOVE (CL:CODE-CHAR 34)
+                               (NC.AskUser "Enter file name" ":  " FirstTry (NULL DontClearPromptFlg)
+                                      Window T NIL T)))
          (PROG1 (COND
                    ((SETQ FullFileName (INFILEP FileName))
                     (PACKFILENAME 'VERSION NIL 'BODY FullFileName))
@@ -423,11 +433,11 @@
 (PUTPROP 'File 'ExportSubstanceFn (FUNCTION OPENTEXTSTREAM))
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1653 2138 (NCAddStub.FileCard 1663 . 2136)) (2322 10322 (NC.MakeFileCard 2332 . 3151) (
-NC.EditFileSubstance 3153 . 6798) (NC.FileSubstanceDirtyP 6800 . 7169) (NC.GetFileSubstance 7171 . 
-7520) (NC.MarkFileSubstanceDirty 7522 . 8198) (NC.PutFileSubstance 8200 . 8713) (NC.QuitFileSubstance 
-8715 . 9537) (NC.FileCardPutFile 9539 . 10320)) (10351 16921 (NC.FileCardFileVersionNumber 10361 . 
-10902) (NC.FileCardTitle 10904 . 11352) (NC.FetchTextStream 11354 . 11575) (NC.GetFileFromUser 11577
- . 13375) (NC.MakeFileCardCore 13377 . 16167) (NC.SetTextStream 16169 . 16413) (NC.FileCardShrinkFn 
-16415 . 16919)) (17106 18421 (NC.AddFileCardType 17116 . 18419)))))
+  (FILEMAP (NIL (1680 2165 (NCAddStub.FileCard 1690 . 2163)) (2349 10461 (NC.MakeFileCard 2359 . 3178) (
+NC.EditFileSubstance 3180 . 6825) (NC.FileSubstanceDirtyP 6827 . 7196) (NC.GetFileSubstance 7198 . 
+7547) (NC.MarkFileSubstanceDirty 7549 . 8337) (NC.PutFileSubstance 8339 . 8852) (NC.QuitFileSubstance 
+8854 . 9676) (NC.FileCardPutFile 9678 . 10459)) (10490 17362 (NC.FileCardFileVersionNumber 10500 . 
+11041) (NC.FileCardTitle 11043 . 11491) (NC.FetchTextStream 11493 . 11714) (NC.GetFileFromUser 11716
+ . 13816) (NC.MakeFileCardCore 13818 . 16608) (NC.SetTextStream 16610 . 16854) (NC.FileCardShrinkFn 
+16856 . 17360)) (17547 18862 (NC.AddFileCardType 17557 . 18860)))))
 STOP
