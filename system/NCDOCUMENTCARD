@@ -1,10 +1,13 @@
-(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+(DEFINE-FILE-INFO :PACKAGE "INTERLISP" :READTABLE "INTERLISP" :BASE 10)
 
-(FILECREATED "25-Mar-2024 12:52:41" {DSK}<home>frank>il>notecards>system>NCDOCUMENTCARD.;5 49100  
+(FILECREATED "11-Sep-2026 13:19:21" {DSK}<home>frank>il>medley>notecards>system>NCDOCUMENTCARD.;3 49504  
 
-      :CHANGES-TO (FNS NC.ChangeParaLeading)
+      :EDIT-BY "FGH"
 
-      :PREVIOUS-DATE " 8-Mar-2024 12:41:19" {DSK}<home>frank>il>notecards>system>NCDOCUMENTCARD.;4)
+      :CHANGES-TO (FNS NC.DumpCardToDoc)
+
+      :PREVIOUS-DATE " 4-Sep-2026 23:59:15" 
+{DSK}<home>frank>il>medley>notecards>system>NCDOCUMENTCARD.;2)
 
 
 (PRETTYCOMPRINT NCDOCUMENTCARDCOMS)
@@ -240,14 +243,16 @@
 
 (NC.DumpCardToDoc
   [LAMBDA (Card DocCard DocStream CurSection SubSectionNum HeadingsFromFileboxes TitlesFromNoteCards
-                BuildBackLinks CopyEmbeddedLinks ExpandEmbeddedLinks)
-                                                             (* ; "Edited  8-Feb-88 17:18 by Trigg")
+                BuildBackLinks CopyEmbeddedLinks ExpandEmbeddedLinks)
+                                                             (* ; "Edited 11-Sep-2026 13:15 by FGH")
+                                                             (* ; "Edited  4-Sep-2026 23:58 by FGH")
+                                                             (* ; "Edited  8-Feb-88 17:18 by Trigg")
 
-    (* ;; "rht 10/15/86: Integrated markM's changes and fixed box numbering.")
+    (* ;; "rht 10/15/86: Integrated markM's changes and fixed box numbering.")
 
-    (* ;; "rht 6/4/87: Now handles cross file links.")
+    (* ;; "rht 6/4/87: Now handles cross file links.")
 
-    (* ;; "rht 2/8/88: Now returns SubSectionNum in case that can't follow cross-file link.")
+    (* ;; "rht 2/8/88: Now returns SubSectionNum in case that can't follow cross-file link.")
 
     (LET ((Title (NC.RetrieveTitle Card)))
          (if [AND (NC.CrossFileLinkCardP Card)
@@ -256,6 +261,10 @@
              then (NC.PrintMsg NIL NIL "Couldn't follow cross-file link to " Title (CHARACTER 13))
                   SubSectionNum
            else (LET ((Type (NC.RetrieveType Card)))
+
+                     (* ;; " Force load of code for this card type")
+
+                     (fetch (Card GetFn) of Card)
                      (COND
                         ((OR (NCP.SketchBasedP Card)
                              (NCP.GraphBasedP Card)
@@ -803,10 +812,10 @@
 
 (PUTPROPS NCDOCUMENTCARD MAKEFILE-ENVIRONMENT (:PACKAGE "IL" :READTABLE "INTERLISP" :BASE 10))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (2930 3395 (NCAddStub.DocumentCard 2940 . 3393)) (4095 47408 (NC.MakeDocument 4105 . 
-13243) (NC.DumpCardToDoc 13245 . 15782) (NC.DumpFileBoxToDoc 15784 . 20462) (NC.DumpNoteCardToDoc 
-20464 . 28776) (NC.FetchToLinksInOrder 28778 . 29361) (NC.BuildMakeDocInspector 29363 . 33417) (
-NC.MakeDocInspectorSelectionFn 33419 . 37099) (NC.AddCRIfNeeded 37101 . 37547) (NC.ChangeParaLeading 
-37549 . 37878) (NC.DumpExportableCardToDoc 37880 . 47406)) (48190 48668 (NC.AddDocumentCard 48200 . 
-48666)))))
+  (FILEMAP (NIL (2963 3428 (NCAddStub.DocumentCard 2973 . 3426)) (4128 47812 (NC.MakeDocument 4138 . 
+13276) (NC.DumpCardToDoc 13278 . 16186) (NC.DumpFileBoxToDoc 16188 . 20866) (NC.DumpNoteCardToDoc 
+20868 . 29180) (NC.FetchToLinksInOrder 29182 . 29765) (NC.BuildMakeDocInspector 29767 . 33821) (
+NC.MakeDocInspectorSelectionFn 33823 . 37503) (NC.AddCRIfNeeded 37505 . 37951) (NC.ChangeParaLeading 
+37953 . 38282) (NC.DumpExportableCardToDoc 38284 . 47810)) (48594 49072 (NC.AddDocumentCard 48604 . 
+49070)))))
 STOP
